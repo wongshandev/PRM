@@ -1,0 +1,41 @@
+//
+//  PrefixHeader.pch
+//  PRM
+//
+//  Created by JoinupMac01 on 17/2/6.
+//  Copyright © 2017年 JoinupMac01. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+#import "Header.h"
+#import "CALayer+XibConfiguration.h"
+
+
+#import <AVFoundation/AVFoundation.h>
+
+#import <AFNetworking.h>
+#import <SDImageCache.h>
+#import <UIImageView+WebCache.h>
+#import <MJRefresh.h>
+#import <BRPickerView/BRPickerView.h>
+#import <PinYin4Objc.h>
+
+#import "MBProgressHUD.h"
+ 
+
+#import <MessageUI/MessageUI.h>
+#import "NewNetWorkManager.h"
+#import "UserDefaultManager.h"
+
+//#import "PassValueHelper.h"
+
+
+#define MAS_SHORTHAND
+#define MAS_SHORTHAND_GLOBALS
+#import <Masonry.h>
+
+#endif /* PrefixHeader_pch */

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="ReceiveGoodsHeaderView">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="42"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="收货类型" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XQD-ZT-klv">
+                    <rect key="frame" x="0.0" y="0.0" width="64" height="42"/>
+                    <color key="backgroundColor" red="0.87058823529999996" green="0.0078431372550000003" blue="0.1019607843" alpha="1" colorSpace="calibratedRGB"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="出库人/供应商" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HC8-sH-b67">
+                    <rect key="frame" x="64" y="0.0" width="64" height="42"/>
+                    <color key="backgroundColor" red="1" green="0.54542386330000003" blue="0.62459846890000004" alpha="1" colorSpace="calibratedRGB"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="状态" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IIB-Qs-GIe">
+                    <rect key="frame" x="128" y="0.0" width="64" height="42"/>
+                    <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="接收人" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Keh-hd-CpL">
+                    <rect key="frame" x="192" y="0.0" width="64" height="42"/>
+                    <color key="backgroundColor" red="1" green="0.54082012970000004" blue="0.1140147547" alpha="1" colorSpace="calibratedRGB"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="快递单号/采购单号" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SvG-WL-3xb">
+                    <rect key="frame" x="256" y="0.0" width="64" height="42"/>
+                    <color key="backgroundColor" red="0.37647058820000001" green="0.54901960780000003" blue="0.84313725490000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="SvG-WL-3xb" secondAttribute="trailing" id="5Cz-xy-fKF"/>
+                <constraint firstItem="HC8-sH-b67" firstAttribute="leading" secondItem="XQD-ZT-klv" secondAttribute="trailing" id="7qc-e8-F2S"/>
+                <constraint firstItem="HC8-sH-b67" firstAttribute="width" secondItem="XQD-ZT-klv" secondAttribute="width" id="CV2-su-gNM"/>
+                <constraint firstAttribute="bottom" secondItem="SvG-WL-3xb" secondAttribute="bottom" id="CaI-YM-rAD"/>
+                <constraint firstItem="IIB-Qs-GIe" firstAttribute="leading" secondItem="HC8-sH-b67" secondAttribute="trailing" id="ILF-w7-13g"/>
+                <constraint firstItem="XQD-ZT-klv" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Kgz-Zm-K5T"/>
+                <constraint firstItem="HC8-sH-b67" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="M4u-Y4-KKm"/>
+                <constraint firstItem="SvG-WL-3xb" firstAttribute="leading" secondItem="Keh-hd-CpL" secondAttribute="trailing" id="PvZ-10-mTf"/>
+                <constraint firstItem="SvG-WL-3xb" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Snv-wE-HYS"/>
+                <constraint firstAttribute="bottom" secondItem="XQD-ZT-klv" secondAttribute="bottom" id="Ufn-K0-0Sv"/>
+                <constraint firstAttribute="bottom" secondItem="Keh-hd-CpL" secondAttribute="bottom" id="ZCE-48-4xL"/>
+                <constraint firstItem="SvG-WL-3xb" firstAttribute="width" secondItem="XQD-ZT-klv" secondAttribute="width" id="bYZ-Rd-DUI"/>
+                <constraint firstItem="Keh-hd-CpL" firstAttribute="width" secondItem="XQD-ZT-klv" secondAttribute="width" id="fAW-47-UtV"/>
+                <constraint firstItem="Keh-hd-CpL" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="ghw-SS-P5j"/>
+                <constraint firstItem="Keh-hd-CpL" firstAttribute="leading" secondItem="IIB-Qs-GIe" secondAttribute="trailing" id="hdQ-09-xWc"/>
+                <constraint firstItem="IIB-Qs-GIe" firstAttribute="width" secondItem="XQD-ZT-klv" secondAttribute="width" id="m8e-AM-lhH"/>
+                <constraint firstItem="IIB-Qs-GIe" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="oZc-OU-Utd"/>
+                <constraint firstAttribute="bottom" secondItem="HC8-sH-b67" secondAttribute="bottom" id="odc-30-O7K"/>
+                <constraint firstAttribute="bottom" secondItem="IIB-Qs-GIe" secondAttribute="bottom" id="q7d-G1-gdO"/>
+                <constraint firstItem="XQD-ZT-klv" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="t4d-6D-2g6"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="107" y="-187"/>
+        </view>
+    </objects>
+</document>

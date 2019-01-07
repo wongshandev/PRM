@@ -1,0 +1,57 @@
+PODS:
+  - AFNetworking (3.1.0):
+    - AFNetworking/NSURLSession (= 3.1.0)
+    - AFNetworking/Reachability (= 3.1.0)
+    - AFNetworking/Security (= 3.1.0)
+    - AFNetworking/Serialization (= 3.1.0)
+    - AFNetworking/UIKit (= 3.1.0)
+  - AFNetworking/NSURLSession (3.1.0):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (3.1.0)
+  - AFNetworking/Security (3.1.0)
+  - AFNetworking/Serialization (3.1.0)
+  - AFNetworking/UIKit (3.1.0):
+    - AFNetworking/NSURLSession
+  - BRPickerView (2.2.1)
+  - Masonry (1.0.2)
+  - MJRefresh (3.1.12)
+  - PinYin4Objc (1.1.1)
+  - SDCycleScrollView (1.65):
+    - SDWebImage (~> 3.7)
+  - SDWebImage (3.8.2):
+    - SDWebImage/Core (= 3.8.2)
+  - SDWebImage/Core (3.8.2)
+
+DEPENDENCIES:
+  - AFNetworking (~> 3.1.0)
+  - BRPickerView (~> 2.2.1)
+  - Masonry (~> 1.0.1)
+  - MJRefresh (~> 3.1.12)
+  - PinYin4Objc (~> 1.1.1)
+  - SDCycleScrollView (~> 1.65)
+  - SDWebImage (~> 3.8.1)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - AFNetworking
+    - BRPickerView
+    - Masonry
+    - MJRefresh
+    - PinYin4Objc
+    - SDCycleScrollView
+    - SDWebImage
+
+SPEC CHECKSUMS:
+  AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
+  BRPickerView: 0590a8c5de9bd98c6b4e4f117a3dff6de287d5b2
+  Masonry: 7c429b56da9d4ee0bbb3ed77a5ea710d6a5df39e
+  MJRefresh: b96cdb21c4aa75a7b07654311ab2f315c497e806
+  PinYin4Objc: 3fa9673610368330e2dfb688b1d19a35c3930a78
+  SDCycleScrollView: f72904c77698a7f93a41bcbbc2d78b073bf7326c
+  SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
+
+PODFILE CHECKSUM: 8c72c9f43780c53b8fe894de8f97ef3865ac7ed0
+
+COCOAPODS: 1.5.3

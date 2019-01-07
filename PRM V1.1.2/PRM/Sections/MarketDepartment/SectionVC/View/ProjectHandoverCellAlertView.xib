@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="Q9x-rd-ott" customClass="ProjectHandoverCellAlertView">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iN0-l3-epB">
+                    <rect key="frame" x="20" y="225" width="335" height="217"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" semanticContentAttribute="forceLeftToRight" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eGE-MM-cAE">
+                            <rect key="frame" x="10" y="45" width="315" height="40"/>
+                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <accessibility key="accessibilityConfiguration">
+                                <accessibilityTraits key="traits" button="YES" notEnabled="YES"/>
+                            </accessibility>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="40" id="ogO-5R-heh"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="16"/>
+                            <state key="normal" title="工程合同" image="deSelect.png">
+                                <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                            <connections>
+                                <action selector="projectContractAction:" destination="Q9x-rd-ott" eventType="touchUpInside" id="XVx-RF-oR0"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" semanticContentAttribute="forceLeftToRight" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IGM-NU-c86">
+                            <rect key="frame" x="10" y="90" width="315" height="40"/>
+                            <accessibility key="accessibilityConfiguration">
+                                <accessibilityTraits key="traits" button="YES" notEnabled="YES"/>
+                            </accessibility>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <state key="normal" title="设备清单" image="deSelect.png">
+                                <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                            <connections>
+                                <action selector="deviceListButtonAction:" destination="Q9x-rd-ott" eventType="touchUpInside" id="548-1b-ur5"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mdq-Ku-6dn">
+                            <rect key="frame" x="10" y="135" width="315" height="40"/>
+                            <accessibility key="accessibilityConfiguration">
+                                <accessibilityTraits key="traits" button="YES" notEnabled="YES"/>
+                            </accessibility>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <state key="normal" title="方案图纸" image="deSelect.png">
+                                <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                            <connections>
+                                <action selector="projectDrawingButtonAction:" destination="Q9x-rd-ott" eventType="touchUpInside" id="18N-D5-QsX"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lDc-gG-Q7U">
+                            <rect key="frame" x="240" y="180" width="85" height="32"/>
+                            <constraints>
+                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="85" id="o1k-eq-bnZ"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <state key="normal" title="确认">
+                                <color key="titleColor" red="1" green="0.42858640939597314" blue="0.20231173456577167" alpha="1" colorSpace="calibratedRGB"/>
+                            </state>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Iu9-BL-stI">
+                            <rect key="frame" x="145" y="180" width="85" height="32"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <state key="normal" title="取消">
+                                <color key="titleColor" red="1" green="0.42858640939597314" blue="0.20231173456577167" alpha="1" colorSpace="calibratedRGB"/>
+                            </state>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="  交接信息" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3fI-kP-T2Z">
+                            <rect key="frame" x="0.0" y="0.0" width="335" height="40"/>
+                            <color key="backgroundColor" red="0.70317316679999997" green="0.85018028850000005" blue="0.30170492729999998" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="40" id="iGA-Sh-XP0"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstItem="3fI-kP-T2Z" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="0sT-zq-MHT"/>
+                        <constraint firstItem="IGM-NU-c86" firstAttribute="leading" secondItem="eGE-MM-cAE" secondAttribute="leading" id="4id-dt-8Sz"/>
+                        <constraint firstItem="3fI-kP-T2Z" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="6ya-dy-AvE"/>
+                        <constraint firstItem="mdq-Ku-6dn" firstAttribute="height" secondItem="eGE-MM-cAE" secondAttribute="height" id="D3K-CN-KVa"/>
+                        <constraint firstItem="eGE-MM-cAE" firstAttribute="top" secondItem="3fI-kP-T2Z" secondAttribute="bottom" constant="5" id="Ema-OT-3A3"/>
+                        <constraint firstItem="Iu9-BL-stI" firstAttribute="height" secondItem="lDc-gG-Q7U" secondAttribute="height" id="FgV-6M-vfa"/>
+                        <constraint firstAttribute="trailing" secondItem="3fI-kP-T2Z" secondAttribute="trailing" id="HAo-d6-P91"/>
+                        <constraint firstAttribute="bottom" secondItem="lDc-gG-Q7U" secondAttribute="bottom" constant="5" id="Igv-k9-P98"/>
+                        <constraint firstItem="Iu9-BL-stI" firstAttribute="width" secondItem="lDc-gG-Q7U" secondAttribute="width" id="QCp-wQ-pLz"/>
+                        <constraint firstItem="Iu9-BL-stI" firstAttribute="centerY" secondItem="lDc-gG-Q7U" secondAttribute="centerY" id="R1u-bY-b8e"/>
+                        <constraint firstItem="mdq-Ku-6dn" firstAttribute="leading" secondItem="IGM-NU-c86" secondAttribute="leading" id="WUh-YV-1db"/>
+                        <constraint firstItem="IGM-NU-c86" firstAttribute="trailing" secondItem="eGE-MM-cAE" secondAttribute="trailing" id="Xsq-OE-6ev"/>
+                        <constraint firstItem="eGE-MM-cAE" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="ZXp-yL-fiT"/>
+                        <constraint firstAttribute="trailing" secondItem="lDc-gG-Q7U" secondAttribute="trailing" constant="10" id="ZgI-xb-zzR"/>
+                        <constraint firstItem="mdq-Ku-6dn" firstAttribute="top" secondItem="IGM-NU-c86" secondAttribute="bottom" constant="5" id="dyg-Ql-WM5"/>
+                        <constraint firstItem="IGM-NU-c86" firstAttribute="height" secondItem="eGE-MM-cAE" secondAttribute="height" id="dyx-Rx-XtO"/>
+                        <constraint firstItem="IGM-NU-c86" firstAttribute="top" secondItem="eGE-MM-cAE" secondAttribute="bottom" constant="5" id="edB-Tz-VrU"/>
+                        <constraint firstItem="lDc-gG-Q7U" firstAttribute="top" secondItem="mdq-Ku-6dn" secondAttribute="bottom" constant="5" id="fOG-1G-EDJ"/>
+                        <constraint firstItem="lDc-gG-Q7U" firstAttribute="leading" secondItem="Iu9-BL-stI" secondAttribute="trailing" constant="10" id="lqq-qe-fgC"/>
+                        <constraint firstAttribute="trailing" secondItem="eGE-MM-cAE" secondAttribute="trailing" constant="10" id="s6p-lD-Ln3"/>
+                        <constraint firstItem="mdq-Ku-6dn" firstAttribute="trailing" secondItem="IGM-NU-c86" secondAttribute="trailing" id="sn9-K8-TcR"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="5"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                    </userDefinedRuntimeAttributes>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="0.5994391026" green="0.5994391026" blue="0.5994391026" alpha="0.59999999999999998" colorSpace="calibratedRGB"/>
+            <gestureRecognizers/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" constant="20" id="Ryz-BN-XNV"/>
+                <constraint firstItem="iN0-l3-epB" firstAttribute="centerX" secondItem="Q9x-rd-ott" secondAttribute="centerX" id="ctK-g1-KTn"/>
+                <constraint firstItem="iN0-l3-epB" firstAttribute="centerY" secondItem="Q9x-rd-ott" secondAttribute="centerY" id="hB4-oM-Qg1"/>
+            </constraints>
+            <connections>
+                <outlet property="ProjectDrawingButton" destination="mdq-Ku-6dn" id="GGz-Zp-zjb"/>
+                <outlet property="cancleButton" destination="Iu9-BL-stI" id="02F-RM-g8f"/>
+                <outlet property="confirmButton" destination="lDc-gG-Q7U" id="QPR-eV-Nf1"/>
+                <outlet property="deviceListButton" destination="IGM-NU-c86" id="8P6-GT-lYG"/>
+                <outlet property="projectContractButton" destination="eGE-MM-cAE" id="Ibj-By-JBC"/>
+                <outletCollection property="gestureRecognizers" destination="Ysh-Kn-d04" appends="YES" id="ccT-TR-oeg"/>
+            </connections>
+            <point key="canvasLocation" x="143" y="44"/>
+        </view>
+        <tapGestureRecognizer id="Ysh-Kn-d04">
+            <connections>
+                <action selector="tapGuesterAction:" destination="Q9x-rd-ott" id="7ZK-9o-9Zh"/>
+            </connections>
+        </tapGestureRecognizer>
+    </objects>
+    <resources>
+        <image name="deSelect.png" width="29" height="29"/>
+    </resources>
+</document>
