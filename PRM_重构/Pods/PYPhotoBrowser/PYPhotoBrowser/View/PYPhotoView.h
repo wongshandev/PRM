@@ -6,6 +6,8 @@
 
 #import <UIKit/UIKit.h>
 #import "UIView+PYExtension.h"
+#import "FLAnimatedImageView.h"
+
 @class PYPhoto, PYPhotoCell, PYPhotosView, PYProgressView, PYPhotoView;
 
 @protocol PYPhotoViewDelegate <NSObject>
@@ -13,10 +15,11 @@
 @optional
 - (void)didSingleClick:(PYPhotoView *)photoView; // 单击
 - (void)didLongPress:(PYPhotoView *)photoView;   // 长按
+- (void)didDeletePhotoView:(PYPhotoView *)photoView; // 删除
 
 @end
 
-@interface PYPhotoView : UIImageView
+@interface PYPhotoView : FLAnimatedImageView
 
 @property (nonatomic, weak) id<PYPhotoViewDelegate> delegate;
 
@@ -48,6 +51,8 @@
 @property (weak, nonatomic) PYProgressView *progressView;
 /** 加载失败显示图片 */
 @property (nonatomic, weak) UIImageView *loadFailureView;
+/** 是否隐藏删除按钮 */
+@property (nonatomic, assign) BOOL hideDeleteView;
 
 - (void)imageDidPinch:(UIPinchGestureRecognizer *)pinch;
 - (void)photoDidRotation:(UIRotationGestureRecognizer *)rotation;

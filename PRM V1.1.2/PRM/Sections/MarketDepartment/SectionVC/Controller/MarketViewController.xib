@@ -50,7 +50,7 @@
                 <constraint firstItem="b90-aJ-okw" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="SwY-SB-uQk"/>
             </constraints>
             <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
-            <point key="canvasLocation" x="63" y="-259"/>
+            <point key="canvasLocation" x="-1343" y="-334"/>
         </view>
     </objects>
 </document>

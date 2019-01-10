@@ -582,8 +582,16 @@ UIPopoverPresentationControllerDelegate>{
         }else{
             cellClickRequestSuccessed = NO;
         }
+        if (cellClickRequestSuccessed) {
+            self.mutliSelectView.projectContractButton.selected = [model.HaveAgreement boolValue];
+            self.mutliSelectView.deviceListButton.selected = [model.HaveDeepenDesign boolValue];
+            self.mutliSelectView.ProjectDrawingButton.selected = [model.HaveProgram boolValue];
+//            self.mutliSelectView.projectContractButton.userInteractionEnabled = NO;
+//            self.mutliSelectView.deviceListButton.userInteractionEnabled = NO;
+//            self.mutliSelectView.ProjectDrawingButton.userInteractionEnabled = NO;
+        }
         [self hideProgressHUD];
-    } conError:^(NSError *error) {
+     } conError:^(NSError *error) {
         kMyLog(@"%@",error);
         [self hideProgressHUD];
         cellClickRequestSuccessed = NO;

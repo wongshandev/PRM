@@ -74,8 +74,7 @@
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"application/json",@"text/plain",@"text/json",@"text/javascript",nil];
     manager.requestSerializer.timeoutInterval = 10;
-    manager.securityPolicy= [AFSecurityPolicy defaultPolicy];
-    manager.securityPolicy = [AFSecurityPolicy defaultPolicy];
+     manager.securityPolicy = [AFSecurityPolicy defaultPolicy];
     manager.securityPolicy.allowInvalidCertificates = YES;//忽略https证书
     manager.securityPolicy.validatesDomainName = NO;
     

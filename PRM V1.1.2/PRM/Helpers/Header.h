@@ -50,7 +50,6 @@ typedef enum  {
 #define kImageUrl        [NSString stringWithFormat:@"http://%@:%@",IP_Address,IP_Port]
 
 #define kBaseUrl           [NSString stringWithFormat:@"http://%@:%@/App",IP_Address,IP_Port]
-
 //登录接口       拼接参数 loginName、password   post传递
 //#define kRequestUrl(functionName)                  [NSString stringWithFormat:@"%@/%@",kBaseUrl,functionName]
 #define kRequestUrl(functionName)                  [NSString stringWithFormat:@"%@/%@",kBaseUrl,functionName]

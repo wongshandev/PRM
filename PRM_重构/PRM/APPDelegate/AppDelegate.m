@@ -16,7 +16,15 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    [self.window makeKeyAndVisible];
+    if ([[SJYDefaultManager shareManager]getFirstRun]) {
+        //配置端口
+        [[SJYDefaultManager shareManager] saveIPAddress:@"58.216.202.186" IPPort:@"8811"];
+    } 
+    SJYLoginViewController *loginVC = [[SJYLoginViewController alloc] init];
+    UINavigationController *navVC = [[UINavigationController alloc]initWithRootViewController:loginVC];
+    self.window.rootViewController = navVC;
     return YES;
 }
 

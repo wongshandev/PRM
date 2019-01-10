@@ -33,6 +33,12 @@ typedef NS_ENUM(NSInteger, PYPhotosViewPageType) { // 分页类型
  */
 - (void)photosView:(PYPhotosView *)photosView didAddImageClickedWithImages:(NSMutableArray *)images;
 
+/**
+ * 删除图片按钮触发时调用此方法
+ * imageIndex : 删除的图片在之前图片数组的位置
+ */
+- (void)photosView:(PYPhotosView *)photosView didDeleteImageIndex:(NSInteger)imageIndex;
+
 /** 
  * 图片未发布时进入浏览图片时调用此方法
  * previewControlelr : 预览图片时的控制器
@@ -63,21 +69,27 @@ typedef NS_ENUM(NSInteger, PYPhotosViewPageType) { // 分页类型
 /** 代理 */
 @property (nonatomic, weak) id<PYPhotosViewDelegate> delegate;
 
+/** 占位图 */
+@property (nonatomic, strong) UIImage *placeholderImage;
 /** 网络图片模型数组 */
 @property (nonatomic, copy) NSArray<PYPhoto *> *photos;
 /** 网络图片地址数组（缩略图） */
 @property (nonatomic, copy) NSArray<NSString *> *thumbnailUrls;
 /** 网络图片地址数组（原图） */
 @property (nonatomic, copy) NSArray<NSString *> *originalUrls;
-/** 本地相册图片(注意：存的是UIImage)数组(默认最多为九张,当传入图片数组长度超过九张时，取前九张) */
-@property (nonatomic, strong) NSMutableArray<UIImage *> *images;
+/** 本地相册图片(注意：存的是UIImage或者NSString)数组(默认最多为九张,当传入图片数组长度超过九张时，取前九张) */
+@property (nonatomic, strong) NSMutableArray *images;
 
 /** 所有图片的状态（默认为已发布状态） */
 @property (nonatomic, assign) PYPhotosViewState photosState;
+/** 是否隐藏删除按钮(未发布状态) */
+@property (nonatomic, assign) BOOL hideDeleteView;
 /** 图片布局（默认为流水布局） */
 @property (nonatomic, assign) PYPhotosViewLayoutType layoutType;
 /** 图片分页指示类型(默认为pageControll。当图片超过九张，改为label显示) */
 @property (nonatomic, assign) PYPhotosViewPageType pageType;
+/** 是否隐藏指示器，默认为：NO */
+@property (nonatomic, assign) BOOL hiddenPageControl;
 
 /** 图片间距（默认为5） */
 @property (nonatomic, assign) CGFloat photoMargin;
@@ -90,11 +102,15 @@ typedef NS_ENUM(NSInteger, PYPhotosViewPageType) { // 分页类型
 @property (nonatomic, assign) NSInteger photosMaxCol;
 /** 当图片上传前，最多上传的张数，默认为9 */
 @property (nonatomic, assign) NSInteger imagesMaxCountWhenWillCompose;
+/** 当图片只有一张时, 图片是否充满photosView, 默认：YES*/
+@property (nonatomic, assign) BOOL oneImageFullFrame;
 
 /** 当屏幕旋转时，是否自动旋转图片 默认为YES */
 @property (nonatomic, assign) BOOL autoRotateImage;
 /** 当图片为4张时显示为是否两行两列，默认为YES */
 @property (nonatomic, assign) BOOL autoLayoutWithWeChatSytle;
+/** 是否自动设置图片可编辑状态 */
+@property (nonatomic, assign) BOOL autoSetPhotoState;
 
 /** 显示动画时长：（默认0.5s） */
 @property (nonatomic, assign) CGFloat showDuration;
@@ -130,5 +146,7 @@ typedef NS_ENUM(NSInteger, PYPhotosViewPageType) { // 分页类型
  * images : 新的图片数组
  */
 - (void)reloadDataWithImages:(NSMutableArray<UIImage *> *)images;
+/** 根据图片个数刷新界面尺寸 */
+- (void)refreshContentSizeWithPhotoCount:(NSInteger)photoCount;
 
 @end

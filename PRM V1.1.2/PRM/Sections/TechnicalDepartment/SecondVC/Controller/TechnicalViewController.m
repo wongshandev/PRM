@@ -39,7 +39,7 @@
     BOOL HaveDeepenDesign;
     BOOL HaveProgram;
 }
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (strong, nonatomic)  UITableView *tableView;
 @property(nonatomic,strong)NSMutableArray *dataArray;
 
 @property(nonatomic,strong)ProjectHandoverCellAlertView *mutliSelectView;
@@ -55,10 +55,9 @@
     [super viewDidLoad];
     self.dataArray = [NSMutableArray new];
     [self setNavigationItems];
-    
+    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {  make.edges.mas_equalTo(self.view).mas_offset(UIEdgeInsetsMake(kTopStatusAndNavBarHeight, 0, 0, 0));
+    }];
     [self registerDifferentSectionHeadersAndListCells];
-    self.tableView.estimatedRowHeight = 90;
-    self.tableView.rowHeight = UITableViewAutomaticDimension;
 }
 #pragma mark ------------------------配置NavigationItems
 -(void)setNavigationItems{
@@ -248,9 +247,7 @@
     NSString *urlStr=[NSString stringWithFormat:@"%@/%@",kBaseUrl,@"ProcessProjectBranchList"];
     [NewNetWorkManager requestPOSTWithURLStr:urlStr parDic:@{@"rows":@"20",@"page":@(self.page++),@"EmployeeID":kEmployeeID} finish:^(id responder) {
         kMyLog(@"%@",responder);
-        
-        
-        
+
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView reloadData];
@@ -349,7 +346,8 @@
 
     }
     if ([self.mainModel.url isEqualToString:@"PurchaseOrderPay"]) {//采购付款
-          }
+
+    }
     if ([self.mainModel.url isEqualToString:@"ProcurementApprove"]) {//辅料报销
        
     }
@@ -378,6 +376,15 @@
             cellClickRequestSuccessed = NO;
         }
         [self hideProgressHUD];
+        if (cellClickRequestSuccessed) {
+            self.mutliSelectView.projectContractButton.selected = [model.HaveAgreement boolValue];
+            self.mutliSelectView.deviceListButton.selected = [model.HaveDeepenDesign boolValue];
+            self.mutliSelectView.ProjectDrawingButton.selected = [model.HaveProgram boolValue];
+
+            self.mutliSelectView.projectContractButton.userInteractionEnabled = NO;
+            self.mutliSelectView.deviceListButton.userInteractionEnabled = NO;
+            self.mutliSelectView.ProjectDrawingButton.userInteractionEnabled = NO;
+        }
     } conError:^(NSError *error) {
         kMyLog(@"%@",error);
         [self hideProgressHUD];
@@ -385,29 +392,7 @@
         [self showMessageLabel:@"数据请求出错..."withBackColor:kGeneralColor_lightCyanColor];
     }];
     
-    if (cellClickRequestSuccessed) {
-//                self.mutliSelectView.projectContractButton.selected = [model.HaveAgreement boolValue];
-//                self.mutliSelectView.deviceListButton.selected = [model.HaveDeepenDesign boolValue];
-//                self.mutliSelectView.ProjectDrawingButton.selected = [model.HaveProgram boolValue];
-        if ([model.HaveAgreement boolValue]) {
-            [self.mutliSelectView.projectContractButton setImage:[UIImage imageNamed:@"selected"] forState:UIControlStateNormal];
-        }else{
-            [ self.mutliSelectView.projectContractButton setImage:[UIImage imageNamed:@"deSelect"] forState:UIControlStateNormal];
-        }
-        if ([model.HaveDeepenDesign boolValue]) {
-            [ self.mutliSelectView.deviceListButton setImage:[UIImage imageNamed:@"selected"] forState:UIControlStateNormal];
-        }else{
-            [ self.mutliSelectView.deviceListButton setImage:[UIImage imageNamed:@"deSelect"] forState:UIControlStateNormal];
-        }
-        if ([model.HaveProgram boolValue]) {
-            [ self.mutliSelectView.ProjectDrawingButton setImage:[UIImage imageNamed:@"selected"] forState:UIControlStateNormal];
-        }else{
-            [ self.mutliSelectView.ProjectDrawingButton setImage:[UIImage imageNamed:@"deSelect"] forState:UIControlStateNormal];
-        }
-        self.mutliSelectView.projectContractButton.userInteractionEnabled = NO;
-        self.mutliSelectView.deviceListButton.userInteractionEnabled = NO;
-        self.mutliSelectView.ProjectDrawingButton.userInteractionEnabled = NO;
-    }
+
 }
 -(void)cancelButtonAction:(UIButton *)sender{
     [self.mutliSelectView removeFromSuperview];
@@ -459,4 +444,17 @@
  }
  */
 
+-(UITableView *)tableView{
+    if (!_tableView) {
+        _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+        _tableView.delegate = self;
+        _tableView.dataSource = self;
+        _tableView.separatorInset = UIEdgeInsetsZero;
+       _tableView.estimatedRowHeight = 90;
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _tableView.rowHeight = UITableViewAutomaticDimension;
+        [self.view addSubview:_tableView];
+    }
+    return _tableView;
+}
 @end

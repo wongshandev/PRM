@@ -36,30 +36,15 @@
 //    [self removeFromSuperview];
 }
 - (IBAction)projectContractAction:(UIButton *)sender {
-    sender.selected = !sender.selected;
-    if (sender.selected) {
-        [sender setImage:[UIImage imageNamed:@"selected"] forState:UIControlStateNormal];
-    }else{
-        [sender setImage:[UIImage imageNamed:@"deSelect"] forState:UIControlStateNormal];
-    }
+    sender.selected = !sender.selected; 
     self.stateBlock(sender.selected?YES:NO,self.deviceListButton.selected?YES:NO,self.ProjectDrawingButton.selected?YES:NO);
 }
 - (IBAction)deviceListButtonAction:(UIButton *)sender {
     sender.selected = !sender.selected;
-    if (sender.selected) {
-        [sender setImage:[UIImage imageNamed:@"selected"] forState:UIControlStateNormal];
-    }else{
-        [sender setImage:[UIImage imageNamed:@"deSelect"] forState:UIControlStateNormal];
-    }
     self.stateBlock(self.projectContractButton.selected?YES:NO,sender.selected?YES:NO,self.ProjectDrawingButton.selected?YES:NO);
 }
 - (IBAction)projectDrawingButtonAction:(UIButton *)sender {
     sender.selected = !sender.selected;
-    if (sender.selected) {
-        [sender setImage:[UIImage imageNamed:@"selected"] forState:UIControlStateNormal];
-    }else{
-        [sender setImage:[UIImage imageNamed:@"deSelect"] forState:UIControlStateNormal];
-    }
     self.stateBlock(self.projectContractButton.selected?YES:NO,self.deviceListButton.selected?YES:NO,sender.selected?YES:NO);
 }
 

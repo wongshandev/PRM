@@ -387,8 +387,7 @@
     }
 }
 - (IBAction)addNewMaterialPaln:(UIButton *)sender {
-    kMyLog(@"XZ");
-
+    kMyLog(@"XZ"); 
     MatericalPlanDetialController *detialVC = [[MatericalPlanDetialController alloc]initWithNibName:@"MatericalPlanDetialController" bundle:nil];
     detialVC.isSaveItem = NO;
     detialVC.title = @"新增物料信息";

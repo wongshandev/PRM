@@ -31,6 +31,7 @@
                             <state key="normal" title="工程合同" image="deSelect.png">
                                 <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </state>
+                            <state key="selected" title="工程合同" image="selected.png"/>
                             <connections>
                                 <action selector="projectContractAction:" destination="Q9x-rd-ott" eventType="touchUpInside" id="XVx-RF-oR0"/>
                             </connections>
@@ -44,6 +45,7 @@
                             <state key="normal" title="设备清单" image="deSelect.png">
                                 <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </state>
+                            <state key="selected" title="设备清单" image="selected.png"/>
                             <connections>
                                 <action selector="deviceListButtonAction:" destination="Q9x-rd-ott" eventType="touchUpInside" id="548-1b-ur5"/>
                             </connections>
@@ -57,6 +59,7 @@
                             <state key="normal" title="方案图纸" image="deSelect.png">
                                 <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </state>
+                            <state key="selected" title="方案图纸" image="selected.png"/>
                             <connections>
                                 <action selector="projectDrawingButtonAction:" destination="Q9x-rd-ott" eventType="touchUpInside" id="18N-D5-QsX"/>
                             </connections>
@@ -146,5 +149,6 @@
     </objects>
     <resources>
         <image name="deSelect.png" width="29" height="29"/>
+        <image name="selected.png" width="29" height="29"/>
     </resources>
 </document>

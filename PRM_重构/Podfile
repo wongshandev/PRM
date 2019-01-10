@@ -7,7 +7,7 @@ target 'PRM' do
 
   # Pods for PRM
 pod 'AFNetworking', '~> 3.2.1'
-pod 'SDWebImage', '~> 4.4.3'
+pod 'SDWebImage', '~> 4.2.1'
 pod 'Masonry', '~> 1.1.0'
 pod 'QMUIKit', '~> 3.0.0'
 pod 'MJRefresh', '~> 3.1.15.7'
@@ -15,7 +15,7 @@ pod 'BRPickerView', '~> 2.2.1'
 pod 'YYKit'
 
 
-pod 'PYPhotoBrowser'      #, '~> 1.5.6'
+pod 'PYPhotoBrowser', '~> 1.5.6'
 #pod 'PYSearch', '~> 0.9.1'
 
 

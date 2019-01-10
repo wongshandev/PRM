@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		188C27A321DF28470022C989 /* frontPage@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 188C27A221DF28470022C989 /* frontPage@2x.png */; };
 		188C27A521DF28C80022C989 /* frontPage@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 188C27A421DF28C80022C989 /* frontPage@3x.png */; };
+		18A7CBA421E49F3100EDB754 /* AccountDPViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A7CBA321E49F3100EDB754 /* AccountDPViewController.m */; };
 		2F27C12F1E5BCF4800CD7AE6 /* PurchaseDetialModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F27C12E1E5BCF4800CD7AE6 /* PurchaseDetialModel.m */; };
 		2F27C13B1E5BD9E400CD7AE6 /* ReceiveGoodsDetialController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F27C1391E5BD9E400CD7AE6 /* ReceiveGoodsDetialController.m */; };
 		2F27C13C1E5BD9E400CD7AE6 /* ReceiveGoodsDetialController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2F27C13A1E5BD9E400CD7AE6 /* ReceiveGoodsDetialController.xib */; };
@@ -63,7 +64,6 @@
 		2F6A07B31E5AB8B80036F389 /* MarketOrderHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A07981E5AB8B80036F389 /* MarketOrderHeaderView.m */; };
 		2F6A07B41E5AB8B80036F389 /* MarketOrderHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2F6A07991E5AB8B80036F389 /* MarketOrderHeaderView.xib */; };
 		2F6A07DA1E5AB91B0036F389 /* TechnicalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A07BC1E5AB91B0036F389 /* TechnicalViewController.m */; };
-		2F6A07DB1E5AB91B0036F389 /* TechnicalViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2F6A07BD1E5AB91B0036F389 /* TechnicalViewController.xib */; };
 		2F6A07DC1E5AB91B0036F389 /* PurchaseOrderPayModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A07C01E5AB91B0036F389 /* PurchaseOrderPayModel.m */; };
 		2F6A07DD1E5AB91B0036F389 /* DesignAllApproveCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A07C31E5AB91B0036F389 /* DesignAllApproveCell.m */; };
 		2F6A07DE1E5AB91B0036F389 /* DesignAllApproveCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2F6A07C41E5AB91B0036F389 /* DesignAllApproveCell.xib */; };
@@ -166,6 +166,9 @@
 /* Begin PBXFileReference section */
 		188C27A221DF28470022C989 /* frontPage@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "frontPage@2x.png"; sourceTree = "<group>"; };
 		188C27A421DF28C80022C989 /* frontPage@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "frontPage@3x.png"; sourceTree = "<group>"; };
+		18A7CBA221E49F3100EDB754 /* AccountDPViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AccountDPViewController.h; sourceTree = "<group>"; };
+		18A7CBA321E49F3100EDB754 /* AccountDPViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AccountDPViewController.m; sourceTree = "<group>"; };
+		18A7CBA721E4A37F00EDB754 /* SJYMacro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SJYMacro.h; sourceTree = "<group>"; };
 		2F27C12D1E5BCF4800CD7AE6 /* PurchaseDetialModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PurchaseDetialModel.h; sourceTree = "<group>"; };
 		2F27C12E1E5BCF4800CD7AE6 /* PurchaseDetialModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PurchaseDetialModel.m; sourceTree = "<group>"; };
 		2F27C1381E5BD9E400CD7AE6 /* ReceiveGoodsDetialController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReceiveGoodsDetialController.h; sourceTree = "<group>"; };
@@ -253,7 +256,6 @@
 		2F6A07991E5AB8B80036F389 /* MarketOrderHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MarketOrderHeaderView.xib; sourceTree = "<group>"; };
 		2F6A07BB1E5AB91B0036F389 /* TechnicalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TechnicalViewController.h; sourceTree = "<group>"; };
 		2F6A07BC1E5AB91B0036F389 /* TechnicalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TechnicalViewController.m; sourceTree = "<group>"; };
-		2F6A07BD1E5AB91B0036F389 /* TechnicalViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TechnicalViewController.xib; sourceTree = "<group>"; };
 		2F6A07BF1E5AB91B0036F389 /* PurchaseOrderPayModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PurchaseOrderPayModel.h; sourceTree = "<group>"; };
 		2F6A07C01E5AB91B0036F389 /* PurchaseOrderPayModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PurchaseOrderPayModel.m; sourceTree = "<group>"; };
 		2F6A07C21E5AB91B0036F389 /* DesignAllApproveCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DesignAllApproveCell.h; sourceTree = "<group>"; };
@@ -420,6 +422,55 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		18A7CB9C21E49CC000EDB754 /* AccountDepartment */ = {
+			isa = PBXGroup;
+			children = (
+				18A7CB9D21E49DC500EDB754 /* SecondVC */,
+				18A7CBA121E49DC600EDB754 /* ThirdVC */,
+			);
+			path = AccountDepartment;
+			sourceTree = "<group>";
+		};
+		18A7CB9D21E49DC500EDB754 /* SecondVC */ = {
+			isa = PBXGroup;
+			children = (
+				18A7CB9E21E49DC500EDB754 /* Controller */,
+				18A7CB9F21E49DC500EDB754 /* Model */,
+				18A7CBA021E49DC500EDB754 /* View */,
+			);
+			path = SecondVC;
+			sourceTree = "<group>";
+		};
+		18A7CB9E21E49DC500EDB754 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				18A7CBA221E49F3100EDB754 /* AccountDPViewController.h */,
+				18A7CBA321E49F3100EDB754 /* AccountDPViewController.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		18A7CB9F21E49DC500EDB754 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		18A7CBA021E49DC500EDB754 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		18A7CBA121E49DC600EDB754 /* ThirdVC */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ThirdVC;
+			sourceTree = "<group>";
+		};
 		2F27C1341E5BD9A600CD7AE6 /* ReceiveGoodsCellDetialListVC */ = {
 			isa = PBXGroup;
 			children = (
@@ -673,7 +724,6 @@
 			children = (
 				2F6A07BB1E5AB91B0036F389 /* TechnicalViewController.h */,
 				2F6A07BC1E5AB91B0036F389 /* TechnicalViewController.m */,
-				2F6A07BD1E5AB91B0036F389 /* TechnicalViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -980,6 +1030,7 @@
 			isa = PBXGroup;
 			children = (
 				2F7E9F8B1E480D6E0056560D /* Header.h */,
+				18A7CBA721E4A37F00EDB754 /* SJYMacro.h */,
 				2F7E9F8C1E480DDA0056560D /* PrefixHeader.pch */,
 				2F7E9F951E480E860056560D /* UserManager */,
 				2F7E9F8D1E480E340056560D /* NewNetWorkManager */,
@@ -999,6 +1050,7 @@
 		2F7E9F811E4804930056560D /* Sections */ = {
 			isa = PBXGroup;
 			children = (
+				18A7CB9C21E49CC000EDB754 /* AccountDepartment */,
 				2F6A07ED1E5AB9670036F389 /* MarketDepartment */,
 				2F6A06771E5AB71E0036F389 /* TechnicalDepartment */,
 				2F6A05D71E5AB6BF0036F389 /* EngineerDepartment */,
@@ -1325,7 +1377,6 @@
 				2F7E9F6D1E4801270056560D /* Main.storyboard in Resources */,
 				2F837A601E5D8D2A000E4AC1 /* ReviseProjectChangeView.xib in Resources */,
 				2F6A07AC1E5AB8B80036F389 /* ChangeOrdersCell.xib in Resources */,
-				2F6A07DB1E5AB91B0036F389 /* TechnicalViewController.xib in Resources */,
 				2F7E9FBC1E481D0E0056560D /* deSelect@2x.png in Resources */,
 				2F6A080D1E5AB9670036F389 /* FileTransferHeaderView.xib in Resources */,
 				2F7E9FBD1E481D0E0056560D /* deSelect@3x.png in Resources */,
@@ -1445,6 +1496,7 @@
 				2F27C1511E5C399B00CD7AE6 /* ProjectChangeDetialModel.m in Sources */,
 				2F6A08091E5AB9670036F389 /* ProjectApprovelModel.m in Sources */,
 				2F7E9FC51E4840E90056560D /* BaseNavigationController.m in Sources */,
+				18A7CBA421E49F3100EDB754 /* AccountDPViewController.m in Sources */,
 				2F6A08461E5AD65D0036F389 /* ReceiveGoodsModel.m in Sources */,
 				2F6A78DE1E4AAB82001B6B4F /* MainSectionHeadView.m in Sources */,
 				2F6A076B1E5AB87E0036F389 /* ProgressReportModel.m in Sources */,

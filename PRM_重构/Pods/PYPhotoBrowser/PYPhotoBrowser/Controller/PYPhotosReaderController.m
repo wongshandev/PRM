@@ -13,11 +13,10 @@
 #import "PYProgressView.h"
 #import "UIImageView+WebCache.h"
 #import "PYPhotoBrowseView.h"
-
 // 旋转角为90°或者270°
 #define PYVertical (ABS(acosf(self.window.transform.a) - M_PI_2) < 0.01 || ABS(acosf(self.window.transform.a) - M_PI_2 * 3) < 0.01)
 
-@interface PYPhotosReaderController ()<UICollectionViewDelegateFlowLayout>
+@interface PYPhotosReaderController () <UICollectionViewDelegateFlowLayout>
 
 /** 所放大的window */
 @property (nonatomic, strong) PYPhotoBrowseView *window;
@@ -52,7 +51,7 @@
         _pageControl.py_width = self.view.py_width;
         _pageControl.py_y = self.view.py_height - 30;
     }
-    _pageControl.hidden = self.selectedPhotoView.photosView.pageType == PYPhotosViewPageTypeLabel || _pageControl.numberOfPages > 9 || _pageControl.numberOfPages < 2;
+    _pageControl.hidden = self.selectedPhotoView.photosView.hiddenPageControl || self.selectedPhotoView.photosView.pageType == PYPhotosViewPageTypeLabel || _pageControl.numberOfPages > 9 || _pageControl.numberOfPages < 2;
     self.pageLabel.text = [NSString stringWithFormat:@"%zd / %zd", _pageControl.currentPage + 1, _pageControl.numberOfPages];
     return _pageControl;
 }
@@ -71,7 +70,7 @@
     }
     // 判断是否显示_pageLabel
     // 取出指示类型
-    _pageLabel.hidden = self.selectedPhotoView.photosView.pageType == PYPhotosViewPageTypeControll && _pageControl.numberOfPages < 10;
+    _pageLabel.hidden = self.selectedPhotoView.photosView.hiddenPageControl || (self.selectedPhotoView.photosView.pageType == PYPhotosViewPageTypeControll && _pageControl.numberOfPages < 10);
     return _pageLabel;
 }
 
@@ -197,7 +196,7 @@
     }];
     
     // 是否隐藏pageControl
-    self.pageControl.hidden = self.pageControl.numberOfPages < 2;
+    self.pageControl.hidden = self.selectedPhotoView.photosView.hiddenPageControl || self.pageControl.numberOfPages < 2;
 }
 
 - (void)dealloc
@@ -216,6 +215,7 @@
 // 隐藏图片
 - (void)hiddenPhoto
 {
+    
     if ([self.window.delegate respondsToSelector:@selector(photoBrowseView:willHiddenWithImages:index:)]) {
         [self.window.delegate photoBrowseView:self.window willHiddenWithImages:self.window.images index:self.pageControl.currentPage];
     }
@@ -296,6 +296,20 @@
     }];
 }
 
+/** 该控制器不受项目的Device Orientation配置影响 */
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+-(BOOL)shouldAutorotate
+{
+    return NO;
+}
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskPortrait;
+}
+
 // 监听屏幕旋转
 - (void)deviceOrientationDidChange
 {
@@ -307,7 +321,8 @@
         currentDevice.orientation == UIDeviceOrientationFaceDown ||
         currentDevice.orientation == self.orientation ||
         self.isRotationg ||
-        self.window.autoRotateImage == NO) return;
+        self.window.autoRotateImage == NO ||
+        self.selectedPhotoView.photosView.autoRotateImage == NO) return;
     
     // 获取旋转角度
     CGFloat rotateAngle = 0;
@@ -336,8 +351,8 @@
     }
     
     // 判断即将显示哪一张
-    // 执行旋转动画
-    __block UIWindow *tempWindow = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    // 执行旋转动画（保证黑色背景足够大）
+    __block UIWindow *tempWindow = [[UIWindow alloc] initWithFrame:CGRectMake(-6000, -6000, 12000, 12000)];
     tempWindow.windowLevel = UIWindowLevelStatusBar;
     // 自动调节宽高
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
@@ -387,8 +402,6 @@
         tempWindow.hidden = YES;
     }];
 }
-
-
 
 #pragma mark - UICollectionViewDataSource
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {

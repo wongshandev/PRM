@@ -9,10 +9,10 @@
 #import "PYPhoto.h"
 #import "PYPhotoView.h"
 #import "PYProgressView.h"
-@interface PYPhotoBrowseView ()
+#import "FLAnimatedImage.h"
 
-/** 是否正在浏览 */
-@property (nonatomic, assign) BOOL showing;
+
+@interface PYPhotoBrowseView ()
 
 @end
 
@@ -67,6 +67,8 @@
     self.photosView = photosView;
     photosView.showDuration = self.showDuration;
     photosView.hiddenDuration = self.hiddenDuration;
+    photosView.placeholderImage = self.placeholderImage;
+    photosView.hiddenPageControl = self.hiddenPageControl;
     
     NSMutableArray *photosM = [NSMutableArray array];
     // 获取图片个数
@@ -133,7 +135,7 @@
 {
     if ([self.delegate respondsToSelector:@selector(photoBrowseView:didSingleClickedImage:index:)]) {
         [self.delegate photoBrowseView:self didSingleClickedImage:photoView.image index:photoView.tag];
-        if (self.images) return;
+        return;
     }
     
     // 发出图片缩小通知

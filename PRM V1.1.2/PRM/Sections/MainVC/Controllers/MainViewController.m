@@ -15,6 +15,7 @@
 #import "MarketViewController.h"
 #import "TechnicalViewController.h"
 #import "EngineerViewController.h"
+#import "AccountDPViewController.h"
 
 @interface MainViewController ()<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
 @property(nonatomic,strong)NSMutableArray *dataArray;
@@ -161,7 +162,7 @@
         [self.navigationController pushViewController:engineerVC animated:YES];
     }
     if ([departMentID integerValue] == 2){
-        TechnicalViewController *engineerVC = [[TechnicalViewController alloc] initWithNibName:@"TechnicalViewController" bundle:nil];
+        TechnicalViewController *engineerVC = [[TechnicalViewController alloc] init];
         engineerVC.title = [NSString stringWithFormat:@"%@",cellModel.text];
         engineerVC.mainModel = cellModel;
         [self.navigationController pushViewController:engineerVC animated:YES];
@@ -171,7 +172,14 @@
         engineerVC.title = [NSString stringWithFormat:@"%@",cellModel.text];
         engineerVC.mainModel = cellModel;
         [self.navigationController pushViewController:engineerVC animated:YES];
-    } 
+    }
+    if ([departMentID integerValue] == 6){
+        AccountDPViewController *accountVC = [[AccountDPViewController alloc] init];
+        accountVC.title = [NSString stringWithFormat:@"%@",cellModel.text];
+        accountVC.mainModel = cellModel;
+        [self.navigationController pushViewController:accountVC animated:YES];
+    }
+ 
 }
 
 

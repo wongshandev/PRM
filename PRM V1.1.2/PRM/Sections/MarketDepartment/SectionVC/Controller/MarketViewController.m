@@ -35,8 +35,6 @@ UITableViewDataSource>{
     dispatch_queue_t  queue;
     BOOL _isMainDesignClicked;
     
-    
-    
     NSString * _ProjectBranchID;
     NSString * _InquiryID;
     NSString * _DesignID;
@@ -190,9 +188,7 @@ UITableViewDataSource>{
                 NSDictionary * desiginParaDic = @{@"DepartmentID":@"2"};
                 [self requestData_PMWithURL:urlStr WithDic:desiginParaDic]; //设计人员
             });
-        }
-        
-        
+        } 
     }
     //项目交接
     if ([self.mainModel.url isEqualToString:@"FileTransfer"]) {
@@ -211,43 +207,10 @@ UITableViewDataSource>{
                 [self endRefresh];
             });
         }];
-        
     }
 }
 
-
-
 #pragma mark ------------------------请求数据
-/*-(void)requestWithURLStr:(NSString *)urlStr CurrentPage:(NSInteger)page Rows:(NSInteger)rows{
- [NewNetWorkManager requestPOSTWithURLStr:urlStr parDic:@{@"rows":@(rows),@"page":@(page),@"EmployeeID":kEmployeeID} finish:^(id responder) {
- kMyLog(@"%@",responder);
- NSInteger total = [[responder objectForKey:@"total"] integerValue];
- for (NSInteger currentPage = page, currentRows = rows; currentPage<= total/20+1; currentPage++) {
- if (currentPage == total/20+1) {
- currentRows = total%20;
- }else{
- currentRows = 20 ;
- }
- [self requestWithURLStr:urlStr CurrentPage:currentPage Rows:currentRows];
- }
- 
- NSArray *rows = [responder objectForKey:@"rows"];
- [self FengZhuangWithDic:rows.firstObject];
- for (NSDictionary *dic in rows) {
- ProjectApprovelModel *model = [[ProjectApprovelModel alloc] init];
- [model setValuesForKeysWithDictionary:dic];
- [self.dataArray addObject:model];
- }
- [self.tableView reloadData];
- [self hideProgressHUD];
- [self showInfoMentation];
- } conError:^(NSError *error) {
- kMyLog(@"%@",error);
- [self hideProgressHUD];
- [self showMessageLabel:@"数据请求出错..."withBackColor:kWarningColor_lightRedColor];
- }];
- }*/
-
 //任务分配
 -(void)requestAppPBAssignListData_RWFP{
     [self.dataArray removeAllObjects];
@@ -452,6 +415,11 @@ UITableViewDataSource>{
             cellClickRequestSuccessed = NO;
         }
         [self hideProgressHUD];
+        if (cellClickRequestSuccessed) {
+            self.mutliSelectView.projectContractButton.selected = [model.HaveAgreement boolValue];
+            self.mutliSelectView.deviceListButton.selected = [model.HaveDeepenDesign boolValue];
+            self.mutliSelectView.ProjectDrawingButton.selected = [model.HaveProgram boolValue];
+        }
     } conError:^(NSError *error) {
         kMyLog(@"%@",error);
         [self hideProgressHUD];
@@ -459,26 +427,7 @@ UITableViewDataSource>{
         [self showMessageLabel:@"数据请求出错..."withBackColor:kGeneralColor_lightCyanColor];
     }];
     
-    if (cellClickRequestSuccessed) {
-        //        self.mutliSelectView.projectContractButton.selected = model.HaveAgreement;
-        //        self.mutliSelectView.deviceListButton.selected = model.HaveDeepenDesign;
-        //        self.mutliSelectView.ProjectDrawingButton.selected = model.HaveProgram;
-        if (![model.HaveAgreement boolValue]) {
-            [self.mutliSelectView.projectContractButton setImage:[UIImage imageNamed:@"selected"] forState:UIControlStateNormal];
-        }else{
-            [ self.mutliSelectView.projectContractButton setImage:[UIImage imageNamed:@"deSelect"] forState:UIControlStateNormal];
-        }
-        if (![model.HaveDeepenDesign boolValue]) {
-            [ self.mutliSelectView.deviceListButton setImage:[UIImage imageNamed:@"selected"] forState:UIControlStateNormal];
-        }else{
-            [ self.mutliSelectView.deviceListButton setImage:[UIImage imageNamed:@"deSelect"] forState:UIControlStateNormal];
-        }
-        if (![model.HaveProgram boolValue]) {
-            [ self.mutliSelectView.ProjectDrawingButton setImage:[UIImage imageNamed:@"selected"] forState:UIControlStateNormal];
-        }else{
-            [ self.mutliSelectView.ProjectDrawingButton setImage:[UIImage imageNamed:@"deSelect"] forState:UIControlStateNormal];
-        }
-    }
+
 }
 
 -(void)cancelButtonAction:(UIButton *)sender{

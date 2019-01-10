@@ -24,8 +24,8 @@
     }
     UIStoryboard *board = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
             UINavigationController *navVC = [board instantiateViewControllerWithIdentifier:@"rootNavVC"];
-                self.window.rootViewController = navVC; 
-    
+                self.window.rootViewController = navVC;
+ 
     return YES;
 }
 
