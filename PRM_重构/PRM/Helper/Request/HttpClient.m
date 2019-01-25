@@ -22,7 +22,10 @@ NSData *cookiesData = [NSKeyedArchiver archivedDataWithRootObject:cookies];\
 
 + (void)post:(NSString *)urlString parameters:(NSDictionary *)params success:(void (^) (NSURLSessionDataTask *dataTask,id responseObjcet))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
     if (![self isNetAvilable]) {
-        SJYAlertShow(@"当前网络不可用,请检查网络", @"确定");
+        [QMUITips hideAllTips];
+//        SJYAlertShow(@"当前网络不可用,请检查网络", @"确定");
+        [self alertView];
+//
         return;
     }
     NSLog(@"当前请求:%@\n,参数:%@",urlString,params);
@@ -98,7 +101,10 @@ NSData *cookiesData = [NSKeyedArchiver archivedDataWithRootObject:cookies];\
 
 + (void)get:(NSString *)urlString parameters:(NSDictionary *)params success:(void (^) (NSURLSessionDataTask *dataTask,id responseObject))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
     if (![self isNetAvilable]) {
-        SJYAlertShow(@"当前网络不可用,请检查网络", @"确定");
+        [QMUITips hideAllTips];
+//        SJYAlertShow(@"当前网络不可用,请检查网络", @"确定");
+        [self alertView];
+
         return;
     }
     AFHTTPSessionManager * manager = [self createSessionManager];
@@ -107,7 +113,10 @@ NSData *cookiesData = [NSKeyedArchiver archivedDataWithRootObject:cookies];\
 
 +(void)upLoadMoreImageWithURLString:(NSString *)URLString parameters:(NSDictionary *)parameters imageArray:(NSArray *)imageArray fileName:(NSString *)name progerss:(void (^)(id))progress success:(void (^) (NSURLSessionDataTask *dataTask,id responseObjcet))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
     if (![self isNetAvilable]) {
-        SJYAlertShow(@"当前网络不可用,请检查网络", @"确定");
+        [QMUITips hideAllTips];
+//        SJYAlertShow(@"当前网络不可用,请检查网络", @"确定");
+        [self alertView];
+
         return;
     }
 
@@ -154,7 +163,25 @@ NSData *cookiesData = [NSKeyedArchiver archivedDataWithRootObject:cookies];\
     } progress:progress success:success  failure:failure];
     [uploadTask resume];
 }
-
++(void)uploadFileWithUrl:(NSString *)url paradic:(NSDictionary *)paradic   filePath:(NSString *)filepath progress:(void(^)(NSProgress * uploadProgress))progress   success:(void (^) (NSURLSessionDataTask *dataTask,id responseObjcet))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
+    if (![self isNetAvilable]) {
+        [QMUITips hideAllTips];
+         [self alertView];
+        return;
+    }
+    AFHTTPSessionManager *sharedManager1 = [[AFHTTPSessionManager alloc]init];
+    sharedManager1.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", @"text/plain",nil];
+    [sharedManager1 POST:url parameters:paradic constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+         NSData *data = [NSData dataWithContentsOfFile:filepath];
+        NSString *mimeType =[NSString mimeTypeForFileAtPath:filepath];
+        NSString *fileName =  [filepath.lastPathComponent componentsSeparatedByString:@"."].lastObject;
+        [formData appendPartWithFileData:data
+                                    name:[filepath.lastPathComponent componentsSeparatedByString:@"."].firstObject
+                                fileName:filepath.lastPathComponent
+                                mimeType:[NSString mimeTypeForFileAtPath:filepath]];
+    } progress:progress   success:success  failure:failure];
+    //        //上传数据:FileData-->data  name-->fileName(固定，和服务器一致)  fileName-->你的语音文件名  mimeType-->我的语音文件type是audio/amr 如果你是图片可能为image/jpeg
+ }
 
 //+ (void)postRegisterHeader:(NSString *)urlString parameters:(NSDictionary *)params success:(void (^) (NSURLSessionDataTask *dataTask,id responseObjcet))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
 //
@@ -207,7 +234,8 @@ NSData *cookiesData = [NSKeyedArchiver archivedDataWithRootObject:cookies];\
                         destination:(NSURL * (^)(NSURL *targetPath, NSURLResponse *response))destination
                   completionHandler:(void (^)(NSURLResponse *response, NSURL *filePath, NSError *error))completionHandler{
     if (![self isNetAvilable]) {
-        SJYAlertShow(@"当前网络不可用,请检查网络", @"确定");
+        [QMUITips hideAllTips];
+         [self alertView];
         return;
     }
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
@@ -221,6 +249,7 @@ NSData *cookiesData = [NSKeyedArchiver archivedDataWithRootObject:cookies];\
          //        NSLog(@"fullPath:%@",fullPath);
          //        return [NSURL fileURLWithPath:fullPath];
          */
+        
     } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
         completionHandler(response,filePath,error);
     }];
@@ -271,4 +300,30 @@ NSData *cookiesData = [NSKeyedArchiver archivedDataWithRootObject:cookies];\
     return manager;
 }
 
++(void)alertView{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"当前网络不可用,请检查网络" preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:@"设置" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self goToAppSystemSetting];
+    }]];
+    [kWindow.rootViewController presentViewController:alert animated:YES completion:nil];
+
+}
+
+// 如果用户关闭了接收通知功能，该方法可以跳转到APP设置页面进行修改
++(void)goToAppSystemSetting {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIApplication *application = [UIApplication sharedApplication];
+        NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+        if ([application canOpenURL:url]) {
+            if (@available(iOS 10.0, *)) {
+                if ([application respondsToSelector:@selector(openURL:options:completionHandler:)]) {
+                    [application openURL:url options:@{} completionHandler:nil];
+                }
+            }else {
+                [application openURL:url];
+            }
+        }
+    });
+}
 @end

@@ -14,11 +14,12 @@ pod 'MJRefresh', '~> 3.1.15.7'
 pod 'BRPickerView', '~> 2.2.1'
 pod 'YYKit'
 
+pod 'MMDrawerController', '~> 0.5.7'
 
 pod 'PYPhotoBrowser', '~> 1.5.6'
 #pod 'PYSearch', '~> 0.9.1'
 
-
+pod 'EBBannerView', '~> 1.0.9'
 
 
 

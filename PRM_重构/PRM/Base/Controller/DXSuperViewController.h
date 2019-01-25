@@ -12,14 +12,14 @@
 
 @interface DXSuperViewController : QMUICommonViewController
 @property (nonatomic,strong) DXNavBarView *navBar;
-
+ 
 /**
  * 子类继承的方法
  */
+- (void)setUpNavigationBar;
  
 - (void)buildSubviews;
 
-- (void)setUpNavigationBar;
 
 - (void)bindViewModel;
 

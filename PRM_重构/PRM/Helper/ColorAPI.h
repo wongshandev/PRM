@@ -48,6 +48,16 @@ NS_ASSUME_NONNULL_BEGIN
 #define Color_Green        [UIColor greenColor]
 #define Color_Gray          [UIColor grayColor]
 #define Color_Magenta    [UIColor magentaColor]
+#define Color_Cyan    [UIColor cyanColor]
+
+#define Color_MAIN Color_RGB_HEX(0x22CC65, 1)                                     //主色调
+#define Color_MAIN_BACKGROUND Color_RGB_HEX(0xF7F7F9, 1)          //背景色
+#define Color_TEXT_HIGH Color_RGB_HEX(0x3D3D45, 1)                           //重要文字
+#define Color_TEXT_NOMARL Color_RGB_HEX(0x81818F, 1)                     //一般文字
+#define Color_TEXT_WEAK Color_RGB_HEX(0xC6C6CC, 1)                        //较弱文字
+#define Color_LINE_NOMARL Color_RGB_HEX(0xF2F2F2, 1)                      //线条颜色
+#define Color_TEXT_RED Color_RGB_HEX(0xff7519, 1)
+#define Color_MAIN_NAV [UIColor whiteColor]                               //导航条颜色
 
 @end
 

@@ -7,7 +7,8 @@
 //
 
 #import "AppDelegate.h"
-
+#import "AppDelegate+RootViewController.h"
+#import "AppDelegate+NotificationService.h"
 @interface AppDelegate ()
 
 @end
@@ -16,15 +17,9 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    [self.window makeKeyAndVisible];
-    if ([[SJYDefaultManager shareManager]getFirstRun]) {
-        //配置端口
-        [[SJYDefaultManager shareManager] saveIPAddress:@"58.216.202.186" IPPort:@"8811"];
-    } 
-    SJYLoginViewController *loginVC = [[SJYLoginViewController alloc] init];
-    UINavigationController *navVC = [[UINavigationController alloc]initWithRootViewController:loginVC];
-    self.window.rootViewController = navVC;
+    [self setAppWindows];
+    [self requestNotificationAuthor];
+    [self setRootViewController];
     return YES;
 }
 

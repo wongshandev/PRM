@@ -63,14 +63,16 @@
         make.top.equalTo(self).offset(NAVNOMARLHEIGHT-44);
         make.centerX.equalTo(self).offset(0);
         make.height.mas_equalTo(44);
-        make.width.mas_equalTo(SCREEN_W-SJYNUM(112));
+//        make.width.mas_equalTo(SCREEN_W-SJYNUM(112));
+        make.width.mas_equalTo(SJYNUM(180));
     }];
     
     [self addSubview:self.titleLabel];
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self).offset(NAVNOMARLHEIGHT-44);
         make.centerX.equalTo(self).offset(0);
-        make.width.mas_equalTo(SCREEN_W-SJYNUM(112));
+//        make.width.mas_equalTo(SCREEN_W-SJYNUM(112));
+        make.width.mas_equalTo(SJYNUM(180));
         make.height.mas_equalTo(44);
     }];
     [self addSubview:self.seperateLine];
@@ -90,6 +92,7 @@
         _titleLabel.textColor= Color_White;
         _titleLabel.font= SJYBoldFont(18);//[UIFont boldSystemFontOfSize:SJYNUM(18)];
         _titleLabel.textAlignment=NSTextAlignmentCenter;
+         _titleLabel.lineBreakMode = NSLineBreakByTruncatingMiddle;    //中间的内容以…方式省略，显示头尾
     }
     return _titleLabel;
 }

@@ -45,9 +45,7 @@
     //    loginLabel.textColor = Color_RGB_HEX(0x3d3d45, 1);
     //    loginLabel.font = [UIFont boldSystemFontOfSize:SJYNUM(34)];
     //    [self.view addSubview:loginLabel];
-
-
-
+    
     //IP提示
     UILabel *ipAddressLab = [[UILabel alloc] init];
     ipAddressLab.font = SJYFont(16);
@@ -102,7 +100,6 @@
             [QMUITips showWithText:@"服务器信息配置不完善" inView:weakSelf.view  hideAfterDelay:1.3];
             return ;
         }
-
         if (![weakSelf isValidatIPaddress:weakSelf.ipAddressTF.text]) {
             [QMUITips showError:@"无效的IP地址" inView:weakSelf.view  hideAfterDelay:1.3];
             return;
@@ -179,14 +176,13 @@
     return [urlTest evaluateWithObject:ipAddress];
 }
 
-- (BOOL)isValidatIPport:(NSString *)ipport{
+- (BOOL)isValidatIPport:(NSString *)ipport {
    return ipport.intValue >= 0 && ipport.intValue <= 0xFFFF;
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
      printf("Retain Count = %ld\n",CFGetRetainCount((__bridge CFTypeRef)(self)));
-
 }
 
 -(void)dealloc{

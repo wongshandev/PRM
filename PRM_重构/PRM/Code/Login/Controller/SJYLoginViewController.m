@@ -7,8 +7,7 @@
 //
 
 #import "SJYLoginViewController.h"
-#import "SJYIPSetViewController.h"
-#import "SJYMainViewController.h"
+
 #define BackView_H 44
 #define TF_Padding_Left 7  
 @interface SJYLoginViewController()
@@ -42,8 +41,7 @@
     Weak_Self;
     self.view.backgroundColor = [UIColor whiteColor];
     UIView *topView = [UIView new];
-    //    topView.backgroundColor = Color_NavigationLightBlue;
-    [self.view addSubview:topView];
+     [self.view addSubview:topView];
 
 
     UIImageView *imgView  = [UIImageView new];
@@ -95,26 +93,53 @@
             return ;
         }
         [QMUITips showLoading:@"加载中..." inView:weakSelf.view];
-        [SJYRequestTool loginInfoWithUserName:weakSelf.nameTF.text passworld:weakSelf.passwordTF.text complete:^(id responder){
+        [SJYRequestTool loginInfoWithUserName:weakSelf.nameTF.text passworld:weakSelf.passwordTF.text success:^(LoginModel *loginInfo) {
             [QMUITips hideAllTipsInView: weakSelf.view];
-            NSDictionary *dic = responder;
-            if ([[dic  valueForKey:@"success"] boolValue] == YES) {
-                [QMUITips showSucceed:@"登录成功" inView:weakSelf.view hideAfterDelay:0.6];
-                if ([[SJYDefaultManager shareManager] isRemberPassword]) {
-                    [[SJYDefaultManager shareManager] saveUserName:weakSelf.nameTF.text password:weakSelf.passwordTF.text];
-                }
-                [[SJYDefaultManager shareManager] saveEmployeeName:[dic valueForKey:@"employeeName"] Dt_Info:[dic valueForKey:@"dt"] EmployeeID:[dic valueForKey:@"employeeID"] DepartmentID:[dic valueForKey:@"departmentID"] PositionID:[dic valueForKey:@"positionID"]];
-
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    SJYMainViewController *mainVC = [[SJYMainViewController alloc] init];
-                    [weakSelf.navigationController qmui_pushViewController:mainVC animated:YES completion:^{
-                    }];
-                });
-            }else{
-                [QMUITips showError:[dic valueForKey:@"infotype"] inView:weakSelf.view hideAfterDelay:1.5];
+            [SJYUserManager sharedInstance].loginModel= loginInfo;
+            [[SJYUserManager sharedInstance]updateLoginModel];
+            
+            [SJYUserManager sharedInstance].sjyloginData= loginInfo.uc;
+            [[SJYUserManager sharedInstance] updateLoginData];
+            
+            [QMUITips showSucceed:@"登录成功" inView:weakSelf.view hideAfterDelay:0.6];
+            if ([[SJYDefaultManager shareManager] isRemberPassword]) {
+                [[SJYDefaultManager shareManager] saveUserName:weakSelf.nameTF.text password:weakSelf.passwordTF.text];
             }
+            [[SJYDefaultManager shareManager] saveEmployeeName:loginInfo.employeeName Dt_Info:loginInfo.dt EmployeeID:loginInfo.employeeID DepartmentID:loginInfo.departmentID PositionID:loginInfo.positionID];
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                SJYMainViewController *mainVC = [[SJYMainViewController alloc] init];
+                [weakSelf.navigationController qmui_pushViewController:mainVC animated:YES completion:^{
+                    AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                    [delegate gotoMainVC];
+                }];
+            });
+            
+        } failure:^(int status, NSString *info) {
+            [QMUITips hideAllTipsInView: weakSelf.view];
+            [QMUITips showError:info inView:weakSelf.view hideAfterDelay:1.5];
         }];
-
+        //        [SJYRequestTool loginWithUserName:weakSelf.nameTF.text passworld:weakSelf.passwordTF.text complete:^(id responder){
+        //            [QMUITips hideAllTipsInView: weakSelf.view];
+        //            NSDictionary *dic = responder;
+        //            if ([[dic  valueForKey:@"success"] boolValue] == YES) {
+        //                [QMUITips showSucceed:@"登录成功" inView:weakSelf.view hideAfterDelay:0.6];
+        //                if ([[SJYDefaultManager shareManager] isRemberPassword]) {
+        //                    [[SJYDefaultManager shareManager] saveUserName:weakSelf.nameTF.text password:weakSelf.passwordTF.text];
+        //                }
+        //                [[SJYDefaultManager shareManager] saveEmployeeName:[dic valueForKey:@"employeeName"] Dt_Info:[dic valueForKey:@"dt"] EmployeeID:[dic valueForKey:@"employeeID"] DepartmentID:[dic valueForKey:@"departmentID"] PositionID:[dic valueForKey:@"positionID"]];
+        //
+        //                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        //                    SJYMainViewController *mainVC = [[SJYMainViewController alloc] init];
+        //                    [weakSelf.navigationController qmui_pushViewController:mainVC animated:YES completion:^{
+        //                        AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        //                        [delegate gotoMainVC];
+        //                    }];
+        //                });
+        //            }else{
+        //                [QMUITips showError:[dic valueForKey:@"infotype"] inView:weakSelf.view hideAfterDelay:1.5];
+        //            }
+        //        }];
     }];
 
     // 记住密码
@@ -193,18 +218,22 @@
 -(void)textFieldsDidChangeText:(UITextField *)textField{
     self.passwordTF.text = @"";
 }
- 
+
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     self.nameTF.text = [[SJYDefaultManager shareManager]getUserName];
     self.passwordTF.text = [[SJYDefaultManager shareManager]getPassword];
     self.remberPasswordBtn.selected = [[SJYDefaultManager shareManager]isRemberPassword];
-    
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-    printf("Retain Count = %ld\n",CFGetRetainCount((__bridge CFTypeRef)(self)));
-
+    NSLog("Retain Count = %ld\n",CFGetRetainCount((__bridge CFTypeRef)(self)));
 }
+
+-(void)dealloc{
+    NSLog(@"释放");
+}
+
+
 @end

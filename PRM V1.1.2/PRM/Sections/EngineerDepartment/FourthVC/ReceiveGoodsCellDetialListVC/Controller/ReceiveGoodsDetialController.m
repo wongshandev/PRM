@@ -56,7 +56,7 @@
 -(void)requestCurrentViewData{
     [self.dataArray removeAllObjects];
     [self showProgressHUD];
-    NSString *urlStr=[NSString stringWithFormat:@"%@/%@",kBaseUrl,@"AppPODList"];
+    NSString *urlStr= [NSString stringWithFormat:@"%@/%@",kBaseUrl,@"AppPODList"];
     [NewNetWorkManager requestPOSTWithURLStr:urlStr parDic:@{@"RealID":self.realID,@"SiteState":self.siteState} finish:^(id responder) {
         kMyLog(@"%@",responder);
         NSArray *rowsArr = [responder objectForKey:@"rows"];
@@ -88,8 +88,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return self.dataArray.count;
 }
-
-
+ 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return tableView.rowHeight;
 }

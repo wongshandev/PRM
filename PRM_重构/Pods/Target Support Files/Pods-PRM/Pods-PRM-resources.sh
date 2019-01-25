@@ -98,12 +98,18 @@ EOM
 }
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_resource "${PODS_ROOT}/BRPickerView/BRPickerView/AddressPickerView/BRPickerView.bundle"
+  install_resource "${PODS_ROOT}/EBBannerView/EBBannerView/Classes/EBBannerView.xib"
+  install_resource "${PODS_ROOT}/EBBannerView/EBBannerView/Classes/EBBannerViewController.xib"
+  install_resource "${PODS_ROOT}/EBBannerView/EBBannerView/Classes/EBMuteDetector.mp3"
   install_resource "${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle"
   install_resource "${PODS_ROOT}/PYPhotoBrowser/PYPhotoBrowser/PYPhotosView.bundle"
   install_resource "${PODS_ROOT}/QMUIKit/QMUIKit/QMUIResources/QMUIResources.bundle"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_resource "${PODS_ROOT}/BRPickerView/BRPickerView/AddressPickerView/BRPickerView.bundle"
+  install_resource "${PODS_ROOT}/EBBannerView/EBBannerView/Classes/EBBannerView.xib"
+  install_resource "${PODS_ROOT}/EBBannerView/EBBannerView/Classes/EBBannerViewController.xib"
+  install_resource "${PODS_ROOT}/EBBannerView/EBBannerView/Classes/EBMuteDetector.mp3"
   install_resource "${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle"
   install_resource "${PODS_ROOT}/PYPhotoBrowser/PYPhotoBrowser/PYPhotosView.bundle"
   install_resource "${PODS_ROOT}/QMUIKit/QMUIKit/QMUIResources/QMUIResources.bundle"

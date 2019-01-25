@@ -157,7 +157,7 @@ UIImagePickerControllerDelegate>{
     
     [self.reviseProjectView.changeTypeButton setTitle:cell.changeTypeLabel.text forState:UIControlStateNormal];
     [self.reviseProjectView.changeDescriptionTV setText:cell.markLabel.text];
-    
+
     
     self.reviseProjectView.filePathLabel.text = [model.Url componentsSeparatedByString:@"/"].lastObject;
     [self.view addSubview:self.reviseProjectView];

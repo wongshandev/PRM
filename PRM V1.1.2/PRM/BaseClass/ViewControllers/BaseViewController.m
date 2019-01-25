@@ -178,8 +178,6 @@
     NSString *patchs = NSHomeDirectory();// NSSearchPathForDirectoriesInDomains(NSHomeDirectory(), NSUserDomainMask, YES);
     NSString *fileDirectory = [patchs stringByAppendingPathComponent:dirName];
     NSArray *files = [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:fileDirectory error:nil];
-    
-    
     return files;
 }
 @end

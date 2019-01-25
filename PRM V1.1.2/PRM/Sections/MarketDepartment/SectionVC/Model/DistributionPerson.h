@@ -9,7 +9,7 @@
 #import "BaseModel.h"
 
 @interface DistributionPerson : BaseModel
-@property(assign,nonatomic)NSInteger Id;
+@property(copy,nonatomic)NSString *Id;
 @property(copy,nonatomic)NSString *Name;
 
 @property(copy,nonatomic)NSString *DepartmentID;

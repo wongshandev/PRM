@@ -32,8 +32,6 @@
         [weakSelf.navigationController popViewControllerAnimated:YES];
     }];
     
-    //    self.automaticallyAdjustsScrollViewInsets = NO;
-    //    self.edgesForExtendedLayout = UIRectEdgeNone;
     self.edgesForExtendedLayout = UIRectEdgeNone;
     if (@available(iOS 11.0, *)) {
         [[UIScrollView appearance] setContentInsetAdjustmentBehavior:UIScrollViewContentInsetAdjustmentNever];
@@ -41,8 +39,8 @@
         self.automaticallyAdjustsScrollViewInsets = NO;
     }
 
-    [self buildSubviews];
     [self setUpNavigationBar];
+    [self buildSubviews];
     [self bindViewModel];
 }
 
@@ -56,7 +54,7 @@
 }
 
 - (void)setUpNavigationBar {
-   
+
 }
 
 - (void)bindViewModel {
@@ -67,7 +65,7 @@
 - (void)goToLoginViewController {
     SJYLoginViewController *loginVC = [[SJYLoginViewController alloc] init];
     UINavigationController *navigVC = [[UINavigationController alloc] initWithRootViewController:loginVC];
-//    loginVC.hidesBottomBarWhenPushed = YES;
+    //    loginVC.hidesBottomBarWhenPushed = YES;
     [self presentViewController:navigVC animated:YES completion:^{
         
     }];
@@ -85,32 +83,32 @@
 
 -(void)viewDidLayoutSubviews
 {
-//    __block UITableView* table;
-//    [self.view.subviews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-//        if ([obj isKindOfClass:[UITableView class]]) {
-//            table=obj;
-//        }
-//    }];
-//    if ([table respondsToSelector:@selector(setSeparatorInset:)]) {
-//        [table setSeparatorInset:UIEdgeInsetsMake(0,0,0,0)];
-//    }
-//    
-//    if ([table respondsToSelector:@selector(setLayoutMargins:)]) {
-//        [table setLayoutMargins:UIEdgeInsetsMake(0,0,0,0)];
-//    }
+    //    __block UITableView* table;
+    //    [self.view.subviews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+    //        if ([obj isKindOfClass:[UITableView class]]) {
+    //            table=obj;
+    //        }
+    //    }];
+    //    if ([table respondsToSelector:@selector(setSeparatorInset:)]) {
+    //        [table setSeparatorInset:UIEdgeInsetsMake(0,0,0,0)];
+    //    }
+    //
+    //    if ([table respondsToSelector:@selector(setLayoutMargins:)]) {
+    //        [table setLayoutMargins:UIEdgeInsetsMake(0,0,0,0)];
+    //    }
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    if ([cell respondsToSelector:@selector(setSeparatorInset:)])
-//    {
-//        [cell setSeparatorInset:UIEdgeInsetsZero];
-//    }
-//    
-//    if ([cell respondsToSelector:@selector(setLayoutMargins:)])
-//    {
-//        [cell setLayoutMargins:UIEdgeInsetsZero];
-//    }
+    //    if ([cell respondsToSelector:@selector(setSeparatorInset:)])
+    //    {
+    //        [cell setSeparatorInset:UIEdgeInsetsZero];
+    //    }
+    //
+    //    if ([cell respondsToSelector:@selector(setLayoutMargins:)])
+    //    {
+    //        [cell setLayoutMargins:UIEdgeInsetsZero];
+    //    }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -128,14 +126,14 @@
 }
 
 /*
-#pragma mark - Navigation
+ #pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
     [self.view endEditing:YES];
 }

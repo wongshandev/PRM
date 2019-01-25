@@ -20,6 +20,14 @@
 
     // Configure the view for the selected state
 }
++(instancetype)cellWithTableView:(UITableView *)tableView{
+//    static   NSString *identifier = @"DXBaseCell";
+    DXBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:[self className]];
+    if (cell == nil) {
+        cell = [[self alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:[self className]];
+    }
+    return cell;
+}
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
@@ -102,5 +110,17 @@
 + (void)registerToTableView:(UITableView *)tableView {
     [tableView registerClass:[self class] forCellReuseIdentifier:NSStringFromClass([self class])];
 }
+
+
+
+-(QMUILabel *)createLabelWithTextColor:(UIColor *)textColor Font:(UIFont *)font numberOfLines:(NSInteger)number {
+    QMUILabel *label = [[QMUILabel alloc] init];
+    label.lineBreakMode = NSLineBreakByCharWrapping; 
+    label.font = font;
+    label.textColor = textColor;
+    label.numberOfLines = number;
+    return label;
+}
+
 
 @end

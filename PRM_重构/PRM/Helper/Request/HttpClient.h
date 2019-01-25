@@ -22,6 +22,7 @@
 +(void)upLoadMoreImageWithURLString:(NSString *)URLString parameters:(NSDictionary *)parameters imageArray:(NSArray *)imageArray fileName:(NSString *)name progerss:(void (^)(id))progress success:(void (^) (NSURLSessionDataTask *dataTask,id responseObjcet))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure;
 //注册 不含 token
 //+ (void)postRegisterHeader:(NSString *)urlString parameters:(NSDictionary *)params success:(void (^) (NSURLSessionDataTask *dataTask,id responseObjcet))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure;
++(void)uploadFileWithUrl:(NSString *)url paradic:(NSDictionary *)paradic   filePath:(NSString *)filepath progress:(void(^)(NSProgress * uploadProgress))progress   success:(void (^) (NSURLSessionDataTask *dataTask,id responseObjcet))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure;
 
 
 + (void)downLoadFilesWithURLStringr:(NSURL *)URLString

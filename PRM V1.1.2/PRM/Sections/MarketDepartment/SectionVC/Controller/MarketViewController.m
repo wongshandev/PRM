@@ -166,11 +166,11 @@ UITableViewDataSource>{
                 });
             }];
             NSString *urlStr=[NSString stringWithFormat:@"%@/%@",kBaseUrl,@"AppEmployeeByDPList"];
-            //负责人
             queue= dispatch_queue_create("com.JoinupTech.www", DISPATCH_QUEUE_SERIAL);
             dispatch_async(queue, ^{
                 [self.tableView.mj_header beginRefreshing];
             });
+            //负责人
             dispatch_async(queue, ^{
                 NSDictionary *LeaderParaDic = @{@"DepartmentID":@"1"};
                 [self requestData_PMWithURL:urlStr WithDic:LeaderParaDic];
@@ -548,7 +548,6 @@ UITableViewDataSource>{
     }else{
         [self showMessageLabel:@"请优先选择主设计人" withBackColor:kGeneralColor_lightCyanColor];
     }
-    
 }
 
 

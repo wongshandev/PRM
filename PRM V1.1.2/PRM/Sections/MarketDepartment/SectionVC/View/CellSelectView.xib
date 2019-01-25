@@ -245,7 +245,7 @@
                 <outlet property="submitButton" destination="1Tq-qO-Rve" id="fFV-Iv-jCH"/>
                 <outlet property="teamLeaderButton" destination="ajc-Dy-dlr" id="1ue-9v-1bU"/>
             </connections>
-            <point key="canvasLocation" x="-20" y="-163"/>
+            <point key="canvasLocation" x="285" y="-293"/>
         </view>
     </objects>
     <resources>

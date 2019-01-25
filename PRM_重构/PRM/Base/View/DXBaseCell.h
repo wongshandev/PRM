@@ -26,7 +26,7 @@
 @end
 
 @interface DXBaseCell : UITableViewCell
-
++(instancetype)cellWithTableView:(UITableView *)tableView;
 /**
  * cell 的代理
  */
@@ -184,5 +184,7 @@
  *  @param tableView       TableView.
  */
 + (void)registerToTableView:(UITableView *)tableView;
+
+-(QMUILabel *)createLabelWithTextColor:(UIColor *)textColor Font:(UIFont *)font numberOfLines:(NSInteger)number; 
 
 @end

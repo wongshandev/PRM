@@ -150,6 +150,7 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     MaterialPlanDetialModel *model = [self.dataArray objectAtIndex:indexPath.section] [indexPath.row];
     MatericalPlanDetialCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+
     
     NSString *maxNum = [NSString stringWithFormat:@"%ld",(model.Quantity.integerValue - model.QuantityPurchased.integerValue)];
     NSString *messageStr = [NSString stringWithFormat:@" 本次输入的范围:0 ~ %@",maxNum];
@@ -223,7 +224,7 @@
 
 - (void)saveButtonAction:(UIBarButtonItem *)sender {
     kMyLog(@"%@",self.savedArray);
-    if (self.savedArray.count==0 ){
+    if (self.savedArray.count ==0 ){
         [self showMessageLabel:@"无数据需要保存" withBackColor:kWarningColor_lightRedColor];
         return;
     }

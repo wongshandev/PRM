@@ -16,10 +16,23 @@ PODS:
     - AFNetworking/NSURLSession
   - BRPickerView (2.2.1)
   - DACircularProgress (2.3.1)
+  - EBBannerView (1.0.9)
   - FLAnimatedImage (1.0.12)
   - Masonry (1.1.0)
   - MBProgressHUD (1.1.0)
   - MJRefresh (3.1.15.7)
+  - MMDrawerController (0.5.7):
+    - MMDrawerController/Core (= 0.5.7)
+    - MMDrawerController/MMDrawerBarButtonItem (= 0.5.7)
+    - MMDrawerController/MMDrawerVisualStates (= 0.5.7)
+    - MMDrawerController/Subclass (= 0.5.7)
+  - MMDrawerController/Core (0.5.7)
+  - MMDrawerController/MMDrawerBarButtonItem (0.5.7):
+    - MMDrawerController/Core
+  - MMDrawerController/MMDrawerVisualStates (0.5.7):
+    - MMDrawerController/Core
+  - MMDrawerController/Subclass (0.5.7):
+    - MMDrawerController/Core
   - PYPhotoBrowser (1.5.6):
     - DACircularProgress
     - MBProgressHUD
@@ -295,8 +308,10 @@ PODS:
 DEPENDENCIES:
   - AFNetworking (~> 3.2.1)
   - BRPickerView (~> 2.2.1)
+  - EBBannerView (~> 1.0.9)
   - Masonry (~> 1.1.0)
   - MJRefresh (~> 3.1.15.7)
+  - MMDrawerController (~> 0.5.7)
   - PYPhotoBrowser (~> 1.5.6)
   - QMUIKit (~> 3.0.0)
   - SDWebImage (~> 4.2.1)
@@ -307,10 +322,12 @@ SPEC REPOS:
     - AFNetworking
     - BRPickerView
     - DACircularProgress
+    - EBBannerView
     - FLAnimatedImage
     - Masonry
     - MBProgressHUD
     - MJRefresh
+    - MMDrawerController
     - PYPhotoBrowser
     - QMUIKit
     - SDWebImage
@@ -320,15 +337,17 @@ SPEC CHECKSUMS:
   AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
   BRPickerView: 0590a8c5de9bd98c6b4e4f117a3dff6de287d5b2
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
+  EBBannerView: b3e2460bc97fb068af915263b696200a03680ab9
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   MBProgressHUD: e7baa36a220447d8aeb12769bf0585582f3866d9
   MJRefresh: 697f8ec75ebdbe9207767bb682cf0f51b0d8a41f
+  MMDrawerController: 7a4cf8e25596bf2434e03ce50d22a8608ddee6a1
   PYPhotoBrowser: 74f6526b290069a55943ed92e5a21f84c6d90ecf
   QMUIKit: fdd5b7ae57a4fdcb5daf1288ef34c308a8efbb9b
   SDWebImage: 791bb72962b3492327ddcac4b1880bd1b5458431
   YYKit: 7cda43304a8dc3696c449041e2cb3107b4e236e7
 
-PODFILE CHECKSUM: 70e7b7b566b771518dfdfb0d3bfbe79e5caec740
+PODFILE CHECKSUM: 1ee217e39f5ff52e2b2279d597148ef80fbcab3c
 
 COCOAPODS: 1.6.0.beta.2
