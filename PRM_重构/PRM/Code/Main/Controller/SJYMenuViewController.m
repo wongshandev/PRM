@@ -35,7 +35,7 @@
     [headerView addSubview:imgView];
 
     [imgView makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(headerView.mas_centerX);
+        make.centerX.equalTo(headerView.mas_left).offset(100);
         make.centerY.equalTo(headerView);
         make.width.equalTo(80);
         make.height.equalTo(80);
