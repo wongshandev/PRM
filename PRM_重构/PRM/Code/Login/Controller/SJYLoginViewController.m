@@ -173,6 +173,7 @@
         make.width.equalTo(80);
         make.height.equalTo(80);
     }];
+    [imgView rounded:4];
     [nameView makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(topView.mas_bottom);//.offset(SJYNUM(20));
         make.centerX.equalTo(self.view.mas_centerX);

@@ -28,7 +28,19 @@
     self.tableView.bounces = NO;
 
     [self.view addSubview:self.tableView];
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width - 90, 250)];
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width - 100, 250)];
+
+    UIImageView *imgView  = [UIImageView new];
+    imgView.image = SJYCommonImage(@"AppIcon");
+    [headerView addSubview:imgView];
+
+    [imgView makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(headerView.mas_centerX);
+        make.centerY.equalTo(headerView);
+        make.width.equalTo(80);
+        make.height.equalTo(80);
+    }];
+    [imgView rounded:4];
     headerView.backgroundColor = Color_NavigationLightBlue;
     self.tableView.tableHeaderView = headerView;
  }

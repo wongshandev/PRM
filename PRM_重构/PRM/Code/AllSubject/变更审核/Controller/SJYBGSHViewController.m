@@ -318,7 +318,7 @@
     self.searchCode = textField.text.length ?textField.text:@"";
     self.searchAlertView.sepLine.backgroundColor = Color_SrprateLine;
 }
- 
+
 
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
