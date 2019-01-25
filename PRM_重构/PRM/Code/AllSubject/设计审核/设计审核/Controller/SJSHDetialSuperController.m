@@ -188,6 +188,10 @@
     mentionLabel.font = Font_ListTitle;
     mentionLabel.text = @"驳回至 : ";
 
+    UIImageView *rightdownImgView = [[UIImageView alloc] init];
+    rightdownImgView.image = SJYCommonImage(@"downBlack");
+    [contentView addSubview:rightdownImgView];
+
     QMUIButton *typeBtn = [QMUIButton buttonWithType:UIButtonTypeCustom];
     typeBtn.contentHorizontalAlignment =UIControlContentHorizontalAlignmentLeft ;
     [typeBtn setTitle:@"合同" forState:UIControlStateNormal];
@@ -223,7 +227,12 @@
         make.right.mas_equalTo(contentView.mas_right).offset(-10);
         make.height.mas_equalTo(mentionLabel.mas_height);
     }];
-
+    [rightdownImgView makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(typeBtn.mas_centerY);
+        make.right.mas_equalTo(typeBtn.mas_right);
+        make.height.mas_equalTo(15);
+        make.width.mas_equalTo(20);
+    }];
     [textView makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(mentionLabel.mas_bottom).offset(5);
         make.left.mas_equalTo(mentionLabel.mas_left);

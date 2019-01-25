@@ -310,9 +310,13 @@
     }
 }
 
-
+-(void)textFieldDidBeginEditing:(UITextField *)textField{
+    textField.text = self.searchCode;
+    self.searchAlertView.sepLine.backgroundColor = Color_NavigationLightBlue;
+}
 -(void)textFieldDidEndEditing:(UITextField *)textField{
-    self.searchCode = textField.text.length ?textField.text:self.searchCode;
+    self.searchCode = textField.text.length ?textField.text:@"";
+    self.searchAlertView.sepLine.backgroundColor = Color_SrprateLine;
 }
  
 
