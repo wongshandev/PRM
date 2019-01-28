@@ -59,21 +59,22 @@ static AFHTTPSessionManager *_mgr;
 
 + (CGFloat )getNavHeight{
     //判断机型
-    if ([UIScreen mainScreen].bounds.size.height == 812) {
-        return 84.f+SJYNUM(5);
-    }else {
-        return 64.f+SJYNUM(5);
-    }
+//    if ([UIScreen mainScreen].bounds.size.height == 812) {
+//        return 84.f+SJYNUM(5);
+//    }else {
+//        return 64.f+SJYNUM(5);
+//    }
+    return  [[UIApplication sharedApplication] statusBarFrame].size.height +44 +SJYNUM(5);
 }
 
 + (CGFloat )getNomarlNavHeight{
     //判断机型
-    if (SCREEN_H == 812) {
-        return 84.f;
-    }else {
-        return 64.f;
-    }
-//     [UIApplication sharedApplication].statusBarFrame.size.height
+//    if (SCREEN_H == 812) {
+//        return 84.f;
+//    }else {
+//        return 64.f;
+//    }
+     return  [[UIApplication sharedApplication] statusBarFrame].size.height +44;
 }
 
 + (UIFont *)getFontWithSize:(CGFloat)size{
