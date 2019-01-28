@@ -153,7 +153,12 @@
          return @"";
     }
     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-    formatter.numberStyle = kCFNumberFormatterCurrencyStyle;
+//    formatter.numberStyle = kCFNumberFormatterCurrencyStyle;
+    
+    formatter.numberStyle = kCFNumberFormatterDecimalStyle;
+    formatter.maximumFractionDigits = 2;    //设置最大小数点后的位数
+    formatter.minimumFractionDigits = 2;
+
      NSNumber *result111 = [NSNumber numberWithDouble:number.doubleValue];
     NSString *string = [formatter stringFromNumber:result111];
     return string;
