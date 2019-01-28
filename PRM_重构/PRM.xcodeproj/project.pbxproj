@@ -156,10 +156,8 @@
 		18A7CBCB21E5844400EDB754 /* lunchImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A7CBB621E5844400EDB754 /* lunchImage.png */; };
 		18A7CBCC21E5844400EDB754 /* caidan@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A7CBB721E5844400EDB754 /* caidan@2x.png */; };
 		18A7CBCD21E5844400EDB754 /* zx@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A7CBB821E5844400EDB754 /* zx@2x.png */; };
-		18A7CBCE21E5844400EDB754 /* frontPage@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A7CBB921E5844400EDB754 /* frontPage@3x.png */; };
 		18A7CBCF21E5844400EDB754 /* tc@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A7CBBA21E5844400EDB754 /* tc@3x.png */; };
 		18A7CBD021E5844400EDB754 /* tc@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A7CBBB21E5844400EDB754 /* tc@2x.png */; };
-		18A7CBD121E5844400EDB754 /* frontPage@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A7CBBC21E5844400EDB754 /* frontPage@2x.png */; };
 		18A7CBD221E5844400EDB754 /* zx@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A7CBBD21E5844400EDB754 /* zx@3x.png */; };
 		18A7CBD321E5844400EDB754 /* caidan@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A7CBBE21E5844400EDB754 /* caidan@3x.png */; };
 		18A7CC0A21E587B700EDB754 /* SJYDefaultManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A7CC0921E587B700EDB754 /* SJYDefaultManager.m */; };
@@ -443,10 +441,8 @@
 		18A7CBB621E5844400EDB754 /* lunchImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lunchImage.png; sourceTree = "<group>"; };
 		18A7CBB721E5844400EDB754 /* caidan@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "caidan@2x.png"; sourceTree = "<group>"; };
 		18A7CBB821E5844400EDB754 /* zx@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zx@2x.png"; sourceTree = "<group>"; };
-		18A7CBB921E5844400EDB754 /* frontPage@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "frontPage@3x.png"; sourceTree = "<group>"; };
 		18A7CBBA21E5844400EDB754 /* tc@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tc@3x.png"; sourceTree = "<group>"; };
 		18A7CBBB21E5844400EDB754 /* tc@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tc@2x.png"; sourceTree = "<group>"; };
-		18A7CBBC21E5844400EDB754 /* frontPage@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "frontPage@2x.png"; sourceTree = "<group>"; };
 		18A7CBBD21E5844400EDB754 /* zx@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zx@3x.png"; sourceTree = "<group>"; };
 		18A7CBBE21E5844400EDB754 /* caidan@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "caidan@3x.png"; sourceTree = "<group>"; };
 		18A7CC0821E587B600EDB754 /* SJYDefaultManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SJYDefaultManager.h; sourceTree = "<group>"; };
@@ -975,8 +971,6 @@
 				18A7CBB521E5844400EDB754 /* deSelect@3x.png */,
 				18A7CBB321E5844400EDB754 /* down@2x.png */,
 				18A7CBAA21E5844400EDB754 /* down@3x.png */,
-				18A7CBBC21E5844400EDB754 /* frontPage@2x.png */,
-				18A7CBB921E5844400EDB754 /* frontPage@3x.png */,
 				18A7CBB621E5844400EDB754 /* lunchImage.png */,
 				18A7CBAC21E5844400EDB754 /* mainRightItem1@2x.png */,
 				18A7CBB121E5844400EDB754 /* mainRightItem1@3x.png */,
@@ -1754,7 +1748,6 @@
 				18A7CBC621E5844400EDB754 /* mainRightItem1@3x.png in Resources */,
 				18A7CBC021E5844400EDB754 /* set@2x.png in Resources */,
 				184567B021EF17DF00AF55DF /* xls.png in Resources */,
-				18A7CBCE21E5844400EDB754 /* frontPage@3x.png in Resources */,
 				188C27C221DF43D40022C989 /* Main.storyboard in Resources */,
 				184567BB21EF17DF00AF55DF /* setting.png in Resources */,
 				1843788121EF1EF100AA14DC /* save_n@2x.png in Resources */,
@@ -1772,7 +1765,6 @@
 				184567AD21EF17DF00AF55DF /* main_ye.png in Resources */,
 				18A7CBC121E5844400EDB754 /* mainRightItem1@2x.png in Resources */,
 				18A7CBCB21E5844400EDB754 /* lunchImage.png in Resources */,
-				18A7CBD121E5844400EDB754 /* frontPage@2x.png in Resources */,
 				184567AC21EF17DF00AF55DF /* txt.png in Resources */,
 				184567B221EF17DF00AF55DF /* excel.png in Resources */,
 				1816E9FB21F5653300687C5B /* rar.png in Resources */,

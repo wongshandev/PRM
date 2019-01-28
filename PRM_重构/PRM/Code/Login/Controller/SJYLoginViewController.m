@@ -25,8 +25,8 @@
     Weak_Self;
     self.navBar.hidden = NO;
     self.navBar.titleLabel.text = DisplayName;
-
     self.navBar.rightButton.hidden = NO;
+
     [self.navBar.rightButton setImage:SJYCommonImage(@"set") forState:UIControlStateNormal];
     [self.navBar.rightButton clickWithBlock:^{
         [weakSelf.view endEditing:YES];
@@ -34,6 +34,9 @@
         [weakSelf.navigationController qmui_pushViewController:ipVC animated:NO completion:^{
         }];
     }];
+    [self.navBar.titleView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.navBar.leftButton.mas_right).offset(-SJYNUM(56)/2);
+    }]; 
 }
 
 

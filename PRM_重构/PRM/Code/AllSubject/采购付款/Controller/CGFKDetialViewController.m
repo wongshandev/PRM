@@ -54,6 +54,9 @@
         make.height.equalTo(44);
         make.width.equalTo(45);
     }];
+    [self.navBar.titleView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self.navBar.rightButton.mas_left).offset(-SJYNUM(56));
+    }];
 }
 
 -(void)setupTableView{
@@ -73,7 +76,6 @@
         [weakSelf  requestData_CGFKInfoData];
     };
  }
-
 
 -(void)requestData_CGFKInfoData{
     [SJYRequestTool requestCGFKInfoDataWithPurchaseOrderID:self.listModel.Id success:^(id responder) {
@@ -102,7 +104,6 @@
              [footSectionArr addObject:model];
         }
         [self.dataArray addObject:footSectionArr];
-
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView reloadData];
@@ -248,10 +249,7 @@
                                                         } failure:^(int status, NSString *info) {
                                                             [QMUITips showError:info inView:self.view hideAfterDelay:1.2];
                                                             [aDialogViewController hide];
-
                                                         }];
-
-
     }];
     [dialogViewController show];
     [textView becomeFirstResponder];

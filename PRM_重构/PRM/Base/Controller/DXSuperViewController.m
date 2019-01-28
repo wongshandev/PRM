@@ -42,7 +42,27 @@
     [self setUpNavigationBar];
     [self buildSubviews];
     [self bindViewModel];
+
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(statusFrameChanged:)
+//                                                 name:UIApplicationWillChangeStatusBarFrameNotification
+//                                               object:nil]; 
+
 }
+//-(void)statusFrameChanged:(NSNotification*) note {
+//    CGRect statusBarFrame = [note.userInfo[UIApplicationStatusBarFrameUserInfoKey] CGRectValue];
+//    CGFloat statusHeight = statusBarFrame.size.height;
+//    UIScreen *screen = [UIScreen mainScreen];
+//    CGRect viewRect = screen.bounds;
+//    viewRect.size.height -= statusHeight;
+//    viewRect.origin.y = statusHeight;
+//    self.view.frame = viewRect;
+//    [self.view setNeedsLayout];
+//
+//    self.navBar.frame = CGRectMake(0, 0, SCREEN_W, kTopStatusAndNavBarHeight);
+//    [self.navBar layoutIfNeeded];
+//}
+
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -74,15 +94,14 @@
 
 -(DXNavBarView *)navBar{
     if (_navBar==nil) {
-        _navBar=[[DXNavBarView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_W, NAVHEIGHT)];
+        _navBar=[[DXNavBarView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_W, NAVNOMARLHEIGHT)];
     }
     return _navBar;
 }
 
 #pragma mark - table.set 可修改
 
--(void)viewDidLayoutSubviews
-{
+-(void)viewDidLayoutSubviews {
     //    __block UITableView* table;
     //    [self.view.subviews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
     //        if ([obj isKindOfClass:[UITableView class]]) {
@@ -137,4 +156,8 @@
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
     [self.view endEditing:YES];
 }
+
+//-(void)setNeedsStatusBarAppearanceUpdate{
+//    self.navBar.frame = CGRectMake(0, 0, SCREEN_W, kTopStatusAndNavBarHeight);
+//}
 @end

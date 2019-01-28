@@ -9,80 +9,112 @@
 #import "DXNavBarView.h"
 
 @implementation DXNavBarView
-- (instancetype)initWithFrame:(CGRect)frame
-{
+- (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor clearColor];
         [self initialize];
+         [self setNeedsLayout];
     }
     return self;
 }
+
+//-(void) statusFrameChanged:(NSNotification*) note {
+//    CGRect statusBarFrame = [note.userInfo[UIApplicationStatusBarFrameUserInfoKey] CGRectValue];
+//    CGFloat statusHeight = statusBarFrame.size.height;
+//    UIScreen *screen = [UIScreen mainScreen];
+//    CGRect viewRect = screen.bounds;
+//    viewRect.size.height -= statusHeight;
+//    viewRect.origin.y = statusHeight;
+//    self.frame = viewRect;
+//    [self setNeedsLayout];
+//}
+
 //
 //progress
-- (void)initialize{
-    [self addSubview:self.backView];
-    
-    [self addSubview:self.shadowView];
+
+-(void)layoutSubviews{
+    [super layoutSubviews];
     [self.shadowView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.mas_bottom).offset(0);
         make.left.equalTo(self).offset(0);
         make.right.equalTo(self).offset(0);
         make.height.mas_equalTo(5);
     }];
-    
-    [self addSubview:self.backButton];
-    [self.backButton mas_makeConstraints:^(MASConstraintMaker *make) {
+
+     [self.backButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self).offset(NAVNOMARLHEIGHT-44);
         make.left.equalTo(self).offset(0);
-//        make.width.mas_equalTo(SCREEN_W*0.12);
+        //        make.width.mas_equalTo(SCREEN_W*0.12);
         make.width.mas_equalTo(56);
         make.height.mas_equalTo(44);
     }];
-    
-    [self addSubview:self.leftButton];
-    [self.leftButton mas_makeConstraints:^(MASConstraintMaker *make) {
+
+     [self.leftButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self).offset(NAVNOMARLHEIGHT-44);
         make.left.equalTo(self).offset(0);
         make.width.mas_equalTo(SJYNUM(56));
         make.height.mas_equalTo(44);
     }];
-    self.leftButton.hidden=YES;
-    
-    [self addSubview:self.rightButton];
-    [self.rightButton mas_makeConstraints:^(MASConstraintMaker *make) {
+
+     [self.rightButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self).offset(NAVNOMARLHEIGHT-44);
         make.right.equalTo(self).offset(0);
         make.width.mas_equalTo(SJYNUM(56));
         make.height.mas_equalTo(44);
     }];
-    self.rightButton.hidden=YES;
-    
-    [self addSubview:self.titleView];
-    [self.titleView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self).offset(NAVNOMARLHEIGHT-44);
-        make.centerX.equalTo(self).offset(0);
-        make.height.mas_equalTo(44);
-//        make.width.mas_equalTo(SCREEN_W-SJYNUM(112));
-        make.width.mas_equalTo(SJYNUM(180));
+
+     [self.titleView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.equalTo(self).offset(NAVNOMARLHEIGHT-44);
+//        make.centerX.equalTo(self).offset(0);
+//        make.height.mas_equalTo(44);
+//         make.width.mas_equalTo(SJYNUM(180));
+
+         make.top.equalTo(self).offset(NAVNOMARLHEIGHT-44);
+         make.height.mas_equalTo(44);
+         make.left.mas_equalTo(self.leftButton.mas_right);
+         make.right.mas_equalTo(self.rightButton.mas_left);
     }];
-    
-    [self addSubview:self.titleLabel];
-    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self).offset(NAVNOMARLHEIGHT-44);
-        make.centerX.equalTo(self).offset(0);
-//        make.width.mas_equalTo(SCREEN_W-SJYNUM(112));
-        make.width.mas_equalTo(SJYNUM(180));
-        make.height.mas_equalTo(44);
+
+     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.equalTo(self).offset(NAVNOMARLHEIGHT-44);
+//        make.centerX.equalTo(self).offset(0);
+//        make.width.mas_equalTo(SJYNUM(180));
+//        make.height.mas_equalTo(44);
+
+         make.centerY.mas_equalTo(self.titleView.mas_centerY);
+         make.left.mas_equalTo(self.titleView.mas_left);
+         make.right.mas_equalTo(self.titleView.mas_right);
     }];
-    [self addSubview:self.seperateLine];
-    [self.seperateLine mas_makeConstraints:^(MASConstraintMaker *make) {
+     [self.seperateLine mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self);
         make.right.equalTo(self);
         make.bottom.equalTo(self) ;
         make.height.mas_equalTo(1);
     }];
+}
+
+- (void)initialize{
+    [self addSubview:self.backView];
     
+    [self addSubview:self.shadowView];
+
+    [self addSubview:self.backButton]; 
+
+    [self addSubview:self.leftButton];
+
+    self.leftButton.hidden=YES;
+    
+    [self addSubview:self.rightButton];
+
+    self.rightButton.hidden=YES;
+    
+    [self addSubview:self.titleView];
+    [self.titleView addSubview:self.titleLabel];
+
+    [self addSubview:self.seperateLine];
+
+
 }
 
 -(UILabel *)titleLabel{
@@ -91,8 +123,8 @@
         _titleLabel.backgroundColor=[UIColor clearColor];
         _titleLabel.textColor= Color_White;
         _titleLabel.font= SJYBoldFont(18);//[UIFont boldSystemFontOfSize:SJYNUM(18)];
-        _titleLabel.textAlignment=NSTextAlignmentCenter;
-         _titleLabel.lineBreakMode = NSLineBreakByTruncatingMiddle;    //中间的内容以…方式省略，显示头尾
+//        _titleLabel.textAlignment=NSTextAlignmentCenterr;
+//         _titleLabel.lineBreakMode = NSLineBreakByTruncatingMiddle;    //中间的内容以…方式省略，显示头尾
     }
     return _titleLabel;
 }
@@ -133,7 +165,7 @@
 -(UIButton *)rightButton{
     if (_rightButton==nil) {
         _rightButton=[UIButton buttonWithType:UIButtonTypeCustom];
-        _rightButton.titleLabel.font=SJYFont(16);
+        _rightButton.titleLabel.font=Font_System(16);
         [_rightButton setTitleColor:Color_White forState:UIControlStateNormal];
         [_rightButton setBackgroundColor:[UIColor clearColor]];
  

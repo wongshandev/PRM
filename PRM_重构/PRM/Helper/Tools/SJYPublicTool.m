@@ -73,6 +73,7 @@ static AFHTTPSessionManager *_mgr;
     }else {
         return 64.f;
     }
+//     [UIApplication sharedApplication].statusBarFrame.size.height
 }
 
 + (UIFont *)getFontWithSize:(CGFloat)size{

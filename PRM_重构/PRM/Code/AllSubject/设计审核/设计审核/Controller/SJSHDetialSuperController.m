@@ -62,6 +62,9 @@
         make.height.equalTo(44);
         make.width.equalTo(45);
     }];
+    [self.navBar.titleView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self.navBar.rightButton.mas_left).offset(-SJYNUM(56));
+    }];
 }
 -(void)buildSubviews{
     ZJSegmentStyle *style = [[ZJSegmentStyle alloc] init];
