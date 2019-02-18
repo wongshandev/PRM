@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>zh_CN</string>
 	<key>CFBundleDisplayName</key>
-	<string>项目资源管理</string>
+	<string>项目资源管理 重构标准版</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
