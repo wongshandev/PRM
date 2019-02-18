@@ -33,7 +33,6 @@
 		181B923321F847E200E85E4B /* RWFPPersonDealController.m in Sources */ = {isa = PBXBuildFile; fileRef = 181B923221F847E200E85E4B /* RWFPPersonDealController.m */; };
 		181B923621F85F4900E85E4B /* RWFPPersonDealCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 181B923521F85F4900E85E4B /* RWFPPersonDealCell.m */; };
 		181B923921F8637E00E85E4B /* RWFPDealListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 181B923821F8637E00E85E4B /* RWFPDealListModel.m */; };
-		181B923C21F86E8C00E85E4B /* DistributionPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = 181B923A21F86E8C00E85E4B /* DistributionPerson.m */; };
 		181B923F21F99E1B00E85E4B /* SJYCGFKListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 181B923E21F99E1B00E85E4B /* SJYCGFKListController.m */; };
 		181B924221F99EA500E85E4B /* CGFKListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 181B924121F99EA500E85E4B /* CGFKListModel.m */; };
 		181B924521F99EFE00E85E4B /* CGFKListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 181B924421F99EFE00E85E4B /* CGFKListCell.m */; };
@@ -106,6 +105,8 @@
 		184E8FC421E5F7ED00F133AA /* RequestTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 184E8FC321E5F7ED00F133AA /* RequestTool.m */; };
 		184E8FC721E6019E00F133AA /* SJYMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 184E8FC621E6019E00F133AA /* SJYMainViewController.m */; };
 		184E8FCA21E6EC0100F133AA /* SJYMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 184E8FC921E6EC0100F133AA /* SJYMenuViewController.m */; };
+		187254C2221A751E002C7FE7 /* DistributionPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = 187254C1221A751E002C7FE7 /* DistributionPerson.m */; };
+		187254C5221A7544002C7FE7 /* FileModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 187254C4221A7544002C7FE7 /* FileModel.m */; };
 		18838A5D21F084E1004033CB /* XCSHRecordModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 18838A5C21F084E1004033CB /* XCSHRecordModel.m */; };
 		18838A6021F085CF004033CB /* XCSCRecordCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18838A5F21F085CF004033CB /* XCSCRecordCell.m */; };
 		18838A6321F08C2A004033CB /* XCSHRecordDetialController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18838A6221F08C2A004033CB /* XCSHRecordDetialController.m */; };
@@ -184,7 +185,6 @@
 		18EAA1B821EC5C5E00B1DF08 /* MainViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18EAA1B721EC5C5E00B1DF08 /* MainViewCell.m */; };
 		18EC2B2021F5901E00AFC07E /* addfj@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 18EC2B1F21F5901E00AFC07E /* addfj@2x.png */; };
 		18EC2B2221F5902900AFC07E /* assfj@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 18EC2B2121F5902900AFC07E /* assfj@3x.png */; };
-		18EC2B2521F5ABDA00AFC07E /* FileModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 18EC2B2421F5ABD900AFC07E /* FileModel.m */; };
 		18EC2B2821F5AE9F00AFC07E /* FileSelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18EC2B2721F5AE9F00AFC07E /* FileSelectView.m */; };
 		18EC2B2B21F5C28E00AFC07E /* FileCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18EC2B2A21F5C28E00AFC07E /* FileCell.m */; };
 		18EC2B2E21F5CC1600AFC07E /* XMBGNewAddController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18EC2B2D21F5CC1600AFC07E /* XMBGNewAddController.m */; };
@@ -244,8 +244,6 @@
 		181B923521F85F4900E85E4B /* RWFPPersonDealCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RWFPPersonDealCell.m; sourceTree = "<group>"; };
 		181B923721F8637E00E85E4B /* RWFPDealListModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RWFPDealListModel.h; sourceTree = "<group>"; };
 		181B923821F8637E00E85E4B /* RWFPDealListModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RWFPDealListModel.m; sourceTree = "<group>"; };
-		181B923A21F86E8C00E85E4B /* DistributionPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DistributionPerson.m; path = "../../../../../../PRM V1.1.2/PRM/Sections/MarketDepartment/SectionVC/Model/DistributionPerson.m"; sourceTree = "<group>"; };
-		181B923B21F86E8C00E85E4B /* DistributionPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DistributionPerson.h; path = "../../../../../../PRM V1.1.2/PRM/Sections/MarketDepartment/SectionVC/Model/DistributionPerson.h"; sourceTree = "<group>"; };
 		181B923D21F99E1B00E85E4B /* SJYCGFKListController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SJYCGFKListController.h; sourceTree = "<group>"; };
 		181B923E21F99E1B00E85E4B /* SJYCGFKListController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SJYCGFKListController.m; sourceTree = "<group>"; };
 		181B924021F99EA500E85E4B /* CGFKListModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CGFKListModel.h; sourceTree = "<group>"; };
@@ -358,6 +356,10 @@
 		184E8FC621E6019E00F133AA /* SJYMainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SJYMainViewController.m; sourceTree = "<group>"; };
 		184E8FC821E6EC0100F133AA /* SJYMenuViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SJYMenuViewController.h; sourceTree = "<group>"; };
 		184E8FC921E6EC0100F133AA /* SJYMenuViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SJYMenuViewController.m; sourceTree = "<group>"; };
+		187254C0221A751E002C7FE7 /* DistributionPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DistributionPerson.h; sourceTree = "<group>"; };
+		187254C1221A751E002C7FE7 /* DistributionPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DistributionPerson.m; sourceTree = "<group>"; };
+		187254C3221A7544002C7FE7 /* FileModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileModel.h; sourceTree = "<group>"; };
+		187254C4221A7544002C7FE7 /* FileModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileModel.m; sourceTree = "<group>"; };
 		18838A5B21F084E1004033CB /* XCSHRecordModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XCSHRecordModel.h; sourceTree = "<group>"; };
 		18838A5C21F084E1004033CB /* XCSHRecordModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XCSHRecordModel.m; sourceTree = "<group>"; };
 		18838A5E21F085CF004033CB /* XCSCRecordCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XCSCRecordCell.h; sourceTree = "<group>"; };
@@ -496,8 +498,6 @@
 		18EAA1B721EC5C5E00B1DF08 /* MainViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewCell.m; sourceTree = "<group>"; };
 		18EC2B1F21F5901E00AFC07E /* addfj@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "addfj@2x.png"; sourceTree = "<group>"; };
 		18EC2B2121F5902900AFC07E /* assfj@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "assfj@3x.png"; sourceTree = "<group>"; };
-		18EC2B2321F5ABD900AFC07E /* FileModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FileModel.h; path = "../../../../../../PRM V1.1.2/PRM/Sections/EngineerDepartment/ThirdVC/ProjectChangeVC/View/FileModel.h"; sourceTree = "<group>"; };
-		18EC2B2421F5ABD900AFC07E /* FileModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FileModel.m; path = "../../../../../../PRM V1.1.2/PRM/Sections/EngineerDepartment/ThirdVC/ProjectChangeVC/View/FileModel.m"; sourceTree = "<group>"; };
 		18EC2B2621F5AE9F00AFC07E /* FileSelectView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileSelectView.h; sourceTree = "<group>"; };
 		18EC2B2721F5AE9F00AFC07E /* FileSelectView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileSelectView.m; sourceTree = "<group>"; };
 		18EC2B2921F5C28E00AFC07E /* FileCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileCell.h; sourceTree = "<group>"; };
@@ -1061,10 +1061,10 @@
 		18A7CBDA21E5846900EDB754 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				187254C0221A751E002C7FE7 /* DistributionPerson.h */,
+				187254C1221A751E002C7FE7 /* DistributionPerson.m */,
 				181B922B21F83E9300E85E4B /* RWFPListModel.h */,
 				181B922C21F83E9300E85E4B /* RWFPListModel.m */,
-				181B923B21F86E8C00E85E4B /* DistributionPerson.h */,
-				181B923A21F86E8C00E85E4B /* DistributionPerson.m */,
 				181B923721F8637E00E85E4B /* RWFPDealListModel.h */,
 				181B923821F8637E00E85E4B /* RWFPDealListModel.m */,
 			);
@@ -1320,12 +1320,12 @@
 		18A7CBF621E5846A00EDB754 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				187254C3221A7544002C7FE7 /* FileModel.h */,
+				187254C4221A7544002C7FE7 /* FileModel.m */,
 				18838A7D21F1CDF1004033CB /* XMBGListModel.h */,
 				18838A7E21F1CDF1004033CB /* XMBGListModel.m */,
 				18838A8621F32610004033CB /* XMBGDetailModel.h */,
 				18838A8721F32610004033CB /* XMBGDetailModel.m */,
-				18EC2B2321F5ABD900AFC07E /* FileModel.h */,
-				18EC2B2421F5ABD900AFC07E /* FileModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1847,6 +1847,7 @@
 				182C500E21EDBEB80002B312 /* UIView+ZJFrame.m in Sources */,
 				1845674021EECE9F00AF55DF /* WLJHListCell.m in Sources */,
 				18A7CC4521E5BCC100EDB754 /* BaseModel.m in Sources */,
+				187254C5221A7544002C7FE7 /* FileModel.m in Sources */,
 				181B922A21F83B2600E85E4B /* SJYRWFPListController.m in Sources */,
 				18FB920B21EC989900B55322 /* SJYJJQRViewController.m in Sources */,
 				18255E0A21E71AEA00095143 /* NSObject+SJYKVO.m in Sources */,
@@ -1882,6 +1883,7 @@
 				18A7CC0A21E587B700EDB754 /* SJYDefaultManager.m in Sources */,
 				18838A7221F18F8F004033CB /* XMQGDetialController.m in Sources */,
 				184E8FC421E5F7ED00F133AA /* RequestTool.m in Sources */,
+				187254C2221A751E002C7FE7 /* DistributionPerson.m in Sources */,
 				182C501021EDBEB80002B312 /* UIViewController+ZJScrollPageController.m in Sources */,
 				1809E3A421F6DD6700DBFCFF /* SJYXMJDViewController.m in Sources */,
 				181B924221F99EA500E85E4B /* CGFKListModel.m in Sources */,
@@ -1937,8 +1939,6 @@
 				18838A8B21F32E38004033CB /* XMBGDetailCell.m in Sources */,
 				189EEAFF21FAABF50027E1A3 /* BJQDListFrame.m in Sources */,
 				18255E1221E71B9800095143 /* UITableView+NoData.m in Sources */,
-				18EC2B2521F5ABDA00AFC07E /* FileModel.m in Sources */,
-				181B923C21F86E8C00E85E4B /* DistributionPerson.m in Sources */,
 				189EEAEC21FAA32A0027E1A3 /* SJSHDetialSuperController.m in Sources */,
 				189EEAB521F9CB6A0027E1A3 /* CGFKDetialFrame.m in Sources */,
 				18EC2B3721F6A29B00AFC07E /* BGSHListCell.m in Sources */,
