@@ -7,8 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		188C27A321DF28470022C989 /* frontPage@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 188C27A221DF28470022C989 /* frontPage@2x.png */; };
-		188C27A521DF28C80022C989 /* frontPage@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 188C27A421DF28C80022C989 /* frontPage@3x.png */; };
+		187254CB221A761F002C7FE7 /* DistributionPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = 187254CA221A761F002C7FE7 /* DistributionPerson.m */; };
+		187254CE221A7659002C7FE7 /* EngineeringModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 187254CC221A7659002C7FE7 /* EngineeringModel.m */; };
+		187254D1221A7711002C7FE7 /* FileModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 187254D0221A7711002C7FE7 /* FileModel.m */; };
+		187254D8221A7807002C7FE7 /* frontPage@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 187254D6221A7807002C7FE7 /* frontPage@3x.png */; };
+		187254D9221A7807002C7FE7 /* frontPage@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 187254D7221A7807002C7FE7 /* frontPage@2x.png */; };
 		18A7CBA421E49F3100EDB754 /* AccountDPViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A7CBA321E49F3100EDB754 /* AccountDPViewController.m */; };
 		2F27C12F1E5BCF4800CD7AE6 /* PurchaseDetialModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F27C12E1E5BCF4800CD7AE6 /* PurchaseDetialModel.m */; };
 		2F27C13B1E5BD9E400CD7AE6 /* ReceiveGoodsDetialController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F27C1391E5BD9E400CD7AE6 /* ReceiveGoodsDetialController.m */; };
@@ -47,7 +50,6 @@
 		2F6A07A11E5AB8B80036F389 /* EngineerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2F6A07781E5AB8B80036F389 /* EngineerViewController.xib */; };
 		2F6A07A21E5AB8B80036F389 /* ChangeOrdersApproveModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A077B1E5AB8B80036F389 /* ChangeOrdersApproveModel.m */; };
 		2F6A07A31E5AB8B80036F389 /* ChangeOrdersModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A077D1E5AB8B80036F389 /* ChangeOrdersModel.m */; };
-		2F6A07A41E5AB8B80036F389 /* EngineeringModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A077F1E5AB8B80036F389 /* EngineeringModel.m */; };
 		2F6A07A51E5AB8B80036F389 /* MarketOrderModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A07811E5AB8B80036F389 /* MarketOrderModel.m */; };
 		2F6A07A71E5AB8B80036F389 /* ChangeOrdersApproveCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6A07861E5AB8B80036F389 /* ChangeOrdersApproveCell.m */; };
 		2F6A07A81E5AB8B80036F389 /* ChangeOrdersApproveCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2F6A07871E5AB8B80036F389 /* ChangeOrdersApproveCell.xib */; };
@@ -153,19 +155,23 @@
 		2F837A601E5D8D2A000E4AC1 /* ReviseProjectChangeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2F837A5F1E5D8D2A000E4AC1 /* ReviseProjectChangeView.xib */; };
 		2F837A631E5D9864000E4AC1 /* down@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2F837A611E5D9864000E4AC1 /* down@2x.png */; };
 		2F837A641E5D9864000E4AC1 /* down@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2F837A621E5D9864000E4AC1 /* down@3x.png */; };
-		2FBE9CBA1E67B75000D47F5F /* DistributionPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FBE9CB91E67B75000D47F5F /* DistributionPerson.m */; };
 		2FC7AF781E519A3A00EDB090 /* CALayer+XibConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FC7AF771E519A3A00EDB090 /* CALayer+XibConfiguration.m */; };
 		2FCD1F561E67E5CB0012B9C4 /* MultiSelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCD1F541E67E5CB0012B9C4 /* MultiSelectView.m */; };
 		2FCD1F5A1E68036A0012B9C4 /* MultiSelectCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FCD1F591E68036A0012B9C4 /* MultiSelectCell.m */; };
 		2FD2C4241E5EE19B0052BFEE /* PopSelectTypeTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD2C4231E5EE19B0052BFEE /* PopSelectTypeTableView.m */; };
 		2FD4DC2C1E60077F002BFA42 /* FileSelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD4DC2B1E60077F002BFA42 /* FileSelectView.m */; };
-		2FD4DC2F1E600A94002BFA42 /* FileModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD4DC2E1E600A94002BFA42 /* FileModel.m */; };
 		B7C95FECA3D6696098B1C3B8 /* libPods-PRM.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EE850D1EFBE3225FEA00DFDE /* libPods-PRM.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		188C27A221DF28470022C989 /* frontPage@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "frontPage@2x.png"; sourceTree = "<group>"; };
-		188C27A421DF28C80022C989 /* frontPage@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "frontPage@3x.png"; sourceTree = "<group>"; };
+		187254C9221A761E002C7FE7 /* DistributionPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DistributionPerson.h; sourceTree = "<group>"; };
+		187254CA221A761F002C7FE7 /* DistributionPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DistributionPerson.m; sourceTree = "<group>"; };
+		187254CC221A7659002C7FE7 /* EngineeringModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EngineeringModel.m; path = "../../../../../../PRM_重构/PRM/Code/AllSubject/施工管理现场收货/施工管理/Model/EngineeringModel.m"; sourceTree = "<group>"; };
+		187254CD221A7659002C7FE7 /* EngineeringModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EngineeringModel.h; path = "../../../../../../PRM_重构/PRM/Code/AllSubject/施工管理现场收货/施工管理/Model/EngineeringModel.h"; sourceTree = "<group>"; };
+		187254CF221A7711002C7FE7 /* FileModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileModel.h; sourceTree = "<group>"; };
+		187254D0221A7711002C7FE7 /* FileModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileModel.m; sourceTree = "<group>"; };
+		187254D6221A7807002C7FE7 /* frontPage@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "frontPage@3x.png"; sourceTree = "<group>"; };
+		187254D7221A7807002C7FE7 /* frontPage@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "frontPage@2x.png"; sourceTree = "<group>"; };
 		18A7CBA221E49F3100EDB754 /* AccountDPViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AccountDPViewController.h; sourceTree = "<group>"; };
 		18A7CBA321E49F3100EDB754 /* AccountDPViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AccountDPViewController.m; sourceTree = "<group>"; };
 		18A7CBA721E4A37F00EDB754 /* SJYMacro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SJYMacro.h; sourceTree = "<group>"; };
@@ -229,8 +235,6 @@
 		2F6A077B1E5AB8B80036F389 /* ChangeOrdersApproveModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChangeOrdersApproveModel.m; sourceTree = "<group>"; };
 		2F6A077C1E5AB8B80036F389 /* ChangeOrdersModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangeOrdersModel.h; sourceTree = "<group>"; };
 		2F6A077D1E5AB8B80036F389 /* ChangeOrdersModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChangeOrdersModel.m; sourceTree = "<group>"; };
-		2F6A077E1E5AB8B80036F389 /* EngineeringModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EngineeringModel.h; sourceTree = "<group>"; };
-		2F6A077F1E5AB8B80036F389 /* EngineeringModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EngineeringModel.m; sourceTree = "<group>"; };
 		2F6A07801E5AB8B80036F389 /* MarketOrderModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MarketOrderModel.h; sourceTree = "<group>"; };
 		2F6A07811E5AB8B80036F389 /* MarketOrderModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MarketOrderModel.m; sourceTree = "<group>"; };
 		2F6A07851E5AB8B80036F389 /* ChangeOrdersApproveCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangeOrdersApproveCell.h; sourceTree = "<group>"; };
@@ -391,8 +395,6 @@
 		2F837A5F1E5D8D2A000E4AC1 /* ReviseProjectChangeView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ReviseProjectChangeView.xib; sourceTree = "<group>"; };
 		2F837A611E5D9864000E4AC1 /* down@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "down@2x.png"; sourceTree = "<group>"; };
 		2F837A621E5D9864000E4AC1 /* down@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "down@3x.png"; sourceTree = "<group>"; };
-		2FBE9CB81E67B75000D47F5F /* DistributionPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DistributionPerson.h; sourceTree = "<group>"; };
-		2FBE9CB91E67B75000D47F5F /* DistributionPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DistributionPerson.m; sourceTree = "<group>"; };
 		2FC7AF761E519A3A00EDB090 /* CALayer+XibConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CALayer+XibConfiguration.h"; sourceTree = "<group>"; };
 		2FC7AF771E519A3A00EDB090 /* CALayer+XibConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CALayer+XibConfiguration.m"; sourceTree = "<group>"; };
 		2FCD1F531E67E5CB0012B9C4 /* MultiSelectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiSelectView.h; sourceTree = "<group>"; };
@@ -403,8 +405,6 @@
 		2FD2C4231E5EE19B0052BFEE /* PopSelectTypeTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopSelectTypeTableView.m; sourceTree = "<group>"; };
 		2FD4DC2A1E60077F002BFA42 /* FileSelectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileSelectView.h; sourceTree = "<group>"; };
 		2FD4DC2B1E60077F002BFA42 /* FileSelectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileSelectView.m; sourceTree = "<group>"; };
-		2FD4DC2D1E600A94002BFA42 /* FileModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileModel.h; sourceTree = "<group>"; };
-		2FD4DC2E1E600A94002BFA42 /* FileModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileModel.m; sourceTree = "<group>"; };
 		7E07F68975EB552419C9BC2C /* Pods-PRM.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PRM.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PRM/Pods-PRM.debug.xcconfig"; sourceTree = "<group>"; };
 		D8DFA9CFACE8AB162CA6C7C3 /* Pods-PRM.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PRM.release.xcconfig"; path = "Pods/Target Support Files/Pods-PRM/Pods-PRM.release.xcconfig"; sourceTree = "<group>"; };
 		EE850D1EFBE3225FEA00DFDE /* libPods-PRM.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PRM.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -666,12 +666,12 @@
 		2F6A07791E5AB8B80036F389 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				187254CD221A7659002C7FE7 /* EngineeringModel.h */,
+				187254CC221A7659002C7FE7 /* EngineeringModel.m */,
 				2F6A077A1E5AB8B80036F389 /* ChangeOrdersApproveModel.h */,
 				2F6A077B1E5AB8B80036F389 /* ChangeOrdersApproveModel.m */,
 				2F6A077C1E5AB8B80036F389 /* ChangeOrdersModel.h */,
 				2F6A077D1E5AB8B80036F389 /* ChangeOrdersModel.m */,
-				2F6A077E1E5AB8B80036F389 /* EngineeringModel.h */,
-				2F6A077F1E5AB8B80036F389 /* EngineeringModel.m */,
 				2F6A07801E5AB8B80036F389 /* MarketOrderModel.h */,
 				2F6A07811E5AB8B80036F389 /* MarketOrderModel.m */,
 			);
@@ -800,12 +800,12 @@
 		2F6A07F31E5AB9670036F389 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				187254C9221A761E002C7FE7 /* DistributionPerson.h */,
+				187254CA221A761F002C7FE7 /* DistributionPerson.m */,
 				2F6A07F41E5AB9670036F389 /* FileTransferModel.h */,
 				2F6A07F51E5AB9670036F389 /* FileTransferModel.m */,
 				2F6A07F61E5AB9670036F389 /* ProjectApprovelModel.h */,
 				2F6A07F71E5AB9670036F389 /* ProjectApprovelModel.m */,
-				2FBE9CB81E67B75000D47F5F /* DistributionPerson.h */,
-				2FBE9CB91E67B75000D47F5F /* DistributionPerson.m */,
 				2F4C9AB11E7237F700391E1D /* TransferCellClickModel.h */,
 				2F4C9AB21E7237F700391E1D /* TransferCellClickModel.m */,
 			);
@@ -924,10 +924,10 @@
 				2F837A5C1E5D8D12000E4AC1 /* ReviseProjectChangeView.h */,
 				2F837A5D1E5D8D12000E4AC1 /* ReviseProjectChangeView.m */,
 				2F837A5F1E5D8D2A000E4AC1 /* ReviseProjectChangeView.xib */,
+				187254CF221A7711002C7FE7 /* FileModel.h */,
+				187254D0221A7711002C7FE7 /* FileModel.m */,
 				2FD4DC2A1E60077F002BFA42 /* FileSelectView.h */,
 				2FD4DC2B1E60077F002BFA42 /* FileSelectView.m */,
-				2FD4DC2D1E600A94002BFA42 /* FileModel.h */,
-				2FD4DC2E1E600A94002BFA42 /* FileModel.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1229,11 +1229,11 @@
 				2F7488E81E49CA7400C11ADE /* zx@3x.png */,
 				2F7488E11E49C6E000C11ADE /* caidan@2x.png */,
 				2F7488E21E49C6E000C11ADE /* caidan@3x.png */,
+				187254D7221A7807002C7FE7 /* frontPage@2x.png */,
+				187254D6221A7807002C7FE7 /* frontPage@3x.png */,
 				2F7488D11E49BA1500C11ADE /* mainRightItem1@3x.png */,
 				2F7488D51E49BA5D00C11ADE /* mainRightItem1@2x.png */,
 				2F7E9FCA1E4858770056560D /* lunchImage.png */,
-				188C27A221DF28470022C989 /* frontPage@2x.png */,
-				188C27A421DF28C80022C989 /* frontPage@3x.png */,
 				2F7E9FB21E481D0E0056560D /* set@3x.png */,
 				2F7E9FB31E481D0E0056560D /* set@2x.png */,
 				2F7E9FB41E481D0E0056560D /* deSelect@2x.png */,
@@ -1346,7 +1346,7 @@
 				2F7A4AED1E569A3A00399EA2 /* dateSelect@3x.png in Resources */,
 				2F6A07471E5AB87E0036F389 /* MatericalPlanDetialController.xib in Resources */,
 				2F6A08111E5AB9680036F389 /* ProjectApprovalHeaderView.xib in Resources */,
-				188C27A321DF28470022C989 /* frontPage@2x.png in Resources */,
+				187254D9221A7807002C7FE7 /* frontPage@2x.png in Resources */,
 				2F6A081A1E5ABC780036F389 /* ReceiveGoodsViewController.xib in Resources */,
 				2F27C1461E5BE7EA00CD7AE6 /* ReceiveGoodsDetialCell.xib in Resources */,
 				2F72491E1E652E8800C367C8 /* SearchSelectView.xib in Resources */,
@@ -1358,7 +1358,6 @@
 				2F7488E01E49C5CE00C11ADE /* LeftMenuView.xib in Resources */,
 				2F6A07691E5AB87E0036F389 /* EngineerInfoViewController.xib in Resources */,
 				2F6A076D1E5AB87E0036F389 /* MaterialPalnCell.xib in Resources */,
-				188C27A521DF28C80022C989 /* frontPage@3x.png in Resources */,
 				2F27C14E1E5C2FC700CD7AE6 /* ProjectChangeDetialCell.xib in Resources */,
 				2F6A07DE1E5AB91B0036F389 /* DesignAllApproveCell.xib in Resources */,
 				2F6A08071E5AB9670036F389 /* MarketViewController.xib in Resources */,
@@ -1386,6 +1385,7 @@
 				2F7488E31E49C6E000C11ADE /* caidan@2x.png in Resources */,
 				2F8032631E700369003D748D /* ProjectHandoverCellAlertView.xib in Resources */,
 				2F6A07E41E5AB91B0036F389 /* ProcurementApproveHeaderView.xib in Resources */,
+				187254D8221A7807002C7FE7 /* frontPage@3x.png in Resources */,
 				2F6A08341E5AC3C00036F389 /* ProjectPurchuseViewController.xib in Resources */,
 				2F7E9FCB1E4858770056560D /* lunchImage.png in Resources */,
 				2F7488D31E49BA1500C11ADE /* mainRightItem1@3x.png in Resources */,
@@ -1462,6 +1462,8 @@
 				2F6A07AF1E5AB8B80036F389 /* EngineeringHeaderView.m in Sources */,
 				2F6A07E51E5AB91B0036F389 /* ProjectProcessCell.m in Sources */,
 				2F7E9F981E480E860056560D /* UserDefaultManager.m in Sources */,
+				187254D1221A7711002C7FE7 /* FileModel.m in Sources */,
+				187254CE221A7659002C7FE7 /* EngineeringModel.m in Sources */,
 				2FD4DC2C1E60077F002BFA42 /* FileSelectView.m in Sources */,
 				2F6A080E1E5AB9670036F389 /* ProjectApprovalCell.m in Sources */,
 				2FD2C4241E5EE19B0052BFEE /* PopSelectTypeTableView.m in Sources */,
@@ -1486,7 +1488,6 @@
 				2F8032611E70035A003D748D /* ProjectHandoverCellAlertView.m in Sources */,
 				2F6A08331E5AC3C00036F389 /* ProjectPurchuseViewController.m in Sources */,
 				2F7E9F901E480E350056560D /* NewNetWorkManager.m in Sources */,
-				2FD4DC2F1E600A94002BFA42 /* FileModel.m in Sources */,
 				2F6A07721E5AB87E0036F389 /* ProgressReportHeaderView.m in Sources */,
 				2F6A07481E5AB87E0036F389 /* MaterialPlanDetialModel.m in Sources */,
 				2F6A076C1E5AB87E0036F389 /* MaterialPalnCell.m in Sources */,
@@ -1513,7 +1514,6 @@
 				2F6A08401E5AD6370036F389 /* ReceiveGoodsCell.m in Sources */,
 				2F6A07DA1E5AB91B0036F389 /* TechnicalViewController.m in Sources */,
 				2F27C13F1E5BE61200CD7AE6 /* ReceiveGoodsDetialHeaderView.m in Sources */,
-				2F6A07A41E5AB8B80036F389 /* EngineeringModel.m in Sources */,
 				2F6A07A31E5AB8B80036F389 /* ChangeOrdersModel.m in Sources */,
 				2F6A076E1E5AB87E0036F389 /* MaterialPalnHeaderView.m in Sources */,
 				2F6A78E11E4AC04C001B6B4F /* MainModel.m in Sources */,
@@ -1532,12 +1532,12 @@
 				2F6A07461E5AB87E0036F389 /* MatericalPlanDetialController.m in Sources */,
 				2F5CA03E1E6664EF003A397E /* CellSelectView.m in Sources */,
 				2F27C14D1E5C2FC700CD7AE6 /* ProjectChangeDetialCell.m in Sources */,
-				2FBE9CBA1E67B75000D47F5F /* DistributionPerson.m in Sources */,
 				2F6A08381E5AC4090036F389 /* ProjectChangeViewController.m in Sources */,
 				2FC7AF781E519A3A00EDB090 /* CALayer+XibConfiguration.m in Sources */,
 				2F6A07A21E5AB8B80036F389 /* ChangeOrdersApproveModel.m in Sources */,
 				2F27C12F1E5BCF4800CD7AE6 /* PurchaseDetialModel.m in Sources */,
 				2F7488DF1E49C5CE00C11ADE /* LeftMenuView.m in Sources */,
+				187254CB221A761F002C7FE7 /* DistributionPerson.m in Sources */,
 				2F6A07AB1E5AB8B80036F389 /* ChangeOrdersCell.m in Sources */,
 				2F7E9F9C1E48100F0056560D /* MBProgressHUD.m in Sources */,
 				2F6A08491E5AEFDF0036F389 /* PurchaseDetialHeaderView.m in Sources */,
