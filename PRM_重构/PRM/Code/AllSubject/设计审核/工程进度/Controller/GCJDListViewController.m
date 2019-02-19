@@ -76,11 +76,7 @@
         self.tableView.isShowBtn =  havError;
     }
 }
-
--(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    return self.dataArray.count;
-}
-
+ 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return tableView.rowHeight;
 }

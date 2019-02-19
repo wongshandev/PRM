@@ -18,7 +18,7 @@
     [self.window makeKeyAndVisible];
     if ([[SJYDefaultManager shareManager]getFirstRun]) {
         //配置端口
-        [[SJYDefaultManager shareManager] saveIPAddress:@"58.216.202.186" IPPort:@"8811"];
+        [[SJYDefaultManager shareManager] saveIPAddress:@"58.216.202.186" IPPort:@"8817"];
     }
     if (@available(iOS 11.0, *)) {
         [UIScrollView appearance].contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;

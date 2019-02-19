@@ -77,18 +77,13 @@
     }
 }
 
--(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    return self.dataArray.count;
-}
-
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return tableView.rowHeight;
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return [self.dataArray count];
+    return  self.dataArray.count;
 }
-
-
+ 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     GCJDListCell *cell = [GCJDListCell cellWithTableView:tableView];
     GCJDListModel *model =  self.dataArray[indexPath.row];
