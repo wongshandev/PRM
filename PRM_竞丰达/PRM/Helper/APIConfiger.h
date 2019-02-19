@@ -99,6 +99,13 @@ NS_ASSUME_NONNULL_BEGIN
 #define API_SJSH_SH                                  API_Request(@"AppApprovalDesignAll")
 
 
+// 工程分配
+#define API_GCFPList                            API_Request(@"AppEngineeringAssignList")
+#define API_GCFPSave                         API_Request(@"AppAssignEngineering")
+
+// 采购审核
+#define API_CGSHList                            API_Request(@"AppApprovalPurchaseOrderList")
+#define API_CGSHSubmitList                API_Request(@"AppSubmitPO") // AppSubmitPO,参数:State=6,AEmp(登录成功后的uc)
 
 @end
 

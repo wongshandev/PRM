@@ -71,6 +71,10 @@
 		187254BC221A7443002C7FE7 /* FileModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 187254BB221A7443002C7FE7 /* FileModel.m */; };
 		187254BF221A74D5002C7FE7 /* DistributionPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = 187254BD221A74D5002C7FE7 /* DistributionPerson.m */; };
 		1872552E221A86FC002C7FE7 /* notificationSound.caf in Resources */ = {isa = PBXBuildFile; fileRef = 1872552D221A86FC002C7FE7 /* notificationSound.caf */; };
+		18725537221AA3DE002C7FE7 /* GCFPPersonDealController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18725532221AA3DE002C7FE7 /* GCFPPersonDealController.m */; };
+		18725538221AA3DE002C7FE7 /* SJYGCFPListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18725533221AA3DE002C7FE7 /* SJYGCFPListController.m */; };
+		18725545221B8D9F002C7FE7 /* SJYCGSHViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1872553C221B8D9F002C7FE7 /* SJYCGSHViewController.m */; };
+		18725547221B8D9F002C7FE7 /* SJYCGSHSearchAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18725542221B8D9F002C7FE7 /* SJYCGSHSearchAlertView.m */; };
 		18838A5D21F084E1004033CB /* XCSHRecordModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 18838A5C21F084E1004033CB /* XCSHRecordModel.m */; };
 		18838A6021F085CF004033CB /* XCSCRecordCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18838A5F21F085CF004033CB /* XCSCRecordCell.m */; };
 		18838A6321F08C2A004033CB /* XCSHRecordDetialController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18838A6221F08C2A004033CB /* XCSHRecordDetialController.m */; };
@@ -267,6 +271,14 @@
 		187254BD221A74D5002C7FE7 /* DistributionPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DistributionPerson.m; sourceTree = "<group>"; };
 		187254BE221A74D5002C7FE7 /* DistributionPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DistributionPerson.h; sourceTree = "<group>"; };
 		1872552D221A86FC002C7FE7 /* notificationSound.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = notificationSound.caf; sourceTree = "<group>"; };
+		18725531221AA3DE002C7FE7 /* SJYGCFPListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SJYGCFPListController.h; sourceTree = "<group>"; };
+		18725532221AA3DE002C7FE7 /* GCFPPersonDealController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCFPPersonDealController.m; sourceTree = "<group>"; };
+		18725533221AA3DE002C7FE7 /* SJYGCFPListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SJYGCFPListController.m; sourceTree = "<group>"; };
+		18725534221AA3DE002C7FE7 /* GCFPPersonDealController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCFPPersonDealController.h; sourceTree = "<group>"; };
+		1872553B221B8D9F002C7FE7 /* SJYCGSHViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SJYCGSHViewController.h; sourceTree = "<group>"; };
+		1872553C221B8D9F002C7FE7 /* SJYCGSHViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SJYCGSHViewController.m; sourceTree = "<group>"; };
+		18725542221B8D9F002C7FE7 /* SJYCGSHSearchAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SJYCGSHSearchAlertView.m; sourceTree = "<group>"; };
+		18725544221B8D9F002C7FE7 /* SJYCGSHSearchAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SJYCGSHSearchAlertView.h; sourceTree = "<group>"; };
 		18838A5B21F084E1004033CB /* XCSHRecordModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XCSHRecordModel.h; sourceTree = "<group>"; };
 		18838A5C21F084E1004033CB /* XCSHRecordModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XCSHRecordModel.m; sourceTree = "<group>"; };
 		18838A5E21F085CF004033CB /* XCSCRecordCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XCSCRecordCell.h; sourceTree = "<group>"; };
@@ -565,6 +577,76 @@
 				1845674721EEFD1E00AF55DF /* ZZCountingLabel.m */,
 			);
 			path = ZZCircleProgress;
+			sourceTree = "<group>";
+		};
+		1872552F221AA3DE002C7FE7 /* 工程分配 */ = {
+			isa = PBXGroup;
+			children = (
+				18725530221AA3DE002C7FE7 /* Controller */,
+				18725535221AA3DE002C7FE7 /* Model */,
+				18725536221AA3DE002C7FE7 /* View */,
+			);
+			path = "工程分配";
+			sourceTree = "<group>";
+		};
+		18725530221AA3DE002C7FE7 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				18725531221AA3DE002C7FE7 /* SJYGCFPListController.h */,
+				18725533221AA3DE002C7FE7 /* SJYGCFPListController.m */,
+				18725534221AA3DE002C7FE7 /* GCFPPersonDealController.h */,
+				18725532221AA3DE002C7FE7 /* GCFPPersonDealController.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		18725535221AA3DE002C7FE7 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		18725536221AA3DE002C7FE7 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		18725539221B8D9F002C7FE7 /* 采购审核 */ = {
+			isa = PBXGroup;
+			children = (
+				1872553A221B8D9F002C7FE7 /* Controller */,
+				1872553D221B8D9F002C7FE7 /* Model */,
+				18725540221B8D9F002C7FE7 /* View */,
+			);
+			path = "采购审核";
+			sourceTree = "<group>";
+		};
+		1872553A221B8D9F002C7FE7 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				1872553B221B8D9F002C7FE7 /* SJYCGSHViewController.h */,
+				1872553C221B8D9F002C7FE7 /* SJYCGSHViewController.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		1872553D221B8D9F002C7FE7 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		18725540221B8D9F002C7FE7 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				18725544221B8D9F002C7FE7 /* SJYCGSHSearchAlertView.h */,
+				18725542221B8D9F002C7FE7 /* SJYCGSHSearchAlertView.m */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		188C27AE21DF43D30022C989 = {
@@ -1405,6 +1487,8 @@
 		18EAA1AF21EC39A000B1DF08 /* AllSubject */ = {
 			isa = PBXGroup;
 			children = (
+				18725539221B8D9F002C7FE7 /* 采购审核 */,
+				1872552F221AA3DE002C7FE7 /* 工程分配 */,
 				18FB920C21EC996F00B55322 /* 交接 */,
 				18A7CBE021E5846900EDB754 /* 采购付款 */,
 				18A7CBD821E5846900EDB754 /* 任务分配 */,
@@ -1608,6 +1692,7 @@
 				18A7CC1321E59C2100EDB754 /* Reachability.m in Sources */,
 				18A7CC0D21E58EE100EDB754 /* HttpClient.m in Sources */,
 				18E995B721EC188400161BC2 /* LoginModel.m in Sources */,
+				18725545221B8D9F002C7FE7 /* SJYCGSHViewController.m in Sources */,
 				1843789521EF32E400AA14DC /* WLJHDetialModel.m in Sources */,
 				18255E1121E71B9800095143 /* DXNoDataView.m in Sources */,
 				182C501821EDC07D0002B312 /* SJYSGGLDetailController.m in Sources */,
@@ -1628,6 +1713,7 @@
 				1845674B21EEFD1F00AF55DF /* ZZCountingLabel.m in Sources */,
 				1809E3B221F6FBFB00DBFCFF /* ScrollGanttView.m in Sources */,
 				18A7CC0A21E587B700EDB754 /* SJYDefaultManager.m in Sources */,
+				18725537221AA3DE002C7FE7 /* GCFPPersonDealController.m in Sources */,
 				18838A7221F18F8F004033CB /* XMQGDetialController.m in Sources */,
 				184E8FC421E5F7ED00F133AA /* RequestTool.m in Sources */,
 				182C501021EDBEB80002B312 /* UIViewController+ZJScrollPageController.m in Sources */,
@@ -1635,6 +1721,7 @@
 				181B924221F99EA500E85E4B /* CGFKListModel.m in Sources */,
 				182C4FF821EDB8BB0002B312 /* JDHBListController.m in Sources */,
 				18A7CC1E21E5B67800EDB754 /* QMUIConfigurationTemplate.m in Sources */,
+				18725547221B8D9F002C7FE7 /* SJYCGSHSearchAlertView.m in Sources */,
 				181B924821F9A86D00E85E4B /* CGFKDetialViewController.m in Sources */,
 				184E8FC121E5EF8D00F133AA /* SJYIPSetViewController.m in Sources */,
 				182C501221EDBEB80002B312 /* ZJCollectionView.m in Sources */,
@@ -1704,6 +1791,7 @@
 				181B923621F85F4900E85E4B /* RWFPPersonDealCell.m in Sources */,
 				18255E0B21E71AEA00095143 /* NSString+Validate.m in Sources */,
 				188C27BC21DF43D30022C989 /* AppDelegate.m in Sources */,
+				18725538221AA3DE002C7FE7 /* SJYGCFPListController.m in Sources */,
 				180D699521ED7A6600684414 /* SGGLXCSHListController.m in Sources */,
 				18255E1521E72C6E00095143 /* UICollectionView+NoData.m in Sources */,
 				182C4FFB21EDB8D90002B312 /* WLJHListController.m in Sources */,

@@ -98,7 +98,7 @@
     Weak_Self;
     [self.searchAlertView.stateBtn clickWithBlock:^{
         [self.searchAlertView endEditing:YES];
-        [BRStringPickerView showStringPickerWithTitle:@"项目状态" dataSource:STATEArray defaultSelValue:weakSelf.searchAlertView.stateBtn isAutoSelect:NO themeColor:Color_NavigationLightBlue resultBlock:^(id selectValue) {
+        [BRStringPickerView showStringPickerWithTitle:@"项目状态" dataSource:STATEArray defaultSelValue:weakSelf.searchAlertView.stateBtn.currentTitle isAutoSelect:NO themeColor:Color_NavigationLightBlue resultBlock:^(id selectValue) {
             [weakSelf.searchAlertView.stateBtn setTitle:selectValue forState:UIControlStateNormal];
             weakSelf.shStateType = [@([STATEArray indexOfObject:selectValue]) stringValue];
         }];

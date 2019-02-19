@@ -19,7 +19,28 @@
 -(void)setUpNavigationBar{
     self.navBar.hidden = NO;
     self.navBar.titleLabel.text = self.listModel.Name;
-    [self createSaveagreeBtn];
+
+    Weak_Self;
+    if (self.listModel.isCGFK) {
+        [self.navBar.rightButton setTitle:@"同意" forState:UIControlStateNormal];
+        self.navBar.rightButton.hidden = NO;
+        [self.navBar.rightButton clickWithBlock:^{
+            // 同意处理
+            [weakSelf alertAgreeView];
+        }];
+    }else{
+        if (((self.listModel.State == 2) && (self.listModel.ApprovalID == 0 || self.listModel.ApprovalID == self.eld))
+            //State == 4 && ManagerID.In(0, eId) && !eId.In(ApprovalID, BossID))
+            || ((self.listModel.State == 4) && (self.listModel.ManagerID == 0 || self.listModel.ManagerID == self.eld) && self.eld != self.listModel.ApprovalID && self.eld != self.listModel.BossID)
+            //(State == 5 && BossID.inArray(0, eId) && !eId.In(ApprovalID,ManagerID))
+            || ((self.listModel.State == 5) && (self.listModel.BossID == 0 || self.listModel.BossID == self.eld) && self.eld != self.listModel.ApprovalID && self.eld != self.listModel.ManagerID)
+            ){
+            [self createSaveagreeBtn];
+
+        }
+
+
+    }
 }
 -(void)createSaveagreeBtn{
     Weak_Self;
@@ -184,15 +205,26 @@
     dialogViewController.contentView = contentView;
     [dialogViewController addCancelButtonWithText:@"取消" block:nil];
     [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
-        [SJYRequestTool requestCGFKAgreeReject: @{
-                                                        @"PurchaseOrderID":self.listModel.Id,
-                                                        @"EmployeeID":[SJYUserManager sharedInstance].sjyloginData.Id,
-                                                        @"State":@"5",
-                                                         @"RejectReason":@""//(驳回时必要回传参数)
-                                                        } success:^(id responder) {
+        NSDictionary  *paradic = self.listModel.isCGFK?@{
+                                                  @"PurchaseOrderID":self.listModel.Id,
+                                                  @"EmployeeID":[SJYUserManager sharedInstance].sjyloginData.Id,
+                                                  @"State":@"7", //竞丰达同意为7 其他为5
+                                                  @"RejectReason":@""//(驳回时必要回传参数)
+                                                  }:@{
+                                                      @"PurchaseOrderID":self.listModel.Id, 
+                                                      @"AEmp":[[SJYUserManager sharedInstance].sjyloginData modelToJSONString],
+                                                      @"State":@"6", //竞丰达同意为7 其他为5
+                                                      @"RejectReason":@""//(驳回时必要回传参数)
+                                                      };
+        [SJYRequestTool requestCGFKAgreeReject:paradic  success:^(id responder) {
                                                             [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
                                                             if ([[responder valueForKey:@"success"] boolValue]== YES) {
-                                                                [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshCGFKListView" object:nil];
+                                                                if (self.listModel.isCGFK) {
+                                                                    [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshCGFKListView" object:nil];
+                                                                }else{
+                                                                    [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshCGSHListView" object:nil];
+
+                                                                }
                                                                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                                                                     [self.navigationController popViewControllerAnimated:YES];
                                                                 });
@@ -240,7 +272,11 @@
                                                             [aDialogViewController hide];
                                                             [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
                                                             if ([[responder valueForKey:@"success"] boolValue]== YES) {
-                                                                [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshCGFKListView" object:nil];
+                                                                if (self.listModel.isCGFK) {
+                                                                    [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshCGFKListView" object:nil];
+                                                                }else{
+                                                                    [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshCGSHListView" object:nil]; 
+                                                                }
                                                                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                                                                     [self.navigationController popViewControllerAnimated:YES];
                                                                 });

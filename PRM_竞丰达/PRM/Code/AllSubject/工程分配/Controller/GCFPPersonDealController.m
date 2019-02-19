@@ -6,14 +6,14 @@
 //  Copyright © 2019年 apple. All rights reserved.
 //
 
-#import "RWFPPersonDealController.h"
+#import "GCFPPersonDealController.h"
 #import "RWFPPersonDealCell.h"
 #import "DistributionPerson.h"
 
 
 #define TypeArray @[@"负责人",@"工程经理",@"主设计人",@"辅助设计"]
 
-@interface RWFPPersonDealController ()
+@interface GCFPPersonDealController ()
 @property(nonatomic,strong)NSMutableArray<DistributionPerson *> *mainLeaderArray;
 @property(nonatomic,strong)NSMutableArray<DistributionPerson *> *PMArray;
 @property(nonatomic,strong)NSMutableArray<DistributionPerson *> *designerArray;
@@ -25,7 +25,7 @@
 
 @end
 
-@implementation RWFPPersonDealController
+@implementation GCFPPersonDealController
 
 -(void)setUpNavigationBar{
     Weak_Self;
@@ -191,14 +191,8 @@
     NSMutableArray *modelArray = [NSMutableArray new];
     NSMutableArray *dataArr = [@[
                                  @{
-                                     @"titleStr":@"负责人",
-                                     @"subtitleStr":self.stasticDic[@"FZR"],
-                                     @"IdString":@"",
-                                     @"isMust":@""
-                                     },
-                                 @{
-                                     @"titleStr":@"主设计人",
-                                     @"subtitleStr":self.stasticDic[@"ZSJR"],
+                                     @"titleStr":@"工程经理",
+                                     @"subtitleStr":self.stasticDic[@"GCJL"],
                                      @"IdString":@"",
                                      @"isMust":@""
                                      }
@@ -208,20 +202,20 @@
         RWFPDealListModel *model  = [RWFPDealListModel  modelWithDictionary:dataArr[i]];
         [modelArray addObject:model];
     }
-    switch (self.listModel.ProjectTypeID.integerValue) {
-        case 2:  //2：销售项目禁用工程下拉框
-        {
-            //            [modelArray removeObjectAtIndex:1];
-        }
-            break;
-        case 3:  //3：维保项目禁用设计下拉框
-        {
-            [modelArray removeLastObject];
-        }
-            break;
-        default:
-            break;
-    }
+//    switch (self.listModel.ProjectTypeID.integerValue) {
+//        case 2:  //2：销售项目禁用工程下拉框
+//        {
+//            //            [modelArray removeObjectAtIndex:1];
+//        }
+//            break;
+//        case 3:  //3：维保项目禁用设计下拉框
+//        {
+//            [modelArray removeLastObject];
+//        }
+//            break;
+//        default:
+//            break;
+//    }
     self.dataArray = modelArray;
     [self.tableView reloadData];
 }
@@ -466,7 +460,6 @@
             return;
         }
     }
-
     NSDictionary *paraDic = @{
                               @"InquiryID":_InquiryID,
                               @"DesignID":_DesignID,
@@ -477,10 +470,10 @@
                               };
     
 
-    [SJYRequestTool requestRWFPSubmit:paraDic success:^(id responder) {
+    [SJYRequestTool requestGCFPSubmit:paraDic success:^(id responder) {
         if ([[responder valueForKey:@"success"] boolValue]== YES) {
             [QMUITips showSucceed:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
-            [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshRWFPListView" object:nil];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshGCFPListView" object:nil];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [self.navigationController popViewControllerAnimated:YES];
             });
@@ -490,11 +483,6 @@
     }];
 }
 
-
-
-
-
-
 -(void)requestRWFP_submit_JFD{
     /**
      int InquiryID(市场负责人Id)
@@ -503,77 +491,25 @@
      int EngineeringID(项目经理Id)
      */
 
-    __block NSString *_InquiryID = @"";
-    __block NSString *_DesignID= @"";
-//    __block NSString *_EngineeringID= @"";
-//    __block NSString *_AidIds= @"";
-
-    [self.mainLeaderArray enumerateObjectsUsingBlock:^(DistributionPerson * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([obj.Name isEqualToString:self.stasticDic[@"FZR"]]) {
-            _InquiryID = obj.Id;
+    __block NSString *_EngineeringID= @"";
+    [self.PMArray enumerateObjectsUsingBlock:^(DistributionPerson * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj.Name isEqualToString:self.stasticDic[@"GCJL"]]) {
+            _EngineeringID = obj.Id;
         }
     }];
-    [self.designerArray enumerateObjectsUsingBlock:^(DistributionPerson * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([obj.Name isEqualToString:self.stasticDic[@"ZSJR"]]) {
-            _DesignID = obj.Id;
-        }
-    }];
-//    [self.PMArray enumerateObjectsUsingBlock:^(DistributionPerson * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-//        if ([obj.Name isEqualToString:self.stasticDic[@"GCJL"]]) {
-//            _EngineeringID = obj.Id;
-//        }
-//    }];
-
-//    NSMutableArray *assidArr = [NSMutableArray new];
-//    [self.stasticDic[@"FZSJ"] enumerateObjectsUsingBlock:^(NSString * _Nonnull name, NSUInteger idxout, BOOL * _Nonnull stopout) {
-//        [self.designerArray enumerateObjectsUsingBlock:^(DistributionPerson * _Nonnull obj, NSUInteger idxin, BOOL * _Nonnull stop) {
-//            if ([obj.Name isEqualToString:name]) {
-//                [assidArr addObject:obj.Id];
-//            }
-//        }];
-//    }];
-//    _AidIds = [assidArr componentsJoinedByString:@","];
-//
-
-    if (_InquiryID.length == 0) {
+    if ( !_EngineeringID.length) {
         [QMUITips showWithText:@"数据不全无法保存" inView:self.view hideAfterDelay:1.2];
         return;
     }
-
-    if (self.listModel.ProjectTypeID.integerValue == 1) { // 工程
-        if (!_DesignID.length) {
-            [QMUITips showWithText:@"数据不全无法保存" inView:self.view hideAfterDelay:1.2];
-            return;
-        }
-    }
-
-    if (self.listModel.ProjectTypeID.integerValue == 2) { // 销售
-        if (!_DesignID.length) {
-            [QMUITips showWithText:@"数据不全无法保存" inView:self.view hideAfterDelay:1.2];
-            return;
-        }
-    }
-    if (self.listModel.ProjectTypeID.integerValue == 3) { //维保
-//        if ( !_EngineeringID.length) {
-//            [QMUITips showWithText:@"数据不全无法保存" inView:self.view hideAfterDelay:1.2];
-//            return;
-//        }
-    }
-
     NSDictionary *paraDic = @{
-                              @"InquiryID":_InquiryID,
-                              @"DesignID":_DesignID,
-//                              @"AidIds":_AidIds,
-//                              @"EngineeringID":_EngineeringID,
+                              @"EngineeringID":_EngineeringID,
                               @"ProjectBranchID":self.listModel.Id,
                               @"EmployeeID":[SJYUserManager sharedInstance].sjyloginData.Id
                               };
-
-
-    [SJYRequestTool requestRWFPSubmit:paraDic success:^(id responder) {
+    [SJYRequestTool requestGCFPSubmit:paraDic success:^(id responder) {
         if ([[responder valueForKey:@"success"] boolValue]== YES) {
             [QMUITips showSucceed:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
-            [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshRWFPListView" object:nil];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshGCFPListView" object:nil];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [self.navigationController popViewControllerAnimated:YES];
             });
@@ -583,19 +519,7 @@
     }];
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 
 
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];

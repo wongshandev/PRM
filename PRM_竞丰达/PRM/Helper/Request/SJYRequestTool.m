@@ -494,4 +494,54 @@
         }
     }];
 }
+#pragma mark ============= 工程分配
++(void)requestGCFPWithPage:(NSInteger)page success:(Success)success failure:(Failure)failure{
+    [RequestTool requestGCFPWithPage:page success:^(NSURLSessionDataTask *dataTask, id responseObjcet) {
+        id  respond = [NSJSONSerialization  JSONObjectWithData:responseObjcet options:0 error:nil];
+        success(respond);
+    } failure:^(NSURLSessionDataTask *dataTask, NSError *error) {
+        if ([AFNetworkReachabilityManager sharedManager].reachable) {
+            failure(-1,@"请求失败");
+        } else{
+            failure(-1,@"网络异常,请检查您的网络状况");
+        }
+    }];
+}
++(void)requestGCFPSubmit:(NSDictionary *)paradic success:(Success)success failure:(Failure)failure{
+    [RequestTool requestGCFPSubmit:paradic success:^(NSURLSessionDataTask *dataTask, id responseObjcet) {
+        id  respond = [NSJSONSerialization  JSONObjectWithData:responseObjcet options:0 error:nil];
+        success(respond);
+    } failure:^(NSURLSessionDataTask *dataTask, NSError *error) {
+        if ([AFNetworkReachabilityManager sharedManager].reachable) {
+            failure(-1,@"请求失败");
+        } else{
+            failure(-1,@"网络异常,请检查您的网络状况");
+        }
+    }];
+}
+#pragma mark ============== 采购审核
++(void)requestCGSHListWithSearchStateID:(NSInteger)searchStateID  SearchCode:(NSString *)searchCode page:(NSInteger)page success:(Success)success failure:(Failure)failure{
+    [RequestTool requestCGSHListWithSearchStateID:searchStateID  SearchCode:searchCode page:page success:^(NSURLSessionDataTask *dataTask, id responseObjcet) {
+        id  respond = [NSJSONSerialization  JSONObjectWithData:responseObjcet options:0 error:nil];
+        success(respond);
+    } failure:^(NSURLSessionDataTask *dataTask, NSError *error) {
+        if ([AFNetworkReachabilityManager sharedManager].reachable) {
+            failure(-1,@"请求失败");
+        } else{
+            failure(-1,@"网络异常,请检查您的网络状况");
+        }
+    }];
+}
++(void)requestCGSHSubmitWithParameters:(NSDictionary *)paradic  success:(Success)success failure:(Failure)failure{
+    [RequestTool requestCGSHSubmitWithParameters:paradic success:^(NSURLSessionDataTask *dataTask, id responseObjcet) {
+        id  respond = [NSJSONSerialization  JSONObjectWithData:responseObjcet options:0 error:nil];
+        success(respond);
+    } failure:^(NSURLSessionDataTask *dataTask, NSError *error) {
+        if ([AFNetworkReachabilityManager sharedManager].reachable) {
+            failure(-1,@"请求失败");
+        } else{
+            failure(-1,@"网络异常,请检查您的网络状况");
+        }
+    }];
+}
 @end

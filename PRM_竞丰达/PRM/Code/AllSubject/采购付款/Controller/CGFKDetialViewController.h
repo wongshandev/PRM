@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface CGFKDetialViewController : DXSuperTabViewController
 @property(nonatomic,strong)CGFKListModel *listModel;
-
+@property(nonatomic,assign)NSInteger eld;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -141,6 +141,7 @@ typedef NS_ENUM(NSUInteger, JumpURL) {
     MarketOrder,  // 工程部----项目请购
     ChangeOrdersApprove, //变更审核
     ProjectApproval,  //任务分配；
+    EngineeringAssign, // 工程分配 
     DesignAllApprove// 技术部--- 设计审核 ；
 };
 #define kJumpURLGet [[NSArray alloc] initWithObjects:\
@@ -156,6 +157,7 @@ typedef NS_ENUM(NSUInteger, JumpURL) {
 @"MarketOrder",\
 @"ChangeOrdersApprove",\
 @"ProjectApproval",\
+@"EngineeringAssign",\
 @"DesignAllApprove", nil]
 // 枚举 to 字串
 #define KJumpURLToString(type) ([kJumpURLGet objectAtIndex:type])

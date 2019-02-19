@@ -77,9 +77,14 @@
 // ProjectApproval:  //任务分配；
 #import "SJYRWFPListController.h"
 
+// EngineeringAssign:  //工程分配；
+#import "SJYGCFPListController.h"
+
 // DesignAllApprove: // 技术部--- 设计审核；
 #import "SJYSJSHViewController.h"
 
+// ChangeOrdersApprove: //采购审核
+#import "SJYCGSHViewController.h"
 
 
 

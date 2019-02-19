@@ -9,9 +9,16 @@
 #import "DXBaseCell.h"
 #import "CGFKListModel.h"
 
+typedef enum : NSUInteger {
+    CellType_CGFKList,
+    CellType_CGSHList,
+} CellType;
+
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface CGFKListCell : DXBaseCell
+@property(nonatomic,assign)CellType cellType;
 
 @end
 

@@ -193,7 +193,7 @@
 
 #pragma mark =============   任务分配
 +(void)requestRWFPList:(NSString *)employID  page:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
-    NSDictionary *params = @{@"rows":@"20",@"page":@(page),@"EmployeeID":employID};
+    NSDictionary *params = @{@"rows":@"20",@"page":@(page),@"PositionID":employID};
     NSLog(@"%@",API_RWFPList);
     NSLog(@"%@",params);
     [HttpClient post:API_RWFPList parameters:params success:success failure:failure];
@@ -225,7 +225,14 @@
 #pragma mark ============= 设计审核
 
 +(void)requestSJSHListWithSearchStateID:(NSString *)searchStateID  SearchCode:(NSString *)searchCode SearchName:(NSString *)searchName page:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
-    NSDictionary *params = @{@"rows":@"20",@"page":@(page),@"SearchName":searchName,@"SearchStateID":searchStateID,@"SearchCode":searchCode};
+    //竞丰达 增加AEmp字段
+    NSDictionary *params = @{
+                             @"AEmp":[[SJYUserManager sharedInstance].sjyloginData   modelToJSONString],
+                             @"rows":@"20",
+                             @"page":@(page),
+                             @"SearchName":searchName,
+                             @"SearchStateID":searchStateID,
+                             @"SearchCode":searchCode};
     NSLog(@"%@",API_SJSHList);
     NSLog(@"%@",params);
     [HttpClient post:API_SJSHList parameters:params success:success failure:failure];
@@ -233,6 +240,43 @@
 
 +(void)requestSJSHWithAPI:(NSString *)apiUrl  parameters:(NSDictionary *)params success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
     [HttpClient post:apiUrl parameters:params success:success failure:failure]; 
+}
+#pragma mark ============= 工程分配
++(void)requestGCFPWithPage:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
+    //竞丰达 增加AEmp字段
+    NSDictionary *params = @{
+                             @"AEmp":[[SJYUserManager sharedInstance].sjyloginData   modelToJSONString],
+                             @"rows":@"20",
+                             @"page":@(page)
+                             };
+    NSLog(@"%@",API_GCFPList);
+    NSLog(@"%@",params);
+    [HttpClient post:API_GCFPList parameters:params success:success failure:failure];
+}
++(void)requestGCFPSubmit:(NSDictionary *)paradic  success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
+     [HttpClient post:API_GCFPSave parameters:paradic success:success failure:failure];
+}
+
+#pragma mark ============== 采购审核
++(void)requestCGSHListWithSearchStateID:(NSInteger)searchStateID  SearchCode:(NSString *)searchCode page:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
+
+//    NSError *jsonError;
+//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[[SJYUserManager sharedInstance].sjyloginData modelToJSONObject] options:NSJSONWritingPrettyPrinted error:&jsonError];
+//    NSString *jsonStr = [[[[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding] stringByReplacingOccurrencesOfString:@"\n" withString:@""] stringByReplacingOccurrencesOfString:@" " withString:@""] stringByReplacingOccurrencesOfString:@"\\" withString:@""];
+    //竞丰达 增加AEmp字段
+   NSDictionary *params = @{
+                            @"rows":@"20",
+                            @"page":@(page),
+                            @"AEmp":[[SJYUserManager sharedInstance].sjyloginData modelToJSONString],
+                            @"SearchStateID":@(searchStateID),
+                            @"SearchCode":searchCode};
+
+    NSLog(@"%@",API_CGSHList);
+    NSLog(@"%@",params);
+    [HttpClient post:API_CGSHList parameters:params success:success failure:failure];
+}
++(void)requestCGSHSubmitWithParameters:(NSDictionary *)paradic  success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
+    [HttpClient post:API_CGSHSubmitList parameters:paradic success:success failure:failure];
 }
 
 @end

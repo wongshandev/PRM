@@ -43,6 +43,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy  ) NSString * PurchaseId;
 @property (nonatomic, copy  ) NSString * SHDpId;
 @property (nonatomic, copy  ) NSString * SHId;
+
+@property (nonatomic, copy  ) NSString * PoAmount1;
+@property (nonatomic, copy  ) NSString * PoAmount2;
+@property (nonatomic, copy  ) NSString * PoAmount3;
+@property (nonatomic, copy  ) NSString * PoId1;
+@property (nonatomic, copy  ) NSString * PoId2;
+@property (nonatomic, copy  ) NSString * PoId3;
+
 @end
 NS_ASSUME_NONNULL_END
 

@@ -98,6 +98,15 @@ typedef void (^Failure)(int status,NSString *info);
 
 //报价清单 /文件清单 / 工程进度
 +(void)requestSJSHWithAPI:(NSString *)apiUrl  parameters:(NSDictionary *)params success:(Success)success failure:(Failure)failure;
+
+#pragma mark ============= 工程分配
++(void)requestGCFPWithPage:(NSInteger)page success:(Success)success failure:(Failure)failure;
++(void)requestGCFPSubmit:(NSDictionary *)paradic success:(Success)success failure:(Failure)failure;
+#pragma mark ============== 采购审核
++(void)requestCGSHListWithSearchStateID:(NSInteger)searchStateID  SearchCode:(NSString *)searchCode page:(NSInteger)page success:(Success)success failure:(Failure)failure;
++(void)requestCGSHSubmitWithParameters:(NSDictionary *)paradic  success:(Success)success failure:(Failure)failure;
+
+
 @end
 
 

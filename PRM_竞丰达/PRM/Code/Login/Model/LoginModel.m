@@ -66,6 +66,14 @@
     self.PurchaseId  = [aDecoder decodeObjectForKey:@"PurchaseId"];
     self.SHDpId  = [aDecoder decodeObjectForKey:@"SHDpId"];
     self.SHId  = [aDecoder decodeObjectForKey:@"SHId"];
+ 
+    self.PoAmount1  = [aDecoder decodeObjectForKey:@"PoAmount1"];
+    self.PoAmount2  = [aDecoder decodeObjectForKey:@"PoAmount2"];
+    self.PoAmount3  = [aDecoder decodeObjectForKey:@"PoAmount3"];
+    self.PoId1  = [aDecoder decodeObjectForKey:@"PoId1"];
+    self.PoId2  = [aDecoder decodeObjectForKey:@"PoId2"];
+    self.PoId3  = [aDecoder decodeObjectForKey:@"PoId3"];
+
     return self;
 }
 
@@ -89,6 +97,15 @@
     [aCoder encodeObject:self.PurchaseId forKey:@"PurchaseId"];
     [aCoder encodeObject:self.SHDpId forKey:@"SHDpId"];
     [aCoder encodeObject:self.SHId forKey:@"SHId"];
+
+
+    [aCoder encodeObject:self.PoAmount1 forKey:@"PoAmount1"];
+    [aCoder encodeObject:self.PoAmount2 forKey:@"PoAmount2"];
+    [aCoder encodeObject:self.PoAmount3 forKey:@"PoAmount3"];
+    [aCoder encodeObject:self.PoId1 forKey:@"PoId1"];
+    [aCoder encodeObject:self.PoId3 forKey:@"PoId2"];
+    [aCoder encodeObject:self.PoId3 forKey:@"PoId3"];
+
 }
 @end
 

@@ -61,7 +61,7 @@ static YYCache *cache;
         [cache removeObjectForKey:LOGINDATAKEY];
     }
     [SJYUserManager sharedInstance].sjyloginData = nil;
-    //清除奇葩说推送本地存储
+    //清除 本地存储
  }
 
 //userInfo

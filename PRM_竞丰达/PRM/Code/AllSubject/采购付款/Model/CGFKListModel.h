@@ -19,6 +19,18 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *AgreementPrice;
 @property (nonatomic, copy) NSString *PlaceReceipt;
 
-@end
+
+@property (nonatomic, assign) int ApprovalID;
+@property (nonatomic, assign) int ManagerID;
+@property (nonatomic, assign) int BossID;
+@property (nonatomic, assign) int State;
+
+@property (nonatomic, copy) NSString *StateStr;
+@property (nonatomic, strong) UIColor *StateColor;
+
+@property (nonatomic, assign) BOOL isCGFK;
+
+ @end
+
 
 NS_ASSUME_NONNULL_END

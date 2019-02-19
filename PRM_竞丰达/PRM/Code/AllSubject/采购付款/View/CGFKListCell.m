@@ -24,7 +24,7 @@
 -(void)setupCell{
     self.selectionStyle = UITableViewCellSelectionStyleGray;
     QMUILabel *leftCircle = [self createLabelWithTextColor:Color_White Font:Font_ListLeftCircle numberOfLines:0];
-    leftCircle.backgroundColor = Color_NavigationLightBlue;
+//    leftCircle.backgroundColor = Color_NavigationLightBlue;
     leftCircle.textAlignment = NSTextAlignmentCenter;
     [self addSubview:leftCircle];
     self.leftCircleLab = leftCircle;
@@ -84,25 +84,48 @@
 }
 
 -(void)loadContent{
-    CGFKListModel *model = self.data;
-    self.titleLab.text = model.Name;
-    self.leftCircleLab.text= model.CreateName;
-    self.subTitle.text = model.SupplierName;
-    
-    self.descriptionLab.text = model.PlaceReceipt;
-    self.moneyLab.text = [NSString numberMoneyFormattor:model.AgreementPrice];
-    
+    if(self.cellType == CellType_CGFKList){
+        CGFKListModel *model = self.data;
+        self.titleLab.text = model.Name;
+        self.leftCircleLab.text= model.CreateName;
+         self.leftCircleLab.backgroundColor = Color_NavigationLightBlue;
+        self.subTitle.text = model.SupplierName;
+        self.descriptionLab.text = model.PlaceReceipt;
+        self.moneyLab.text = [NSString numberMoneyFormattor:model.AgreementPrice];
+    }
+
+    if(self.cellType == CellType_CGSHList){
+        CGFKListModel *model = self.data;
+        self.titleLab.text = model.Name;
+        self.leftCircleLab.text= model.StateStr;
+        self.leftCircleLab.backgroundColor = model.StateColor;
+        self.subTitle.text = model.SupplierName;
+        self.descriptionLab.text = model.PlaceReceipt;
+        self.moneyLab.text = [NSString numberMoneyFormattor:model.AgreementPrice];
+    } 
 }
 
 // 处理点击时控件颜色变化
 -(void)setSelected:(BOOL)highlighted animated:(BOOL)animated{
     [super setSelected:highlighted animated:animated];//加上这句哦
+    if(self.cellType == CellType_CGFKList){
      _leftCircleLab.backgroundColor =   Color_NavigationLightBlue;
+    }
+    if(self.cellType == CellType_CGSHList){
+        CGFKListModel *model = self.data;
+        _leftCircleLab.backgroundColor =   model.StateColor;
+    }
 }
 
 -(void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated{
     [super setHighlighted:highlighted animated:animated];//加上这句哦
+    if(self.cellType == CellType_CGFKList){
      _leftCircleLab.backgroundColor =   Color_NavigationLightBlue;
+    }
+    if(self.cellType == CellType_CGSHList){
+        CGFKListModel *model = self.data;
+        _leftCircleLab.backgroundColor =   model.StateColor;
+    }
 }
 
 @end

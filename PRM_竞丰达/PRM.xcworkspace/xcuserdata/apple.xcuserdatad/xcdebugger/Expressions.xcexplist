@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "__41-[SJYSJSHViewController request_SJSHData]_block_invoke:SJYSJSHViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__38-[SJYMainViewController bindViewModel]_block_invoke_2:SJYMainViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__41-[SJYCGSHViewController requestData_CGSH]_block_invoke:SJYCGSHViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "+[RequestTool requestCGSHListWithSearchStateID:SearchCode:page:success:failure:]:RequestTool.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[SJYMainViewController collectionView:didSelectItemAtIndexPath:]:SJYMainViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__66+[SJYRequestTool loginInfoWithUserName:passworld:success:failure:]_block_invoke:SJYRequestTool.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "(__NSCFString *)string">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[GCFPPersonDealController requestRWFP_submit_JFD]:GCFPPersonDealController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__50-[GCFPPersonDealController requestRWFP_submit_JFD]_block_invoke.549:GCFPPersonDealController.m">
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

@@ -21,5 +21,116 @@
             </Actions>
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PRM/Code/AllSubject/&#x91c7;&#x8d2d;&#x4ed8;&#x6b3e;/Controller/CGFKDetialViewController.m"
+            timestampString = "572251118.384722"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "275"
+            endingLineNumber = "275"
+            landmarkName = "-alertRejectView"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PRM/Code/AllSubject/&#x91c7;&#x8d2d;&#x4ed8;&#x6b3e;/Controller/CGFKDetialViewController.m"
+            timestampString = "572251118.3848619"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "279"
+            endingLineNumber = "279"
+            landmarkName = "-alertRejectView"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__43-[CGFKDetialViewController alertRejectView]_block_invoke_2"
+                  moduleName = "PRM"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/apple/Desktop/SourceTree/PRM/PRM_%E7%AB%9E%E4%B8%B0%E8%BE%BE/PRM/Code/AllSubject/%E9%87%87%E8%B4%AD%E4%BB%98%E6%AC%BE/Controller/CGFKDetialViewController.m"
+                  timestampString = "572251118.8487411"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "280"
+                  endingLineNumber = "280"
+                  offsetFromSymbolStart = "656">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__43-[CGFKDetialViewController alertRejectView]_block_invoke_3"
+                  moduleName = "PRM"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/apple/Desktop/SourceTree/PRM/PRM_%E7%AB%9E%E4%B8%B0%E8%BE%BE/PRM/Code/AllSubject/%E9%87%87%E8%B4%AD%E4%BB%98%E6%AC%BE/Controller/CGFKDetialViewController.m"
+                  timestampString = "572251118.852016"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "280"
+                  endingLineNumber = "280"
+                  offsetFromSymbolStart = "24">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__destroy_helper_block_.505"
+                  moduleName = "PRM"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/apple/Desktop/SourceTree/PRM/PRM_%E7%AB%9E%E4%B8%B0%E8%BE%BE/PRM/Code/AllSubject/%E9%87%87%E8%B4%AD%E4%BB%98%E6%AC%BE/Controller/CGFKDetialViewController.m"
+                  timestampString = "572251118.856733"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "280"
+                  endingLineNumber = "280"
+                  offsetFromSymbolStart = "20">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PRM/Code/AllSubject/&#x91c7;&#x8d2d;&#x4ed8;&#x6b3e;/Controller/CGFKDetialViewController.m"
+            timestampString = "572251118.384937"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "266"
+            endingLineNumber = "266"
+            landmarkName = "-alertRejectView"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PRM/Code/AllSubject/&#x91c7;&#x8d2d;&#x4ed8;&#x6b3e;/Controller/CGFKDetialViewController.m"
+            timestampString = "572251118.384997"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "233"
+            endingLineNumber = "233"
+            landmarkName = "-alertAgreeView"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

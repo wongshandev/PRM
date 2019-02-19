@@ -1,21 +1,21 @@
 //
-//  SJYCGFKListController.m
+//  SJYGCFPListController.m
 //  PRM
 //
-//  Created by apple on 2019/1/24.
+//  Created by apple on 2019/1/23.
 //  Copyright © 2019年 apple. All rights reserved.
 //
 
-#import "SJYCGFKListController.h"
- #import "CGFKDetialViewController.h"
-#import "CGFKListCell.h"
+#import "SJYGCFPListController.h" 
+#import "RWFPListCell.h"
+#import "GCFPPersonDealController.h"
 
-@interface SJYCGFKListController ()
+@interface SJYGCFPListController ()
 @property(nonatomic,assign)NSInteger page;
 @property(nonatomic,assign)NSInteger totalNum;
 @end
 
-@implementation SJYCGFKListController
+@implementation SJYGCFPListController
 
 
 -(void)setUpNavigationBar{
@@ -39,30 +39,31 @@
     Weak_Self;
     self.tableView.mj_header =[MJRefreshNormalHeader headerWithRefreshingBlock:^{
         weakSelf.page = 0;
-        [weakSelf  requestData_CGFK];
+        [weakSelf  requestData_GCFP];
+
     }];
     self.tableView.mj_footer =[MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
         weakSelf.page ++;
-        [weakSelf  requestData_CGFK];
-    }];
+        [weakSelf  requestData_GCFP];
+     }];
     [self.tableView.mj_header beginRefreshing];
     self.tableView.refreshBlock = ^{
         [weakSelf.tableView.mj_header beginRefreshing];
     };
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshListView) name:@"refreshCGFKListView" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshListView) name:@"refreshGCFPListView" object:nil];
 }
 
--(void)requestData_CGFK{
-    [SJYRequestTool requestCGFKListWithPage:self.page success:^(id responder) {
+-(void)requestData_GCFP{
+    [SJYRequestTool requestGCFPWithPage:self.page success:^(id responder) {
         self.totalNum = [[responder objectForKey:@"total"] integerValue];
         NSArray *rowsArr = [responder objectForKey:@"rows"];
         if (self.tableView.mj_header.isRefreshing) {
             [self.dataArray removeAllObjects];
         }
         for (NSDictionary *dic in rowsArr) {
-            CGFKListModel *model = [CGFKListModel  modelWithDictionary:dic];
-            model.isCGFK = YES;
-             [self.dataArray addObject:model];
+            RWFPListModel *model = [RWFPListModel  modelWithDictionary:dic];
+            model.titleStr = model.Code.length? [model.Name stringByAppendingFormat:@" (%@)",model.Code]:model.Name;
+            [self.dataArray addObject:model];
         }
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView reloadData];
@@ -99,17 +100,17 @@
     return tableView.rowHeight;
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    CGFKListCell *cell = [CGFKListCell cellWithTableView:tableView];
+    RWFPListCell *cell = [RWFPListCell cellWithTableView:tableView];
     cell .indexPath = indexPath;
-     cell.data = self.dataArray[indexPath.row];
+    cell.data = self.dataArray[indexPath.row];
     [cell loadContent];
     return cell;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    CGFKListModel *model =  self.dataArray[indexPath.row];
-    CGFKDetialViewController *dealVC = [[CGFKDetialViewController alloc]init];
+    RWFPListModel *model =  self.dataArray[indexPath.row];
+    GCFPPersonDealController *dealVC = [[GCFPPersonDealController alloc]init];
     dealVC.listModel = model;
     dealVC.title = model.Name;
     [self.navigationController pushViewController:dealVC animated:YES];
@@ -122,7 +123,7 @@
 
 -(void)dealloc{
     NSLog(@"释放");
-    [[NSNotificationCenter defaultCenter]removeObserver:self name:@"refreshCGFKListView" object:nil];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:@"refreshGCFPListView" object:nil];
 }
 
 

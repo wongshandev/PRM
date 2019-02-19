@@ -113,7 +113,7 @@
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     MainModel *sectionModel = [self.dateSource  objectAtIndex:indexPath.section];
     MainModel *cellModel = [sectionModel.children objectAtIndex:indexPath.row];
-
+    
     JumpURL jump = KJumpURLToEnum(cellModel.url);
     switch (jump) {
         case  FileTransferEngineering : //工程  -- 交接确认；
@@ -156,12 +156,12 @@
             SJYXMJDViewController *xmjdVC = [[SJYXMJDViewController alloc] init];
             xmjdVC.mainModel = cellModel;
             xmjdVC.title = cellModel.text;
-         [self.navigationController pushViewController:xmjdVC animated:YES];
-
+            [self.navigationController pushViewController:xmjdVC animated:YES];
+            
         }
             break;
         case MySpending: //我的报销
-
+            
             break;
         case MarketOrder:  // 工程部----项目请购
         {
@@ -187,6 +187,14 @@
             [self.navigationController pushViewController:rwfpVC animated:YES];
         }
             break;
+        case EngineeringAssign:  //工程分配；
+        {
+            SJYGCFPListController * rwfpVC = [[SJYGCFPListController alloc]init];
+            rwfpVC.mainModel = cellModel;
+            rwfpVC.title = cellModel.text;
+            [self.navigationController pushViewController:rwfpVC animated:YES];
+        }
+            break;
         case DesignAllApprove: // 技术部--- 设计审核；
         {
             SJYSJSHViewController *sjshVC = [[SJYSJSHViewController alloc]init];
@@ -195,9 +203,16 @@
             [self.navigationController pushViewController:sjshVC animated:YES];
         }
             break;
-            default:
+        default:
+        {
+            if ([cellModel.text isEqualToString:@"采购审核"]) {
+                SJYCGSHViewController *cgshVC = [[SJYCGSHViewController alloc] init];
+                cgshVC.mainModel = cellModel;
+                cgshVC.title = cellModel.text;
+                [self.navigationController pushViewController:cgshVC animated:YES];
+            }
+        }
             break;
-
     }
 }
 
