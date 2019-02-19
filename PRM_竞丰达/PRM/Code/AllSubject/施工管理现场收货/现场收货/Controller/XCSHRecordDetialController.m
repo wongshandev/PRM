@@ -35,7 +35,10 @@
     [self.navBar.rightButton clickWithBlock:^{
         [weakSelf submit_RecordChangeData];
     }];
-    
+//    [self alertMention];
+    [self alertMention_JFD];
+}
+-(void)alertMention{
     /**
      SiteState：
      1-采购接收;State=5,弹出接收详情，State=6,提示该发货已接收完成，State<5,提示该发货还未付款
@@ -44,22 +47,53 @@
     if ((self.recordModel.SiteState.integerValue == 1 && self.recordModel.State.integerValue == 5) || (self.recordModel.SiteState.integerValue == 2 && (self.recordModel.State.integerValue == 3  ||  self.recordModel.State.integerValue == 4  ))) {
         self.navBar.rightButton.hidden= NO;
     }
-    {
-        if (self.recordModel.SiteState.integerValue == 1) {
-            if (self.recordModel.State.integerValue < 5) {
-                SJYAlertShow(@"该发货尚未付款", @"确定");
-            }
+
+    if (self.recordModel.SiteState.integerValue == 1) {
+        if (self.recordModel.State.integerValue < 5) {
+            SJYAlertShow(@"该发货尚未付款", @"确定");
         }
-        if (self.recordModel.SiteState.integerValue == 2) {
-            if (self.recordModel.State.integerValue < 3) {
-                SJYAlertShow(@"未发货,不能接收", @"确定");
-            }
-            if (self.recordModel.State.integerValue >= 5) {
-                SJYAlertShow(@"该发货已接收完成", @"确定");
-            }
+    }
+    if (self.recordModel.SiteState.integerValue == 2) {
+        if (self.recordModel.State.integerValue < 3) {
+            SJYAlertShow(@"未发货,不能接收", @"确定");
+        }
+        if (self.recordModel.State.integerValue >= 5) {
+            SJYAlertShow(@"该发货已接收完成", @"确定");
+        }
+    }
+
+}
+
+-(void)alertMention_JFD{
+
+    /**
+     SiteState：
+     1-采购接收;State=7,弹出接收详情，State=8,提示该发货已接收完成，State<7,提示该发货还未付款
+     2-总部发货接收:State>2&&State<5,弹出接收详情，State<3提示未发货记录不能接收， State>=5提示该发货已接收完成
+     */
+    if ((self.recordModel.SiteState.integerValue == 1 && self.recordModel.State.integerValue == 7) || (self.recordModel.SiteState.integerValue == 2 && (self.recordModel.State.integerValue == 3  ||  self.recordModel.State.integerValue == 4  ))) {
+        self.navBar.rightButton.hidden= NO;
+    }
+
+    if (self.recordModel.SiteState.integerValue == 1) {
+        if (self.recordModel.State.integerValue < 7) {
+            SJYAlertShow(@"该发货尚未付款", @"确定");
+        }
+        if (self.recordModel.State.integerValue== 8) {
+            SJYAlertShow(@"该发货已接收完成", @"确定");
+        }
+    }
+    if (self.recordModel.SiteState.integerValue == 2) {
+        if (self.recordModel.State.integerValue < 3) {
+            SJYAlertShow(@"未发货,不能接收", @"确定");
+        }
+        if (self.recordModel.State.integerValue >= 5) {
+            SJYAlertShow(@"该发货已接收完成", @"确定");
         }
     }
 }
+
+
 -(void)setupTableView{
     [super setupTableView];
     self.tableView.separatorStyle =  UITableViewCellSeparatorStyleSingleLine;

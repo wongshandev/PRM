@@ -203,15 +203,15 @@
             [self.navigationController pushViewController:sjshVC animated:YES];
         }
             break;
-        default:
+        case PurchaseApprove: // 采购审核；
         {
-            if ([cellModel.text isEqualToString:@"采购审核"]) {
-                SJYCGSHViewController *cgshVC = [[SJYCGSHViewController alloc] init];
-                cgshVC.mainModel = cellModel;
-                cgshVC.title = cellModel.text;
-                [self.navigationController pushViewController:cgshVC animated:YES];
-            }
+            SJYCGSHViewController *cgshVC = [[SJYCGSHViewController alloc] init];
+            cgshVC.mainModel = cellModel;
+            cgshVC.title = cellModel.text;
+            [self.navigationController pushViewController:cgshVC animated:YES];
         }
+            break;
+        default:
             break;
     }
 }

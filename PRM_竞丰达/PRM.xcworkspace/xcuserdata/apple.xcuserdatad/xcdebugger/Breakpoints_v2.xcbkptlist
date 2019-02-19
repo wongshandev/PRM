@@ -28,7 +28,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PRM/Code/AllSubject/&#x91c7;&#x8d2d;&#x4ed8;&#x6b3e;/Controller/CGFKDetialViewController.m"
-            timestampString = "572251118.384722"
+            timestampString = "572251346.151209"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "275"
@@ -44,7 +44,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PRM/Code/AllSubject/&#x91c7;&#x8d2d;&#x4ed8;&#x6b3e;/Controller/CGFKDetialViewController.m"
-            timestampString = "572251118.3848619"
+            timestampString = "572251346.163172"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "279"
@@ -60,7 +60,7 @@
                   moduleName = "PRM"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/apple/Desktop/SourceTree/PRM/PRM_%E7%AB%9E%E4%B8%B0%E8%BE%BE/PRM/Code/AllSubject/%E9%87%87%E8%B4%AD%E4%BB%98%E6%AC%BE/Controller/CGFKDetialViewController.m"
-                  timestampString = "572251118.8487411"
+                  timestampString = "572253313.403774"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "280"
@@ -75,7 +75,7 @@
                   moduleName = "PRM"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/apple/Desktop/SourceTree/PRM/PRM_%E7%AB%9E%E4%B8%B0%E8%BE%BE/PRM/Code/AllSubject/%E9%87%87%E8%B4%AD%E4%BB%98%E6%AC%BE/Controller/CGFKDetialViewController.m"
-                  timestampString = "572251118.852016"
+                  timestampString = "572253313.4067481"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "280"
@@ -90,7 +90,7 @@
                   moduleName = "PRM"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/apple/Desktop/SourceTree/PRM/PRM_%E7%AB%9E%E4%B8%B0%E8%BE%BE/PRM/Code/AllSubject/%E9%87%87%E8%B4%AD%E4%BB%98%E6%AC%BE/Controller/CGFKDetialViewController.m"
-                  timestampString = "572251118.856733"
+                  timestampString = "572253313.40968"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "280"
@@ -107,7 +107,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PRM/Code/AllSubject/&#x91c7;&#x8d2d;&#x4ed8;&#x6b3e;/Controller/CGFKDetialViewController.m"
-            timestampString = "572251118.384937"
+            timestampString = "572251346.164162"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "266"
@@ -123,12 +123,28 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PRM/Code/AllSubject/&#x91c7;&#x8d2d;&#x4ed8;&#x6b3e;/Controller/CGFKDetialViewController.m"
-            timestampString = "572251118.384997"
+            timestampString = "572251346.1650701"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "233"
             endingLineNumber = "233"
             landmarkName = "-alertAgreeView"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PRM/Code/Main/Controller/SJYMainViewController.m"
+            timestampString = "572253312.930776"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "53"
+            endingLineNumber = "53"
+            landmarkName = "-bindViewModel"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
