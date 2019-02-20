@@ -213,7 +213,7 @@
     textView.placeholder = @"请输入(限32字)";
     [typeBtn clickWithBlock:^{
         [textView endEditing:YES];
-        [BRStringPickerView showStringPickerWithTitle:@"驳回至" dataSource:@[@"合同",@"设计"] defaultSelValue:typeBtn.currentTitle isAutoSelect:NO themeColor:Color_NavigationLightBlue resultBlock:^(id selectValue) {
+        [BRStringPickerView showStringPickerWithTitle:@"驳回至" dataSource:@[@"合同",@"深化设计"] defaultSelValue:typeBtn.currentTitle isAutoSelect:NO themeColor:Color_NavigationLightBlue resultBlock:^(id selectValue) {
             [typeBtn setTitle:selectValue forState:UIControlStateNormal];
         }];
     }];
