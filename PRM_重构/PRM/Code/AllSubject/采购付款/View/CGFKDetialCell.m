@@ -72,8 +72,8 @@
 
 - (void)setTagViewSubviewsModel:(CGFKDetialFrame *)frame {
     [self.floatLayoutView removeAllSubviews];
-
     NSMutableArray<NSString *> *suggestions = [@[frame.model.Model , frame.model.BrandName, frame.model.QuantityStr , frame.model.PriceStr ] mutableCopy];
+//    NSMutableArray<NSString *> *suggestions = [@[frame.model.Model , frame.model.BrandName, frame.model.QuantityStr] mutableCopy];
     if([suggestions containsObject:@""]){
         [suggestions removeObject:@""];
     }

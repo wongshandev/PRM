@@ -14,7 +14,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *BeginDate;
 @property (nonatomic, copy) NSString *DesignDay;
 @property (nonatomic, copy) NSString *Name;
- 
+
+
+@property (nonatomic, copy) NSString *Rate;
+@property (nonatomic, copy) NSString *pId;
+@property (nonatomic, copy) NSString *ChildName;
+
+@property (nonatomic, copy) NSString *titleStr;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -27,7 +27,7 @@
 			<key>CFBundleTypeName</key>
 			<string>My File Format</string>
 			<key>LSHandlerRank</key>
-			<string>Owner</string>
+			<string>Alternate</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>com.microsoft.powerpoint.ppt</string>
@@ -61,8 +61,10 @@
 	<key>CFBundleShortVersionString</key>
 	<string>0.0.1</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2</string>
 	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>

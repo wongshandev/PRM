@@ -30,16 +30,11 @@
         }];
     }else{
         if (((self.listModel.State == 2) && (self.listModel.ApprovalID == 0 || self.listModel.ApprovalID == self.eld))
-            //State == 4 && ManagerID.In(0, eId) && !eId.In(ApprovalID, BossID))
-            || ((self.listModel.State == 4) && (self.listModel.ManagerID == 0 || self.listModel.ManagerID == self.eld) && self.eld != self.listModel.ApprovalID && self.eld != self.listModel.BossID)
-            //(State == 5 && BossID.inArray(0, eId) && !eId.In(ApprovalID,ManagerID))
-            || ((self.listModel.State == 5) && (self.listModel.BossID == 0 || self.listModel.BossID == self.eld) && self.eld != self.listModel.ApprovalID && self.eld != self.listModel.ManagerID)
+            || ((self.listModel.State == 4) && (self.listModel.ManagerID == 0 || self.listModel.ManagerID == self.eld) && (self.eld != self.listModel.ApprovalID && self.eld != self.listModel.BossID))
+            || ((self.listModel.State == 5) && (self.listModel.BossID == 0 || self.listModel.BossID == self.eld) && (self.eld != self.listModel.ApprovalID && self.eld != self.listModel.ManagerID))
             ){
             [self createSaveagreeBtn];
-
         }
-
-
     }
 }
 -(void)createSaveagreeBtn{
@@ -110,7 +105,7 @@
         NSMutableArray *rowSectionArr = [NSMutableArray new];
         for (NSDictionary *dic in rowsArr) {
             CGFKDetialModel *model = [CGFKDetialModel  modelWithDictionary:dic];
-            model.PriceStr = model.Price.length!= 0?[[NSString numberMoneyFormattor:model.Price] stringByAppendingString:@" (单价)"]:@"";
+            model.PriceStr = model.UnitPrice.length!= 0?[[NSString numberMoneyFormattor:model.UnitPrice] stringByAppendingString:@" (单价)"]:@"";
            model.QuantityStr = model.Quantity.length!= 0?[[NSString numberSepFormattor:model.Quantity] stringByAppendingString:@" (数量)"]:@"";
             CGFKDetialFrame *frame = [[CGFKDetialFrame alloc]init];
             frame.model = model;

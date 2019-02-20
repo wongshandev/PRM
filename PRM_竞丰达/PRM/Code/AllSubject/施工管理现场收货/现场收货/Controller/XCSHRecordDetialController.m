@@ -42,9 +42,9 @@
     /**
      SiteState：
      1-采购接收;State=5,弹出接收详情，State=6,提示该发货已接收完成，State<5,提示该发货还未付款
-     2-总部发货接收:State>2&&State<5,弹出接收详情，State<3提示未发货记录不能接收， State>=5提示该发货已接收完成
+     2-总部发货接收:State>2&&State<5,弹出接收详情，State<3提示未发货记录不能接收， State>=5提示该发货已接收完成 
      */
-    if ((self.recordModel.SiteState.integerValue == 1 && self.recordModel.State.integerValue == 5) || (self.recordModel.SiteState.integerValue == 2 && (self.recordModel.State.integerValue == 3  ||  self.recordModel.State.integerValue == 4  ))) {
+    if ((self.recordModel.SiteState.integerValue == 1 && self.recordModel.State.integerValue == 5) || (self.recordModel.SiteState.integerValue == 2 && (self.recordModel.State.integerValue >2  &&   self.recordModel.State.integerValue < 5 ))) {
         self.navBar.rightButton.hidden= NO;
     }
 
@@ -70,8 +70,13 @@
      SiteState：
      1-采购接收;State=7,弹出接收详情，State=8,提示该发货已接收完成，State<7,提示该发货还未付款
      2-总部发货接收:State>2&&State<5,弹出接收详情，State<3提示未发货记录不能接收， State>=5提示该发货已接收完成
+
+     SiteState=1
+     采购接收;State=7,弹出接收详情，State=8,提示该发货已接收完成，State<7,提示该发货还未付款
+     SiteState=2
+     总部发货接收:State>2&&State<5,弹出接收详情，State<3提示未发货记录不能接收， State>=5提示该发货已接收完成
      */
-    if ((self.recordModel.SiteState.integerValue == 1 && self.recordModel.State.integerValue == 7) || (self.recordModel.SiteState.integerValue == 2 && (self.recordModel.State.integerValue == 3  ||  self.recordModel.State.integerValue == 4  ))) {
+    if ((self.recordModel.SiteState.integerValue == 1 && self.recordModel.State.integerValue == 7) || (self.recordModel.SiteState.integerValue == 2 && (self.recordModel.State.integerValue >2  &&   self.recordModel.State.integerValue < 5 ))) {
         self.navBar.rightButton.hidden= NO;
     }
 

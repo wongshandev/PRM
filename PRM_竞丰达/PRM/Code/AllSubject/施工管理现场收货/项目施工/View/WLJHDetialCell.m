@@ -81,7 +81,7 @@
 
     QMUILabel *thisLab = [self createLabelWithTextColor:Color_White Font:Font_EqualWidth(13) numberOfLines:1];
     thisLab.contentEdgeInsets = UIEdgeInsetsMake(0, 5, 0, 5);
-    thisLab.backgroundColor = Color_Cyan ;
+    thisLab.backgroundColor = UIColorHex(#3FD0AD);
     [self addSubview:thisLab];
     self.thisLab = thisLab;
 
@@ -150,7 +150,8 @@
 -(void)loadContent{
     WLJHDetialModel *model = self.data;
     self.titleLab.text = model.Name;
-    self.circleProgress.progress = model.canChangeQuantityThis.floatValue / model.Quantity.integerValue;
+    CGFloat planNum =  model.QuantityPurchased.floatValue;
+    self.circleProgress.progress = (model.canChangeQuantityThis.floatValue + planNum )  / model.Quantity.integerValue;
     self.totalLab.text = model.Quantity;
     self.planLab.text = model.QuantityPurchased;
      self.thisLab.text = model.canChangeQuantityThis;

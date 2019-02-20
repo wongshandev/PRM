@@ -25,6 +25,7 @@
     self.selectionStyle = UITableViewCellSelectionStyleGray;
     QMUILabel *leftCircle = [self createLabelWithTextColor:Color_White Font:Font_ListLeftCircle numberOfLines:0];
 //    leftCircle.backgroundColor = Color_NavigationLightBlue;
+    leftCircle.contentEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
     leftCircle.textAlignment = NSTextAlignmentCenter;
     [self addSubview:leftCircle];
     self.leftCircleLab = leftCircle;
@@ -96,7 +97,7 @@
 
     if(self.cellType == CellType_CGSHList){
         CGFKListModel *model = self.data;
-        self.titleLab.text = model.Name;
+        self.titleLab.text = model.titleStr;
         self.leftCircleLab.text= model.StateStr;
         self.leftCircleLab.backgroundColor = model.StateColor;
         self.subTitle.text = model.SupplierName;

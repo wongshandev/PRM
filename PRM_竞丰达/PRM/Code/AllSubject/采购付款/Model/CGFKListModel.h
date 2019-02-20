@@ -20,14 +20,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *PlaceReceipt;
 
 
-@property (nonatomic, assign) int ApprovalID;
-@property (nonatomic, assign) int ManagerID;
-@property (nonatomic, assign) int BossID;
-@property (nonatomic, assign) int State;
+@property (nonatomic, assign) NSInteger ApprovalID;
+@property (nonatomic, assign) NSInteger ManagerID;
+@property (nonatomic, assign) NSInteger BossID;
+@property (nonatomic, assign) NSInteger State;
 
+@property (nonatomic, copy) NSString *titleStr;
 @property (nonatomic, copy) NSString *StateStr;
 @property (nonatomic, strong) UIColor *StateColor;
-
 @property (nonatomic, assign) BOOL isCGFK;
 
  @end

@@ -267,6 +267,7 @@
 
     QMUIDialogSelectionViewController *dialogViewController = [[QMUIDialogSelectionViewController alloc] init];
     dialogViewController.titleView.style = QMUINavigationTitleViewStyleSubTitleVertical;
+    dialogViewController.tableView.separatorInset  = UIEdgeInsetsZero;
     dialogViewController.title = model.titleStr;
     dialogViewController.titleView.subtitle = [model.titleStr isEqualToString:@"辅助设计"]?@"多选":@"单选";
     dialogViewController.allowsMultipleSelection = [model.titleStr isEqualToString:@"辅助设计"]? YES:NO;// 打开多选
@@ -364,17 +365,23 @@
         [dialogVC hide];
         //负责人
         if ([model.titleStr isEqualToString:TypeArray[0]]) {
-            model.subtitleStr = dialogVC.items[dialogVC.selectedItemIndex];
+            if (dialogVC.selectedItemIndex <= dialogVC.items.count -1 && dialogVC.selectedItemIndex>=0) {
+                model.subtitleStr = dialogVC.items[dialogVC.selectedItemIndex];
+            }
             [self.stasticDic setValue:model.subtitleStr forKey:@"FZR"];
         }
         //工程经理
         if ([model.titleStr isEqualToString:TypeArray[1]]) {
-            model.subtitleStr = dialogVC.items[dialogVC.selectedItemIndex];
+            if (dialogVC.selectedItemIndex <= dialogVC.items.count -1 && dialogVC.selectedItemIndex>=0) {
+                model.subtitleStr = dialogVC.items[dialogVC.selectedItemIndex];
+            }
             [self.stasticDic setValue:model.subtitleStr forKey:@"GCJL"];
         }
         //主设计人
         if ([model.titleStr isEqualToString:TypeArray[2]]) {
-            model.subtitleStr = dialogVC.items[dialogVC.selectedItemIndex];
+            if (dialogVC.selectedItemIndex <= dialogVC.items.count -1 && dialogVC.selectedItemIndex>=0) {
+                model.subtitleStr = dialogVC.items[dialogVC.selectedItemIndex];
+            }
             [self.stasticDic setValue:model.subtitleStr forKey:@"ZSJR"];
             if ([self.stasticDic[@"FZSJ"] containsObject:model.subtitleStr]) {
                 [self.stasticDic[@"FZSJ"] removeObject:model.subtitleStr];

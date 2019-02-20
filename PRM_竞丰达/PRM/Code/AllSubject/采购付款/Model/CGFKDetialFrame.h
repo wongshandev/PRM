@@ -15,6 +15,7 @@
 @property (nonatomic, copy) NSString *Model;
 @property (nonatomic, copy) NSString *Name;
 @property (nonatomic, copy) NSString *Price;
+@property (nonatomic, copy) NSString *UnitPrice;
 @property (nonatomic, copy) NSString *Quantity;
 @property (nonatomic, copy) NSString *StockID;
 

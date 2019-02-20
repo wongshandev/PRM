@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,copy)NSString *Address;
 @property(nonatomic,copy)NSString *stateString;
 
+@property(nonatomic,assign)BOOL isCanSH;
 @end
 
 NS_ASSUME_NONNULL_END

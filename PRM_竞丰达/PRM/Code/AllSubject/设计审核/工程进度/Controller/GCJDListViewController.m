@@ -52,6 +52,7 @@
 
            for (NSDictionary *dic in rowsArr) {
                GCJDListModel *model = [GCJDListModel  modelWithDictionary:dic];
+               model.titleStr = model.ChildName.length?[model.Name stringByAppendingFormat:@"(%@)",model.ChildName]:model.Name; 
                [self.dataArray addObject:model];
            }
            dispatch_async(dispatch_get_main_queue(), ^{

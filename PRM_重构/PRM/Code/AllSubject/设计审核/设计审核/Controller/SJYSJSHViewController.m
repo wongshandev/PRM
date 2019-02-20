@@ -11,7 +11,7 @@
 #import "SJYSJSHSearchAlertView.h"
 #import "SJSHDetialSuperController.h"
 
-#define  STATEArray  @[@"未审核",@"已审核",@"全部"]
+#define  STATEArray  @[@"全部",@"未审核",@"已审核"]
 
 @interface SJYSJSHViewController ()<QMUITextFieldDelegate>
 @property (nonatomic, strong) SJYSJSHSearchAlertView * searchAlertView;
@@ -19,7 +19,7 @@
 @property(nonatomic,assign)NSInteger page;
 @property(nonatomic,assign)NSInteger totalNum;
 
-@property(nonatomic,copy)NSString * shStateType;
+@property(nonatomic,assign)NSInteger  shStateType;
 @property(nonatomic,copy)NSString * searchCode;
 @property(nonatomic,copy)NSString * searchName;
 
@@ -31,7 +31,7 @@
     Weak_Self;
     self.navBar.backButton.hidden = NO;
     self.navBar.titleLabel.text = self.title;
-    self.shStateType = @"0";
+    self.shStateType = 0;
     self.searchCode = @"";
     self.searchName = @"";
 
@@ -53,7 +53,7 @@
     self.searchAlertView.codeTF.text = self.searchCode;
     self.searchAlertView.nameTF.delegate = self;
     self.searchAlertView.nameTF.text = self.searchName;
-    [self.searchAlertView.stateBtn  setTitle:[STATEArray objectAtIndex:self.shStateType.integerValue] forState:UIControlStateNormal];
+    [self.searchAlertView.stateBtn  setTitle:[STATEArray objectAtIndex:self.shStateType+1] forState:UIControlStateNormal];
     self.searchAlertView.rightdownImgView.image = SJYCommonImage(@"downBlack");
     [self.searchAlertView.stateLab makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.searchAlertView.mas_top).offset(5);
@@ -117,9 +117,11 @@
     Weak_Self;
     [self.searchAlertView.stateBtn clickWithBlock:^{
         [self.searchAlertView endEditing:YES];
-        [BRStringPickerView showStringPickerWithTitle:@"项目状态" dataSource:STATEArray defaultSelValue:weakSelf.searchAlertView.stateBtn isAutoSelect:NO themeColor:Color_NavigationLightBlue resultBlock:^(id selectValue) {
+        [BRStringPickerView showStringPickerWithTitle:@"项目状态" dataSource:STATEArray defaultSelValue:weakSelf.searchAlertView.stateBtn.currentTitle isAutoSelect:NO themeColor:Color_NavigationLightBlue resultBlock:^(id selectValue) {
             [weakSelf.searchAlertView.stateBtn setTitle:selectValue forState:UIControlStateNormal];
-            weakSelf.shStateType = [@([STATEArray indexOfObject:selectValue]) stringValue];
+            NSInteger index = [STATEArray indexOfObject:selectValue] -1;
+            weakSelf.shStateType = index;
+
         }];
     }];
 
@@ -172,7 +174,7 @@
 
 -(void)request_SJSHData{
 
-    [SJYRequestTool requestSJSHListWithSearchStateID:self.shStateType SearchCode:self.searchCode SearchName:self.searchName page:self.page  success:^(id responder) {
+    [SJYRequestTool requestSJSHListWithSearchStateID:@(self.shStateType).stringValue SearchCode:self.searchCode SearchName:self.searchName page:self.page  success:^(id responder) {
         NSArray *rowsArr = [responder objectForKey:@"rows"];
         self.totalNum = [[responder objectForKey:@"total"] integerValue];
 
@@ -182,7 +184,8 @@
         for (NSDictionary *dic in rowsArr) {
             SJSHListModel  *model = [SJSHListModel  modelWithDictionary:dic];
             model.titleStr = [model.Name stringByAppendingFormat:@" (%@)",model.Code];
-            model.stateString = model.State.integerValue>0?[STATEArray objectAtIndex:1]:STATEArray.firstObject;
+//            model.stateString = model.State.integerValue>0?[STATEArray objectAtIndex:1]:STATEArray.firstObject;
+            model.stateString = model.State.integerValue==2?[STATEArray objectAtIndex:1]:STATEArray.lastObject;
             [self.dataArray addObject:model];
         }
         dispatch_async(dispatch_get_main_queue(), ^{

@@ -10,10 +10,10 @@
 #import "CGFKListCell.h"
 #import "SJYCGSHSearchAlertView.h"
 #import "CGFKDetialViewController.h"
-
+//value == 1 ? "计划" : (value == 2) ? "已提交" : (value == 3) ? "已驳回" : (value == 4) ? "财务已审" : (value == 5) ? "总经理已审" : (value == 6) ? "待付款" : (value == 7) ? "已付款" : "已入库";
 #define  STATEArray  @[@"全部",@"未审核",@"已审核"]
-#define  ListModelSTATEArray  @[@"",@"制单",@"已提交",@"已驳回",@"财务审核",@"总经理审核",@"董事长审核",@"已付款",@"入完库"]
-#define  ListSTATEColorArray  @[[UIColor whiteColor],UIColorHex(#007BD3),UIColorHex(#31BDF3),UIColorHex(#FF0000),UIColorHex(#FE6D4B),UIColorHex(#EF5362),UIColorHex(#7FEF5362),UIColorHex(#3FD0AD),UIColorHex(#2BBDF3)]
+#define  ListModelSTATEArray  @[@"",@"计划",@"已提交",@"已驳回",@"财务已审",@"总经理已审",@"待付款",@"已付款",@"已入库"]
+#define  ListSTATEColorArray  @[[UIColor whiteColor],UIColorHex(#007BD3),UIColorHex(#007BD3),UIColorHex(#FF0000),UIColorHex(#FE6D4B),UIColorHex(#EF5362),UIColorHex(#F79746),UIColorHex(#3FD0AD),UIColorHex(#2BBDF3)]
 @interface SJYCGSHViewController ()<QMUITextFieldDelegate>
 @property (nonatomic, strong) SJYCGSHSearchAlertView * searchAlertView;
 
@@ -34,7 +34,6 @@
     self.navBar.titleLabel.text = self.title;
     self.shStateType = 0;
     self.searchCode = @"";
-
     [self.navBar.rightButton setTitle:@"查询" forState:UIControlStateNormal];
     self.navBar.rightButton.hidden = NO;
     [self.navBar.rightButton clickWithBlock:^{
@@ -148,7 +147,7 @@
     [SJYRequestTool requestCGSHListWithSearchStateID:self.shStateType SearchCode:self.searchCode page:self.page success:^(id responder) {
         NSArray *rowsArr = [responder objectForKey:@"rows"];
         self.totalNum = [[responder objectForKey:@"total"] integerValue];
-        self.eld = [[responder objectForKey:@"eld"] integerValue];
+        self.eld = [[responder objectForKey:@"eId"] integerValue];
         if (self.tableView.mj_header.isRefreshing) {
             [self.dataArray removeAllObjects];
         }
@@ -157,6 +156,7 @@
             model.isCGFK = NO;
             model.StateStr = [ListModelSTATEArray objectAtIndex:model.State];
             model.StateColor = [ ListSTATEColorArray objectAtIndex:model.State];
+            model.titleStr = model.CreateName.length?[NSString stringWithFormat:@"(%@)  %@",model.CreateName,model.Name]:model.Name;
             [self.dataArray addObject:model];
         }
         dispatch_async(dispatch_get_main_queue(), ^{

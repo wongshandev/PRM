@@ -60,8 +60,8 @@
     
     NSDictionary *dic = [CGFKDetialFrame properties_aps:model];
     [model  setValuesForKeysWithDictionary:dic];
-
     NSMutableArray<NSString *> *suggestions = [@[model.Model , model.BrandName, model.QuantityStr , model.PriceStr ] mutableCopy];
+//    NSMutableArray<NSString *> *suggestions = [@[model.Model , model.BrandName, model.QuantityStr ] mutableCopy];
     if([suggestions containsObject:@""]){
         [suggestions removeObject:@""];
     }

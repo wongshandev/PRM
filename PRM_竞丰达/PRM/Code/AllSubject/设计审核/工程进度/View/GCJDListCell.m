@@ -23,6 +23,7 @@
 @implementation GCJDListCell
 
 -(void)setupCell{
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
     QMUILabel *titleLab = [self createLabelWithTextColor:Color_TEXT_HIGH Font:Font_ListTitle numberOfLines:0];
     [self addSubview:titleLab];
     self.titleLab = titleLab;
@@ -93,7 +94,7 @@
 
 -(void)loadContent{
     GCJDListModel *model = self.data;
-    self.titleLab.text = model.Name;
+    self.titleLab.text = model.titleStr;
     self.jhkssjLab.text = model.BeginDate;
     self.jhsgtsLab.text = model.DesignDay;
 }

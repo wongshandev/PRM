@@ -81,7 +81,7 @@
 
     QMUILabel *thisLab = [self createLabelWithTextColor:Color_White Font:Font_EqualWidth(13) numberOfLines:1];
     thisLab.contentEdgeInsets = UIEdgeInsetsMake(0, 5, 0, 5);
-    thisLab.backgroundColor = Color_Cyan ;
+    thisLab.backgroundColor = UIColorHex(#3FD0AD);
     [self addSubview:thisLab];
     self.thisLab = thisLab;
 

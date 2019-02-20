@@ -25,11 +25,12 @@
 -(void)setUpNavigationBar{
     self.navBar.backButton.hidden = NO;
     self.navBar.titleLabel.text = self.title;
-    if(self.sjshListModel.State.integerValue == 2){
-        [self createSaveagreeBtn];
-    } 
+    [self createSaveagreeBtn];
 }
 -(void)createSaveagreeBtn{
+    if(!self.sjshListModel.isCanSH ){
+        return;
+    }
     Weak_Self;
     QMUIButton *rejectBt = [[QMUIButton  alloc]init];
     [rejectBt setTitle:@"驳回" forState:UIControlStateNormal];
@@ -40,7 +41,7 @@
     [self.rejectBtn clickWithBlock:^{
         [weakSelf alertRejectView];
     }];
-
+    
     QMUIButton *agreeBt = [QMUIButton  buttonWithType:UIButtonTypeCustom];
     [agreeBt setTitle:@"同意" forState:UIControlStateNormal];
     [agreeBt setTitleColor:Color_White forState:UIControlStateNormal];
@@ -83,10 +84,10 @@
     style.contentViewBounces = NO;
     // 颜色渐变
     style.gradualChangeTitleColor = YES;
-
+    
     // 初始化
     self.pageScrollView = [[ZJScrollPageView alloc] initWithFrame:CGRectMake(0, self.navBar.height, self.view.bounds.size.width, self.view.bounds.size.height - self.navBar.height) segmentStyle:style titles:self.titles parentViewController:self delegate:self];
-     [self.view addSubview:self.pageScrollView];
+    [self.view addSubview:self.pageScrollView];
 }
 
 #pragma mark ======================= 数据绑定
@@ -110,7 +111,7 @@
         wjqdVC.sjshListModel = self.sjshListModel;
         childVc = wjqdVC;
     }
-     return childVc;
+    return childVc;
 }
 
 - (BOOL)shouldAutomaticallyForwardAppearanceMethods {
@@ -118,7 +119,7 @@
 }
 
 - (void)setSelectedIndex:(NSInteger)selectedIndex animated:(BOOL)animated{
-
+    
 }
 -(NSArray *)titles{
     if (!_titles) {
@@ -140,7 +141,7 @@
 -(void)alertAgreeView{
     QMUIDialogViewController *dialogViewController = [[QMUIDialogViewController alloc] init];
     dialogViewController.title = @"提醒";
-
+    
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 45)];
     contentView.backgroundColor = UIColorWhite;
     QMUILabel *label = [[QMUILabel alloc] init];
@@ -156,23 +157,24 @@
     dialogViewController.contentView = contentView;
     [dialogViewController addCancelButtonWithText:@"取消" block:nil];
     [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
-          [SJYRequestTool requestSJSHWithAPI:API_SJSH_SH parameters:@{
-                                                  @"DeepenDesignID":self.sjshListModel.Id,
-                                                  @"EmployeeID":[SJYUserManager sharedInstance].sjyloginData.Id,
-                                                  @"State":@"7",
-                                                  @"InquiryId":[SJYUserManager sharedInstance].sjyloginData.InquiryId//(驳回时必要回传参数)
-                                                  } success:^(id responder) {
-                                                      [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
-                                                      if ([[responder valueForKey:@"success"] boolValue]== YES) {
-                                                          [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshSJSHListView" object:nil];
-                                                          dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                                              [self.navigationController popViewControllerAnimated:YES];
-                                                          });
-                                                      }
-                                                  } failure:^(int status, NSString *info) {
-                                                      [QMUITips showError:info inView:self.view hideAfterDelay:1.2];
-                                                  }];
-
+        [SJYRequestTool requestSJSHWithAPI:API_SJSH_SH parameters:@{
+                                                                    @"AEmp":[[SJYUserManager sharedInstance].sjyloginData   modelToJSONString],
+                                                                    @"DeepenDesignID":self.sjshListModel.Id,
+                                                                    @"EmployeeID":[SJYUserManager sharedInstance].sjyloginData.Id,
+                                                                    @"State":@"7",
+                                                                    @"InquiryId":[SJYUserManager sharedInstance].sjyloginData.InquiryId//(驳回时必要回传参数)
+                                                                    } success:^(id responder) {
+                                                                        [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
+                                                                        if ([[responder valueForKey:@"success"] boolValue]== YES) {
+                                                                            [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshSJSHListView" object:nil];
+                                                                            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                                                                [self.navigationController popViewControllerAnimated:YES];
+                                                                            });
+                                                                        }
+                                                                    } failure:^(int status, NSString *info) {
+                                                                        [QMUITips showError:info inView:self.view hideAfterDelay:1.2];
+                                                                    }];
+        
         [aDialogViewController hide];
     }];
     [dialogViewController show];
@@ -181,28 +183,28 @@
 -(void)alertRejectView{
     QMUIDialogViewController *dialogViewController = [[QMUIDialogViewController alloc] init];
     dialogViewController.title = @"请输入驳回理由";
-
+    
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 150)];
     contentView.backgroundColor = UIColorWhite;
-
+    
     QMUILabel *mentionLabel = [[QMUILabel alloc] init];
     [contentView addSubview:mentionLabel];
     mentionLabel.textColor = Color_TEXT_HIGH;
     mentionLabel.font = Font_ListTitle;
     mentionLabel.text = @"驳回至 : ";
-
+    
     UIImageView *rightdownImgView = [[UIImageView alloc] init];
     rightdownImgView.image = SJYCommonImage(@"downBlack");
     [contentView addSubview:rightdownImgView];
-
+    
     QMUIButton *typeBtn = [QMUIButton buttonWithType:UIButtonTypeCustom];
     typeBtn.contentHorizontalAlignment =UIControlContentHorizontalAlignmentLeft ;
     [typeBtn setTitle:@"合同" forState:UIControlStateNormal];
     [typeBtn setTitleColor:Color_TEXT_HIGH forState:UIControlStateNormal];
     typeBtn.titleLabel.font = Font_ListTitle;
     [contentView addSubview:typeBtn];
-
-
+    
+    
     QMUITextView *textView = [[QMUITextView alloc] init];
     [contentView addSubview:textView];
     textView.shouldResponseToProgrammaticallyTextChanges = YES;
@@ -213,11 +215,11 @@
     textView.placeholder = @"请输入(限32字)";
     [typeBtn clickWithBlock:^{
         [textView endEditing:YES];
-        [BRStringPickerView showStringPickerWithTitle:@"驳回至" dataSource:@[@"合同",@"设计"] defaultSelValue:typeBtn.currentTitle isAutoSelect:NO themeColor:Color_NavigationLightBlue resultBlock:^(id selectValue) {
+        [BRStringPickerView showStringPickerWithTitle:@"驳回至" dataSource:@[@"合同",@"深化设计"] defaultSelValue:typeBtn.currentTitle isAutoSelect:NO themeColor:Color_NavigationLightBlue resultBlock:^(id selectValue) {
             [typeBtn setTitle:selectValue forState:UIControlStateNormal];
         }];
     }];
-
+    
     [mentionLabel makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(contentView.mas_top).offset(5);
         make.left.mas_equalTo(contentView.mas_left).offset(10);
@@ -251,29 +253,30 @@
             return ;
         }
         [SJYRequestTool requestSJSHWithAPI:API_SJSH_SH parameters:@{
-                                                 @"DeepenDesignID":self.sjshListModel.Id,
-                                                 @"EmployeeID":[SJYUserManager sharedInstance].sjyloginData.Id,
-                                                 @"State":[typeBtn.currentTitle isEqualToString:@"合同"]?@"0":@"3",
-                                                 @"RejectReason":textView.text//(驳回时必要回传参数)
-                                                 } success:^(id responder) {
-                                                     [aDialogViewController hide];
-                                                     [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
-                                                     if ([[responder valueForKey:@"success"] boolValue]== YES) {
-                                                         [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshSJSHListView" object:nil];
-                                                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                                             [self.navigationController popViewControllerAnimated:YES];
-                                                         });
-                                                     }
-
-                                                 } failure:^(int status, NSString *info) {
-                                                     [QMUITips showError:info inView:self.view hideAfterDelay:1.2];
-                                                     [aDialogViewController hide];
-
-                                                 }];
-
+                                                                    @"AEmp":[[SJYUserManager sharedInstance].sjyloginData   modelToJSONString],
+                                                                    @"DeepenDesignID":self.sjshListModel.Id,
+                                                                    @"EmployeeID":[SJYUserManager sharedInstance].sjyloginData.Id,
+                                                                    @"State":[typeBtn.currentTitle isEqualToString:@"合同"]?@"0":@"3",
+                                                                    @"RejectReason":textView.text//(驳回时必要回传参数)
+                                                                    } success:^(id responder) {
+                                                                        [aDialogViewController hide];
+                                                                        [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
+                                                                        if ([[responder valueForKey:@"success"] boolValue]== YES) {
+                                                                            [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshSJSHListView" object:nil];
+                                                                            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                                                                [self.navigationController popViewControllerAnimated:YES];
+                                                                            });
+                                                                        }
+                                                                        
+                                                                    } failure:^(int status, NSString *info) {
+                                                                        [QMUITips showError:info inView:self.view hideAfterDelay:1.2];
+                                                                        [aDialogViewController hide];
+                                                                        
+                                                                    }];
+        
     }];
     [dialogViewController show];
-//    [textView becomeFirstResponder];
+    //    [textView becomeFirstResponder];
 }
 
 @end
