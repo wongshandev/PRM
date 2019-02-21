@@ -12,7 +12,7 @@
 #import "SJSHDetialSuperController.h"
 
  #define  STATEArray  @[@"全部",@"未审核",@"已审核"]
-
+#define  ListSTATEColorArray  @[[UIColor whiteColor],UIColorHex(#007BD3),UIColorHex(#EF5362)]
 @interface SJYSJSHViewController ()<QMUITextFieldDelegate>
 @property (nonatomic, strong) SJYSJSHSearchAlertView * searchAlertView;
 
@@ -192,6 +192,7 @@
 //            model.stateString = model.State.integerValue==2?[STATEArray objectAtIndex:1]:STATEArray.lastObject;
             BOOL isWSH = ((model.State.integerValue == 2 && dpld == [SJYUserManager sharedInstance].sjyloginData.EngineeringDpId.integerValue) || (model.State.integerValue == 5 && dpld == [SJYUserManager sharedInstance].sjyloginData.DesignDpId.integerValue));
             model.stateString = isWSH?[STATEArray objectAtIndex:1]:STATEArray.lastObject;
+            model.StateColor =  isWSH?[ListSTATEColorArray objectAtIndex:1]:ListSTATEColorArray.lastObject;
             model.isCanSH = isWSH;
             [self.dataArray addObject:model];
         }
@@ -267,7 +268,6 @@
     if (textField == self.searchAlertView.codeTF) {
         self.searchCode = textField.text.length !=0? textField.text:@"";
         self.searchAlertView.sepLineCode.backgroundColor = Color_SrprateLine;
-
     }
     if (textField == self.searchAlertView.nameTF) {
         self.searchName = textField.text.length !=0 ? textField.text:@"";

@@ -20,13 +20,13 @@
 
 
 @property(nonatomic,strong)NSMutableArray *sectionArray;
-@property(nonatomic,strong)NSMutableArray<NSDictionary *> *savedArray;
+@property(nonatomic,strong)NSMutableArray<NSMutableDictionary *> *savedArray;
 
 @property(nonatomic,assign)NSInteger maxNumThis;
 @end
 
 @implementation WLJHDetialController
--(NSMutableArray *)savedArray{
+-(NSMutableArray <NSMutableDictionary *>*)savedArray{
     if (!_savedArray) {
         self.savedArray = [NSMutableArray new];
     }
@@ -254,15 +254,22 @@
         return NO;
     }
     if ([self.wlListModel.State  isEqualToString: @"-888"]) {
+        if (self.savedArray.count==0) {
+            [QMUITips showWithText:@"无数据需要保存" inView:self.view hideAfterDelay:1.5];
+        }
         return self.savedArray.count;
     }else{
-        return (self.savedArray.count ||  ![self.datePickerBtn.currentTitle isEqualToString: self.wlListModel.OrderDate]);
+        BOOL isCan = (self.savedArray.count ||  ![self.datePickerBtn.currentTitle isEqualToString: self.wlListModel.OrderDate]);
+        if (isCan == NO) {
+            [QMUITips showWithText:@"无数据需要保存" inView:self.view hideAfterDelay:1.5];
+        }
+        return isCan;
     }
  }
 
 -(void)save_WLJHData{
     if (![self checkCanSave]) {
-        [QMUITips showWithText:@"无数据需要保存" inView:self.view hideAfterDelay:1.5];
+//        [QMUITips showWithText:@"无数据需要保存" inView:self.view hideAfterDelay:1.5];
         return;
     };
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"ModId == %@", @"0"];
@@ -396,27 +403,26 @@
         if (![model.canChangeQuantityThis isEqualToString:model.QuantityThis]){
             [cell loadContent];
             //数据处理 添加进入数组
-            NSDictionary *currentDic= @{@"QuantityThis":model.canChangeQuantityThis,@"BOMID":model.BOMID,@"ModId":model.ModId,@"Id":model.Id};
-            if (self.savedArray.count== 0) {
-                [self.savedArray addObject:currentDic];
-            }else{
-                NSLog(@"%@", self.savedArray);
-                for (int i = 0;  i < self.savedArray.count; i++) {
-                    NSDictionary *dic = self.savedArray[i];
-                    if ([[dic valueForKey:@"Id"] isEqualToString:[currentDic valueForKey:@"Id"]]) {
-                        [self.savedArray removeObject:dic];
-                        if (![[dic valueForKey:@"QuantityThis"] isEqualToString:[currentDic valueForKey:@"QuantityThis"]]) {
-                            [self.savedArray addObject:currentDic];
-                        }
-                    }else{
-                        [self.savedArray addObject:currentDic];
-                    }
+            NSMutableDictionary *currentDic= [NSMutableDictionary dictionary];
+            [currentDic setValue:model.canChangeQuantityThis forKey:@"QuantityThis"];
+            [currentDic setValue:model.BOMID forKey:@"BOMID"];
+            [currentDic setValue:model.ModId forKey:@"ModId"];
+            [currentDic setValue:model.Id forKey:@"Id"];
+
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Id == %@", model.Id];
+            NSMutableDictionary *havDic = [self.savedArray filteredArrayUsingPredicate:predicate].firstObject;
+            if (havDic) {
+                if (![[havDic valueForKey:@"QuantityThis"] isEqualToString:[currentDic valueForKey:@"QuantityThis"]]) {
+                    [havDic setValue:model.canChangeQuantityThis forKey:@"QuantityThis"];
                 }
+            }else{
+                [self.savedArray addObject:currentDic];
             }
+            NSLog(@"%@", self.savedArray);
         }
     }];
+    
     confirmAction.enabled = NO;
-
     [alertVC addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];
     }]];
@@ -433,12 +439,11 @@
         UIAlertAction *okAction = alertController.actions.lastObject;
         if([textField.text hasPrefix:@"0"]){
             textField.text = @"";
-        }
-        okAction.enabled = textField.text.length;
-
+        } 
         if (textField.text.integerValue > self.maxNumThis) {
             textField.text = [textField.text substringToIndex:@(self.maxNumThis).stringValue.length];
         }
+        okAction.enabled = textField.text.length;
     }
 }
 

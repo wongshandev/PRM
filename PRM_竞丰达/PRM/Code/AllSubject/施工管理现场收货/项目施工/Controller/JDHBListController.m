@@ -70,8 +70,7 @@
         if ([self.tableView.mj_header isRefreshing]) {
             [self.dataArray removeAllObjects];
         }
-        
-        
+
         for (NSDictionary *dic in rowsArr) {
             JDHBListModel *model = [JDHBListModel  modelWithDictionary:dic];
             model.canChangeRate = model.CompletionRate;
@@ -149,12 +148,16 @@
     [alertVC addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
         textField.placeholder =@"请输入进度";
         textField.keyboardType = UIKeyboardTypeNumberPad;
-        textField.text = model.canChangeRate;
+//        textField.text = model.canChangeRate;
+         textField.text = model.canChangeRate.integerValue == 0 ?nil : model.canChangeRate;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertTextFieldDidChange:) name:UITextFieldTextDidChangeNotification object:textField];
+
     }];
     //备注信息输入框
     [alertVC addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
         textField.placeholder =@"请输入备注信息";
         textField.text = model.Remark;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertTextFieldDidChange:) name:UITextFieldTextDidChangeNotification object:textField];
     }];
     [alertVC.textFields[0] makeConstraints:^(MASConstraintMaker *make) {
         make.height.equalTo(35);
@@ -166,9 +169,8 @@
         textField.font= Font_ListTitle;
     }
     //确定按钮
-    [alertVC addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            
+  UIAlertAction *confirmAction =  [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];
             //  cell 界面 数据 的调整
             if ([alertVC.textFields[0].text integerValue] > 100 ) {
                 model.canChangeRate = @"100";
@@ -179,33 +181,60 @@
             }else{
                 model.canChangeRate = alertVC.textFields[0].text;
             }
-            
+
             if (![model.canChangeRate isEqualToString:model.CompletionRate] || ![model.Remark isEqualToString:model.canChangeRemark]) {
                 [cell loadContent];
                 //数据处理 添加进入数组
-                NSDictionary *currentDic= @{@"Id":model.Id,@"Remark":model.canChangeRemark,@"CompletionRate":model.canChangeRate};
-                if (self.updateArray.count== 0) {
-                    [self.updateArray addObject:currentDic];
-                }else{
-                    NSLog(@"%@", self.updateArray);
-                    for (int i = 0;  i < self.updateArray.count; i++) {
-                        NSDictionary *dic = self.updateArray[i];
-                        if ([[dic valueForKey:@"Id"] isEqualToString:[currentDic valueForKey:@"Id"]]) {
-                            [self.updateArray removeObject:dic];
-                            if (![[dic valueForKey:@"Remark"] isEqualToString:[currentDic valueForKey:@"Remark"]] || ![[dic valueForKey:@"CompletionRate"] isEqualToString:[currentDic valueForKey:@"CompletionRate"]]) {
-                                [self.updateArray addObject:currentDic];
-                            }
-                        }else{
-                            [self.updateArray addObject:currentDic];
-                        }
+                 NSMutableDictionary *currentDic= [NSMutableDictionary dictionary];
+                [currentDic setValue:model.canChangeRemark forKey:@"Remark"];
+                [currentDic setValue:model.canChangeRate forKey:@"CompletionRate"];
+                [currentDic setValue:model.Id forKey:@"Id"];
+
+                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Id == %@", model.Id];
+                NSMutableDictionary *havDic = [self.updateArray filteredArrayUsingPredicate:predicate].firstObject;
+                if (havDic) {
+                    if (![[havDic valueForKey:@"Remark"] isEqualToString:[currentDic valueForKey:@"Remark"]] || ![[havDic valueForKey:@"CompletionRate"] isEqualToString:[currentDic valueForKey:@"CompletionRate"]]) {
+                        [havDic setValue:model.canChangeRate forKey:@"CompletionRate"];
+                        [havDic setValue:model.canChangeRemark forKey:@"Remark"];
                     }
+                }else{
+                    [self.updateArray addObject:currentDic];
+                }
+                NSLog(@"%@", self.updateArray);
+            }
+  }];
+    //取消按钮
+    [alertVC addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];
+    }]];
+    confirmAction.enabled = NO;
+    [alertVC addAction:confirmAction];
+    [self presentViewController:alertVC animated:YES completion:nil];
+}
+
+- (void)alertTextFieldDidChange:(NSNotification *)notification{
+    UITextField *TF = (UITextField *)notification.object;
+
+    UIAlertController *alertController = (UIAlertController *)self.presentedViewController;
+    if (alertController) {
+        UITextField *textField = alertController.textFields.firstObject;
+        UITextField *bzTF = alertController.textFields.lastObject;
+
+        UIAlertAction *okAction = alertController.actions.lastObject;
+        if (TF == textField) {
+            if([textField.text hasPrefix:@"00"]){
+                textField.text = @"0";
+            }
+            if (textField.text.integerValue >= 100) {
+                if ([textField.text hasPrefix:@"1"] && textField.text.length >= @(100).stringValue.length) {
+                    textField.text = @"100";
+                }else{
+                    textField.text = [textField.text substringToIndex:@(100).stringValue.length-1];
                 }
             }
-        });
-    }]];
-    //取消按钮
-    [alertVC addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
-    [self presentViewController:alertVC animated:YES completion:nil];
+        }
+        okAction.enabled = textField.text.length || bzTF.text.length;
+    }
 }
 
 

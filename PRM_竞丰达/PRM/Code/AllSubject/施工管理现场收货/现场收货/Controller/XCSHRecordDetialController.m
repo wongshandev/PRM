@@ -17,11 +17,12 @@
 
 @property(nonatomic,strong)NSMutableArray *sectionArray;
 
-@property(nonatomic,strong)NSMutableArray<NSDictionary *> *updateArray;
+@property(nonatomic,strong)NSMutableArray<NSMutableDictionary *> *updateArray;
+@property(nonatomic,assign)NSInteger maxNumThis;
 
 @end
 @implementation XCSHRecordDetialController
--(NSMutableArray<NSDictionary *> *)updateArray{
+-(NSMutableArray<NSMutableDictionary *> *)updateArray{
     if (!_updateArray) {
         self.updateArray = [NSMutableArray new];
     }
@@ -199,24 +200,27 @@
     
 }
 -(void)clickReceiveGoodsDetialCell:( XCSHRecordDetialCell *)cell alertViewWithModel:(XCSHRecordDetialModel*)model{
-
-    NSInteger chazhiNum = model.Quantity.integerValue - model.QuantityReceive.integerValue;
-    NSString *maxNum = @(chazhiNum).stringValue;
-    if (chazhiNum<=0) {
+    NSInteger maxNumThis =  model.Quantity.integerValue - model.QuantityReceive.integerValue;
+    NSString *maxNum = @(maxNumThis).stringValue;
+    NSString *messageStr = [NSString stringWithFormat:@"本次输入值的范围在0 ~ %@ 之间",maxNum];
+    if (maxNumThis == 0) {
         return;
     }
-    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:model.Name message:[NSString stringWithFormat:@"本次输入值的范围在0 ~ %@ 之间",maxNum] preferredStyle:UIAlertControllerStyleAlert];
+    self.maxNumThis = maxNumThis;
+    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:model.Name message:messageStr preferredStyle:UIAlertControllerStyleAlert];
     //进度输入框
     [alertVC addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
         textField.placeholder =@"请输入数量";
         textField.keyboardType = UIKeyboardTypeNumberPad;
-        textField.text = model.changeQuantityCheck;
+        textField.text = model.changeQuantityCheck.integerValue == 0 ?nil : model.changeQuantityCheck;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertTextFieldDidChange:) name:UITextFieldTextDidChangeNotification object:textField];
+
     }];
     //备注信息输入框
     [alertVC addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
         textField.placeholder =@"请输入备注信息";
         textField.text = model.changeRemark;
-        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertTextFieldDidChange:) name:UITextFieldTextDidChangeNotification object:textField];
     }];
     [alertVC.textFields[0] makeConstraints:^(MASConstraintMaker *make) {
         make.height.equalTo(35);
@@ -228,7 +232,9 @@
         textField.font= [UIFont systemFontOfSize:15];
     }
     //确定按钮
-    [alertVC addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+   UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];
+
         //  cell 界面 数据 的调整
         if ([alertVC.textFields[0].text integerValue] > maxNum.integerValue ) {
             model.changeQuantityCheck = maxNum;
@@ -244,30 +250,76 @@
         if (![model.changeRemark isEqualToString:model.Remark] || ![model.changeQuantityCheck isEqualToString:model.QuantityCheck]){
             [cell loadContent];
             //数据处理 添加进入数组
-            NSDictionary *currentDic= @{@"Id":model.Id,@"Remark": model.changeRemark,@"QuantityCheck": model.changeQuantityCheck,@"ModId":model.ModId};
-            if (self.updateArray.count== 0) {
-                [self.updateArray addObject:currentDic];
-            }else{
-                NSLog(@"%@", self.updateArray);
-                for (int i = 0;  i < self.updateArray.count; i++) {
-                    NSDictionary *dic = self.updateArray[i]; 
-                    
-                    if ([[dic valueForKey:@"Id"] isEqualToString:[currentDic valueForKey:@"Id"]]) {
-                        [self.updateArray removeObject:dic];
-                        if (![[dic valueForKey:@"Remark"] isEqualToString:[currentDic valueForKey:@"Remark"]] || ![[dic valueForKey:@"QuantityCheck"] isEqualToString:[currentDic valueForKey:@"QuantityCheck"]]) {
-                            [self.updateArray addObject:currentDic];
-                        }
-                    }else{
-                        [self.updateArray addObject:currentDic];
-                    }
+            //数据处理 添加进入数组
+            NSMutableDictionary *currentDic= [NSMutableDictionary dictionary];
+            [currentDic setValue:model.changeRemark forKey:@"Remark"];
+            [currentDic setValue:model.changeQuantityCheck forKey:@"QuantityCheck"];
+            [currentDic setValue:model.ModId forKey:@"ModId"];
+            [currentDic setValue:model.Id forKey:@"Id"];
+
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Id == %@", model.Id];
+            NSMutableDictionary *havDic = [self.updateArray filteredArrayUsingPredicate:predicate].firstObject;
+            if (havDic) {
+                if (![[havDic valueForKey:@"Remark"] isEqualToString:[currentDic valueForKey:@"Remark"]] || ![[havDic valueForKey:@"QuantityCheck"] isEqualToString:[currentDic valueForKey:@"QuantityCheck"]]) {
+                    [havDic setValue:model.changeRemark forKey:@"Remark"];
+                    [havDic setValue:model.changeQuantityCheck forKey:@"QuantityCheck"];
                 }
+            }else{
+                [self.updateArray addObject:currentDic];
             }
+            NSLog(@"%@", self.updateArray);
+//
+//            NSDictionary *currentDic= @{@"Id":model.Id,@"Remark": model.changeRemark,@"QuantityCheck": model.changeQuantityCheck,@"ModId":model.ModId};
+//            if (self.updateArray.count== 0) {
+//                [self.updateArray addObject:currentDic];
+//            }else
+//            {
+//                NSLog(@"%@", self.updateArray);
+//                for (int i = 0;  i < self.updateArray.count; i++) {
+//                    NSDictionary *dic = self.updateArray[i];
+//                    
+//                    if ([[dic valueForKey:@"Id"] isEqualToString:[currentDic valueForKey:@"Id"]]) {
+//                        [self.updateArray removeObject:dic];
+//                        if (![[dic valueForKey:@"Remark"] isEqualToString:[currentDic valueForKey:@"Remark"]] || ![[dic valueForKey:@"QuantityCheck"] isEqualToString:[currentDic valueForKey:@"QuantityCheck"]]) {
+//                            [self.updateArray addObject:currentDic];
+//                        }
+//                    }else{
+//                        [self.updateArray addObject:currentDic];
+//                    }
+//                }
+//            }
         }
+    }];
+     //取消按钮
+    [alertVC addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];
     }]];
-    //取消按钮
-    [alertVC addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    confirmAction.enabled = NO;
+    [alertVC addAction:confirmAction];
     [self presentViewController:alertVC animated:YES completion:nil];
 }
+
+- (void)alertTextFieldDidChange:(NSNotification *)notification{
+    UITextField *TF = (UITextField *)notification.object;
+
+    UIAlertController *alertController = (UIAlertController *)self.presentedViewController;
+    if (alertController) {
+        UITextField *textField = alertController.textFields.firstObject;
+        UITextField *bzTF = alertController.textFields.lastObject;
+        UIAlertAction *okAction = alertController.actions.lastObject;
+
+        if (TF == textField) {
+            if([textField.text hasPrefix:@"0"]){
+                textField.text = @"";
+            }
+            if (textField.text.integerValue > self.maxNumThis) {
+                textField.text = [textField.text substringToIndex:@(self.maxNumThis).stringValue.length];
+            }
+        }
+        okAction.enabled = textField.text.length || bzTF.text.length;
+    }
+}
+
 
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];

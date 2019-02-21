@@ -104,6 +104,7 @@
 
     if (self.cellType == CellType_SJSHList) {
         SJSHListModel *model = self.data;
+        self.leftCircleLab.backgroundColor = model.StateColor;
         self.leftCircleLab.text = model.stateString;
         self.mainSJRLab.text = model.DesignName;
         self.mainFZRLab.text = model.InquiryName;
@@ -117,7 +118,7 @@
     [super setSelected:highlighted animated:animated];//加上这句哦
     if (self.cellType == CellType_SJSHList) {
         SJSHListModel *model = self.data;
-        _leftCircleLab.backgroundColor = model.State.integerValue !=2 ?  Color_NavigationLightBlue:Color_Red;
+        _leftCircleLab.backgroundColor = model.StateColor;
     }
     if (self.cellType == CellType_JJQRList) {
         _leftCircleLab.backgroundColor =   Color_NavigationLightBlue;
@@ -128,9 +129,8 @@
     [super setHighlighted:highlighted animated:animated];//加上这句哦
     if (self.cellType == CellType_SJSHList) {
         SJSHListModel *model = self.data;
-        _leftCircleLab.backgroundColor = model.State.integerValue  != 2 ?  Color_NavigationLightBlue:Color_Red;
-    }
-
+        _leftCircleLab.backgroundColor = model.StateColor;
+    } 
     if (self.cellType == CellType_JJQRList) {
          _leftCircleLab.backgroundColor =   Color_NavigationLightBlue;
     }
