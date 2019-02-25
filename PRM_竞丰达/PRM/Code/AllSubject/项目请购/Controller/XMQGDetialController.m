@@ -90,7 +90,9 @@
         }
         for (NSDictionary *dic in rowsArr) {
             XMQGDetialModel *model = [XMQGDetialModel  modelWithDictionary:dic];
-            model.titleStr = model.Model.length != 0? [model.Name stringByAppendingFormat:@"(%@)",model.Model]: model.Name;
+            NSString *titStr = model.Model.length!=0?[model.Name stringByAppendingFormat:@"(%@)",model.Model]:model.Name;
+            model.titleStr =  model.Unit.length!=0?[titStr stringByAppendingFormat:@"(%@)",model.Unit]:titStr;
+//            model.titleStr = model.Model.length != 0? [model.Name stringByAppendingFormat:@"(%@)",model.Model]: model.Name;
             [self.dataArray addObject:model];
         }
         dispatch_async(dispatch_get_main_queue(), ^{

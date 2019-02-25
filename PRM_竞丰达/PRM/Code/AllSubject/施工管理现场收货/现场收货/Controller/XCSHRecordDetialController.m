@@ -119,8 +119,7 @@
     if (self.updateArray.count == 0) {
         [QMUITips showWithText:@"无数据修改,无须提交" inView:self.view hideAfterDelay:1.5];
     }else{
-        NSString *updateString = [self.updateArray modelToJSONString];
-        
+        NSString *updateString = [self.updateArray modelToJSONString]; 
         NSDictionary *  paraDic = @{
                                     @"EmployeeID":kEmployeeID,
                                     @"SiteState":self.recordModel.SiteState,
@@ -152,6 +151,8 @@
             XCSHRecordDetialModel *model = [XCSHRecordDetialModel  modelWithDictionary:dic];
             model.changeRemark = model.Remark;
             model.changeQuantityCheck = model.QuantityCheck;
+            NSString *titStr = model.Model.length!=0?[model.Name stringByAppendingFormat:@"(%@)",model.Model]:model.Name;
+            model.titleStr =  model.Unit.length!=0?[titStr stringByAppendingFormat:@"(%@)",model.Unit]:titStr;
             [self.dataArray addObject:model];
         }
         dispatch_async(dispatch_get_main_queue(), ^{

@@ -18,7 +18,7 @@
 @property (nonatomic, copy) NSString *UnitPrice;
 @property (nonatomic, copy) NSString *Quantity;
 @property (nonatomic, copy) NSString *StockID;
-
+@property (nonatomic, copy) NSString *Unit;
 
 @property (nonatomic, copy) NSString *PriceStr;
 @property (nonatomic, copy) NSString *QuantityStr;

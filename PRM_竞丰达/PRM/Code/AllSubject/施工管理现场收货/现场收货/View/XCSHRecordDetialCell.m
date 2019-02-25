@@ -152,7 +152,7 @@
 -(void)loadContent{
     XCSHRecordDetialModel *model = self.data;
     self.circleProgress.progress = (model.QuantityReceive.floatValue + model.changeQuantityCheck.floatValue)  / model.Quantity.integerValue;
-    self.titleLab.text = model.Name;
+    self.titleLab.text = model.titleStr;
     self.totalLab.text = model.Quantity;
     self.receiveLab.text = model.QuantityReceive;
     self.thisLab.text = model.changeQuantityCheck;

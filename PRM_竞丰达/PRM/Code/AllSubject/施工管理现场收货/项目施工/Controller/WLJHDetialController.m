@@ -207,7 +207,8 @@
         for (NSDictionary *dic in rowsArr) {
             WLJHDetialModel *model = [ WLJHDetialModel  modelWithDictionary:dic];
             model.canChangeQuantityThis = model.QuantityThis;
-            model.titleStr = model.Model.length == 0?model.Name:[model.Name stringByAppendingFormat:@"  (%@)",model.Model];
+            NSString *titStr = model.Model.length!=0?[model.Name stringByAppendingFormat:@"(%@)",model.Model]:model.Name;
+            model.titleStr =  model.Unit.length!=0?[titStr stringByAppendingFormat:@"(%@)",model.Unit]:titStr;
             if ([[dic valueForKey:@"_parentId"]integerValue] == 0) {
                 [self.sectionArray addObject:model];
             }else{

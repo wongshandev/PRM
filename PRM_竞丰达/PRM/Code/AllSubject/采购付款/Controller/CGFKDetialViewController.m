@@ -106,7 +106,7 @@
         for (NSDictionary *dic in rowsArr) {
             CGFKDetialModel *model = [CGFKDetialModel  modelWithDictionary:dic];
             model.PriceStr = model.UnitPrice.length!= 0?[[NSString numberMoneyFormattor:model.UnitPrice] stringByAppendingString:@" (单价)"]:@"";
-           model.QuantityStr = model.Quantity.length!= 0?[[NSString numberSepFormattor:model.Quantity] stringByAppendingString:@" (数量)"]:@"";
+           model.QuantityStr =  model.Quantity.length!= 0?[[NSString numberIntFormattor:model.Quantity] stringByAppendingFormat:@" %@",model.Unit]:@"";
             CGFKDetialFrame *frame = [[CGFKDetialFrame alloc]init];
             frame.model = model;
               [rowSectionArr addObject:frame];

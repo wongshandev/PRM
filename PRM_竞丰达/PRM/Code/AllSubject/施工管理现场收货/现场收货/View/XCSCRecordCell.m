@@ -81,6 +81,19 @@
 }
 
 
+// 处理点击时控件颜色变化
+-(void)setSelected:(BOOL)highlighted animated:(BOOL)animated{
+    [super setSelected:highlighted animated:animated];//加上这句哦
+    XCSHRecordModel *model = self.data;
+    _leftCircleLab.backgroundColor =   model.stateColor;
+
+}
+
+-(void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated{
+    [super setHighlighted:highlighted animated:animated];//加上这句哦
+    XCSHRecordModel *model = self.data;
+    _leftCircleLab.backgroundColor =   model.stateColor;
+}
 
 
 

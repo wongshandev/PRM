@@ -10,7 +10,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PRM/Code/AllSubject/&#x91c7;&#x8d2d;&#x5ba1;&#x6838;/Controller/SJYCGSHViewController.m"
-            timestampString = "572778561.879546"
+            timestampString = "572780767.512089"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "156"
@@ -42,7 +42,7 @@
                   moduleName = "PRM"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/apple/Desktop/SourceTree/PRM/PRM_%E7%AB%9E%E4%B8%B0%E8%BE%BE/PRM/Code/AllSubject/%E9%87%87%E8%B4%AD%E4%BB%98%E6%AC%BE/Controller/SJYCGFKListController.m"
-                  timestampString = "572778603.673835"
+                  timestampString = "572782651.9664969"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "66"
@@ -57,7 +57,7 @@
                   moduleName = "PRM"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/apple/Desktop/SourceTree/PRM/PRM_%E7%AB%9E%E4%B8%B0%E8%BE%BE/PRM/Code/AllSubject/%E9%87%87%E8%B4%AD%E4%BB%98%E6%AC%BE/Controller/SJYCGFKListController.m"
-                  timestampString = "572778603.676845"
+                  timestampString = "572782651.973879"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "66"
@@ -65,22 +65,6 @@
                   offsetFromSymbolStart = "824">
                </Location>
             </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PRM/Code/AllSubject/&#x91c7;&#x8d2d;&#x4ed8;&#x6b3e;/Controller/CGFKDetialViewController.m"
-            timestampString = "572778622.488786"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "109"
-            endingLineNumber = "109"
-            landmarkName = "-requestData_CGFKInfoData"
-            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

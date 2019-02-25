@@ -28,7 +28,6 @@
 +(NSString *)mimeTypeForFileAtPath:(NSString *)path;
 
 +(NSString *)numberMoneyFormattor:(NSString *)number;
-+(NSString *)numberSepFormattor:(NSString *)number;
-+(NSString *)numberIntFormattor:(NSString *)number;
+ +(NSString *)numberIntFormattor:(NSString *)number;
 
 @end

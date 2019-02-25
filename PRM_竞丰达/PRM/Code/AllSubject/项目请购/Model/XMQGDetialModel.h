@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *Model;
 @property (nonatomic, copy) NSString *BrandName;
 @property (nonatomic, copy) NSString *Quantity;
+@property (nonatomic, copy) NSString *Unit;
 
 @property(nonatomic,copy) NSString *titleStr;
 

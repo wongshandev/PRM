@@ -11,6 +11,10 @@
 #import "XCSCRecordCell.h"
 #import "XCSHRecordDetialController.h"
 
+#define  ListModelSTATEArray  @[@"",@"计划",@"已提交",@"已驳回",@"财务已审",@"总经理已审",@"待付款",@"已付款",@"已入库"]
+#define  ListSTATEColorArray  @[[UIColor whiteColor],UIColorHex(#007BD3),UIColorHex(#007BD3),UIColorHex(#FF0000),UIColorHex(#FE6D4B),UIColorHex(#EF5362),UIColorHex(#F79746),UIColorHex(#3FD0AD),UIColorHex(#2BBDF3)]
+//#define  ListSTATEColorArray  @[[UIColor whiteColor],UIColorHex(#3FD0AD),UIColorHex(#007BD3),]
+
 @interface SJYXCSHRecordController ()
 
 @end
@@ -45,12 +49,14 @@
 -(void)requestData_RecordList{
     [SJYRequestTool  requestXCSHRecordList:self.engineerModel.Id success:^(id responder) {
         NSArray *rowsArr = [responder objectForKey:@"rows"];
-             [self.dataArray removeAllObjects];
+        [self.dataArray removeAllObjects];
         
         for (NSDictionary *dic in rowsArr) {
             XCSHRecordModel *model = [XCSHRecordModel  modelWithDictionary:dic];
             NSString *titlStr =  model.SiteState.integerValue == 1? [model.SupplierName stringByAppendingFormat:@"  (%@)  ",  @"采购接收"]: [model.Approval stringByAppendingFormat:@"  (%@)  ",  @"总部发货"];
             model.titleName = titlStr;
+            BOOL isHav = [ListModelSTATEArray containsObject:model.StateName];
+            model.stateColor = isHav?[ListSTATEColorArray objectAtIndex:[ListModelSTATEArray indexOfObject:model.StateName]]:Color_NavigationLightBlue;
             [self.dataArray addObject:model];
         }
         dispatch_async(dispatch_get_main_queue(), ^{

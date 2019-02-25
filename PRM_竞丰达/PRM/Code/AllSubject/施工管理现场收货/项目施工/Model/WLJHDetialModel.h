@@ -20,6 +20,7 @@
 @property (nonatomic, copy) NSString *Model;
 @property (nonatomic, copy) NSString *QuantityReceive;
 @property (nonatomic, copy) NSString *ModId;
+@property (nonatomic, copy) NSString *Unit;
 
 @property (nonatomic, copy) NSString *canChangeQuantityThis;
 @property (nonatomic, copy) NSString *titleStr;
