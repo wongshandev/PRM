@@ -60,15 +60,12 @@
  }
  */
 -(void)bindViewModel{
-
   self.stasticDic = [NSMutableDictionary dictionaryWithDictionary:@{
                                                                       @"FZR":@"",//(市场负责人Id)
                                                                       @"ZSJR":@"",//(主设计师Id)
                                                                       @"GCJL":@"",//(项目经理Id)
                                                                       @"FZSJ":[NSMutableArray new] //(辅助设计师Id集合，以’,’分开)
                                                                       }];
-
-
     self.submitDic = [NSMutableDictionary dictionaryWithDictionary:@{
                                                                      @"ProjectBranchID":@"",
                                                                      @"EmployeeID":[SJYUserManager sharedInstance].sjyloginData.Id,
