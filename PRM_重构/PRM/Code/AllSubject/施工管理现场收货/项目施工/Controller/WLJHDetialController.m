@@ -203,8 +203,6 @@
             [self.sectionArray removeAllObjects];
             [self.savedArray removeAllObjects];
         }
-
-     
         NSMutableArray *cellsArr = [NSMutableArray new];
         for (NSDictionary *dic in rowsArr) {
             WLJHDetialModel *model = [ WLJHDetialModel  modelWithDictionary:dic];

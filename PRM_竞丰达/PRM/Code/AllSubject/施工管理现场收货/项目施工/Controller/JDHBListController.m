@@ -145,6 +145,9 @@
     [self clickProgressReportCell:cell alertViewWithModel:model];
 }
 -(void)clickProgressReportCell:(JDHBListCell *)cell alertViewWithModel:(JDHBListModel *)model{
+    if (model.CompletionRate.integerValue >=100) {
+        return;
+    }
     UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:model.Name message:[NSString stringWithFormat:@"进度及备注信息设置, 输入的进度范围在%@ ~ 100 之间",model.CompletionRate] preferredStyle:UIAlertControllerStyleAlert];
     //进度输入框
     [alertVC addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
@@ -158,7 +161,7 @@
     //备注信息输入框
     [alertVC addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
         textField.placeholder =@"请输入备注信息";
-        textField.text = model.Remark;
+        textField.text = model.canChangeRemark;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertTextFieldDidChange:) name:UITextFieldTextDidChangeNotification object:textField];
     }];
     [alertVC.textFields[0] makeConstraints:^(MASConstraintMaker *make) {
@@ -171,40 +174,40 @@
         textField.font= Font_ListTitle;
     }
     //确定按钮
-  UIAlertAction *confirmAction =  [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertAction *confirmAction =  [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];
-            //  cell 界面 数据 的调整
-            if ([alertVC.textFields[0].text integerValue] > 100 ) {
-                model.canChangeRate = @"100";
-                [QMUITips showInfo:@"超出默认范围上限" inView:self.view hideAfterDelay:1.2];
-            }else if([alertVC.textFields[0].text integerValue] < model.CompletionRate.integerValue){
-                model.canChangeRate = model.CompletionRate;
-                [QMUITips showInfo:@"超出默认范围下限" inView:self.view hideAfterDelay:1.2];
-            }else{
-                model.canChangeRate = alertVC.textFields[0].text;
-            }
+        //  cell 界面 数据 的调整
+        if ([alertVC.textFields[0].text integerValue] > 100 ) {
+            model.canChangeRate = @"100";
+            [QMUITips showInfo:@"超出默认范围上限" inView:self.view hideAfterDelay:1.2];
+        }else if([alertVC.textFields[0].text integerValue] < model.CompletionRate.integerValue){
+            model.canChangeRate = model.CompletionRate;
+            [QMUITips showInfo:@"超出默认范围下限" inView:self.view hideAfterDelay:1.2];
+        }else{
+            model.canChangeRate = alertVC.textFields.firstObject.text;
+        }
+        model.canChangeRemark = alertVC.textFields.lastObject.text; 
+        if (![model.canChangeRate isEqualToString:model.CompletionRate] || ![model.Remark isEqualToString:model.canChangeRemark]) {
+            [cell loadContent];
+            //数据处理 添加进入数组
+            NSMutableDictionary *currentDic= [NSMutableDictionary dictionary];
+            [currentDic setValue:model.canChangeRemark forKey:@"Remark"];
+            [currentDic setValue:model.canChangeRate forKey:@"CompletionRate"];
+            [currentDic setValue:model.Id forKey:@"Id"];
 
-            if (![model.canChangeRate isEqualToString:model.CompletionRate] || ![model.Remark isEqualToString:model.canChangeRemark]) {
-                [cell loadContent];
-                //数据处理 添加进入数组
-                 NSMutableDictionary *currentDic= [NSMutableDictionary dictionary];
-                [currentDic setValue:model.canChangeRemark forKey:@"Remark"];
-                [currentDic setValue:model.canChangeRate forKey:@"CompletionRate"];
-                [currentDic setValue:model.Id forKey:@"Id"];
-
-                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Id == %@", model.Id];
-                NSMutableDictionary *havDic = [self.updateArray filteredArrayUsingPredicate:predicate].firstObject;
-                if (havDic) {
-                    if (![[havDic valueForKey:@"Remark"] isEqualToString:[currentDic valueForKey:@"Remark"]] || ![[havDic valueForKey:@"CompletionRate"] isEqualToString:[currentDic valueForKey:@"CompletionRate"]]) {
-                        [havDic setValue:model.canChangeRate forKey:@"CompletionRate"];
-                        [havDic setValue:model.canChangeRemark forKey:@"Remark"];
-                    }
-                }else{
-                    [self.updateArray addObject:currentDic];
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Id == %@", model.Id];
+            NSMutableDictionary *havDic = [self.updateArray filteredArrayUsingPredicate:predicate].firstObject;
+            if (havDic) {
+                if (![[havDic valueForKey:@"Remark"] isEqualToString:[currentDic valueForKey:@"Remark"]] || ![[havDic valueForKey:@"CompletionRate"] isEqualToString:[currentDic valueForKey:@"CompletionRate"]]) {
+                    [havDic setValue:model.canChangeRate forKey:@"CompletionRate"];
+                    [havDic setValue:model.canChangeRemark forKey:@"Remark"];
                 }
-                NSLog(@"%@", self.updateArray);
+            }else{
+                [self.updateArray addObject:currentDic];
             }
-  }];
+            NSLog(@"%@", self.updateArray);
+        }
+    }];
     //取消按钮
     [alertVC addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];

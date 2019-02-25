@@ -144,6 +144,9 @@
     [self clickProgressReportCell:cell alertViewWithModel:model];
 }
 -(void)clickProgressReportCell:(JDHBListCell *)cell alertViewWithModel:(JDHBListModel *)model{
+    if (model.CompletionRate.integerValue >=100) {
+        return;
+    }
     UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:model.Name message:[NSString stringWithFormat:@"进度及备注信息设置, 输入的进度范围在%@ ~ 100 之间",model.CompletionRate] preferredStyle:UIAlertControllerStyleAlert];
     //进度输入框
     [alertVC addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
@@ -157,7 +160,7 @@
     //备注信息输入框
     [alertVC addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
         textField.placeholder =@"请输入备注信息";
-        textField.text = model.Remark;
+        textField.text = model.canChangeRemark;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertTextFieldDidChange:) name:UITextFieldTextDidChangeNotification object:textField];
     }];
     [alertVC.textFields[0] makeConstraints:^(MASConstraintMaker *make) {
@@ -182,7 +185,8 @@
         }else{
             model.canChangeRate = alertVC.textFields[0].text;
         }
-
+        model.canChangeRemark = alertVC.textFields.lastObject.text;
+        
         if (![model.canChangeRate isEqualToString:model.CompletionRate] || ![model.Remark isEqualToString:model.canChangeRemark]) {
             [cell loadContent];
             //数据处理 添加进入数组
