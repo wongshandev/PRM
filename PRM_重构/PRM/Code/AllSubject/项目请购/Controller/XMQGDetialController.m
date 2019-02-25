@@ -213,7 +213,7 @@
     [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
         [textView endEditing:YES];
         if (textView.text.length == 0) {
-            [QMUITips showInfo:@"请输入驳回原因" inView:[UIApplication sharedApplication].keyWindow hideAfterDelay:1.2];
+            [QMUITips showInfo:@"请输入驳回理由" inView:[UIApplication sharedApplication].keyWindow hideAfterDelay:1.2];
             return ;
         }
         [SJYRequestTool requestXMQGApprovelWithParam: @{

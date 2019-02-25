@@ -2,4 +2,86 @@
 <Bucket
    type = "0"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PRM/Code/AllSubject/&#x91c7;&#x8d2d;&#x5ba1;&#x6838;/Controller/SJYCGSHViewController.m"
+            timestampString = "572778561.879546"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "156"
+            endingLineNumber = "156"
+            landmarkName = "-requestData_CGSH"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PRM/Code/AllSubject/&#x91c7;&#x8d2d;&#x4ed8;&#x6b3e;/Controller/SJYCGFKListController.m"
+            timestampString = "572778603.376317"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "66"
+            endingLineNumber = "66"
+            landmarkName = "-requestData_CGFK"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__41-[SJYCGFKListController requestData_CGFK]_block_invoke"
+                  moduleName = "PRM"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/apple/Desktop/SourceTree/PRM/PRM_%E7%AB%9E%E4%B8%B0%E8%BE%BE/PRM/Code/AllSubject/%E9%87%87%E8%B4%AD%E4%BB%98%E6%AC%BE/Controller/SJYCGFKListController.m"
+                  timestampString = "572778603.673835"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "66"
+                  endingLineNumber = "66"
+                  offsetFromSymbolStart = "812">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__41-[SJYCGFKListController requestData_CGFK]_block_invoke"
+                  moduleName = "PRM"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/apple/Desktop/SourceTree/PRM/PRM_%E7%AB%9E%E4%B8%B0%E8%BE%BE/PRM/Code/AllSubject/%E9%87%87%E8%B4%AD%E4%BB%98%E6%AC%BE/Controller/SJYCGFKListController.m"
+                  timestampString = "572778603.676845"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "66"
+                  endingLineNumber = "66"
+                  offsetFromSymbolStart = "824">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PRM/Code/AllSubject/&#x91c7;&#x8d2d;&#x4ed8;&#x6b3e;/Controller/CGFKDetialViewController.m"
+            timestampString = "572778622.488786"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "109"
+            endingLineNumber = "109"
+            landmarkName = "-requestData_CGFKInfoData"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>
