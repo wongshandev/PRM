@@ -36,7 +36,7 @@
     self.floatLayoutView.itemMargins = UIEdgeInsetsMake(0, 0, 10, 10);
     self.floatLayoutView.minimumItemSize = CGSizeMake(50, 25);// 以2个字的按钮作为最小宽度
     [self addSubview:self.floatLayoutView];
-
+  
 }
 -(void)buildSubview{
     [self.titleLab mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -82,9 +82,8 @@
             self.titleLab.contentEdgeInsets = UIEdgeInsetsZero;
         }else {
             if (frame.model.IsSubTotal.boolValue) {
-                self.moneyLab.text =frame.model.QuotedPriceStr;
-                self.titleLab.contentEdgeInsets = UIEdgeInsetsZero;
-
+                self.moneyLab.text = frame.model.QuotedPriceStr;
+                self.titleLab.contentEdgeInsets = UIEdgeInsetsZero; 
             }else{
                 self.moneyLab.text =frame.model.QuotedPriceStr;
                 self.titleLab.contentEdgeInsets = UIEdgeInsetsMake(5, 10, 5 ,10);
@@ -96,13 +95,13 @@
                 }
                 for (NSInteger i = 0; i < suggestions.count; i++) {
                     QMUILabel *label = [[QMUILabel alloc] init];
+                    label.contentEdgeInsets = UIEdgeInsetsMake(3, 5, 3, 5);
                     [label rounded:3];
                     label.textAlignment = NSTextAlignmentCenter;
                     label.backgroundColor = Color_NavigationLightBlue;
                     label.textColor = Color_White;
                     label.font = Font_System(14);
                     label.text = suggestions[i];
-                    label.contentEdgeInsets = UIEdgeInsetsMake(3, 5, 3, 5);
                     [self.floatLayoutView addSubview:label];
                 }
             }

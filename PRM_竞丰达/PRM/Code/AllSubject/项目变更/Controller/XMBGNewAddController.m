@@ -25,14 +25,17 @@
     self.navBar.rightButton.hidden = !self.detialModel.isNewAdd;
     Weak_Self;
     [self.navBar.rightButton clickWithBlock:^{
-         NSMutableDictionary *paradic = [@{
+        NSMutableDictionary *paradic = [@{
                                           @"ChangeOrderID":self.detialModel.Id,
                                           @"ProjectBranchID":self.projectBranchID,
                                           @"EmployeeID":kEmployeeID,
                                           @"ChangeType":[self.alertContentView.typeBtn.currentTitle  isEqualToString: @"签证变更"]?@"1":@"2",
                                           @"Remark":self.alertContentView.xmbgDescriptTV.text,
                                           }mutableCopy];
-
+        if (self.alertContentView.xmbgDescriptTV.text.length == 0) {
+            [QMUITips showWithText:@"请输入变更描述" inView:self.view hideAfterDelay:1.2];
+            return ;
+        } 
         if (self.detialModel.isNewAdd && self.uploadFilePath.length== 0) {
             [QMUITips showError:@"新增变更,附件不能为空" inView:self.view hideAfterDelay:1.2];
         }else{

@@ -47,9 +47,9 @@
     self.tagView.width = tagViewW;
     CGFloat tagViewH = [self setTagViewSubviewsWithModel:model];
 
-    self.tagViewF  = CGRectMake(tagViewX, tagViewY , tagViewW, tagViewH);
+    self.tagViewF  = CGRectMake(tagViewX, tagViewY , tagViewW, tagViewH) ;
 
-    self.cellHeight  =  padding + (CGRectGetMaxY(self.tagViewF));
+    self.cellHeight  = self.tagView.subviews.count==0? padding  + (CGRectGetMaxY(self.tagViewF)):padding*2 + (CGRectGetMaxY(self.tagViewF));//  padding + (CGRectGetMaxY(self.tagViewF));
 }
 
 

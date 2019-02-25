@@ -17,10 +17,11 @@
 @property (nonatomic, copy) NSString *CompletionRate;
 @property (nonatomic, copy) NSString *LastModifyDate;
 @property (nonatomic, copy) NSString *BeginDate;
-
+@property (nonatomic, copy) NSString *ChildName;
 
 @property (nonatomic, copy) NSString *canChangeRate;
 @property (nonatomic, copy) NSString *canChangeRemark;
+@property (nonatomic, copy) NSString *titleStr;
 
 
 @end

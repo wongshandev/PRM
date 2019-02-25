@@ -18,7 +18,7 @@
  @property (nonatomic,assign) GanttScrollDirection scrollDirection;
 @property(strong,nonatomic) NSString * miniXStr;
 @property(strong,nonatomic) NSString * maxXStr;
-
+@property(strong,nonatomic) NSString * title;
 @end
 @implementation ScrollGanttView
 
@@ -31,12 +31,13 @@
       }
     return self;
 }
- -(instancetype)initWithFrame:(CGRect)frame yAlexArray:(NSArray *)yalexArray  withXminDateStr:(NSString *)xminStr withXmaxDateStr:(NSString *)xmaxStr {
+ -(instancetype)initWithFrame:(CGRect)frame yAlexArray:(NSArray *)yalexArray  withXminDateStr:(NSString *)xminStr withXmaxDateStr:(NSString *)xmaxStr titleStr:(NSString *)title{
     if (self = [super initWithFrame:frame]) {
         self.backgroundColor = [UIColor whiteColor];
         self.ganttArray = [yalexArray  mutableCopy];
         self.miniXStr = xminStr;
         self.maxXStr = xmaxStr;
+        self.title = title;
          [self addSubview:self.contenView];
      
     }
@@ -45,7 +46,7 @@
 
 -(StasticGanttView *)contenView{
     if (!_contenView) {
-         _contenView = [[StasticGanttView alloc] initWithFrame:CGRectMake(0,0, SCREEN_W, (self.ganttArray.count ) *StageRowHeight +Bounce_Top +Bounce_Bottom)  yAlexArray:self.ganttArray withXminDateStr:self.miniXStr withXmaxDateStr:self.maxXStr];
+         _contenView = [[StasticGanttView alloc] initWithFrame:CGRectMake(0,0, SCREEN_W, (self.ganttArray.count ) *StageRowHeight +Bounce_Top +Bounce_Bottom)  yAlexArray:self.ganttArray withXminDateStr:self.miniXStr withXmaxDateStr:self.maxXStr titleStr:self.title];
      }
     self.contentSize = _contenView.bounds.size;
     return _contenView;

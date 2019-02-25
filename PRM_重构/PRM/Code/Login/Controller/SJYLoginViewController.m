@@ -39,6 +39,43 @@
     }]; 
 }
 
+-(void)bindViewModel{
+    [self visionCheckFromAppStore];
+}
+//版本更新检测
+-(void)visionCheckFromAppStore{
+    NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"https://itunes.apple.com/cn/lookup?id=1218072711"]];
+    NSError *error;
+    NSDictionary *resultDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    NSInteger resultCount = [[resultDic objectForKey:@"resultCount"] integerValue];
+    NSDictionary *appStorInfoDic = [[resultDic objectForKey:@"results"] firstObject];
+    if (error == nil  && resultCount ) {
+        NSString *appVisionInfo = [appStorInfoDic valueForKey:@"version"];
+        //获取本地的版本号
+        NSString *currentVersion = [[[NSBundle mainBundle] infoDictionary]objectForKey:@"CFBundleShortVersionString"];
+        if (![appVisionInfo isEqualToString:currentVersion]) {
+            NSString *message = appStorInfoDic[@"releaseNotes"];
+            NSString *trackViewUrl = appStorInfoDic[@"trackViewUrl"];
+
+            UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:@"有新版本%@啦",appVisionInfo] message:@"" preferredStyle:UIAlertControllerStyleAlert];
+            NSMutableAttributedString *messageString = [[NSMutableAttributedString alloc] initWithString:message attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:15],NSParagraphStyleAttributeName:[self paragraphAlignment] }];
+            [alertVC setValue:messageString forKey:@"attributedMessage"];
+            [alertVC addAction:[UIAlertAction actionWithTitle:@"马上尝鲜" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:trackViewUrl]]) {
+                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:trackViewUrl]];
+                }
+            }]];
+            [alertVC addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:nil]];
+            [self presentViewController:alertVC animated:YES completion:nil];
+        }
+    }
+}
+//配置对齐方式
+- (NSMutableParagraphStyle*)paragraphAlignment{
+    NSMutableParagraphStyle*_paragraph = [[NSMutableParagraphStyle alloc]init] ;
+    _paragraph.alignment=NSTextAlignmentLeft;
+    return _paragraph ;
+}
 
 - (void)buildSubviews{
     Weak_Self;

@@ -27,10 +27,8 @@
 
 -(void)bindViewModel{
     [SJYRequestTool requestXMJDGanttDataWithProjectBranchID:self.listModel.Id success:^(id responder) {
-        
         NSArray *firstCategoriesArr = [responder objectForKey:@"firstCategories"];
         NSArray *secondCategoriesArr = [responder objectForKey:@"secondCategories"];
-        
         
         NSString *kssj =     [firstCategoriesArr.firstObject objectForKey:@"BeginDate"];
         NSString *jjsj =     [secondCategoriesArr.lastObject objectForKey:@"EndDate"];
@@ -51,11 +49,10 @@
             
             //实际
             ganntModel.sjKSRQ =[self dateStringFormJSDateString:model.ActualBeginDate];
-            ganntModel.sjJSRQ =[self dateStringFormJSDateString: model.LastModifyDate];
+            ganntModel.sjJSRQ =[self dateStringFormJSDateString:model.LastModifyDate];
             //规划
-            ganntModel.jhJSRQ = [self dateStringFormJSDateString: model.BeginDate];
-            ganntModel.jhKSRQ = [self dateStringFormJSDateString: model.EndDate];
-            
+            ganntModel.jhKSRQ = [self dateStringFormJSDateString:model.BeginDate];
+            ganntModel.jhJSRQ = [self dateStringFormJSDateString:model.EndDate]; 
             [self.dataArray addObject:ganntModel];
         }
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -73,7 +70,7 @@
 
 - (void)initScrollGanntView{
     if (self.dataArray.count!= 0) {
-        self.scrollGanntView = [[ScrollGanttView alloc] initWithFrame:CGRectMake(0, NAVHEIGHT, SCREEN_W, SCREEN_H - NAVHEIGHT )  yAlexArray:self.dataArray withXminDateStr:self.miniXStr withXmaxDateStr:self.maxXStr];
+        self.scrollGanntView = [[ScrollGanttView alloc] initWithFrame:CGRectMake(0, NAVHEIGHT, SCREEN_W, SCREEN_H - NAVHEIGHT )  yAlexArray:self.dataArray withXminDateStr:self.miniXStr withXmaxDateStr:self.maxXStr titleStr:self.title];
         if (@available(iOS 11.0, *)) {
             self.scrollGanntView.contentInsetAdjustmentBehavior = UIApplicationBackgroundFetchIntervalNever;
         } else {

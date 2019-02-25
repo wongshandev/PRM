@@ -175,4 +175,16 @@
     NSString *string = [formatter stringFromNumber:result111];
     return string;
 }
++(NSString *)numberIntFormattor:(NSString *)number{
+    if (number.length==0) {
+        return @"";
+    }
+    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+    formatter.numberStyle = kCFNumberFormatterDecimalStyle;
+    formatter.maximumFractionDigits = 0;    //设置最大小数点后的位数
+    formatter.minimumFractionDigits = 0;
+    NSNumber *result111 = [NSNumber numberWithDouble:number.doubleValue];
+    NSString *string = [formatter stringFromNumber:result111];
+    return string;
+}
 @end

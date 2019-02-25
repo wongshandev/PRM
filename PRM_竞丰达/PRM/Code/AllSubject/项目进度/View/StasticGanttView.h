@@ -8,11 +8,12 @@
 
 #import <UIKit/UIKit.h>
  #import "StasticGanttModel.h"
- 
+
+#define   Bounce_Title_Top  10.0
 #define   Bounce_Left        30.0
 #define   Bounce_Right      30.0
-#define   Bounce_Top         40.0
-#define   Bounce_Bottom   60.0
+#define   Bounce_Top         70.0 + Bounce_Title_Top
+#define   Bounce_Bottom   30.0
 
 #define   PaddingY   5
 
@@ -52,6 +53,6 @@ typedef NS_OPTIONS(NSUInteger, GanttScrollDirection) {
 @property(nonatomic,strong)NSMutableArray *ganttArray;
  
 //-(instancetype)initWithFrame:(CGRect)frame prmInfomodel:(PRMInfoModel *)infoModel yAlexArray:(NSArray *)yalexArray;
--(instancetype)initWithFrame:(CGRect)frame yAlexArray:(NSArray *)yalexArray  withXminDateStr:(NSString *)xminStr withXmaxDateStr:(NSString *)xmaxStr;
+-(instancetype)initWithFrame:(CGRect)frame yAlexArray:(NSArray *)yalexArray  withXminDateStr:(NSString *)xminStr withXmaxDateStr:(NSString *)xmaxStr titleStr:(NSString *)title;
  
 @end

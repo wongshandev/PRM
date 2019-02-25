@@ -149,7 +149,7 @@
 }
 -(void)loadContent{
     WLJHDetialModel *model = self.data;
-    self.titleLab.text = model.Name;
+    self.titleLab.text = model.titleStr;
     self.circleProgress.progress = model.canChangeQuantityThis.floatValue / model.Quantity.integerValue;
     self.totalLab.text = model.Quantity;
     self.planLab.text = model.QuantityPurchased;

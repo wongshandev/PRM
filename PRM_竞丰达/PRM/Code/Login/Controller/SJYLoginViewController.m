@@ -39,13 +39,48 @@
     }]; 
 }
 
+-(void)bindViewModel{
+    [self visionCheckFromAppStore];
+}
+//版本更新检测
+-(void)visionCheckFromAppStore{
+    NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"https://itunes.apple.com/cn/lookup?id=1453354285"]];
+    NSError *error;
+    NSDictionary *resultDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    NSInteger resultCount = [[resultDic objectForKey:@"resultCount"] integerValue];
+    NSDictionary *appStorInfoDic = [[resultDic objectForKey:@"results"] firstObject];
+    if (error == nil  && resultCount ) {
+        NSString *appVisionInfo = [appStorInfoDic valueForKey:@"version"];
+        //获取本地的版本号
+        NSString *currentVersion = [[[NSBundle mainBundle] infoDictionary]objectForKey:@"CFBundleShortVersionString"];
+        if (![appVisionInfo isEqualToString:currentVersion]) {
+            NSString *message = appStorInfoDic[@"releaseNotes"];
+            NSString *trackViewUrl = appStorInfoDic[@"trackViewUrl"];
 
+            UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:@"有新版本%@啦",appVisionInfo] message:@"" preferredStyle:UIAlertControllerStyleAlert];
+            NSMutableAttributedString *messageString = [[NSMutableAttributedString alloc] initWithString:message attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:15],NSParagraphStyleAttributeName:[self paragraphAlignment] }];
+            [alertVC setValue:messageString forKey:@"attributedMessage"];
+            [alertVC addAction:[UIAlertAction actionWithTitle:@"马上尝鲜" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:trackViewUrl]]) {
+                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:trackViewUrl]];
+                }
+            }]];
+            [alertVC addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:nil]];
+            [self presentViewController:alertVC animated:YES completion:nil];
+        }
+    }
+}
+//配置对齐方式
+- (NSMutableParagraphStyle*)paragraphAlignment{
+    NSMutableParagraphStyle*_paragraph = [[NSMutableParagraphStyle alloc]init] ;
+    _paragraph.alignment=NSTextAlignmentLeft;
+    return _paragraph ;
+}
 - (void)buildSubviews{
     Weak_Self;
     self.view.backgroundColor = [UIColor whiteColor];
     UIView *topView = [UIView new];
      [self.view addSubview:topView];
-
 
     UIImageView *imgView  = [UIImageView new];
     imgView.image = SJYCommonImage(@"AppIcon");
@@ -64,7 +99,6 @@
     [nameView addSubview: nameTF];
     [nameTF addTarget:self action:@selector(textFieldsDidChangeText:) forControlEvents:UIControlEventEditingChanged];
     self.nameTF = nameTF;
-
 
     // 密码
     UIView *passwordView = [[UIView alloc]init];
@@ -121,28 +155,7 @@
         } failure:^(int status, NSString *info) {
             [QMUITips hideAllTipsInView: weakSelf.view];
             [QMUITips showError:info inView:weakSelf.view hideAfterDelay:1.5];
-        }];
-        //        [SJYRequestTool loginWithUserName:weakSelf.nameTF.text passworld:weakSelf.passwordTF.text complete:^(id responder){
-        //            [QMUITips hideAllTipsInView: weakSelf.view];
-        //            NSDictionary *dic = responder;
-        //            if ([[dic  valueForKey:@"success"] boolValue] == YES) {
-        //                [QMUITips showSucceed:@"登录成功" inView:weakSelf.view hideAfterDelay:0.6];
-        //                if ([[SJYDefaultManager shareManager] isRemberPassword]) {
-        //                    [[SJYDefaultManager shareManager] saveUserName:weakSelf.nameTF.text password:weakSelf.passwordTF.text];
-        //                }
-        //                [[SJYDefaultManager shareManager] saveEmployeeName:[dic valueForKey:@"employeeName"] Dt_Info:[dic valueForKey:@"dt"] EmployeeID:[dic valueForKey:@"employeeID"] DepartmentID:[dic valueForKey:@"departmentID"] PositionID:[dic valueForKey:@"positionID"]];
-        //
-        //                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        //                    SJYMainViewController *mainVC = [[SJYMainViewController alloc] init];
-        //                    [weakSelf.navigationController qmui_pushViewController:mainVC animated:YES completion:^{
-        //                        AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        //                        [delegate gotoMainVC];
-        //                    }];
-        //                });
-        //            }else{
-        //                [QMUITips showError:[dic valueForKey:@"infotype"] inView:weakSelf.view hideAfterDelay:1.5];
-        //            }
-        //        }];
+        }]; 
     }];
 
     // 记住密码

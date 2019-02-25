@@ -12,6 +12,6 @@
 
  @property(nonatomic,strong)NSMutableArray *ganttArray;
 
--(instancetype)initWithFrame:(CGRect)frame  yAlexArray:(NSArray *)yalexArray withXminDateStr:(NSString *)xminStr withXmaxDateStr:(NSString *)xmaxStr;
+-(instancetype)initWithFrame:(CGRect)frame  yAlexArray:(NSArray *)yalexArray withXminDateStr:(NSString *)xminStr withXmaxDateStr:(NSString *)xmaxStr titleStr:(NSString *)title;
 
 @end

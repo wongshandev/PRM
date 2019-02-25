@@ -12,7 +12,7 @@
 #import "SJSHDetialSuperController.h"
 
  #define  STATEArray  @[@"全部",@"未审核",@"已审核"]
-#define  ListSTATEColorArray  @[[UIColor whiteColor],UIColorHex(#007BD3),UIColorHex(#EF5362)]
+#define  ListSTATEColorArray  @[[UIColor whiteColor],UIColorHex(#EF5362),UIColorHex(#007BD3),]
 @interface SJYSJSHViewController ()<QMUITextFieldDelegate>
 @property (nonatomic, strong) SJYSJSHSearchAlertView * searchAlertView;
 

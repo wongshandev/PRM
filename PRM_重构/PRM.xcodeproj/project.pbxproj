@@ -12,11 +12,8 @@
 		1809E3A721F6E2AA00DBFCFF /* XMJDGanttController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1809E3A621F6E2AA00DBFCFF /* XMJDGanttController.m */; };
 		1809E3AA21F6E4DE00DBFCFF /* XMJDListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1809E3A921F6E4DE00DBFCFF /* XMJDListCell.m */; };
 		1809E3AD21F6E4FD00DBFCFF /* XMJDListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1809E3AC21F6E4FD00DBFCFF /* XMJDListModel.m */; };
-		1809E3B221F6FBFB00DBFCFF /* ScrollGanttView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1809E3AE21F6FBF700DBFCFF /* ScrollGanttView.m */; };
-		1809E3B321F6FBFB00DBFCFF /* StasticGanttView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1809E3B121F6FBFB00DBFCFF /* StasticGanttView.m */; };
 		1809E3B621F6FE4000DBFCFF /* StasticGanttModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1809E3B421F6FE3F00DBFCFF /* StasticGanttModel.m */; };
 		1809E3B921F7669B00DBFCFF /* SJYJJQRListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1809E3B821F7669B00DBFCFF /* SJYJJQRListModel.m */; };
-		1809E3BC21F7F9D700DBFCFF /* GanttStageClickedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1809E3BA21F7F9D400DBFCFF /* GanttStageClickedView.m */; };
 		1809E3BF21F813E900DBFCFF /* JJQRFTInfotModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1809E3BE21F813E900DBFCFF /* JJQRFTInfotModel.m */; };
 		180D699121EC9F0400684414 /* SJYJJQRListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 180D699021EC9F0400684414 /* SJYJJQRListCell.m */; };
 		180D699521ED7A6600684414 /* SGGLXCSHListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 180D699421ED7A6600684414 /* SGGLXCSHListController.m */; };
@@ -71,6 +68,9 @@
 		187254C2221A751E002C7FE7 /* DistributionPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = 187254C1221A751E002C7FE7 /* DistributionPerson.m */; };
 		187254C5221A7544002C7FE7 /* FileModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 187254C4221A7544002C7FE7 /* FileModel.m */; };
 		1872552C221A867D002C7FE7 /* notificationSound.caf in Resources */ = {isa = PBXBuildFile; fileRef = 1872552B221A867D002C7FE7 /* notificationSound.caf */; };
+		187871B12223B97D00406F0A /* ScrollGanttView.m in Sources */ = {isa = PBXBuildFile; fileRef = 187871AD2223B97D00406F0A /* ScrollGanttView.m */; };
+		187871B22223B97D00406F0A /* StasticGanttView.m in Sources */ = {isa = PBXBuildFile; fileRef = 187871AF2223B97D00406F0A /* StasticGanttView.m */; };
+		187871B32223B97D00406F0A /* GanttStageClickedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 187871B02223B97D00406F0A /* GanttStageClickedView.m */; };
 		18838A5D21F084E1004033CB /* XCSHRecordModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 18838A5C21F084E1004033CB /* XCSHRecordModel.m */; };
 		18838A6021F085CF004033CB /* XCSCRecordCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18838A5F21F085CF004033CB /* XCSCRecordCell.m */; };
 		18838A6321F08C2A004033CB /* XCSHRecordDetialController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18838A6221F08C2A004033CB /* XCSHRecordDetialController.m */; };
@@ -149,16 +149,10 @@
 		1809E3A921F6E4DE00DBFCFF /* XMJDListCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMJDListCell.m; sourceTree = "<group>"; };
 		1809E3AB21F6E4FD00DBFCFF /* XMJDListModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMJDListModel.h; sourceTree = "<group>"; };
 		1809E3AC21F6E4FD00DBFCFF /* XMJDListModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMJDListModel.m; sourceTree = "<group>"; };
-		1809E3AE21F6FBF700DBFCFF /* ScrollGanttView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScrollGanttView.m; sourceTree = "<group>"; };
-		1809E3AF21F6FBF800DBFCFF /* StasticGanttView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StasticGanttView.h; sourceTree = "<group>"; };
-		1809E3B021F6FBF900DBFCFF /* ScrollGanttView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollGanttView.h; sourceTree = "<group>"; };
-		1809E3B121F6FBFB00DBFCFF /* StasticGanttView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StasticGanttView.m; sourceTree = "<group>"; };
 		1809E3B421F6FE3F00DBFCFF /* StasticGanttModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StasticGanttModel.m; sourceTree = "<group>"; };
 		1809E3B521F6FE4000DBFCFF /* StasticGanttModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StasticGanttModel.h; sourceTree = "<group>"; };
 		1809E3B721F7669B00DBFCFF /* SJYJJQRListModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SJYJJQRListModel.h; sourceTree = "<group>"; };
 		1809E3B821F7669B00DBFCFF /* SJYJJQRListModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SJYJJQRListModel.m; sourceTree = "<group>"; };
-		1809E3BA21F7F9D400DBFCFF /* GanttStageClickedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GanttStageClickedView.m; sourceTree = "<group>"; };
-		1809E3BB21F7F9D600DBFCFF /* GanttStageClickedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GanttStageClickedView.h; sourceTree = "<group>"; };
 		1809E3BD21F813E800DBFCFF /* JJQRFTInfotModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JJQRFTInfotModel.h; sourceTree = "<group>"; };
 		1809E3BE21F813E900DBFCFF /* JJQRFTInfotModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJQRFTInfotModel.m; sourceTree = "<group>"; };
 		180D698F21EC9F0400684414 /* SJYJJQRListCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SJYJJQRListCell.h; sourceTree = "<group>"; };
@@ -267,6 +261,12 @@
 		187254C3221A7544002C7FE7 /* FileModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileModel.h; sourceTree = "<group>"; };
 		187254C4221A7544002C7FE7 /* FileModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileModel.m; sourceTree = "<group>"; };
 		1872552B221A867D002C7FE7 /* notificationSound.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = notificationSound.caf; sourceTree = "<group>"; };
+		187871AB2223B97D00406F0A /* ScrollGanttView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ScrollGanttView.h; path = "../../../../../../PRM_竞丰达/PRM/Code/AllSubject/项目进度/View/ScrollGanttView.h"; sourceTree = "<group>"; };
+		187871AC2223B97D00406F0A /* GanttStageClickedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GanttStageClickedView.h; path = "../../../../../../PRM_竞丰达/PRM/Code/AllSubject/项目进度/View/GanttStageClickedView.h"; sourceTree = "<group>"; };
+		187871AD2223B97D00406F0A /* ScrollGanttView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ScrollGanttView.m; path = "../../../../../../PRM_竞丰达/PRM/Code/AllSubject/项目进度/View/ScrollGanttView.m"; sourceTree = "<group>"; };
+		187871AE2223B97D00406F0A /* StasticGanttView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StasticGanttView.h; path = "../../../../../../PRM_竞丰达/PRM/Code/AllSubject/项目进度/View/StasticGanttView.h"; sourceTree = "<group>"; };
+		187871AF2223B97D00406F0A /* StasticGanttView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StasticGanttView.m; path = "../../../../../../PRM_竞丰达/PRM/Code/AllSubject/项目进度/View/StasticGanttView.m"; sourceTree = "<group>"; };
+		187871B02223B97D00406F0A /* GanttStageClickedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GanttStageClickedView.m; path = "../../../../../../PRM_竞丰达/PRM/Code/AllSubject/项目进度/View/GanttStageClickedView.m"; sourceTree = "<group>"; };
 		18838A5B21F084E1004033CB /* XCSHRecordModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XCSHRecordModel.h; sourceTree = "<group>"; };
 		18838A5C21F084E1004033CB /* XCSHRecordModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XCSHRecordModel.m; sourceTree = "<group>"; };
 		18838A5E21F085CF004033CB /* XCSCRecordCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XCSCRecordCell.h; sourceTree = "<group>"; };
@@ -1229,12 +1229,12 @@
 			children = (
 				1809E3A821F6E4DE00DBFCFF /* XMJDListCell.h */,
 				1809E3A921F6E4DE00DBFCFF /* XMJDListCell.m */,
-				1809E3B021F6FBF900DBFCFF /* ScrollGanttView.h */,
-				1809E3AE21F6FBF700DBFCFF /* ScrollGanttView.m */,
-				1809E3AF21F6FBF800DBFCFF /* StasticGanttView.h */,
-				1809E3B121F6FBFB00DBFCFF /* StasticGanttView.m */,
-				1809E3BB21F7F9D600DBFCFF /* GanttStageClickedView.h */,
-				1809E3BA21F7F9D400DBFCFF /* GanttStageClickedView.m */,
+				187871AB2223B97D00406F0A /* ScrollGanttView.h */,
+				187871AD2223B97D00406F0A /* ScrollGanttView.m */,
+				187871AE2223B97D00406F0A /* StasticGanttView.h */,
+				187871AF2223B97D00406F0A /* StasticGanttView.m */,
+				187871AC2223B97D00406F0A /* GanttStageClickedView.h */,
+				187871B02223B97D00406F0A /* GanttStageClickedView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1597,6 +1597,7 @@
 				187254C5221A7544002C7FE7 /* FileModel.m in Sources */,
 				181B922A21F83B2600E85E4B /* SJYRWFPListController.m in Sources */,
 				18FB920B21EC989900B55322 /* SJYJJQRViewController.m in Sources */,
+				187871B12223B97D00406F0A /* ScrollGanttView.m in Sources */,
 				18255E0A21E71AEA00095143 /* NSObject+SJYKVO.m in Sources */,
 				1843788A21EF234500AA14DC /* WLJHDetialController.m in Sources */,
 				18A7CC1A21E5A7CB00EDB754 /* SJYRequestTool.m in Sources */,
@@ -1626,7 +1627,6 @@
 				189EEB0521FAED280027E1A3 /* GCJDListModel.m in Sources */,
 				18A7CC5421E5BE7200EDB754 /* DXCellDataAdapter.m in Sources */,
 				1845674B21EEFD1F00AF55DF /* ZZCountingLabel.m in Sources */,
-				1809E3B221F6FBFB00DBFCFF /* ScrollGanttView.m in Sources */,
 				18A7CC0A21E587B700EDB754 /* SJYDefaultManager.m in Sources */,
 				18838A7221F18F8F004033CB /* XMQGDetialController.m in Sources */,
 				184E8FC421E5F7ED00F133AA /* RequestTool.m in Sources */,
@@ -1669,15 +1669,16 @@
 				18255E1821E730E200095143 /* AppDelegate+NotificationService.m in Sources */,
 				189EEAFC21FAAB5B0027E1A3 /* BJQDListCell.m in Sources */,
 				18A7CC1721E59DBC00EDB754 /* KeychainItemWrapper.m in Sources */,
+				187871B32223B97D00406F0A /* GanttStageClickedView.m in Sources */,
 				18A7CC1021E59AE600EDB754 /* SJYPublicTool.m in Sources */,
 				18838A6921F09980004033CB /* XCSHRecordDetialCell.m in Sources */,
 				18EC2B2821F5AE9F00AFC07E /* FileSelectView.m in Sources */,
 				18255E0521E6F00A00095143 /* AppDelegate+RootViewController.m in Sources */,
 				1809E3B921F7669B00DBFCFF /* SJYJJQRListModel.m in Sources */,
 				18838A6621F09949004033CB /* XCSHRecordDetialModel.m in Sources */,
-				1809E3B321F6FBFB00DBFCFF /* StasticGanttView.m in Sources */,
 				181B924521F99EFE00E85E4B /* CGFKListCell.m in Sources */,
 				182C502121EDE8E60002B312 /* JDHBListModel.m in Sources */,
+				187871B22223B97D00406F0A /* StasticGanttView.m in Sources */,
 				18838A6C21F17F0F004033CB /* SJYXMQGViewController.m in Sources */,
 				18A7CC5721E5BF5200EDB754 /* SJYLoginViewController.m in Sources */,
 				1845674321EED00400AF55DF /* WLJHListModel.m in Sources */,
@@ -1712,7 +1713,6 @@
 				1809E3A121F6C1BA00DBFCFF /* SJYBGSHSearchAlertView.m in Sources */,
 				189EEAEA21FAA32A0027E1A3 /* SJSHListModel.m in Sources */,
 				188C27C521DF43D40022C989 /* PRM.xcdatamodeld in Sources */,
-				1809E3BC21F7F9D700DBFCFF /* GanttStageClickedView.m in Sources */,
 				18A7CC5121E5BE1C00EDB754 /* DXBaseTableHeaderFooterView.m in Sources */,
 				18CBFC8921DF5D5400672EF4 /* UIButton+block.m in Sources */,
 			);

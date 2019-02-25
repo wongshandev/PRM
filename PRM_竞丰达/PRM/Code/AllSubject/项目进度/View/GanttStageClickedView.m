@@ -182,22 +182,19 @@
 -(void)setGanttModel:(StasticGanttModel *)ganttModel{
     _ganttModel = ganttModel;
     self.topTitleLab.text = ganttModel.JDName;
-    
-    if ( ganttModel.sjKSRQ.length!= 0 &&  ganttModel.sjJSRQ.length!= 0){
-        NSString * guihuaStr =[@[ ganttModel.sjKSRQ, ganttModel.sjJSRQ] componentsJoinedByString:@"~"];
-        self.guiHuaTimeLab.text = guihuaStr;
-    }else{
-        self.guiHuaTimeLab.text = @"";
-        
-    }
-    
+
     if  (ganttModel.jhKSRQ.length!= 0 && ganttModel.jhJSRQ.length!= 0){
         NSString * shijiStr =[@[ ganttModel.jhKSRQ, ganttModel.jhJSRQ] componentsJoinedByString:@"~"];
-        self.shiJiTimeLab.text = shijiStr;
+        self.guiHuaTimeLab.text = shijiStr;
+    }else{
+        self.guiHuaTimeLab.text = @"";
+    }
+    if ( ganttModel.sjKSRQ.length!= 0 &&  ganttModel.sjJSRQ.length!= 0){
+        NSString * guihuaStr =[@[ ganttModel.sjKSRQ, ganttModel.sjJSRQ] componentsJoinedByString:@"~"];
+        self.shiJiTimeLab.text = guihuaStr;
     }else{
         self.shiJiTimeLab.text = @"";
     }
-    
     NSString * shijiNumStr =[@[ @"当前进度:  ",ganttModel.JDNum,@"%"] componentsJoinedByString:@""];
     self.progressLab.text =ganttModel.JDNum.length == 0? @"": shijiNumStr;
      

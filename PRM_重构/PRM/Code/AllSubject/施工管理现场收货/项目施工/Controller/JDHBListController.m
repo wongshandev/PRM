@@ -69,9 +69,9 @@
         NSArray *rowsArr = [responder objectForKey:@"rows"];
         if ([self.tableView.mj_header isRefreshing]) {
             [self.dataArray removeAllObjects];
+            [self.updateArray removeAllObjects];
         }
-        
-        
+
         for (NSDictionary *dic in rowsArr) {
             JDHBListModel *model = [JDHBListModel  modelWithDictionary:dic];
             model.canChangeRate = model.CompletionRate;

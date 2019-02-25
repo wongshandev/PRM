@@ -18,7 +18,7 @@
 
 @property(strong,nonatomic) NSString * miniXStr;
 @property(strong,nonatomic) NSString * maxXStr;
-
+@property(strong,nonatomic) NSString * title;
 @end
 
 @implementation StasticGanttView
@@ -32,7 +32,7 @@
     }
     return self;
 }
--(instancetype)initWithFrame:(CGRect)frame yAlexArray:(NSArray *)yalexArray  withXminDateStr:(NSString *)xminStr withXmaxDateStr:(NSString *)xmaxStr{
+-(instancetype)initWithFrame:(CGRect)frame yAlexArray:(NSArray *)yalexArray  withXminDateStr:(NSString *)xminStr withXmaxDateStr:(NSString *)xmaxStr titleStr:(NSString *)title{
 
 if (self = [super initWithFrame:frame]) {
         self.backgroundColor = [UIColor whiteColor];
@@ -40,6 +40,7 @@ if (self = [super initWithFrame:frame]) {
         self.ganttArray = [yalexArray  mutableCopy];
     self.miniXStr = xminStr;
     self.maxXStr = xmaxStr;
+    self.title = title;
     }
     return self;
 }
@@ -51,7 +52,8 @@ if (self = [super initWithFrame:frame]) {
 //        return;
 //    }
     /*******画出表头******************/
-    //    [self drawTopTitleView];
+        [self drawTopTitleView];
+
     /*******画出坐标轴******************/
     [self drawTheXYAlex];
 
@@ -59,26 +61,37 @@ if (self = [super initWithFrame:frame]) {
     [self drawTheSeperateLine];
 
     /*******绘制提示 颜色与文字*********/
-    [self drawTheMentionWordAndColor];
+//    [self drawTheMentionWordAndColor];
 
     /*******绘制进度数据***************/
     [self setUIProgressData];
 
 }
-//- (void)drawTopTitleView {
-//    NSMutableParagraphStyle *paraSty = [[NSMutableParagraphStyle alloc] init];
-//    paraSty.alignment = NSTextAlignmentCenter;
-//    [ self.infoModel.MC  drawInRect: CGRectMake(
-//                                                                                    Bounce_Left ,
-//                                                                                    PaddingY,
-//                                                                                    kDeviceWidth - Bounce_Left - Bounce_Right,
-//                                                                                    Bounce_Top - PaddingY)
-//                                                         withAttributes:@{
-//                                                                          NSFontAttributeName:H15,
-//                                                                          NSForegroundColorAttributeName:Color_DarkGray,
-//                                                                          NSParagraphStyleAttributeName: paraSty
-//                                                                          }];
-//}
+- (void)drawTopTitleView {
+    NSMutableParagraphStyle *paraStyTitle = [[NSMutableParagraphStyle alloc] init];
+    paraStyTitle.alignment = NSTextAlignmentCenter;
+    NSMutableParagraphStyle *paraSty = [[NSMutableParagraphStyle alloc] init];
+    paraSty.alignment = NSTextAlignmentLeft;
+    CGFloat mentionH =(Bounce_Top-Bounce_Title_Top - PaddingY *3)/2;
+    CGFloat mentionTop = PaddingY*2 + Bounce_Title_Top + mentionH;
+    CGFloat mentionW = 40 ;
+    [ self.title  drawInRect: CGRectMake(
+                                         Bounce_Left ,
+                                         PaddingY + Bounce_Title_Top,
+                                         ChartW - Bounce_Left - Bounce_Right,
+                                        mentionH )
+              withAttributes:@{
+                               NSFontAttributeName:SJYBoldFont(15),
+                               NSForegroundColorAttributeName:Color_DarkGray,
+                               NSParagraphStyleAttributeName:paraStyTitle
+                               }];
+//计划
+    [@"       " drawInRect:CGRectMake( ChartW/2 - mentionW*2, mentionTop, mentionW, mentionH) withAttributes:@{ NSFontAttributeName:SJYBoldFont(12),  NSForegroundColorAttributeName:Color_White, NSBackgroundColorAttributeName:Color_Orange,  NSParagraphStyleAttributeName:paraSty }];
+    [@"计划" drawInRect:CGRectMake( ChartW/2 -  mentionW, mentionTop, mentionW, mentionH) withAttributes:@{ NSFontAttributeName:SJYBoldFont(12),  NSForegroundColorAttributeName:Color_Black,  NSParagraphStyleAttributeName:paraSty }];//NSBackgroundColorAttributeName:Color_NavigationLightBlue,
+//实际
+    [@"       " drawInRect:CGRectMake( ChartW/2 +5,mentionTop, mentionW, mentionH) withAttributes:@{ NSFontAttributeName:SJYBoldFont(12), NSForegroundColorAttributeName:Color_White, NSBackgroundColorAttributeName:Color_NavigationLightBlue, NSParagraphStyleAttributeName:paraSty }];
+    [@"实际" drawInRect:CGRectMake( ChartW/2 + mentionW ,mentionTop , mentionW, mentionH) withAttributes:@{ NSFontAttributeName:SJYBoldFont(12), NSForegroundColorAttributeName:Color_Black, NSParagraphStyleAttributeName:paraSty }];//NSBackgroundColorAttributeName:Color_Orange,
+}
 #pragma mark *****************************绘制坐标轴
 - (void)drawTheXYAlex {
     CGContextRef context = UIGraphicsGetCurrentContext();
@@ -96,7 +109,7 @@ if (self = [super initWithFrame:frame]) {
     CGContextAddLines(context, aPoints, 3);
     CGContextStrokePath(context);
 
-    [@"项目统计图" drawInRect:CGRectMake(Bounce_Left ,  (Bounce_Top - 16)/2 ,ChartW - 2*Bounce_Left, Bounce_Top) withAttributes:@{ NSFontAttributeName:SJYBoldFont(16),  NSForegroundColorAttributeName:Color_RGB_HEX(0x333333, 1) }];//NSBackgroundColorAttributeName:Color_RGB_HEX(0xFFC000, 1)
+//    [@"项目统计图" drawInRect:CGRectMake(Bounce_Left ,  (Bounce_Top - 16)/2 ,ChartW - 2*Bounce_Left, Bounce_Top) withAttributes:@{ NSFontAttributeName:SJYBoldFont(16),  NSForegroundColorAttributeName:Color_RGB_HEX(0x333333, 1) }];//NSBackgroundColorAttributeName:Color_RGB_HEX(0xFFC000, 1)
 }
 #pragma mark *****************************绘制分割线
 
@@ -118,15 +131,15 @@ if (self = [super initWithFrame:frame]) {
 }
 #pragma mark *****************************绘制提示文字
 
-- (void)drawTheMentionWordAndColor {
-    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-    paragraphStyle.alignment = NSTextAlignmentCenter;
-
-
-    [@" 实际 " drawInRect:CGRectMake( ChartW - Bounce_Left - 65,  XAlex_MaxY + 40, 50, 30) withAttributes:@{ NSFontAttributeName:SJYBoldFont(12),  NSForegroundColorAttributeName:Color_White, NSBackgroundColorAttributeName:Color_NavigationLightBlue,  NSParagraphStyleAttributeName:paragraphStyle }];
-
-    [@" 计划 " drawInRect:CGRectMake( ChartW - Bounce_Left - 120, XAlex_MaxY +40, 50, 30) withAttributes:@{ NSFontAttributeName:SJYBoldFont(12), NSForegroundColorAttributeName:Color_White, NSBackgroundColorAttributeName:Color_Orange, NSParagraphStyleAttributeName:paragraphStyle }];
-}
+//- (void)drawTheMentionWordAndColor {
+//    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+//    paragraphStyle.alignment = NSTextAlignmentCenter;
+//
+//
+//    [@" 实际 " drawInRect:CGRectMake( ChartW - Bounce_Left - 65,  XAlex_MaxY + 40, 50, 30) withAttributes:@{ NSFontAttributeName:SJYBoldFont(12),  NSForegroundColorAttributeName:Color_White, NSBackgroundColorAttributeName:Color_NavigationLightBlue,  NSParagraphStyleAttributeName:paragraphStyle }];
+//
+//    [@"       " drawInRect:CGRectMake( ChartW - Bounce_Left - 120, XAlex_MaxY +40, 50, 30) withAttributes:@{ NSFontAttributeName:SJYBoldFont(12), NSForegroundColorAttributeName:Color_White, NSBackgroundColorAttributeName:Color_Orange, NSParagraphStyleAttributeName:paragraphStyle }];
+//}
 
 #pragma mark *****************************绘制甘特进度
 
@@ -288,7 +301,9 @@ if (self = [super initWithFrame:frame]) {
 //                                    }];
 //        [backPath moveToPoint:CGPointMake(Bounce_Left + start_X, Bounce_Top + i *StageRowHeight + (PaddingY  + GanttRectHeight) +PaddingY)];
 //        [backPath addLineToPoint:CGPointMake(Bounce_Left + end_X, Bounce_Top + i*StageRowHeight + (PaddingY  + GanttRectHeight) +PaddingY) ];
-        
+
+//        NSString * guihuaStr =[@[ model.jhKSRQ, model.jhJSRQ] componentsJoinedByString:@"~"];
+//        NSString *jhMentionStr = [model.JDName stringByAppendingFormat:@"(%@)",guihuaStr];
         [model.JDName drawAtPoint:CGPointMake(Bounce_Left + start_X, Bounce_Top + i*StageRowHeight + PaddingY/2 )
                    withAttributes:@{
                                     NSFontAttributeName:SJYBoldFont(12),
@@ -298,12 +313,12 @@ if (self = [super initWithFrame:frame]) {
 
         [backPath moveToPoint:CGPointMake(Bounce_Left + start_X, Bounce_Top + i *StageRowHeight + (PaddingY  + GanttRectHeight) +PaddingY)];
         [backPath addLineToPoint:CGPointMake(Bounce_Left + end_X, Bounce_Top + i*StageRowHeight + (PaddingY  + GanttRectHeight) +PaddingY) ];
-
-
     }):({
         [backPath moveToPoint:CGPointMake(Bounce_Left + start_X, Bounce_Top + i*StageRowHeight + 3*PaddingY + GanttRectHeight*2)];
         [backPath addLineToPoint:CGPointMake(Bounce_Left + end_X, Bounce_Top + i*StageRowHeight + (PaddingY + GanttRectHeight )*2 + PaddingY ) ];
         if (model.JDNum.length !=0 && ![model.JDNum isEqualToString:@"0"]) {
+//            NSString * shijiStr =[@[ model.sjKSRQ, model.sjJSRQ] componentsJoinedByString:@"~"];
+//            NSString *sjMentionStr = [[model.JDNum stringByAppendingString:@"%"] stringByAppendingFormat:@"(%@)",shijiStr];
             [[model.JDNum stringByAppendingString:@"%"] drawAtPoint:CGPointMake(Bounce_Left + start_X, Bounce_Top + i*StageRowHeight + (PaddingY/2 + GanttRectHeight )*3 )
                                                      withAttributes:@{
                                                                       NSFontAttributeName:SJYBoldFont(12),
@@ -350,7 +365,6 @@ if (self = [super initWithFrame:frame]) {
 - (void)drawUserInterfaceBackgroundButton:(NSInteger)tagIndex model:(StasticGanttModel *)model {
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     button.frame = CGRectMake(Bounce_Left +1, Bounce_Top +1 + tagIndex * StageRowHeight , ChartW - Bounce_Left-1, StageRowHeight);
-
     // runtime 为 button 直接绑定参数 model
     objc_setAssociatedObject(button,@"ganttModel", model , OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     //    button.tag = 1000 + tagIndex; // 通过tag 去数组中获取 model
@@ -368,10 +382,6 @@ if (self = [super initWithFrame:frame]) {
 //    // 参数传递方法2
 //    NSInteger index = sender.tag - 1000;
 //    StasticGanttModel *model = [self.ganttArray objectAtIndex:index];
-
-
-
-
     [self handleShowContentViewWithModel:model];
 
  }

@@ -148,6 +148,7 @@
 -(void)createSaveSubmitBtn{
     Weak_Self;
     QMUIFillButton *saveBt = [QMUIFillButton  buttonWithType:UIButtonTypeCustom];
+    saveBt.isIgnore =  YES;
     saveBt.fillColor = Color_NavigationLightBlue;
     [saveBt setTitle:@"保存" forState:UIControlStateNormal];
     [saveBt setTitleTextColor:Color_White];
@@ -155,10 +156,12 @@
     saveBt.hidden = YES;
     self.saveBtn = saveBt;
     [self.saveBtn clickWithBlock:^{
+        weakSelf.saveBtn.enabled = NO;
         [weakSelf save_WLJHData];
     }];
 
     QMUIFillButton *submitBt = [QMUIFillButton  buttonWithType:UIButtonTypeCustom];
+    submitBt.isIgnore = YES;
     submitBt.fillColor = Color_NavigationLightBlue;
     [submitBt setTitle:@"提交" forState:UIControlStateNormal];
     [submitBt setTitleTextColor:Color_White];
@@ -166,6 +169,7 @@
     submitBt.hidden = YES;
     self.submitBtn = submitBt;
     [self.submitBtn clickWithBlock:^{
+        weakSelf.saveBtn.enabled = NO;
         [weakSelf submit_WLJHData];
     }];
 
@@ -197,6 +201,7 @@
         if ([self.tableView.mj_header isRefreshing]) {
             [self.dataArray removeAllObjects];
             [self.sectionArray removeAllObjects];
+            [self.savedArray removeAllObjects];
         }
 
      
@@ -204,6 +209,7 @@
         for (NSDictionary *dic in rowsArr) {
             WLJHDetialModel *model = [ WLJHDetialModel  modelWithDictionary:dic];
             model.canChangeQuantityThis = model.QuantityThis;
+            model.titleStr = model.Model.length == 0?model.Name:[model.Name stringByAppendingFormat:@"  (%@)",model.Model];
             if ([[dic valueForKey:@"_parentId"]integerValue] == 0) {
                 [self.sectionArray addObject:model];
             }else{
@@ -269,7 +275,7 @@
 
 -(void)save_WLJHData{
     if (![self checkCanSave]) {
-//        [QMUITips showWithText:@"无数据需要保存" inView:self.view hideAfterDelay:1.5];
+        self.saveBtn.enabled = YES;
         return;
     };
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"ModId == %@", @"0"];
@@ -299,8 +305,10 @@
         }else{
             [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
         }
+        self.saveBtn.enabled = YES;
     } failure:^(int status, NSString *info) {
         [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
+        self.saveBtn.enabled = YES;
     }];
 
 }
@@ -321,8 +329,10 @@
         }else{
             [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
         }
+        self.submitBtn.enabled = YES;
     } failure:^(int status, NSString *info) {
         [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
+        self.submitBtn.enabled = YES;
     }];
 }
 

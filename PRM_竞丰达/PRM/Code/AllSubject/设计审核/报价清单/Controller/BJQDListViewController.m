@@ -58,7 +58,7 @@
             model.QuotedPriceStr =  [NSString numberMoneyFormattor:model. QuotedPrice];
 
             model.UnitQuotedPriceStr = model.UnitQuotedPrice.length!= 0?[[NSString numberMoneyFormattor:model. UnitQuotedPrice] stringByAppendingString:@" (中标单价)"]:@"";
-            model.QuantityStr = model.Quantity.length!= 0?[[NSString numberSepFormattor:model.Quantity] stringByAppendingString:@" (数量)"]:@"";
+            model.QuantityStr = model.Quantity.length!= 0?[[NSString numberIntFormattor:model.Quantity] stringByAppendingFormat:@" %@",model.Unit]:@"";
             BJQDListFrame *frame = [[BJQDListFrame alloc]init];
             frame.model = model;
             [rowSectionArr addObject:frame];
@@ -72,7 +72,6 @@
             [footSectionArr addObject:model];
         }
         [self.dataArray addObject:footSectionArr];
-
 
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView reloadData];

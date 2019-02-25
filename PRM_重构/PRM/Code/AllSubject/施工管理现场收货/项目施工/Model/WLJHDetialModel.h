@@ -22,6 +22,7 @@
 @property (nonatomic, copy) NSString *ModId;
 
 @property (nonatomic, copy) NSString *canChangeQuantityThis;
+@property (nonatomic, copy) NSString *titleStr;
 
 
 @end

@@ -34,7 +34,7 @@
     [self addSubview:titleLab];
     self.titleLab = titleLab;
 
-    QMUILabel *subTitle = [self createLabelWithTextColor:Color_TEXT_NOMARL Font:Font_ListOtherTxt numberOfLines:0];
+    QMUILabel *subTitle = [self createLabelWithTextColor:Color_TEXT_HIGH Font:Font_ListOtherTxt numberOfLines:0];
     [self addSubview:subTitle];
     self.subTitle = subTitle;
 

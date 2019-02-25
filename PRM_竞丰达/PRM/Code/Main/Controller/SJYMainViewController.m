@@ -38,17 +38,22 @@
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self.view).mas_offset(UIEdgeInsetsMake(NAVHEIGHT, 0, 0, 0));
     }];
-
 }
 
-
 -(void)bindViewModel{
+    Weak_Self;
+    [self request_MainViewData];
+    self.collectionView.refreshBlock = ^{
+        [weakSelf  request_MainViewData];
+    }; 
+}
+-(void)request_MainViewData{
     NSLog(@"%@",[SJYUserManager sharedInstance].sjyloginData.Id);
     [QMUITips showLoading:@"" inView:self.view];
     [ SJYRequestTool requestMainFunctionList:[SJYUserManager sharedInstance].sjyloginData.Id complete:^(id responder) {
         NSLog(@"%@",responder);
-         dispatch_async(dispatch_get_main_queue(), ^{
-             if ([[responder objectForKey:@"success"]boolValue]== YES) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([[responder objectForKey:@"success"]boolValue]== YES) {
                 NSArray *menuArr = [responder objectForKey:@"menu"];
                 for (NSDictionary *dic in menuArr) {
                     MainModel *sectionModel = [MainModel modelWithDictionary:dic];
@@ -56,15 +61,26 @@
                         [self.dateSource addObject:sectionModel];
                     }
                 }
-                 [self.collectionView reloadData];
-                 [QMUITips hideAllTips];
+                [self.collectionView reloadData];
+                [QMUITips hideAllTips];
+                [self endRefreshWithError:NO];
             }else{
                 [self.collectionView reloadData];
                 [QMUITips hideAllTips];
                 [QMUITips showError:[responder objectForKey:@"msg"] inView:self.view hideAfterDelay:1.5];
-             }
-         });
+                [self endRefreshWithError:YES];
+            }
+        });
     }];
+}
+-(void)endRefreshWithError:(BOOL)havError{
+//    [self.collectionView.mj_header endRefreshing];
+    if (self.dateSource.count == 0) {
+        self.collectionView.customImg = !havError ? [UIImage imageNamed:@"empty"]:SJYCommonImage(@"daoda");
+        self.collectionView.customMsg = !havError? @"没有数据了,休息一下吧":@"网络错误,请检查网络后重试";
+        self.collectionView.showNoData = YES;
+        self.collectionView.isShowBtn =  havError;
+    }
 }
 #pragma mark ------------------UICollectionViewDelegateFlowLayout
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -236,6 +252,10 @@
         _collectionView.showsVerticalScrollIndicator = NO;
         [_collectionView registerClass:[MainViewCell class] forCellWithReuseIdentifier:NSStringFromClass([MainViewCell class])];
         [_collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"headView"]; //注册头视图
+
+        _collectionView.showNoData = YES;
+        _collectionView.customImg = SJYCommonImage(@"empty");
+        _collectionView.customMsg = @"没有数据了,休息下吧";
      }
     return _collectionView;
 }

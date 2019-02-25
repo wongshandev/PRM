@@ -19,10 +19,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *LastQuantity;
 @property (nonatomic, copy) NSString *Model;
 
-
 @property (nonatomic, copy) NSString *NOStr;
 @property (nonatomic, copy) NSString *Name;
 @property (nonatomic, copy) NSString *Quantity;    //数量
+@property (nonatomic, copy) NSString *Unit;//单位
 @property (nonatomic, copy) NSString *QuotedPrice; //总价
 @property (nonatomic, copy) NSString *SendType;
 @property (nonatomic, copy) NSString *StockTypeName;

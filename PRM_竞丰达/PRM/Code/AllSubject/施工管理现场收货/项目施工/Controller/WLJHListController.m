@@ -78,8 +78,7 @@
     [SJYRequestTool requestWLJHListWithProjectBranchID: self.engineerModel.Id success:^(id responder) {
         if ([self.tableView.mj_header isRefreshing]) {
             [self.dataArray removeAllObjects];
-        }
-        
+        } 
         self.dState = [responder objectForKey:@"dState"];
         self.addBtn.hidden = self.dState.integerValue < 7;
         NSArray *rowsArr = [responder objectForKey:@"rows"];

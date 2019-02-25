@@ -38,7 +38,7 @@
 
 -(void)setModel:(BJQDListModel *)model{
     _model = model;
-    
+
     CGFloat padding = 10;
 
     CGFloat moneyY = padding;
@@ -61,7 +61,7 @@
     self.tagView.width = tagViewW;
     CGFloat tagViewH = [self setTagViewSubviewsWithModel:model];
     self.tagViewF  = CGRectMake(tagViewX, tagViewY , tagViewW, tagViewH);
-    self.cellHeight  =  padding + (CGRectGetMaxY(self.tagViewF));
+    self.cellHeight  = self.tagView.subviews.count==0? padding  + (CGRectGetMaxY(self.tagViewF)):padding*2 + (CGRectGetMaxY(self.tagViewF));
 }
 
 
@@ -79,13 +79,13 @@
     }
     for (NSInteger i = 0; i < suggestions.count; i++) {
         QMUILabel *label = [[QMUILabel alloc] init];
+        label.contentEdgeInsets = UIEdgeInsetsMake(3, 5, 3, 5);
         [label rounded:3];
         label.textAlignment = NSTextAlignmentCenter;
         label.backgroundColor = Color_NavigationLightBlue;
         label.textColor = Color_White;
         label.font = Font_System(14);
         label.text = suggestions[i];
-        label.contentEdgeInsets = UIEdgeInsetsMake(3, 5, 3, 5);
         [self.tagView addSubview:label];
     }
     CGFloat contentWith =  self.tagView.width;
