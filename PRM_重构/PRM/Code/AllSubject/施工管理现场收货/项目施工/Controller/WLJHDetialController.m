@@ -148,7 +148,6 @@
 -(void)createSaveSubmitBtn{
     Weak_Self;
     QMUIFillButton *saveBt = [QMUIFillButton  buttonWithType:UIButtonTypeCustom];
-    saveBt.isIgnore =  YES;
     saveBt.fillColor = Color_NavigationLightBlue;
     [saveBt setTitle:@"保存" forState:UIControlStateNormal];
     [saveBt setTitleTextColor:Color_White];
@@ -156,12 +155,10 @@
     saveBt.hidden = YES;
     self.saveBtn = saveBt;
     [self.saveBtn clickWithBlock:^{
-        weakSelf.saveBtn.enabled = NO;
         [weakSelf save_WLJHData];
     }];
 
     QMUIFillButton *submitBt = [QMUIFillButton  buttonWithType:UIButtonTypeCustom];
-    submitBt.isIgnore = YES;
     submitBt.fillColor = Color_NavigationLightBlue;
     [submitBt setTitle:@"提交" forState:UIControlStateNormal];
     [submitBt setTitleTextColor:Color_White];
@@ -169,8 +166,7 @@
     submitBt.hidden = YES;
     self.submitBtn = submitBt;
     [self.submitBtn clickWithBlock:^{
-        weakSelf.saveBtn.enabled = NO;
-        [weakSelf submit_WLJHData];
+         [weakSelf submit_WLJHData];
     }];
 
     if ((self.dState.integerValue >= 7 && (self.wlListModel.State.integerValue == 3 || self.wlListModel.State.integerValue ==1 || self.wlListModel.State.integerValue == -888  ))) {
@@ -273,7 +269,6 @@
 
 -(void)save_WLJHData{
     if (![self checkCanSave]) {
-        self.saveBtn.enabled = YES;
         return;
     };
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"ModId == %@", @"0"];
@@ -292,7 +287,9 @@
                               @"inserted":insertString,
                               @"updated":updateString
                               };
+    [QMUITips showLoading:@"数据传输中" inView:[UIApplication sharedApplication].keyWindow];
     [SJYRequestTool requestWLJHDetialSaveWithParam:paraDic success:^(id responder) {
+        [QMUITips hideAllTips];
         if ([[responder valueForKey:@"success"] boolValue]== YES) {
             [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshListView" object:nil];
             [self.savedArray removeAllObjects];
@@ -303,10 +300,9 @@
         }else{
             [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
         }
-        self.saveBtn.enabled = YES;
     } failure:^(int status, NSString *info) {
+        [QMUITips hideAllTips];
         [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
-        self.saveBtn.enabled = YES;
     }];
 
 }
@@ -316,7 +312,9 @@
                               @"State":@"2",
                               @"MarketOrderID":self.marketOrderID
                               };
+    [QMUITips showLoading:@"数据传输中" inView:[UIApplication sharedApplication].keyWindow];
     [SJYRequestTool requestWLJHDetialSubmitWithParam:paraDic success:^(id responder) {
+        [QMUITips hideAllTips];
         if ([[responder valueForKey:@"success"] boolValue]== YES) {
             [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshListView" object:nil];
             [self.savedArray removeAllObjects];
@@ -327,10 +325,9 @@
         }else{
             [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
         }
-        self.submitBtn.enabled = YES;
     } failure:^(int status, NSString *info) {
+        [QMUITips hideAllTips];
         [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
-        self.submitBtn.enabled = YES;
     }];
 }
 

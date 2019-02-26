@@ -13,7 +13,7 @@
 -(QMUILabel *)stateLab{
     if (!_stateLab) {
         _stateLab = [self createLabelWithTextColor:Color_TEXT_HIGH Font:Font_ListTitle numberOfLines:1];
-        _stateLab.text = @"项目状态:";
+        _stateLab.text = @"状       态:";
         [self addSubview:_stateLab];
     }
     return _stateLab;
@@ -43,7 +43,7 @@
 -(QMUILabel *)codeLab{
     if (!_codeLab) {
         _codeLab = [self createLabelWithTextColor:Color_TEXT_HIGH Font:Font_ListTitle numberOfLines:1];
-        _codeLab.text = @"项目编号:";
+        _codeLab.text = @"编       号:";
         [self addSubview:_codeLab];
     }
     return _codeLab;
@@ -55,7 +55,7 @@
         _codeTF = [[QMUITextField alloc] init];
         _codeTF.font = Font_ListTitle;
         _codeTF.clearButtonMode =  UITextFieldViewModeWhileEditing;
-         [self addSubview:_codeTF];
+        [self addSubview:_codeTF];
     }
     return _codeTF;
 }
@@ -65,12 +65,12 @@
         _sepLine = [[QMUILabel alloc]init];
         _sepLine.backgroundColor = Color_SrprateLine;
         [self addSubview:_sepLine];
-
+        
     }
     return _sepLine;
 }
 
- 
+
 -(QMUILabel *)createLabelWithTextColor:(UIColor *)textColor Font:(UIFont *)font numberOfLines:(NSInteger)number {
     QMUILabel *label = [[QMUILabel alloc] init];
     label.font = font;

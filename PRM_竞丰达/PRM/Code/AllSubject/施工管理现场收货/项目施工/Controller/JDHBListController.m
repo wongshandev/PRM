@@ -71,7 +71,7 @@
             [self.dataArray removeAllObjects];
             [self.updateArray removeAllObjects];
         }
-
+        
         for (NSDictionary *dic in rowsArr) {
             JDHBListModel *model = [JDHBListModel  modelWithDictionary:dic];
             model.canChangeRate = model.CompletionRate;
@@ -153,10 +153,9 @@
     [alertVC addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
         textField.placeholder =@"请输入进度";
         textField.keyboardType = UIKeyboardTypeNumberPad;
-//        textField.text = model.canChangeRate;
-         textField.text = model.canChangeRate.integerValue == 0 ?nil : model.canChangeRate;
+        //        textField.text = model.canChangeRate;
+        textField.text = model.canChangeRate.integerValue == 0 ?model.CompletionRate : model.canChangeRate;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertTextFieldDidChange:) name:UITextFieldTextDidChangeNotification object:textField];
-
     }];
     //备注信息输入框
     [alertVC addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
@@ -194,7 +193,7 @@
             [currentDic setValue:model.canChangeRemark forKey:@"Remark"];
             [currentDic setValue:model.canChangeRate forKey:@"CompletionRate"];
             [currentDic setValue:model.Id forKey:@"Id"];
-
+            
             NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Id == %@", model.Id];
             NSMutableDictionary *havDic = [self.updateArray filteredArrayUsingPredicate:predicate].firstObject;
             if (havDic) {
@@ -212,22 +211,22 @@
     [alertVC addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];
     }]];
-    confirmAction.enabled = NO;
+    confirmAction.enabled = (alertVC.textFields.firstObject.text.length || alertVC.textFields.lastObject.text.length);
     [alertVC addAction:confirmAction];
     [self presentViewController:alertVC animated:YES completion:nil];
 }
 
 - (void)alertTextFieldDidChange:(NSNotification *)notification{
     UITextField *TF = (UITextField *)notification.object;
-
+    
     UIAlertController *alertController = (UIAlertController *)self.presentedViewController;
     if (alertController) {
         UITextField *textField = alertController.textFields.firstObject;
         UITextField *bzTF = alertController.textFields.lastObject;
-
+        
         UIAlertAction *okAction = alertController.actions.lastObject;
         if (TF == textField) {
-            if([textField.text hasPrefix:@"00"]){
+            if([textField.text hasPrefix:@"00"] || [textField.text hasPrefix:@"0"]){
                 textField.text = @"0";
             }
             if (textField.text.integerValue >= 100) {

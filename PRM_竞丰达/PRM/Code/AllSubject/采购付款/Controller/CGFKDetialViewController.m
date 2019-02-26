@@ -19,7 +19,7 @@
 -(void)setUpNavigationBar{
     self.navBar.hidden = NO;
     self.navBar.titleLabel.text = self.listModel.Name;
-
+    
     Weak_Self;
     if (self.listModel.isCGFK) {
         [self.navBar.rightButton setTitle:@"同意" forState:UIControlStateNormal];
@@ -48,7 +48,7 @@
     [self.rejectBtn clickWithBlock:^{
         [weakSelf alertRejectView];
     }];
-
+    
     QMUIButton *agreeBt = [QMUIButton  buttonWithType:UIButtonTypeCustom];
     [agreeBt setTitle:@"同意" forState:UIControlStateNormal];
     [agreeBt setTitleColor:Color_White forState:UIControlStateNormal];
@@ -88,36 +88,36 @@
 -(void)bindViewModel{
     Weak_Self;
     [self  requestData_CGFKInfoData];
-     self.tableView.refreshBlock = ^{
+    self.tableView.refreshBlock = ^{
         [weakSelf  requestData_CGFKInfoData];
     };
- }
+}
 
 -(void)requestData_CGFKInfoData{
     [SJYRequestTool requestCGFKInfoDataWithPurchaseOrderID:self.listModel.Id success:^(id responder) {
         NSArray *rowsArr = [responder objectForKey:@"rows"];
         NSArray *footerArr = [responder objectForKey:@"footer"];
-
+        
         if (self.tableView.mj_header.isRefreshing) {
             [self.dataArray removeAllObjects];
         }
- 
+        
         NSMutableArray *rowSectionArr = [NSMutableArray new];
         for (NSDictionary *dic in rowsArr) {
             CGFKDetialModel *model = [CGFKDetialModel  modelWithDictionary:dic];
             model.PriceStr = model.UnitPrice.length!= 0?[[NSString numberMoneyFormattor:model.UnitPrice] stringByAppendingString:@" (单价)"]:@"";
-           model.QuantityStr =  model.Quantity.length!= 0?[[NSString numberIntFormattor:model.Quantity] stringByAppendingFormat:@" %@",model.Unit]:@"";
+            model.QuantityStr =  model.Quantity.length!= 0?[[NSString numberIntFormattor:model.Quantity] stringByAppendingFormat:@" (%@)",model.Unit]:@"";
             CGFKDetialFrame *frame = [[CGFKDetialFrame alloc]init];
             frame.model = model;
-              [rowSectionArr addObject:frame];
+            [rowSectionArr addObject:frame];
         }
         [self.dataArray addObject:rowSectionArr];
- 
+        
         NSMutableArray *footSectionArr = [NSMutableArray new];
         for (NSDictionary *dic in footerArr) {
             CGFKDetialModel *model = [CGFKDetialModel  modelWithDictionary:dic];
-
-             [footSectionArr addObject:model];
+            
+            [footSectionArr addObject:model];
         }
         [self.dataArray addObject:footSectionArr];
         
@@ -151,7 +151,7 @@
     return CGFLOAT_MIN;
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
- return CGFLOAT_MIN;
+    return CGFLOAT_MIN;
 } 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return [self.dataArray[section] count];
@@ -178,13 +178,13 @@
         return cell;
     }
 }
- 
+
 
 
 -(void)alertAgreeView{
     QMUIDialogViewController *dialogViewController = [[QMUIDialogViewController alloc] init];
     dialogViewController.title = @"提醒";
-
+    
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 45)];
     contentView.backgroundColor = UIColorWhite;
     QMUILabel *label = [[QMUILabel alloc] init];
@@ -201,33 +201,33 @@
     [dialogViewController addCancelButtonWithText:@"取消" block:nil];
     [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
         NSDictionary  *paradic = self.listModel.isCGFK?@{
-                                                  @"PurchaseOrderID":self.listModel.Id,
-                                                  @"EmployeeID":[SJYUserManager sharedInstance].sjyloginData.Id,
-                                                  @"State":@"7", //竞丰达同意为7 其他为5
-                                                  @"RejectReason":@""//(驳回时必要回传参数)
-                                                  }:@{
-                                                      @"PurchaseOrderID":self.listModel.Id, 
-                                                      @"AEmp":[[SJYUserManager sharedInstance].sjyloginData modelToJSONString],
-                                                      @"State":@"6", //竞丰达同意为7 其他为5
-                                                      @"RejectReason":@""//(驳回时必要回传参数)
-                                                      };
+                                                         @"PurchaseOrderID":self.listModel.Id,
+                                                         @"EmployeeID":[SJYUserManager sharedInstance].sjyloginData.Id,
+                                                         @"State":@"7", //竞丰达同意为7 其他为5
+                                                         @"RejectReason":@""//(驳回时必要回传参数)
+                                                         }:@{
+                                                             @"PurchaseOrderID":self.listModel.Id, 
+                                                             @"AEmp":[[SJYUserManager sharedInstance].sjyloginData modelToJSONString],
+                                                             @"State":@"6", //竞丰达同意为7 其他为5
+                                                             @"RejectReason":@""//(驳回时必要回传参数)
+                                                             };
         [SJYRequestTool requestCGFKAgreeReject:paradic  success:^(id responder) {
-                                                            [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
-                                                            if ([[responder valueForKey:@"success"] boolValue]== YES) {
-                                                                if (self.listModel.isCGFK) {
-                                                                    [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshCGFKListView" object:nil];
-                                                                }else{
-                                                                    [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshCGSHListView" object:nil];
-
-                                                                }
-                                                                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                                                    [self.navigationController popViewControllerAnimated:YES];
-                                                                });
-                                                            }
-                                                        } failure:^(int status, NSString *info) {
-                                                            [QMUITips showError:info inView:self.view hideAfterDelay:1.2];
-                                                        }];
-
+            [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
+            if ([[responder valueForKey:@"success"] boolValue]== YES) {
+                if (self.listModel.isCGFK) {
+                    [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshCGFKListView" object:nil];
+                }else{
+                    [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshCGSHListView" object:nil];
+                    
+                }
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self.navigationController popViewControllerAnimated:YES];
+                });
+            }
+        } failure:^(int status, NSString *info) {
+            [QMUITips showError:info inView:self.view hideAfterDelay:1.2];
+        }];
+        
         [aDialogViewController hide];
     }];
     [dialogViewController show];
@@ -236,7 +236,7 @@
 -(void)alertRejectView{
     QMUIDialogViewController *dialogViewController = [[QMUIDialogViewController alloc] init];
     dialogViewController.title = @"请输入驳回理由";
-
+    
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 100)];
     contentView.backgroundColor = UIColorWhite;
     QMUITextView *textView = [[QMUITextView alloc] init];
@@ -259,28 +259,28 @@
             return ;
         }
         [SJYRequestTool requestCGFKAgreeReject:@{
-                                                        @"PurchaseOrderID":self.listModel.Id,
-                                                        @"EmployeeID":[SJYUserManager sharedInstance].sjyloginData.Id,
-                                                        @"State":@"3",
-                                                        @"RejectReason":textView.text//(驳回时必要回传参数)
-                                                        } success:^(id responder) {
-                                                            [aDialogViewController hide];
-                                                            [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
-                                                            if ([[responder valueForKey:@"success"] boolValue]== YES) {
-                                                                if (self.listModel.isCGFK) {
-                                                                    [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshCGFKListView" object:nil];
-                                                                }else{
-                                                                    [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshCGSHListView" object:nil]; 
-                                                                }
-                                                                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                                                    [self.navigationController popViewControllerAnimated:YES];
-                                                                });
-                                                            }
-
-                                                        } failure:^(int status, NSString *info) {
-                                                            [QMUITips showError:info inView:self.view hideAfterDelay:1.2];
-                                                            [aDialogViewController hide];
-                                                        }];
+                                                 @"PurchaseOrderID":self.listModel.Id,
+                                                 @"EmployeeID":[SJYUserManager sharedInstance].sjyloginData.Id,
+                                                 @"State":@"3",
+                                                 @"RejectReason":textView.text//(驳回时必要回传参数)
+                                                 } success:^(id responder) {
+                                                     [aDialogViewController hide];
+                                                     [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
+                                                     if ([[responder valueForKey:@"success"] boolValue]== YES) {
+                                                         if (self.listModel.isCGFK) {
+                                                             [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshCGFKListView" object:nil];
+                                                         }else{
+                                                             [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshCGSHListView" object:nil]; 
+                                                         }
+                                                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                                             [self.navigationController popViewControllerAnimated:YES];
+                                                         });
+                                                     }
+                                                     
+                                                 } failure:^(int status, NSString *info) {
+                                                     [QMUITips showError:info inView:self.view hideAfterDelay:1.2];
+                                                     [aDialogViewController hide];
+                                                 }];
     }];
     [dialogViewController show];
     [textView becomeFirstResponder];

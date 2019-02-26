@@ -12,8 +12,10 @@
 #import "CGFKDetialViewController.h"
 //value == 1 ? "计划" : (value == 2) ? "已提交" : (value == 3) ? "已驳回" : (value == 4) ? "财务已审" : (value == 5) ? "总经理已审" : (value == 6) ? "待付款" : (value == 7) ? "已付款" : "已入库";
 #define  STATEArray  @[@"全部",@"未审核",@"已审核"]
-#define  ListModelSTATEArray  @[@"",@"计划",@"已提交",@"已驳回",@"财务已审",@"总经理已审",@"待付款",@"已付款",@"已入库"]
-#define  ListSTATEColorArray  @[[UIColor whiteColor],UIColorHex(#007BD3),UIColorHex(#007BD3),UIColorHex(#FF0000),UIColorHex(#FE6D4B),UIColorHex(#EF5362),UIColorHex(#F79746),UIColorHex(#3FD0AD),UIColorHex(#2BBDF3)]
+//#define  ListModelSTATEArray  @[@"",@"计划",@"已提交",@"已驳回",@"财务已审",@"总经理已审",@"待付款",@"已付款",@"已入库"]
+//#define  ListSTATEColorArray  @[Color_NavigationLightBlue,UIColorHex(#007BD3),UIColorHex(#007BD3),UIColorHex(#FF0000),UIColorHex(#FE6D4B),UIColorHex(#EF5362),UIColorHex(#F79746),UIColorHex(#3FD0AD),UIColorHex(#2BBDF3)]
+#define  ListModelSTATEArray  @[@"",@"计划",@"已提交",@"已驳回",@"财务已审",@"总经理已审",@"待付款",@"已付款",@"已入库",@"已发运",@"接收中",@"已计划"]
+#define  ListSTATEColorArray  @[Color_NavigationLightBlue,UIColorHex(#007BD3),UIColorHex(#007BD3),UIColorHex(#FF0000),UIColorHex(#FE6D4B),UIColorHex(#EF5362),UIColorHex(#F79746),UIColorHex(#3FD0AD),UIColorHex(#2BBDF3),UIColorHex(#EE85C1),UIColorHex(#AC8FEF),UIColorHex(#9FD661)]
 @interface SJYCGSHViewController ()<QMUITextFieldDelegate>
 @property (nonatomic, strong) SJYCGSHSearchAlertView * searchAlertView;
 
@@ -45,7 +47,7 @@
     QMUIModalPresentationViewController *modalViewController = [[QMUIModalPresentationViewController alloc] init];
     QMUIDialogViewController *dialogViewController = [[QMUIDialogViewController alloc] init];
     dialogViewController.title = @"查询";
-
+    
     self.searchAlertView = [[SJYCGSHSearchAlertView alloc] initWithFrame:CGRectMake(0, 0, 300, 100)];
     self.searchAlertView.backgroundColor = UIColorWhite;
     self.searchAlertView.codeTF.delegate = self;
@@ -64,46 +66,46 @@
         make.bottom.mas_equalTo(self.searchAlertView.mas_bottom).offset(-10);
         make.height.mas_equalTo(self.searchAlertView.stateLab.mas_height);
     }];
-
+    
     [self.searchAlertView.stateBtn makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.searchAlertView.stateLab.mas_centerY);
         make.left.mas_equalTo(self.searchAlertView.stateLab.mas_right).offset(5);
         make.right.mas_equalTo( self.searchAlertView.mas_right).offset(-10);
         make.height.mas_equalTo(self.searchAlertView.stateLab.mas_height);
     }];
-
+    
     [self.searchAlertView.rightdownImgView makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.searchAlertView.stateLab.mas_centerY);
         make.right.mas_equalTo( self.searchAlertView.stateBtn.mas_right);
         make.height.mas_equalTo(15);
         make.width.mas_equalTo(20);
     }];
-
+    
     [self.searchAlertView.codeTF makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.searchAlertView.codeLab.mas_centerY);
         make.left.mas_equalTo(self.searchAlertView.codeLab.mas_right).offset(5);
         make.right.mas_equalTo( self.searchAlertView.mas_right).offset(-10);
         make.height.mas_equalTo(self.searchAlertView.codeLab.mas_height);
     }];
-
+    
     [self.searchAlertView.sepLine makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.mas_equalTo(self.searchAlertView.codeTF.mas_bottom);
         make.left.mas_equalTo(self.searchAlertView.codeTF.mas_left);
         make.right.mas_equalTo(self.searchAlertView.codeTF.mas_right);
         make.height.mas_equalTo(2);
     }];
-
-
+    
+    
     Weak_Self;
     [self.searchAlertView.stateBtn clickWithBlock:^{
         [self.searchAlertView endEditing:YES];
-        [BRStringPickerView showStringPickerWithTitle:@"项目状态" dataSource:STATEArray defaultSelValue:weakSelf.searchAlertView.stateBtn.currentTitle isAutoSelect:NO themeColor:Color_NavigationLightBlue resultBlock:^(id selectValue) {
+        [BRStringPickerView showStringPickerWithTitle:@"状态" dataSource:STATEArray defaultSelValue:weakSelf.searchAlertView.stateBtn.currentTitle isAutoSelect:NO themeColor:Color_NavigationLightBlue resultBlock:^(id selectValue) {
             [weakSelf.searchAlertView.stateBtn setTitle:selectValue forState:UIControlStateNormal];
             NSInteger index = [STATEArray indexOfObject:selectValue] -1;
             weakSelf.shStateType = index;
         }];
     }];
-
+    
     dialogViewController.contentView = self.searchAlertView;
     [dialogViewController addCancelButtonWithText:@"取消" block:^(__kindof QMUIDialogViewController *aDialogViewController) {
         [modalViewController hideInView:self.view animated:YES completion:nil];
@@ -113,8 +115,7 @@
         [modalViewController hideInView:self.view animated:YES completion:^(BOOL finished) {
             [weakSelf.tableView.mj_header beginRefreshing];
         }];
-    }]; 
-    modalViewController.modal = YES;
+    }];
     modalViewController.contentViewController = dialogViewController;
     [modalViewController showInView:self.view animated:YES completion:nil];
 }
@@ -154,8 +155,15 @@
         for (NSDictionary *dic in rowsArr) {
             CGFKListModel *model = [CGFKListModel  modelWithDictionary:dic];
             model.isCGFK = NO;
-            model.StateStr = [ListModelSTATEArray objectAtIndex:model.State];
-            model.StateColor = [ ListSTATEColorArray objectAtIndex:model.State];
+            if(model.State <= ListSTATEColorArray.count){
+                //                BOOL isHav = [ListModelSTATEArray containsObject:model.StateName];
+                //                model.stateColor = isHav?[ListSTATEColorArray objectAtIndex:[ListModelSTATEArray indexOfObject:model.StateName]]:Color_NavigationLightBlue;
+                model.StateStr = [ListModelSTATEArray objectAtIndex:model.State];
+                model.StateColor = [ ListSTATEColorArray objectAtIndex:model.State];
+            }else{
+                model.StateStr =  ListModelSTATEArray.firstObject;
+                model.StateColor = ListSTATEColorArray.firstObject;
+            }
             model.titleStr = model.CreateName.length?[NSString stringWithFormat:@"(%@)  %@",model.CreateName,model.Name]:model.Name;
             [self.dataArray addObject:model];
         }

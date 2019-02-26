@@ -36,14 +36,14 @@
 -(void)setUpNavigationBar{
     self.navBar.backButton.hidden = NO;
     self.navBar.titleLabel.text = self.title;
-
+    
 }
 -(void)buildSubviews{
     [super buildSubviews];
-
+    
     [self createTopView];
     [self createSaveSubmitBtn];
-
+    
 }
 -(void)setupTableView{
     [super setupTableView];
@@ -53,8 +53,8 @@
         make.right.equalTo(self.view);
         make.bottom.equalTo(self.view);
     }];
-
-
+    
+    
     self.tableView.separatorStyle =  UITableViewCellSeparatorStyleSingleLine;
     self.tableView.separatorInset = UIEdgeInsetsZero;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
@@ -79,40 +79,40 @@
         make.right.equalTo(self.view.mas_right);
         make.height.equalTo(TopViewHigh);
     }];
-
+    
     UILabel *topLab = [[UILabel alloc]init];
     topLab.font = Font_ListOtherTxt;
     topLab.textColor = Color_TEXT_HIGH;
     topLab.text = @"基础信息";
     topLab.textAlignment = NSTextAlignmentLeft;
     [self.topView addSubview:topLab];
-
+    
     [topLab makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.topView);
         make.left.equalTo(self.topView.mas_left).offset(10);
         make.right.equalTo(self.topView.mas_right);
         make.height.equalTo(29);
     }];
-
+    
     UILabel *sepLab = [[UILabel alloc]init];
     sepLab.backgroundColor = Color_SrprateLine;
     [self.topView addSubview:sepLab];
-
+    
     [sepLab makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(topLab.mas_bottom);
         make.left.equalTo(self.topView);
         make.right.equalTo(self.topView);
         make.height.equalTo(1);
     }];
-
+    
     UILabel *dateLab = [[UILabel alloc]init];
     dateLab.font = Font_ListTitle;
     dateLab.textColor = Color_TEXT_HIGH;
     dateLab.text = @"到货日期";
     dateLab.textAlignment = NSTextAlignmentLeft;
-
+    
     [self.topView addSubview:dateLab];
-
+    
     [dateLab makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(sepLab);
         make.left.equalTo(topLab.mas_left);
@@ -122,13 +122,13 @@
     [dateBtn setTitleColor:Color_TEXT_NOMARL forState:UIControlStateDisabled];
     [dateBtn setTitleColor:Color_TEXT_HIGH forState:UIControlStateNormal];
     [dateBtn setImage:SJYCommonImage(@"enterRight") forState:UIControlStateNormal];
-
+    
     [dateBtn setTitle:self.wlListModel.OrderDate forState:UIControlStateNormal];
     dateBtn.spacingBetweenImageAndTitle =  10;
     dateBtn.contentHorizontalAlignment =  UIControlContentHorizontalAlignmentRight;
     dateBtn.imagePosition =  QMUIButtonImagePositionRight;
     [self.topView addSubview:dateBtn];
-
+    
     [dateBtn makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(sepLab);
         make.right.equalTo(self.topView).offset(-10);
@@ -148,7 +148,6 @@
 -(void)createSaveSubmitBtn{
     Weak_Self;
     QMUIFillButton *saveBt = [QMUIFillButton  buttonWithType:UIButtonTypeCustom];
-    saveBt.isIgnore =  YES;
     saveBt.fillColor = Color_NavigationLightBlue;
     [saveBt setTitle:@"保存" forState:UIControlStateNormal];
     [saveBt setTitleTextColor:Color_White];
@@ -156,12 +155,10 @@
     saveBt.hidden = YES;
     self.saveBtn = saveBt;
     [self.saveBtn clickWithBlock:^{
-        weakSelf.saveBtn.enabled = NO;
         [weakSelf save_WLJHData];
     }];
-
+    
     QMUIFillButton *submitBt = [QMUIFillButton  buttonWithType:UIButtonTypeCustom];
-    submitBt.isIgnore = YES;
     submitBt.fillColor = Color_NavigationLightBlue;
     [submitBt setTitle:@"提交" forState:UIControlStateNormal];
     [submitBt setTitleTextColor:Color_White];
@@ -169,10 +166,9 @@
     submitBt.hidden = YES;
     self.submitBtn = submitBt;
     [self.submitBtn clickWithBlock:^{
-        weakSelf.saveBtn.enabled = NO;
         [weakSelf submit_WLJHData];
     }];
-
+    
     if ((self.dState.integerValue >= 7 && (self.wlListModel.State.integerValue == 3 || self.wlListModel.State.integerValue ==1 || self.wlListModel.State.integerValue == -888  ))) {
         self.saveBtn.hidden = NO;
         self.datePickerBtn.enabled = YES;
@@ -230,7 +226,7 @@
             [self.tableView reloadData];
             [self endRefreshWithError:NO];
         });
-
+        
     } failure:^(int status, NSString *info) {
         [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -270,21 +266,20 @@
         }
         return isCan;
     }
- }
+}
 
 -(void)save_WLJHData{
     if (![self checkCanSave]) {
-        self.saveBtn.enabled = YES;
-         return;
+        return;
     };
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"ModId == %@", @"0"];
     NSArray *insertArr = [self.savedArray filteredArrayUsingPredicate:predicate];
     NSString *insertString = [insertArr modelToJSONString];
-
+    
     NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"ModId != %@", @"0"];
     NSArray *updateArr = [self.savedArray filteredArrayUsingPredicate:predicate1];
     NSString *updateString = [updateArr modelToJSONString];
-
+    
     NSDictionary *paraDic = @{
                               @"EmployeeID":[SJYUserManager sharedInstance].sjyloginData.Id,
                               @"ProjectBranchID":self.projectBranchID,
@@ -293,7 +288,9 @@
                               @"inserted":insertString,
                               @"updated":updateString
                               };
+    [QMUITips showLoading:@"数据传输中" inView:[UIApplication sharedApplication].keyWindow];
     [SJYRequestTool requestWLJHDetialSaveWithParam:paraDic success:^(id responder) {
+        [QMUITips hideAllTips];
         if ([[responder valueForKey:@"success"] boolValue]== YES) {
             [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshListView" object:nil];
             [self.savedArray removeAllObjects];
@@ -304,12 +301,10 @@
         }else{
             [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
         }
-        self.saveBtn.enabled = YES;
     } failure:^(int status, NSString *info) {
+        [QMUITips hideAllTips];
         [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
-        self.saveBtn.enabled = YES;
     }];
-
 }
 -(void)submit_WLJHData{
     NSDictionary *paraDic = @{
@@ -317,7 +312,9 @@
                               @"State":@"2",
                               @"MarketOrderID":self.marketOrderID
                               };
+    [QMUITips showLoading:@"数据传输中" inView:[UIApplication sharedApplication].keyWindow];
     [SJYRequestTool requestWLJHDetialSubmitWithParam:paraDic success:^(id responder) {
+        [QMUITips hideAllTips];
         if ([[responder valueForKey:@"success"] boolValue]== YES) {
             [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshListView" object:nil];
             [self.savedArray removeAllObjects];
@@ -328,10 +325,9 @@
         }else{
             [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
         }
-        self.saveBtn.enabled = YES;
     } failure:^(int status, NSString *info) {
+        [QMUITips hideAllTips];
         [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
-        self.saveBtn.enabled = YES;
     }];
 }
 
@@ -379,7 +375,7 @@
         return;
     }
     NSInteger maxNumThis = model.Quantity.integerValue - model.QuantityPurchased.integerValue;
-//    NSString *maxNum = [NSString stringWithFormat:@"%d",(model.Quantity.integerValue - model.QuantityPurchased.integerValue)];
+    //    NSString *maxNum = [NSString stringWithFormat:@"%d",(model.Quantity.integerValue - model.QuantityPurchased.integerValue)];
     NSString *maxNum = @(maxNumThis).stringValue;
     NSString *messageStr = [NSString stringWithFormat:@" 本次申请的范围:0 ~ %@",maxNum];
     if (maxNumThis == 0) {
@@ -391,7 +387,7 @@
         textField.placeholder = @"请输入申请数量";
         textField.keyboardType = UIKeyboardTypeNumberPad;
         textField.font=   Font_ListTitle;
-        textField.text = model.canChangeQuantityThis.integerValue == 0 ?nil : model.canChangeQuantityThis;
+        textField.text = model.canChangeQuantityThis.integerValue == 0 ?@"0" : model.canChangeQuantityThis;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertTextFieldDidChange:) name:UITextFieldTextDidChangeNotification object:textField];
     }];
     [alertVC.textFields[0] makeConstraints:^(MASConstraintMaker *make) {
@@ -417,7 +413,7 @@
             [currentDic setValue:model.BOMID forKey:@"BOMID"];
             [currentDic setValue:model.ModId forKey:@"ModId"];
             [currentDic setValue:model.Id forKey:@"Id"];
-
+            
             NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Id == %@", model.Id];
             NSMutableDictionary *havDic = [self.savedArray filteredArrayUsingPredicate:predicate].firstObject;
             if (havDic) {
@@ -431,14 +427,14 @@
         }
     }];
     
-    confirmAction.enabled = NO;
     [alertVC addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];
     }]];
     [alertVC addAction: confirmAction];
-
+    confirmAction.enabled = alertVC.textFields.firstObject.text.length;
+    
     [self presentViewController:alertVC animated:YES completion:nil];
-
+    
 }
 
 - (void)alertTextFieldDidChange:(NSNotification *)notification{ 
@@ -446,8 +442,8 @@
     if (alertController) {
         UITextField *textField = alertController.textFields.firstObject;
         UIAlertAction *okAction = alertController.actions.lastObject;
-        if([textField.text hasPrefix:@"0"]){
-            textField.text = @"";
+        if([textField.text hasPrefix:@"0"] || [textField.text hasPrefix:@"00"]){
+            textField.text = @"0";
         } 
         if (textField.text.integerValue > self.maxNumThis) {
             textField.text = [textField.text substringToIndex:@(self.maxNumThis).stringValue.length];

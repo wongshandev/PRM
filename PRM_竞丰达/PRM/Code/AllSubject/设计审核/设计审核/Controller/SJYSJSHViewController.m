@@ -11,7 +11,7 @@
 #import "SJYSJSHSearchAlertView.h"
 #import "SJSHDetialSuperController.h"
 
- #define  STATEArray  @[@"全部",@"未审核",@"已审核"]
+#define  STATEArray  @[@"全部",@"未审核",@"已审核"]
 #define  ListSTATEColorArray  @[[UIColor whiteColor],UIColorHex(#EF5362),UIColorHex(#007BD3),]
 @interface SJYSJSHViewController ()<QMUITextFieldDelegate>
 @property (nonatomic, strong) SJYSJSHSearchAlertView * searchAlertView;
@@ -34,7 +34,7 @@
     self.shStateType = 0;
     self.searchCode = @"";
     self.searchName = @"";
-
+    
     [self.navBar.rightButton setTitle:@"查询" forState:UIControlStateNormal];
     self.navBar.rightButton.hidden = NO;
     [self.navBar.rightButton clickWithBlock:^{
@@ -46,10 +46,10 @@
     QMUIModalPresentationViewController *modalViewController = [[QMUIModalPresentationViewController alloc] init];
     QMUIDialogViewController *dialogViewController = [[QMUIDialogViewController alloc] init];
     dialogViewController.title = @"查询";
-
+    
     self.searchAlertView = [[SJYSJSHSearchAlertView alloc] initWithFrame:CGRectMake(0, 0, 300, 150)];
     self.searchAlertView.backgroundColor = UIColorWhite;
-     self.searchAlertView.codeTF.delegate = self;
+    self.searchAlertView.codeTF.delegate = self;
     self.searchAlertView.codeTF.text = self.searchCode;
     self.searchAlertView.nameTF.delegate = self;
     self.searchAlertView.nameTF.text = self.searchName;
@@ -64,7 +64,7 @@
         make.top.mas_equalTo(self.searchAlertView.stateLab.mas_bottom).offset(10);
         make.left.mas_equalTo(self.searchAlertView.stateLab.mas_left);
         make.width.mas_equalTo(self.searchAlertView.stateLab.mas_width);
-         make.height.mas_equalTo(self.searchAlertView.stateLab.mas_height);
+        make.height.mas_equalTo(self.searchAlertView.stateLab.mas_height);
     }];
     [self.searchAlertView.nameLab makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.searchAlertView.codeLab.mas_bottom).offset(10);
@@ -73,21 +73,21 @@
         make.bottom.mas_equalTo(self.searchAlertView.mas_bottom).offset(-10);
         make.height.mas_equalTo(self.searchAlertView.codeLab.mas_height);
     }];
-
+    
     [self.searchAlertView.stateBtn makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.searchAlertView.stateLab.mas_centerY);
         make.left.mas_equalTo(self.searchAlertView.stateLab.mas_right).offset(5);
         make.right.mas_equalTo( self.searchAlertView.mas_right).offset(-10);
         make.height.mas_equalTo(self.searchAlertView.stateLab.mas_height);
     }];
-
+    
     [self.searchAlertView.rightdownImgView makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.searchAlertView.stateLab.mas_centerY);
         make.right.mas_equalTo( self.searchAlertView.stateBtn.mas_right);
         make.height.mas_equalTo(15);
         make.width.mas_equalTo(20);
     }];
-
+    
     [self.searchAlertView.codeTF makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.searchAlertView.codeLab.mas_centerY);
         make.left.mas_equalTo(self.searchAlertView.codeLab.mas_right).offset(5);
@@ -112,31 +112,28 @@
         make.right.mas_equalTo(self.searchAlertView.nameTF.mas_right);
         make.height.mas_equalTo(2);
     }];
-
-
     Weak_Self;
     [self.searchAlertView.stateBtn clickWithBlock:^{
         [self.searchAlertView endEditing:YES];
-        [BRStringPickerView showStringPickerWithTitle:@"项目状态" dataSource:STATEArray defaultSelValue:weakSelf.searchAlertView.stateBtn.currentTitle isAutoSelect:NO themeColor:Color_NavigationLightBlue resultBlock:^(id selectValue) {
+        [BRStringPickerView showStringPickerWithTitle:@"状态" dataSource:STATEArray defaultSelValue:weakSelf.searchAlertView.stateBtn.currentTitle isAutoSelect:NO themeColor:Color_NavigationLightBlue resultBlock:^(id selectValue) {
             [weakSelf.searchAlertView.stateBtn setTitle:selectValue forState:UIControlStateNormal];
             NSInteger index = [STATEArray indexOfObject:selectValue] -1;
             weakSelf.shStateType = index;
-//            weakSelf.shStateType = [@([STATEArray indexOfObject:selectValue]) stringValue];
+            //            weakSelf.shStateType = [@([STATEArray indexOfObject:selectValue]) stringValue];
         }];
     }];
-
+    
     dialogViewController.contentView = self.searchAlertView;
     [dialogViewController addCancelButtonWithText:@"取消" block:^(__kindof QMUIDialogViewController *aDialogViewController) {
         [modalViewController hideInView:self.view animated:YES completion:nil];
     }];
-
+    
     [dialogViewController addSubmitButtonWithText:@"提交" block:^(QMUIDialogViewController *aDialogViewController) {
         [modalViewController hideInView:self.view animated:YES completion:^(BOOL finished) {
             [weakSelf.tableView.mj_header beginRefreshing];
         }];
     }];
-
-    modalViewController.modal = YES;
+    
     modalViewController.contentViewController = dialogViewController;
     [modalViewController showInView:self.view animated:YES completion:nil];
 }
@@ -147,7 +144,7 @@
     self.tableView.separatorInset = UIEdgeInsetsZero;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.estimatedRowHeight = 90;
- 
+    
 }
 #pragma mark ======================= 数据绑定
 -(void)bindViewModel{
@@ -172,7 +169,7 @@
 }
 
 -(void)request_SJSHData{
-
+    
     /**
      (row.State == 2 && dpId = uc.EngineeringDpId) || (row.State == 5 && dpId = uc.DesignDpId)审核按钮可用
      @param responder <#responder description#>
@@ -182,14 +179,14 @@
         NSArray *rowsArr = [responder objectForKey:@"rows"];
         self.totalNum = [[responder objectForKey:@"total"] integerValue];
         NSInteger dpld = [[responder objectForKey:@"dpId"] integerValue];
-//        self.dpld = dpld;
+        //        self.dpld = dpld;
         if (self.tableView.mj_header.isRefreshing) {
             [self.dataArray removeAllObjects];
         }
         for (NSDictionary *dic in rowsArr) {
             SJSHListModel  *model = [SJSHListModel  modelWithDictionary:dic];
             model.titleStr = [model.Name stringByAppendingFormat:@" (%@)",model.Code];
-//            model.stateString = model.State.integerValue==2?[STATEArray objectAtIndex:1]:STATEArray.lastObject;
+            //            model.stateString = model.State.integerValue==2?[STATEArray objectAtIndex:1]:STATEArray.lastObject;
             BOOL isWSH = ((model.State.integerValue == 2 && dpld == [SJYUserManager sharedInstance].sjyloginData.EngineeringDpId.integerValue) || (model.State.integerValue == 5 && dpld == [SJYUserManager sharedInstance].sjyloginData.DesignDpId.integerValue));
             model.stateString = isWSH?[STATEArray objectAtIndex:1]:STATEArray.lastObject;
             model.StateColor =  isWSH?[ListSTATEColorArray objectAtIndex:1]:ListSTATEColorArray.lastObject;
@@ -207,7 +204,7 @@
             [self endRefreshWithError:YES];
         });
     }];
-
+    
 }
 -(void)endRefreshWithError:(BOOL)havError{
     [self.tableView.mj_header endRefreshing];
@@ -259,7 +256,7 @@
         textField.text = self.searchName;
         self.searchAlertView.sepLine.backgroundColor = Color_NavigationLightBlue;
     }
-
+    
 }
 
 
@@ -284,7 +281,7 @@
 -(void)dealloc{
     NSLog(@"释放");
     [[NSNotificationCenter defaultCenter]removeObserver:self name:@"refreshSJSHListView" object:nil];
-
+    
 }
 
 @end

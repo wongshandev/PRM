@@ -27,26 +27,26 @@
     leftCircle.textAlignment = NSTextAlignmentCenter;
     leftCircle.backgroundColor = Color_NavigationBlue;
     [self addSubview:leftCircle];
-
+    
     self.leftCircleLab = leftCircle;
-
-    QMUILabel *titleLab = [self createLabelWithTextColor:Color_TEXT_HIGH Font:Font_ListTitle numberOfLines:1];
+    
+    QMUILabel *titleLab = [self createLabelWithTextColor:Color_TEXT_HIGH Font:Font_ListTitle numberOfLines:0];
     [self addSubview:titleLab];
     self.titleLab = titleLab;
-
-
+    
+    
     UIImageView *mainfzrImg = [[UIImageView alloc] initWithImage:SJYCommonImage(@"scfzr.png")];
     [self addSubview:mainfzrImg];
     self.fzrImgView = mainfzrImg;
-
+    
     QMUILabel *mainfzrLab = [self createLabelWithTextColor:Color_TEXT_NOMARL Font:Font_ListOtherTxt numberOfLines:1];
     [self addSubview:mainfzrLab];
     self.mainFZRLab = mainfzrLab;
-
+    
     UIImageView *mainsjrImg = [[UIImageView alloc] initWithImage:SJYCommonImage(@"scfzr1.png")];
     [self addSubview:mainsjrImg];
     self.sjrImgView = mainsjrImg;
-
+    
     QMUILabel *mainsjrLab = [self createLabelWithTextColor:Color_TEXT_NOMARL Font:Font_ListOtherTxt numberOfLines:1];
     [self addSubview:mainsjrLab];
     self.mainSJRLab = mainsjrLab;
@@ -59,7 +59,7 @@
         make.width.equalTo(50);
     }];
     [self.leftCircleLab rounded:25];
-
+    
     [self.titleLab makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self).offset(10);
         make.left.equalTo(self.leftCircleLab.mas_right).offset(10);
@@ -76,7 +76,7 @@
         make.centerY.equalTo(self.fzrImgView.mas_centerY);
         make.left.equalTo(self.fzrImgView.mas_right).offset(10);
         make.height.equalTo(self.fzrImgView);
-
+        
     }];
     [self.sjrImgView makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.fzrImgView.mas_centerY);
@@ -91,7 +91,7 @@
         make.height.equalTo(self.sjrImgView);
         make.width.equalTo(self.mainFZRLab.mas_width);
     }];
-
+    
 }
 -(void)loadContent{
     if (self.cellType == CellType_JJQRList) {
@@ -101,7 +101,7 @@
         self.titleLab.text = model.titleStr;
         self.mainSJRLab.text = model.InquiryName;
     }
-
+    
     if (self.cellType == CellType_SJSHList) {
         SJSHListModel *model = self.data;
         self.leftCircleLab.backgroundColor = model.StateColor;
@@ -110,7 +110,7 @@
         self.mainFZRLab.text = model.InquiryName;
         self.titleLab.text = model.titleStr;
     }
-
+    
 }
 
 // 处理点击时控件颜色变化
@@ -123,7 +123,7 @@
     if (self.cellType == CellType_JJQRList) {
         _leftCircleLab.backgroundColor =   Color_NavigationLightBlue;
     }
- }
+}
 
 -(void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated{
     [super setHighlighted:highlighted animated:animated];//加上这句哦
@@ -132,7 +132,7 @@
         _leftCircleLab.backgroundColor = model.StateColor;
     } 
     if (self.cellType == CellType_JJQRList) {
-         _leftCircleLab.backgroundColor =   Color_NavigationLightBlue;
+        _leftCircleLab.backgroundColor =   Color_NavigationLightBlue;
     }
 }
 

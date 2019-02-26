@@ -87,8 +87,9 @@
                                     @"RealID":self.recordModel.RealID,
                                     @"updated":updateString
                                     };
-        
+        [QMUITips showLoading:@"数据传输中" inView:[UIApplication sharedApplication].keyWindow];
         [SJYRequestTool requestXCSHRecordChangeWithParam:paraDic success:^(id responder) {
+            [QMUITips hideAllTips];
             [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
             if ([[responder valueForKey:@"success"] boolValue]== YES) {
                 [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshXCSHRecordListView" object:nil];
@@ -96,6 +97,7 @@
                 [self.tableView.mj_header beginRefreshing];
             }
         } failure:^(int status, NSString *info) {
+            [QMUITips hideAllTips];
             [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
         }];
     }

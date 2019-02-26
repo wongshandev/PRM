@@ -11,8 +11,8 @@
 #import "XCSCRecordCell.h"
 #import "XCSHRecordDetialController.h"
 
-#define  ListModelSTATEArray  @[@"",@"计划",@"已提交",@"已驳回",@"财务已审",@"总经理已审",@"待付款",@"已付款",@"已入库"]
-#define  ListSTATEColorArray  @[[UIColor whiteColor],UIColorHex(#007BD3),UIColorHex(#007BD3),UIColorHex(#FF0000),UIColorHex(#FE6D4B),UIColorHex(#EF5362),UIColorHex(#F79746),UIColorHex(#3FD0AD),UIColorHex(#2BBDF3)]
+#define  ListModelSTATEArray  @[@"",@"计划",@"已提交",@"已驳回",@"财务已审",@"总经理已审",@"待付款",@"已付款",@"已入库",@"已发运",@"接收中",@"已计划"]
+#define  ListSTATEColorArray  @[Color_NavigationLightBlue,UIColorHex(#007BD3),UIColorHex(#007BD3),UIColorHex(#FF0000),UIColorHex(#FE6D4B),UIColorHex(#EF5362),UIColorHex(#F79746),UIColorHex(#3FD0AD),UIColorHex(#2BBDF3),UIColorHex(#EE85C1),UIColorHex(#AC8FEF),UIColorHex(#9FD661)]
 //#define  ListSTATEColorArray  @[[UIColor whiteColor],UIColorHex(#3FD0AD),UIColorHex(#007BD3),]
 
 @interface SJYXCSHRecordController ()
@@ -56,7 +56,7 @@
             NSString *titlStr =  model.SiteState.integerValue == 1? [model.SupplierName stringByAppendingFormat:@"  (%@)  ",  @"采购接收"]: [model.Approval stringByAppendingFormat:@"  (%@)  ",  @"总部发货"];
             model.titleName = titlStr;
             BOOL isHav = [ListModelSTATEArray containsObject:model.StateName];
-            model.stateColor = isHav?[ListSTATEColorArray objectAtIndex:[ListModelSTATEArray indexOfObject:model.StateName]]:Color_NavigationLightBlue;
+            model.stateColor = isHav?[ListSTATEColorArray objectAtIndex:[ListModelSTATEArray indexOfObject:model.StateName]]:ListSTATEColorArray.firstObject;
             [self.dataArray addObject:model];
         }
         dispatch_async(dispatch_get_main_queue(), ^{

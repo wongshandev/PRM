@@ -227,7 +227,7 @@
 
         UIAlertAction *okAction = alertController.actions.lastObject;
         if (TF == textField) {
-            if([textField.text hasPrefix:@"00"]){
+            if([textField.text hasPrefix:@"00"] || [textField.text hasPrefix:@"0"]){
                 textField.text = @"0";
             }
             if (textField.text.integerValue >= 100) {

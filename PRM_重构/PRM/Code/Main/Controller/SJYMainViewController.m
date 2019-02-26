@@ -19,11 +19,11 @@
 
 
 @end
- @implementation SJYMainViewController
+@implementation SJYMainViewController
 
 - (void)setUpNavigationBar{
     Weak_Self;
-     self.navBar.backButton.hidden = YES;
+    self.navBar.backButton.hidden = YES;
     self.navBar.leftButton.hidden = NO;
     self.navBar.titleLabel.text = DisplayName;
     [self.navBar.leftButton setImage:SJYCommonImage(@"caidan") forState:UIControlStateNormal];
@@ -34,7 +34,7 @@
 
 -(void)buildSubviews{
     self.dateSource = [NSMutableArray new];
-     [self.view addSubview:self.collectionView];
+    [self.view addSubview:self.collectionView];
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self.view).mas_offset(UIEdgeInsetsMake(NAVHEIGHT, 0, 0, 0));
     }];
@@ -48,7 +48,7 @@
 }
 -(void)request_MainViewData{
     NSLog(@"%@",[SJYUserManager sharedInstance].sjyloginData.Id);
-    [QMUITips showLoading:@"" inView:self.view];
+    [QMUITips showLoading:@"数据加载中" inView:self.view];
     [ SJYRequestTool requestMainFunctionList:[SJYUserManager sharedInstance].sjyloginData.Id complete:^(id responder) {
         NSLog(@"%@",responder);
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -73,7 +73,6 @@
     }];
 }
 -(void)endRefreshWithError:(BOOL)havError{
-    //    [self.collectionView.mj_header endRefreshing];
     if (self.dateSource.count == 0) {
         self.collectionView.customImg = !havError ? [UIImage imageNamed:@"empty"]:SJYCommonImage(@"daoda");
         self.collectionView.customMsg = !havError? @"没有数据了,休息一下吧":@"网络错误,请检查网络后重试";
@@ -107,7 +106,7 @@
         make.edges.equalTo(UIEdgeInsetsZero);
     }];
     headerView.backgroundColor = Color_NavigationLightBlue;
-     return headerView;
+    return headerView;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
@@ -128,7 +127,7 @@
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     MainModel *sectionModel = [self.dateSource  objectAtIndex:indexPath.section];
     MainModel *cellModel = [sectionModel.children objectAtIndex:indexPath.row];
-
+    
     JumpURL jump = KJumpURLToEnum(cellModel.url);
     switch (jump) {
         case  FileTransferEngineering : //工程  -- 交接确认；
@@ -171,12 +170,12 @@
             SJYXMJDViewController *xmjdVC = [[SJYXMJDViewController alloc] init];
             xmjdVC.mainModel = cellModel;
             xmjdVC.title = cellModel.text;
-         [self.navigationController pushViewController:xmjdVC animated:YES];
-
+            [self.navigationController pushViewController:xmjdVC animated:YES];
+            
         }
             break;
         case MySpending: //我的报销
-
+            
             break;
         case MarketOrder:  // 工程部----项目请购
         {
@@ -210,9 +209,9 @@
             [self.navigationController pushViewController:sjshVC animated:YES];
         }
             break;
-            default:
+        default:
             break;
-
+            
     }
 }
 
@@ -239,7 +238,7 @@
         _collectionView.showNoData = YES;
         _collectionView.customImg = SJYCommonImage(@"empty");
         _collectionView.customMsg = @"没有数据了,休息下吧";
-     }
+    }
     return _collectionView;
 }
 

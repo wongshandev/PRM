@@ -137,8 +137,7 @@
         }];
     }];
 
-    modalViewController.modal = YES;
-    modalViewController.contentViewController = dialogViewController;
+     modalViewController.contentViewController = dialogViewController;
     [modalViewController showInView:self.view animated:YES completion:nil];
 }
 

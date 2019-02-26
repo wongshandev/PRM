@@ -19,11 +19,11 @@
 
 
 @end
- @implementation SJYMainViewController
+@implementation SJYMainViewController
 
 - (void)setUpNavigationBar{
     Weak_Self;
-     self.navBar.backButton.hidden = YES;
+    self.navBar.backButton.hidden = YES;
     self.navBar.leftButton.hidden = NO;
     self.navBar.titleLabel.text = DisplayName;
     [self.navBar.leftButton setImage:SJYCommonImage(@"caidan") forState:UIControlStateNormal];
@@ -34,7 +34,7 @@
 
 -(void)buildSubviews{
     self.dateSource = [NSMutableArray new];
-     [self.view addSubview:self.collectionView];
+    [self.view addSubview:self.collectionView];
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self.view).mas_offset(UIEdgeInsetsMake(NAVHEIGHT, 0, 0, 0));
     }];
@@ -49,7 +49,7 @@
 }
 -(void)request_MainViewData{
     NSLog(@"%@",[SJYUserManager sharedInstance].sjyloginData.Id);
-    [QMUITips showLoading:@"" inView:self.view];
+    [QMUITips showLoading:@"数据加载中" inView:self.view];
     [ SJYRequestTool requestMainFunctionList:[SJYUserManager sharedInstance].sjyloginData.Id complete:^(id responder) {
         NSLog(@"%@",responder);
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -74,7 +74,6 @@
     }];
 }
 -(void)endRefreshWithError:(BOOL)havError{
-//    [self.collectionView.mj_header endRefreshing];
     if (self.dateSource.count == 0) {
         self.collectionView.customImg = !havError ? [UIImage imageNamed:@"empty"]:SJYCommonImage(@"daoda");
         self.collectionView.customMsg = !havError? @"没有数据了,休息一下吧":@"网络错误,请检查网络后重试";
@@ -108,7 +107,7 @@
         make.edges.equalTo(UIEdgeInsetsZero);
     }];
     headerView.backgroundColor = Color_NavigationLightBlue;
-     return headerView;
+    return headerView;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
@@ -252,11 +251,11 @@
         _collectionView.showsVerticalScrollIndicator = NO;
         [_collectionView registerClass:[MainViewCell class] forCellWithReuseIdentifier:NSStringFromClass([MainViewCell class])];
         [_collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"headView"]; //注册头视图
-
+        
         _collectionView.showNoData = YES;
         _collectionView.customImg = SJYCommonImage(@"empty");
         _collectionView.customMsg = @"没有数据了,休息下吧";
-     }
+    }
     return _collectionView;
 }
 

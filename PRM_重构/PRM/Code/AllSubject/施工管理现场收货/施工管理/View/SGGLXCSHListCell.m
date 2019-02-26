@@ -40,7 +40,7 @@
 
     self.leftCircleLab = leftCircle;
 
-    QMUILabel *titleLab = [self createLabelWithTextColor:Color_TEXT_HIGH Font:Font_ListTitle numberOfLines:1];
+    QMUILabel *titleLab = [self createLabelWithTextColor:Color_TEXT_HIGH Font:Font_ListTitle numberOfLines:0];
     [self addSubview:titleLab];
     self.titleLab = titleLab;
 
