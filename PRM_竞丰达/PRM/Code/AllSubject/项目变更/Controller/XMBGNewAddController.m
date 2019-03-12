@@ -11,7 +11,7 @@
 #import "FileSelectView.h"
 #import "SJYXMBGViewController.h"
 
-@interface XMBGNewAddController ()<UIImagePickerControllerDelegate,UIDocumentInteractionControllerDelegate>
+@interface XMBGNewAddController ()<UIImagePickerControllerDelegate,UIDocumentInteractionControllerDelegate,QMUITextViewDelegate>
 @property (nonatomic, strong) UIDocumentInteractionController * documentInteractionController;
 @property (nonatomic, strong) XMBGAlertContentView * alertContentView;
 @property(nonatomic,copy)NSString *uploadFilePath;
@@ -25,25 +25,25 @@
     self.navBar.rightButton.hidden = !self.detialModel.isNewAdd;
     Weak_Self;
     [self.navBar.rightButton clickWithBlock:^{
+        NSString *content =  [self.alertContentView.xmbgDescriptTV.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
         NSMutableDictionary *paradic = [@{
                                           @"ChangeOrderID":self.detialModel.Id,
                                           @"ProjectBranchID":self.projectBranchID,
-                                          @"EmployeeID":kEmployeeID,
+                                          @"EmployeeID":KEmployID,
                                           @"ChangeType":[self.alertContentView.typeBtn.currentTitle  isEqualToString: @"签证变更"]?@"1":@"2",
-                                          @"Remark":self.alertContentView.xmbgDescriptTV.text,
+                                          @"Remark":content,
                                           }mutableCopy];
-        if (self.alertContentView.xmbgDescriptTV.text.length == 0) {
+        if (content.length == 0) {
             [QMUITips showWithText:@"请输入变更描述" inView:self.view hideAfterDelay:1.2];
             return ;
         } 
         if (self.detialModel.isNewAdd && self.uploadFilePath.length== 0) {
-            [QMUITips showError:@"新增变更,附件不能为空" inView:self.view hideAfterDelay:1.2];
+            [QMUITips showWithText:@"请选择附件" inView:self.view hideAfterDelay:1.2];
         }else{
             [weakSelf uploadFileAndNewAddAndChangeProject:paradic];
         }
     }];
 }
-
 - (void)uploadFileAndNewAddAndChangeProject:(NSMutableDictionary *)paradic {
      [HttpClient uploadFileWithUrl:API_XMQGBGDetialSubmit paradic:paradic filePath:self.uploadFilePath progress:^(NSProgress *uploadProgress) {
         CGFloat    pro = uploadProgress.fractionCompleted;
@@ -70,13 +70,12 @@
 -(void)buildSubviews{
     self.alertContentView = [[XMBGAlertContentView alloc] init];
     self.alertContentView.detailModel = self.detialModel;
+    self.alertContentView.xmbgDescriptTV.delegate = self;
     [self.view addSubview:self.alertContentView];
 
     UILabel *sepLab = [[UILabel alloc]init];
     sepLab.backgroundColor = Color_SrprateLine;
     [self.alertContentView addSubview:sepLab];
-
-
 
     [self.alertContentView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.navBar.mas_bottom).offset(10);
@@ -144,7 +143,7 @@
     Weak_Self;
     [self.alertContentView.typeBtn clickWithBlock:^{
         [weakSelf.alertContentView endEditing:YES];
-        [BRStringPickerView showStringPickerWithTitle:@"变更类型" dataSource:@[@"签证变更",@"乙方责任"] defaultSelValue:weakSelf.alertContentView.fujianBtn isAutoSelect:NO themeColor:Color_NavigationLightBlue resultBlock:^(id selectValue) {
+        [BRStringPickerView showStringPickerWithTitle:@"变更类型" dataSource:@[@"签证变更",@"乙方责任"] defaultSelValue:weakSelf.alertContentView.typeBtn.currentTitle isAutoSelect:NO themeColor:Color_NavigationLightBlue resultBlock:^(id selectValue) {
             [weakSelf.alertContentView.typeBtn setTitle:selectValue forState:UIControlStateNormal];
         }];
     }];
@@ -215,9 +214,6 @@
     [alertVC addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDestructive handler:nil]];
     [self presentViewController:alertVC animated:YES completion:nil];
 }
-
-
-
 
 -(void)getPhotoFromCamera{
     if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
@@ -295,18 +291,35 @@
 }
 
 
-
-
 #pragma mark ***************查看文件
+//-(void)openFileAtPath:(NSURL *)filePath{
+//    if (filePath) {
+//        if ([[NSString stringWithFormat:@"%@",filePath] hasSuffix:@"TTF"]) {
+//            [QMUITips showWithText:@"不支持的文件格式" inView:self.view hideAfterDelay:1.5];
+//        }else{
+//            self.documentInteractionController = [UIDocumentInteractionController interactionControllerWithURL:filePath];
+//            //self.documentInteractionController
+//            [self.documentInteractionController setDelegate:self];
+//            [self.documentInteractionController presentPreviewAnimated:YES];
+//        }
+//    } else {
+//        UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"打开失败" message:@"打开文档失败，可能文档损坏，请重试" preferredStyle:UIAlertControllerStyleAlert];
+//        [alert addAction:[UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleCancel handler:nil]];
+//        [self presentViewController:alert animated:YES completion:nil];
+//    }
+//}
+
 -(void)openFileAtPath:(NSURL *)filePath{
     if (filePath) {
-        if ([[NSString stringWithFormat:@"%@",filePath] hasSuffix:@"TTF"]) {
-            [QMUITips showWithText:@"不支持的文件格式" inView:self.view hideAfterDelay:1.5];
-        }else{
-            self.documentInteractionController = [UIDocumentInteractionController interactionControllerWithURL:filePath];
-            //self.documentInteractionController
-            [self.documentInteractionController setDelegate:self];
-            [self.documentInteractionController presentPreviewAnimated:YES];
+        self.documentInteractionController = [UIDocumentInteractionController interactionControllerWithURL:filePath];
+        [self.documentInteractionController setDelegate:self];
+        if ([self.documentInteractionController presentPreviewAnimated:YES]){
+            NSLog(@"打开成功");
+        } else{
+            CGRect navRect = self.navigationController.navigationBar.frame;
+            navRect.size =CGSizeMake(SCREEN_W*3,40.0f);
+            [self.documentInteractionController presentOpenInMenuFromRect:navRect inView:self.view animated:YES];
+            NSLog(@"打开失败");
         }
     } else {
         UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"打开失败" message:@"打开文档失败，可能文档损坏，请重试" preferredStyle:UIAlertControllerStyleAlert];
@@ -314,6 +327,8 @@
         [self presentViewController:alert animated:YES completion:nil];
     }
 }
+
+
 
 -(void)downLoadFileWithCellModeUrl:(NSString  *)downloadUrl saveAtPath:(NSString *)saveFilePath{
     NSURL * url = [NSURL URLWithString:[downloadUrl stringByReplacingOccurrencesOfString:@".." withString:API_ImageUrl]];
@@ -344,6 +359,13 @@
          NSURL *url = [NSURL fileURLWithPath:path];
          */
     }];
-
 }
+
+//-(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
+//    if (([text isEqualToString:@"\n"] || [text isEqualToString:@" "]) && textView.text.length == 0) {
+//        return NO;
+//    }
+//    return YES;
+//}
+
 @end

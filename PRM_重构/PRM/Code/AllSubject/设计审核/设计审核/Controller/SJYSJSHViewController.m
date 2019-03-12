@@ -130,7 +130,7 @@
         [modalViewController hideInView:self.view animated:YES completion:nil];
     }];
 
-    [dialogViewController addSubmitButtonWithText:@"提交" block:^(QMUIDialogViewController *aDialogViewController) {
+    [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
 
         [modalViewController hideInView:self.view animated:YES completion:^(BOOL finished) {
             [weakSelf.tableView.mj_header beginRefreshing];
@@ -224,7 +224,7 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     SJYJJQRListCell *cell = [SJYJJQRListCell cellWithTableView:tableView];
-    cell .indexPath = indexPath;
+    cell.indexPath = indexPath;
     cell.cellType =CellType_SJSHList;
     cell.data = self.dataArray[indexPath.row];
     [cell loadContent];

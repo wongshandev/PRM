@@ -12,7 +12,8 @@
 #import "BGSHListModel.h"
 #import "SJYBGSHSearchAlertView.h"
 
-#define  STATEArray  @[@"未审核",@"已审核",@"全部"]
+#define  STATEArray  @[@"全部",@"未审核",@"已审核"]
+#define  ListSTATEColorArray  @[[UIColor whiteColor],UIColorHex(#EF5362),UIColorHex(#007BD3)]
 
 @interface SJYBGSHViewController ()<UIDocumentInteractionControllerDelegate,QMUITextFieldDelegate>
 @property (nonatomic, strong) UIDocumentInteractionController * documentInteractionController;
@@ -20,7 +21,7 @@
 
 @property(nonatomic,assign)NSInteger page;
 @property(nonatomic,assign)NSInteger totalNum;
-@property(nonatomic,copy)NSString * shStateType;
+@property(nonatomic,assign)NSInteger  shStateType;
 @property(nonatomic,copy)NSString * searchCode;
 
 @end
@@ -30,9 +31,9 @@
 
 -(void)setUpNavigationBar{
     Weak_Self;
-    self.navBar.backButton.hidden = NO;
+    //    self.navBar.backButton.hidden = NO;
     self.navBar.titleLabel.text = self.title;
-    self.shStateType = @"0";
+    self.shStateType = 0;
     self.searchCode = @"";
     
     [self.navBar.rightButton setTitle:@"查询" forState:UIControlStateNormal];
@@ -51,7 +52,7 @@
     self.searchAlertView.backgroundColor = UIColorWhite;
     self.searchAlertView.codeTF.delegate = self;
     self.searchAlertView.codeTF.text = self.searchCode;
-    [self.searchAlertView.stateBtn  setTitle:[STATEArray objectAtIndex:self.shStateType.integerValue] forState:UIControlStateNormal];
+    [self.searchAlertView.stateBtn  setTitle:[STATEArray objectAtIndex:self.shStateType +1] forState:UIControlStateNormal];
     self.searchAlertView.rightdownImgView.image = SJYCommonImage(@"downBlack");
     [self.searchAlertView.stateLab makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.searchAlertView.mas_top).offset(5);
@@ -100,8 +101,9 @@
         [self.searchAlertView endEditing:YES];
         [BRStringPickerView showStringPickerWithTitle:@"状态" dataSource:STATEArray defaultSelValue:weakSelf.searchAlertView.stateBtn.currentTitle isAutoSelect:NO themeColor:Color_NavigationLightBlue resultBlock:^(id selectValue) {
             [weakSelf.searchAlertView.stateBtn setTitle:selectValue forState:UIControlStateNormal];
-            weakSelf.shStateType = [@([STATEArray indexOfObject:selectValue]) stringValue];
-        }];
+            NSInteger index = [STATEArray indexOfObject:selectValue] -1;
+            weakSelf.shStateType = index;
+         }];
     }];
     
     dialogViewController.contentView = self.searchAlertView;
@@ -109,13 +111,12 @@
         [modalViewController hideInView:self.view animated:YES completion:nil];
     }];
     
-    [dialogViewController addSubmitButtonWithText:@"提交" block:^(QMUIDialogViewController *aDialogViewController) {
-        
+    [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
         [modalViewController hideInView:self.view animated:YES completion:^(BOOL finished) {
             [weakSelf.tableView.mj_header beginRefreshing];
         }];
     }];
-    
+    modalViewController.contentViewController = dialogViewController;
     [modalViewController showInView:self.view animated:YES completion:nil];
 }
 
@@ -149,7 +150,7 @@
 -(void)requestData_BGSH{
     //    NSString *stateString = [stateStr isEqual: @"未审核"]?@"0":([stateStr  isEqual:@"全部"]?@"2":@"1");
     
-    [SJYRequestTool requestBGSHListWithEmployID:[SJYUserManager sharedInstance].sjyloginData.Id SearchStateID:self.shStateType SearchCode:self.searchCode page:self.page success:^(id responder) {
+    [SJYRequestTool requestBGSHListWithEmployID:[SJYUserManager sharedInstance].sjyloginData.Id SearchStateID:@(self.shStateType).stringValue SearchCode:self.searchCode page:self.page success:^(id responder) {
         
         NSArray *rowsArr = [responder objectForKey:@"rows"];
         self.totalNum = [[responder objectForKey:@"total"] integerValue];
@@ -161,7 +162,9 @@
             model.titleStr = [model.Name  stringByAppendingFormat:@" (%@)", model.Code];
             NSString *string = model.ChangeType.integerValue == 1 ? @"签证变更":@"乙方责任";
             model.subtitleStr = [model.CName  stringByAppendingFormat:@"(%@)", string];
-            model.stateStr =  model.ApprovalID.integerValue>0?[STATEArray objectAtIndex:1]:STATEArray.firstObject;
+            BOOL isYSH = model.ApprovalID.integerValue>0;
+            model.stateStr = isYSH ?STATEArray.lastObject:[STATEArray objectAtIndex:1];
+            model.stateColor = isYSH ?ListSTATEColorArray.lastObject:[ListSTATEColorArray objectAtIndex:1];
             [self.dataArray addObject:model];
         }
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -186,7 +189,7 @@
     }
     if (self.dataArray.count == 0) {
         self.tableView.customImg = !havError ? [UIImage imageNamed:@"empty"]:SJYCommonImage(@"daoda");
-        self.tableView.customMsg = !havError? @"没有数据了,休息一下吧":@"网络错误,请检查网络后重试";
+        self.tableView.customMsg = !havError? @"没有数据了,休息下吧":@"网络错误,请检查网络后重试";
         self.tableView.showNoData = YES;
         self.tableView.isShowBtn =  havError;
     }
@@ -201,13 +204,11 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     BGSHListCell *cell = [BGSHListCell cellWithTableView:tableView];
     BGSHListModel *model =  self.dataArray[indexPath.row];
-    
-    cell .indexPath = indexPath;
+    cell.indexPath = indexPath;
     cell.data = model;
     [cell loadContent];
     [cell.fujianBtn clickWithBlock:^{
         [self downLoadOrLookFile:model];
-        
     }];
     return cell;
 }
@@ -216,9 +217,10 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     BGSHListModel *model =  self.dataArray[indexPath.row];
     if (model.ApprovalID.integerValue > 0) {  // 已审核
+        [QMUITips showWithText:@"该项目变更已审核" inView:self.view hideAfterDelay:1.2];
         return;
     }
-    QMUIAlertController *alert = [[QMUIAlertController alloc] initWithTitle:@"审核" message:@"确认该记录审核通过?" preferredStyle:QMUIAlertControllerStyleAlert];
+    QMUIAlertController *alert = [[QMUIAlertController alloc] initWithTitle:@"提醒" message:@"确认该记录审核通过?" preferredStyle:QMUIAlertControllerStyleAlert];
     [alert addAction:[QMUIAlertAction actionWithTitle:@"确定" style:QMUIAlertActionStyleDefault handler:^(__kindof QMUIAlertController *aAlertController, QMUIAlertAction *action) {
         
         [SJYRequestTool requestBGSHSubmitWithEmployID:[SJYUserManager sharedInstance].sjyloginData.Id ChangeOrderID:model.Id success:^(id responder) {
@@ -291,15 +293,34 @@
     
 }
 #pragma mark ***************查看文件
+//-(void)openFileAtPath:(NSURL *)filePath{
+//    if (filePath) {
+//        if ([[NSString stringWithFormat:@"%@",filePath] hasSuffix:@"TTF"]) {
+//            [QMUITips showWithText:@"不支持的文件格式" inView:self.view hideAfterDelay:1.5];
+//        }else{
+//            self.documentInteractionController = [UIDocumentInteractionController interactionControllerWithURL:filePath];
+//            //self.documentInteractionController
+//            [self.documentInteractionController setDelegate:self];
+//            [self.documentInteractionController presentPreviewAnimated:YES];
+//        }
+//    } else {
+//        UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"打开失败" message:@"打开文档失败，可能文档损坏，请重试" preferredStyle:UIAlertControllerStyleAlert];
+//        [alert addAction:[UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleCancel handler:nil]];
+//        [self presentViewController:alert animated:YES completion:nil];
+//    }
+//}
+
 -(void)openFileAtPath:(NSURL *)filePath{
     if (filePath) {
-        if ([[NSString stringWithFormat:@"%@",filePath] hasSuffix:@"TTF"]) {
-            [QMUITips showWithText:@"不支持的文件格式" inView:self.view hideAfterDelay:1.5];
-        }else{
-            self.documentInteractionController = [UIDocumentInteractionController interactionControllerWithURL:filePath];
-            //self.documentInteractionController
-            [self.documentInteractionController setDelegate:self];
-            [self.documentInteractionController presentPreviewAnimated:YES];
+        self.documentInteractionController = [UIDocumentInteractionController interactionControllerWithURL:filePath];
+        [self.documentInteractionController setDelegate:self];
+        if ([self.documentInteractionController presentPreviewAnimated:YES]){
+            NSLog(@"打开成功");
+        } else{
+            CGRect navRect = self.navigationController.navigationBar.frame;
+            navRect.size =CGSizeMake(SCREEN_W*3,40.0f);
+            [self.documentInteractionController presentOpenInMenuFromRect:navRect inView:self.view animated:YES];
+            NSLog(@"打开失败");
         }
     } else {
         UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"打开失败" message:@"打开文档失败，可能文档损坏，请重试" preferredStyle:UIAlertControllerStyleAlert];
@@ -307,6 +328,7 @@
         [self presentViewController:alert animated:YES completion:nil];
     }
 }
+
 
 -(void)textFieldDidBeginEditing:(UITextField *)textField{
     textField.text = self.searchCode;
@@ -323,7 +345,9 @@
     NSLog(@"Retain Count = %ld\n",CFGetRetainCount((__bridge CFTypeRef)(self)));
 }
 -(void)dealloc{
-    NSLog(@"释放");
+#ifdef DEBUG
+    printf("[⚠️] 已经释放 %s.\n", NSStringFromClass(self.class).UTF8String);
+#endif
 }
 
 

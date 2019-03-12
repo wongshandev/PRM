@@ -22,8 +22,7 @@
         NSDictionary *dic = [NSMutableDictionary new];
         [dic setValue:@(NO) forKey:@"success"];
         //        [dic setValue:@"登录请求出错" forKey:@"infotype"];
-        [dic setValue:error.localizedDescription  forKey:@"infotype"]; 
-        
+        [dic setValue:error.localizedDescription  forKey:@"infotype"];
         complete(dic);
     }];
 }
@@ -63,8 +62,7 @@
         NSDictionary *dic = [NSMutableDictionary new];
         [dic setValue:@(NO) forKey:@"success"];
         //        [dic setValue:@"登录请求出错" forKey:@"infotype"];
-        [dic setValue:error.localizedDescription  forKey:@"infotype"];
-        
+        [dic setValue:error.localizedDescription  forKey:@"infotype"]; 
         complete(dic);
     }];
 }
@@ -77,8 +75,8 @@
     } failure:^(NSURLSessionDataTask *dataTask, NSError *error) {
         NSDictionary *dic = [NSMutableDictionary new];
         [dic setValue:@(NO) forKey:@"success"];
-        //        [dic setValue:@"登录请求出错" forKey:@"infotype"];
         [dic setValue:error.localizedDescription  forKey:@"infotype"];
+        complete(dic);
     }];
 }
 #pragma mark ============== 施工管理
@@ -544,4 +542,149 @@
         }
     }];
 }
+#pragma mark ============== 入库评审
++(void)requestRKPSListWithSearchStateID:(NSInteger)searchStateID page:(NSInteger)page success:(Success)success failure:(Failure)failure{
+    [RequestTool requestRKPSListWithSearchStateID:searchStateID page:page success:^(NSURLSessionDataTask *dataTask, id responseObjcet) {
+        id  respond = [NSJSONSerialization  JSONObjectWithData:responseObjcet options:0 error:nil];
+        success(respond);
+    } failure:^(NSURLSessionDataTask *dataTask, NSError *error) {
+        if ([AFNetworkReachabilityManager sharedManager].reachable) {
+            failure(-1,@"请求失败");
+        } else{
+            failure(-1,@"网络异常,请检查您的网络状况");
+        }
+    }];
+}
++(void)requestRKPSApprovelSubmitWithParaDic:(NSDictionary *)paradic success:(Success)success failure:(Failure)failure{
+    [RequestTool requestRKPSApprovelSubmitWithParaDic:paradic success:^(NSURLSessionDataTask *dataTask, id responseObjcet) {
+        id  respond = [NSJSONSerialization  JSONObjectWithData:responseObjcet options:0 error:nil];
+        success(respond);
+    } failure:^(NSURLSessionDataTask *dataTask, NSError *error) {
+        if ([AFNetworkReachabilityManager sharedManager].reachable) {
+            failure(-1,@"请求失败");
+        } else{
+            failure(-1,@"网络异常,请检查您的网络状况");
+        }
+    }];
+}
+#pragma mark ============== 项目开支
+//SpendingTypeID开支类型：调用网站根目录下/Scripts/Json/SpendingType.json数据
++(void)requestXMKZSpendingTypeSuccess:(Success)success failure:(Failure)failure{
+    [RequestTool requestXMKZSpendingTypeSuccess:^(NSURLSessionDataTask *dataTask, id responseObjcet) {
+        id  respond = [NSJSONSerialization  JSONObjectWithData:responseObjcet options:0 error:nil];
+        success(respond);
+    } failure:^(NSURLSessionDataTask *dataTask, NSError *error) {
+        if ([AFNetworkReachabilityManager sharedManager].reachable) {
+            failure(-1,@"请求失败");
+        } else{
+            failure(-1,@"网络异常,请检查您的网络状况");
+        }
+    }];
+}
++(void)requestXMKZListWithPage:(NSInteger)page success:(Success)success failure:(Failure)failure{
+    [RequestTool requestXMKZListWithPage:page success:^(NSURLSessionDataTask *dataTask, id responseObjcet) {
+        id  respond = [NSJSONSerialization  JSONObjectWithData:responseObjcet options:0 error:nil];
+        success(respond);
+    } failure:^(NSURLSessionDataTask *dataTask, NSError *error) {
+        if ([AFNetworkReachabilityManager sharedManager].reachable) {
+            failure(-1,@"请求失败");
+        } else{
+            failure(-1,@"网络异常,请检查您的网络状况");
+        }
+    }];
+}
++(void)requestXMKZDetialListWithProjectBranchID:(NSString *)projectBranchID Page:(NSInteger)page success:(Success)success failure:(Failure)failure{
+    [RequestTool requestXMKZDetialListWithProjectBranchID:projectBranchID Page:(NSInteger)page success:^(NSURLSessionDataTask *dataTask, id responseObjcet) {
+        id  respond = [NSJSONSerialization  JSONObjectWithData:responseObjcet options:0 error:nil];
+        success(respond);
+    } failure:^(NSURLSessionDataTask *dataTask, NSError *error) {
+        if ([AFNetworkReachabilityManager sharedManager].reachable) {
+            failure(-1,@"请求失败");
+        } else{
+            failure(-1,@"网络异常,请检查您的网络状况");
+        }
+    }];
+}
+//+(void)requestXMKZDetialSaveWithParaDic:(NSDictionary *)paradic success:(Success)success failure:(Failure)failure{
+//    [RequestTool requestXMKZDetialSaveWithParaDic:paradic success:^(NSURLSessionDataTask *dataTask, id responseObjcet) {
+//        id  respond = [NSJSONSerialization  JSONObjectWithData:responseObjcet options:0 error:nil];
+//        success(respond);
+//    } failure:^(NSURLSessionDataTask *dataTask, NSError *error) {
+//        if ([AFNetworkReachabilityManager sharedManager].reachable) {
+//            failure(-1,@"请求失败");
+//        } else{
+//            failure(-1,@"网络异常,请检查您的网络状况");
+//        }
+//    }];
+//}
++(void)requestXMKZDetialSaveWithParaDic:(NSDictionary *)paradic imageArray:(NSArray *)imgArray fileName:(NSString *)fileName progerss:(Progress)progres success:(Success)success failure:(Failure)failure{
+    [RequestTool requestXMKZDetialSaveWithParaDic:paradic imageArray:imgArray fileName:fileName progerss:^(id progress) {
+        progres(progress);
+    } success:^(NSURLSessionDataTask *dataTask, id responseObjcet) {
+        id  respond = [NSJSONSerialization  JSONObjectWithData:responseObjcet options:0 error:nil];
+        success(respond);
+    } failure:^(NSURLSessionDataTask *dataTask, NSError *error) {
+        if ([AFNetworkReachabilityManager sharedManager].reachable) {
+            failure(-1,@"请求失败");
+        } else{
+            failure(-1,@"网络异常,请检查您的网络状况");
+        }
+    }];
+}
++(void)requestXMKZDetialSubmitWithParaDic:(NSDictionary *)paradic success:(Success)success failure:(Failure)failure{
+    [RequestTool requestXMKZDetialSubmitWithParaDic:paradic success:^(NSURLSessionDataTask *dataTask, id responseObjcet) {
+        id  respond = [NSJSONSerialization  JSONObjectWithData:responseObjcet options:0 error:nil];
+        success(respond);
+    } failure:^(NSURLSessionDataTask *dataTask, NSError *error) {
+        if ([AFNetworkReachabilityManager sharedManager].reachable) {
+            failure(-1,@"请求失败");
+        } else{
+            failure(-1,@"网络异常,请检查您的网络状况");
+        }
+    }];
+}
++(void)requestXMKZDetialDeleteWithParaDic:(NSDictionary *)paradic  success:(Success)success failure:(Failure)failure{
+    [RequestTool requestXMKZDetialDeleteWithParaDic:paradic success:^(NSURLSessionDataTask *dataTask, id responseObjcet) {
+        id  respond = [NSJSONSerialization  JSONObjectWithData:responseObjcet options:0 error:nil];
+        success(respond);
+    } failure:^(NSURLSessionDataTask *dataTask, NSError *error) {
+        if ([AFNetworkReachabilityManager sharedManager].reachable) {
+            failure(-1,@"请求失败");
+        } else{
+            failure(-1,@"网络异常,请检查您的网络状况");
+        }
+    }];
+}
+#pragma mark ==============  开支审核
++(void)requestKZSHListWithSearchStateID:(NSInteger)searchStateID SearchSpendTypeID:(NSString *)searchSpendTypeID Page:(NSInteger)page success:(Success)success failure:(Failure)failure{
+    [RequestTool requestKZSHListWithSearchStateID:searchStateID SearchSpendTypeID:searchSpendTypeID Page:page success:^(NSURLSessionDataTask *dataTask, id responseObjcet) {
+        id  respond = [NSJSONSerialization  JSONObjectWithData:responseObjcet options:0 error:nil];
+        success(respond);
+    } failure:^(NSURLSessionDataTask *dataTask, NSError *error) {
+        if ([AFNetworkReachabilityManager sharedManager].reachable) {
+            failure(-1,@"请求失败");
+        } else{
+            failure(-1,@"网络异常,请检查您的网络状况");
+        }
+    }];
+}
+//开支审核 与项目开支提交接口相同仅参数不同
+//+(void)requestXMKZDetialSubmitWithParaDic:(NSDictionary *)paradic success:(Success)success failure:(Failure)failure;
+
+#pragma mark ==============  开支付款
++(void)requestKZFKListWithSearchStateID:(NSInteger)searchStateID  SearchSpendTypeID:(NSString *)searchSpendTypeID  Page:(NSInteger)page success:(Success)success failure:(Failure)failure{
+    [RequestTool requestKZFKListWithSearchStateID:searchStateID SearchSpendTypeID:searchSpendTypeID Page:page success:^(NSURLSessionDataTask *dataTask, id responseObjcet) {
+        id  respond = [NSJSONSerialization  JSONObjectWithData:responseObjcet options:0 error:nil];
+        success(respond);
+    } failure:^(NSURLSessionDataTask *dataTask, NSError *error) {
+        if ([AFNetworkReachabilityManager sharedManager].reachable) {
+            failure(-1,@"请求失败");
+        } else{
+            failure(-1,@"网络异常,请检查您的网络状况");
+        }
+    }];
+}
+//开支付款 与项目开支提交接口相同仅参数不同
+//+(void)requestXMKZDetialSubmitWithParaDic:(NSDictionary *)paradic success:(Success)success failure:(Failure)failure;
+
 @end

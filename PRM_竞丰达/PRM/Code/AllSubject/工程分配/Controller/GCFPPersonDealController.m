@@ -36,10 +36,17 @@
     self.navBar.rightButton.hidden = NO;
     [self.navBar.rightButton clickWithBlock:^{
         // 提交处理
-//        [weakSelf requestRWFP_submit];
-        [weakSelf requestRWFP_submit_JFD];
+//        [weakSelf requestGCFP_submit];
+        [weakSelf requestGCFP_submit_JFD];
     }];
 
+    [self.navBar.backButton clickWithBlock:^{
+        if ([weakSelf.stasticDic[@"GCJL"] length]) {
+            [weakSelf alertWithSaveMention:@"信息已修改 , 需要保存吗?" withAction:@selector(requestGCFP_submit_JFD)];
+            return ;
+        }
+        [weakSelf.navigationController popViewControllerAnimated:YES];
+     }];
 }
 
 -(void)setupTableView{
@@ -400,7 +407,7 @@
 
 
 
--(void)requestRWFP_submit{
+-(void)requestGCFP_submit{
     /**
      int InquiryID(市场负责人Id)
      int DesignID(主设计师Id)
@@ -487,7 +494,7 @@
     }];
 }
 
--(void)requestRWFP_submit_JFD{
+-(void)requestGCFP_submit_JFD{
     /**
      int InquiryID(市场负责人Id)
      int DesignID(主设计师Id)
@@ -499,6 +506,7 @@
     [self.PMArray enumerateObjectsUsingBlock:^(DistributionPerson * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([obj.Name isEqualToString:self.stasticDic[@"GCJL"]]) {
             _EngineeringID = obj.Id;
+            *stop = YES;
         }
     }];
     if ( !_EngineeringID.length) {
@@ -531,7 +539,9 @@
 }
 
 -(void)dealloc{
-    NSLog(@"释放");
+#ifdef DEBUG
+    printf("[⚠️] 已经释放 %s.\n", NSStringFromClass(self.class).UTF8String);
+#endif
     [[NSNotificationCenter defaultCenter]removeObserver:self name:@"refreshXMQKListView" object:nil];
 } 
 @end

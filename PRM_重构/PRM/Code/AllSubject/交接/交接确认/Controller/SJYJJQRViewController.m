@@ -103,7 +103,7 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     SJYJJQRListCell *cell = [SJYJJQRListCell cellWithTableView:tableView];
-    cell .indexPath = indexPath;
+    cell.indexPath = indexPath;
     cell.cellType =CellType_JJQRList;
     cell.data = self.dataArray[indexPath.row];
     [cell loadContent];
@@ -180,7 +180,7 @@
 
     [dialogViewController addCancelButtonWithText:@"取消" block:nil];
     Weak_Self;
-    [dialogViewController addSubmitButtonWithText:@"提交" block:^(QMUIDialogViewController *aDialogViewController) {
+    [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
         QMUIDialogSelectionViewController *dialogVC = (QMUIDialogSelectionViewController *)aDialogViewController;
 
         NSString *apiUrl;

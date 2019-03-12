@@ -8,8 +8,7 @@
 
 #import "WLJHListCell.h"
 
-#define   STATEArray   @[@"", @"未提交", @"已提交未审核", @"已驳回", @"已审核通过", @"预留状态",@"已下采购计划单、按计划发料", @"物料计划已发完"]
-#define   STATESimpleArray   @[@"", @"未提交", @"未审核", @"已驳回", @"已通过", @"预留", @"已下单", @"已发完"]
+//#define   STATESimpleArray   @[@"", @"已计划", @"已申请", @"已驳回", @"已审核", @"已下单",@"已采购" ,@"已完成"]
 
 @interface WLJHListCell ()
 
@@ -29,14 +28,14 @@
 @implementation WLJHListCell
 
 
-+(instancetype)cellWithTableView:(UITableView *)tableView{
-    static   NSString *identifier = @"WLJHListCell";
-    WLJHListCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-    if (cell == nil) {
-        cell = [[WLJHListCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
-    }
-    return cell;
-}
+//+(instancetype)cellWithTableView:(UITableView *)tableView{
+//    static   NSString *identifier = @"WLJHListCell";
+//    WLJHListCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+//    if (cell == nil) {
+//        cell = [[WLJHListCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
+//    }
+//    return cell;
+//}
 
 -(void)setupCell{
     self.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -133,23 +132,24 @@
 }
 -(void)loadContent{
     if (self.cellType == CellType_WLJH) {
-    WLJHListModel *model = self.data;
-    self.leftCircleLab.text = [STATESimpleArray objectAtIndex: model.State.integerValue];
-    self.titleLab.text = model.Name;
-    self.jhDateLab.text = model.CreateDate;
+        WLJHListModel *model = self.data;
+        self.leftCircleLab.text = model.stateString;
+        self.leftCircleLab.backgroundColor = model.stateColor;
+        self.titleLab.text = model.Name;
+        self.jhDateLab.text = model.CreateDate;
 
-    NSInteger qgrq = [model.MarketDate stringByReplacingOccurrencesOfString:@"-" withString:@""].integerValue;
-    NSInteger planDate = [model.CreateDate stringByReplacingOccurrencesOfString:@"-" withString:@""].integerValue;
-    NSInteger dhRq = [model.OrderDate stringByReplacingOccurrencesOfString:@"-" withString:@""].integerValue;
+        NSInteger qgrq = [model.MarketDate stringByReplacingOccurrencesOfString:@"-" withString:@""].integerValue;
+        NSInteger planDate = [model.CreateDate stringByReplacingOccurrencesOfString:@"-" withString:@""].integerValue;
+        NSInteger dhRq = [model.OrderDate stringByReplacingOccurrencesOfString:@"-" withString:@""].integerValue;
 
-    self.qgDateLab.text = qgrq >= planDate?model.MarketDate:@"";
-    self.dhDateLab.text = dhRq>= planDate?model.OrderDate:@"";
+        self.qgDateLab.text = qgrq >= planDate?model.MarketDate:@"";
+        self.dhDateLab.text = dhRq>= planDate?model.OrderDate:@"";
     }
 
     if (self.cellType == CellType_XMQG) {
-        self.leftCircleLab.backgroundColor = Color_Red;
         XMQGListModel *model = self.data;
-         self.leftCircleLab.text = [STATESimpleArray objectAtIndex: model.State.integerValue];
+        self.leftCircleLab.backgroundColor = model.stateColor;
+        self.leftCircleLab.text = model.stateStr;
         self.titleLab.text = model.titleStr;
         self.jhDateLab.text = model.CreateDate;
 

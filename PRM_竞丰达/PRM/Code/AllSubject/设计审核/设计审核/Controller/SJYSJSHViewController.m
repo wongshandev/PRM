@@ -12,7 +12,7 @@
 #import "SJSHDetialSuperController.h"
 
 #define  STATEArray  @[@"全部",@"未审核",@"已审核"]
-#define  ListSTATEColorArray  @[[UIColor whiteColor],UIColorHex(#EF5362),UIColorHex(#007BD3),]
+#define  ListSTATEColorArray  @[[UIColor whiteColor],UIColorHex(#EF5362),UIColorHex(#007BD3)]
 @interface SJYSJSHViewController ()<QMUITextFieldDelegate>
 @property (nonatomic, strong) SJYSJSHSearchAlertView * searchAlertView;
 
@@ -29,7 +29,7 @@
 
 -(void)setUpNavigationBar{
     Weak_Self;
-    self.navBar.backButton.hidden = NO;
+    //    self.navBar.backButton.hidden = NO;
     self.navBar.titleLabel.text = self.title;
     self.shStateType = 0;
     self.searchCode = @"";
@@ -128,7 +128,7 @@
         [modalViewController hideInView:self.view animated:YES completion:nil];
     }];
     
-    [dialogViewController addSubmitButtonWithText:@"提交" block:^(QMUIDialogViewController *aDialogViewController) {
+    [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
         [modalViewController hideInView:self.view animated:YES completion:^(BOOL finished) {
             [weakSelf.tableView.mj_header beginRefreshing];
         }];
@@ -186,7 +186,7 @@
         for (NSDictionary *dic in rowsArr) {
             SJSHListModel  *model = [SJSHListModel  modelWithDictionary:dic];
             model.titleStr = [model.Name stringByAppendingFormat:@" (%@)",model.Code];
-            //            model.stateString = model.State.integerValue==2?[STATEArray objectAtIndex:1]:STATEArray.lastObject;
+
             BOOL isWSH = ((model.State.integerValue == 2 && dpld == [SJYUserManager sharedInstance].sjyloginData.EngineeringDpId.integerValue) || (model.State.integerValue == 5 && dpld == [SJYUserManager sharedInstance].sjyloginData.DesignDpId.integerValue));
             model.stateString = isWSH?[STATEArray objectAtIndex:1]:STATEArray.lastObject;
             model.StateColor =  isWSH?[ListSTATEColorArray objectAtIndex:1]:ListSTATEColorArray.lastObject;
@@ -215,7 +215,7 @@
     }
     if (self.dataArray.count == 0) {
         self.tableView.customImg = !havError ? [UIImage imageNamed:@"empty"]:SJYCommonImage(@"daoda");
-        self.tableView.customMsg = !havError? @"没有数据了,休息一下吧":@"网络错误,请检查网络后重试";
+        self.tableView.customMsg = !havError? @"没有数据了,休息下吧":@"网络错误,请检查网络后重试";
         self.tableView.showNoData = YES;
         self.tableView.isShowBtn =  havError;
     }
@@ -230,7 +230,7 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     SJYJJQRListCell *cell = [SJYJJQRListCell cellWithTableView:tableView];
-    cell .indexPath = indexPath;
+    cell.indexPath = indexPath;
     cell.cellType =CellType_SJSHList;
     cell.data = self.dataArray[indexPath.row];
     [cell loadContent];
@@ -279,7 +279,9 @@
 }
 
 -(void)dealloc{
-    NSLog(@"释放");
+#ifdef DEBUG
+    printf("[⚠️] 已经释放 %s.\n", NSStringFromClass(self.class).UTF8String);
+#endif
     [[NSNotificationCenter defaultCenter]removeObserver:self name:@"refreshSJSHListView" object:nil];
     
 }

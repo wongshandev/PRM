@@ -52,8 +52,8 @@ if (self = [super initWithFrame:frame]) {
 //        return;
 //    }
     /*******画出表头******************/
-        [self drawTopTitleView];
-
+//    [self drawTopTitleView];
+    [self drawTopTitleViewNoTitle];
     /*******画出坐标轴******************/
     [self drawTheXYAlex];
 
@@ -67,9 +67,40 @@ if (self = [super initWithFrame:frame]) {
     [self setUIProgressData];
 
 }
+
+- (void)drawTopTitleViewNoTitle {
+    NSMutableParagraphStyle *paraStyTitle = [[NSMutableParagraphStyle alloc] init];
+    paraStyTitle.alignment = NSTextAlignmentCenter;
+    paraStyTitle.lineBreakMode = NSLineBreakByTruncatingTail;
+
+    NSMutableParagraphStyle *paraSty = [[NSMutableParagraphStyle alloc] init];
+    paraSty.alignment = NSTextAlignmentLeft;
+    CGFloat mentionH =(Bounce_Top - Bounce_Title_Top - PaddingY *2);
+    CGFloat mentionTop = PaddingY  + Bounce_Title_Top * 3 ;
+    CGFloat mentionW = 40 ;
+//    [ self.title  drawInRect: CGRectMake(
+//                                         Bounce_Left ,
+//                                         PaddingY + Bounce_Title_Top,
+//                                         ChartW - Bounce_Left - Bounce_Right,
+//                                         mentionH )
+//              withAttributes:@{
+//                               NSFontAttributeName:SJYBoldFont(15),
+//                               NSForegroundColorAttributeName:Color_DarkGray,
+//                               NSParagraphStyleAttributeName:paraStyTitle
+//                               }];
+    //计划
+    [@"       " drawInRect:CGRectMake( ChartW/2 - mentionW*2, mentionTop, mentionW, mentionH) withAttributes:@{ NSFontAttributeName:SJYBoldFont(12),  NSForegroundColorAttributeName:Color_White, NSBackgroundColorAttributeName:Color_Orange,  NSParagraphStyleAttributeName:paraSty }];
+    [@"计划" drawInRect:CGRectMake( ChartW/2 -  mentionW, mentionTop, mentionW, mentionH) withAttributes:@{ NSFontAttributeName:SJYBoldFont(12),  NSForegroundColorAttributeName:Color_Black,  NSParagraphStyleAttributeName:paraSty }];//NSBackgroundColorAttributeName:Color_NavigationLightBlue,
+    //实际
+    [@"       " drawInRect:CGRectMake( ChartW/2 +5,mentionTop, mentionW, mentionH) withAttributes:@{ NSFontAttributeName:SJYBoldFont(12), NSForegroundColorAttributeName:Color_White, NSBackgroundColorAttributeName:Color_NavigationLightBlue, NSParagraphStyleAttributeName:paraSty }];
+    [@"实际" drawInRect:CGRectMake( ChartW/2 + mentionW ,mentionTop , mentionW, mentionH) withAttributes:@{ NSFontAttributeName:SJYBoldFont(12), NSForegroundColorAttributeName:Color_Black, NSParagraphStyleAttributeName:paraSty }];//NSBackgroundColorAttributeName:Color_Orange,
+}
+
 - (void)drawTopTitleView {
     NSMutableParagraphStyle *paraStyTitle = [[NSMutableParagraphStyle alloc] init];
     paraStyTitle.alignment = NSTextAlignmentCenter;
+    paraStyTitle.lineBreakMode = NSLineBreakByTruncatingTail;
+
     NSMutableParagraphStyle *paraSty = [[NSMutableParagraphStyle alloc] init];
     paraSty.alignment = NSTextAlignmentLeft;
     CGFloat mentionH =(Bounce_Top-Bounce_Title_Top - PaddingY *3)/2;
@@ -151,16 +182,16 @@ if (self = [super initWithFrame:frame]) {
         NSMutableParagraphStyle *paraSty = [[NSMutableParagraphStyle alloc] init];
         paraSty.alignment = NSTextAlignmentRight;
 
-        [@( i+1).stringValue drawInRect:CGRectMake(
-                                                   0,
-                                                   Bounce_Top+ i*StageRowHeight + PaddingY,
-                                                   Bounce_Left- 5,
-                                                   StageRowHeight)
-                         withAttributes:@{
-                                          NSFontAttributeName:SJYBoldFont(12),
-                                          NSForegroundColorAttributeName:Color_Gray,
-                                          NSParagraphStyleAttributeName: paraSty
-                                          }];
+//        [@( i+1).stringValue drawInRect:CGRectMake(
+//                                                   0,
+//                                                   Bounce_Top+ i*StageRowHeight + PaddingY,
+//                                                   Bounce_Left- 5,
+//                                                   StageRowHeight)
+//                         withAttributes:@{
+//                                          NSFontAttributeName:SJYBoldFont(12),
+//                                          NSForegroundColorAttributeName:Color_Gray,
+//                                          NSParagraphStyleAttributeName: paraSty
+//                                          }];
 
 //        //数据处理
 //        if ( model.sjKSRQ.length!= 0) {
@@ -249,8 +280,9 @@ if (self = [super initWithFrame:frame]) {
     for (NSInteger i = 0; i<self.ganttArray.count; i++) {
         StasticGanttModel * model = [self.ganttArray objectAtIndex:i];
         // 绘制 实际线条
-        [self drawTheRectForStageGanttType:StageGanttTypeActrul withStartDate:model.sjKSRQ withEndDate:model.sjJSRQ atIndex:i ];
-
+        if (model.sjJSRQ.length != 0 && model.sjKSRQ.length!= 0 ) {
+            [self drawTheRectForStageGanttType:StageGanttTypeActrul withStartDate:model.sjKSRQ withEndDate:model.sjJSRQ atIndex:i ];
+        }
         // 绘制 规划线条
         if (model.jhKSRQ.length != 0 && model.jhJSRQ.length!= 0 ) {
             [self drawTheRectForStageGanttType:StageGanttTypePlane withStartDate:model.jhKSRQ withEndDate:model.jhJSRQ atIndex:i];
@@ -274,11 +306,11 @@ if (self = [super initWithFrame:frame]) {
 
     if (startDays == 0  && startDays == endDays ) {
         start_X = 0;
-        end_X = start_X + W_EveryDay/2;
+        end_X = start_X + 1;//W_EveryDay/2;
     }
 
     if (startDays == self.totalDays && startDays == endDays ) {
-       start_X = end_X - W_EveryDay/2;
+        start_X = end_X - 1;//W_EveryDay/2;
     }
 
     CAShapeLayer *backLayer = [CAShapeLayer layer];

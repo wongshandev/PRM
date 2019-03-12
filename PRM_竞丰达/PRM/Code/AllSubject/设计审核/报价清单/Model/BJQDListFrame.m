@@ -31,7 +31,7 @@
         _tagView = [[QMUIFloatLayoutView alloc] init];
         _tagView.padding = UIEdgeInsetsMake(5, 10, 5, 10);
         _tagView.itemMargins = UIEdgeInsetsMake(0, 0, 10, 10);
-        _tagView.minimumItemSize =  CGSizeMake(50, 25);
+        _tagView.minimumItemSize =  CGSizeMake(20, 25);
     }
     return _tagView;
 }

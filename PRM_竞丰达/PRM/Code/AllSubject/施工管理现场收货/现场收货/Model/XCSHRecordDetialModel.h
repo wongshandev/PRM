@@ -24,6 +24,7 @@
 @property (nonatomic, copy) NSString *changeRemark;
 @property (nonatomic, copy) NSString *changeQuantityCheck;
 @property (nonatomic, copy) NSString *titleStr;
+@property (nonatomic, assign)BOOL isModelChange;
 
 @end
 

@@ -26,6 +26,7 @@
     if (cell == nil) {
         cell = [[self alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:[self className]];
     }
+    cell.tableView = tableView;
     return cell;
 }
 

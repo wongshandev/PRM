@@ -58,12 +58,11 @@
     [self.leftCircleLab rounded:25];
 
     [self.moneyLab mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.leftCircleLab.mas_centerY).offset(-10);
+        make.top.mas_equalTo(self.leftCircleLab.mas_top);
         make.right.mas_equalTo(self.mas_right).offset(-10);
-         make.width.mas_equalTo(70);
+         make.width.mas_lessThanOrEqualTo(80);
     }];
-
-
+    self.moneyLab.textAlignment = NSTextAlignmentRight;
     [self.titleLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.leftCircleLab.mas_top);
         make.left.mas_equalTo(self.leftCircleLab.mas_right).offset(10);
@@ -73,13 +72,13 @@
     [self.subTitle mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.titleLab.mas_bottom).offset(10);
         make.left.mas_equalTo(self.titleLab.mas_left);
-        make.right.mas_equalTo(self.titleLab.mas_right);
+        make.right.mas_equalTo(self.moneyLab.mas_right);
         make.height.mas_greaterThanOrEqualTo(20);
     }];
     [self.descriptionLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.subTitle.mas_bottom).offset(5);
-        make.left.mas_equalTo(self.leftCircleLab.mas_centerX).offset(-5);
-        make.right.mas_equalTo(self.moneyLab.mas_left).offset(-5);
+        make.left.mas_equalTo(self.leftCircleLab.mas_left);
+        make.right.mas_equalTo(self.moneyLab.mas_right);
         make.bottom.mas_equalTo(self.mas_bottom).offset(-5);
     }]; 
 }
@@ -125,7 +124,7 @@
     }
     if(self.cellType == CellType_CGSHList){
         CGFKListModel *model = self.data;
-        _leftCircleLab.backgroundColor =   model.StateColor;
+        _leftCircleLab.backgroundColor = model.StateColor;
     }
 }
 

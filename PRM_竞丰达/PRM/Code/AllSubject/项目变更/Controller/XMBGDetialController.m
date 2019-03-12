@@ -26,7 +26,7 @@
 @implementation XMBGDetialController
 
 -(void)setUpNavigationBar{
-    self.navBar.backButton.hidden = NO;
+    //    self.navBar.backButton.hidden = NO;
     self.navBar.titleLabel.text = self.listModel.Name;
     [self.navBar.rightButton setTitle:@"新增" forState:UIControlStateNormal];
     Weak_Self;
@@ -35,7 +35,8 @@
         XMBGDetailModel *model = [[XMBGDetailModel alloc]init];
         model.isNewAdd = YES;
         model.Id = @"0";
-
+        model.ChangeType = @"1";
+        
         newAddVC.title =@"新增变更";
         newAddVC.projectBranchID = self.listModel.Id;
         newAddVC.detialModel = model;
@@ -99,7 +100,7 @@
     [self.tableView.mj_header endRefreshing];
     if (self.dataArray.count == 0) {
         self.tableView.customImg = !havError ? [UIImage imageNamed:@"empty"]:SJYCommonImage(@"daoda");
-        self.tableView.customMsg = !havError? @"没有数据了,休息一下吧":@"网络错误,请检查网络后重试";
+        self.tableView.customMsg = !havError? @"没有数据了,休息下吧":@"网络错误,请检查网络后重试";
         self.tableView.showNoData = YES;
         self.tableView.isShowBtn =  havError;
     }
@@ -196,15 +197,34 @@
 
 }
 #pragma mark ***************查看文件
+//-(void)openFileAtPath:(NSURL *)filePath{
+//    if (filePath) {
+//        if ([[NSString stringWithFormat:@"%@",filePath] hasSuffix:@"TTF"]) {
+//            [QMUITips showWithText:@"不支持的文件格式" inView:self.view hideAfterDelay:1.5];
+//        }else{
+//            self.documentInteractionController = [UIDocumentInteractionController interactionControllerWithURL:filePath];
+//            //self.documentInteractionController
+//            [self.documentInteractionController setDelegate:self];
+//            [self.documentInteractionController presentPreviewAnimated:YES];
+//        }
+//    } else {
+//        UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"打开失败" message:@"打开文档失败，可能文档损坏，请重试" preferredStyle:UIAlertControllerStyleAlert];
+//        [alert addAction:[UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleCancel handler:nil]];
+//        [self presentViewController:alert animated:YES completion:nil];
+//    }
+//}
+
 -(void)openFileAtPath:(NSURL *)filePath{
     if (filePath) {
-        if ([[NSString stringWithFormat:@"%@",filePath] hasSuffix:@"TTF"]) {
-            [QMUITips showWithText:@"不支持的文件格式" inView:self.view hideAfterDelay:1.5];
-        }else{
-            self.documentInteractionController = [UIDocumentInteractionController interactionControllerWithURL:filePath];
-            //self.documentInteractionController
-            [self.documentInteractionController setDelegate:self];
-            [self.documentInteractionController presentPreviewAnimated:YES];
+        self.documentInteractionController = [UIDocumentInteractionController interactionControllerWithURL:filePath];
+        [self.documentInteractionController setDelegate:self]; 
+        if ([self.documentInteractionController presentPreviewAnimated:YES]){
+            NSLog(@"打开成功");
+        } else{
+            CGRect navRect = self.navigationController.navigationBar.frame;
+            navRect.size =CGSizeMake(SCREEN_W*3,40.0f);
+            [self.documentInteractionController presentOpenInMenuFromRect:navRect inView:self.view animated:YES];
+            NSLog(@"打开失败");
         }
     } else {
         UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"打开失败" message:@"打开文档失败，可能文档损坏，请重试" preferredStyle:UIAlertControllerStyleAlert];
@@ -212,6 +232,7 @@
         [self presentViewController:alert animated:YES completion:nil];
     }
 }
+
 
 #pragma mark *************** 弹窗查看
 /*
@@ -291,7 +312,7 @@
  }];
 
  if (model.isNewAdd) {
- [dialogViewController addSubmitButtonWithText:@"提交" block:^(QMUIDialogViewController *aDialogViewController) {
+ [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
  [modalViewController hideInView:self.view animated:YES completion:^(BOOL finished) {
  [weakSelf.tableView.mj_header beginRefreshing];
  }];
@@ -422,9 +443,10 @@
     NSLog(@"Retain Count = %ld\n",CFGetRetainCount((__bridge CFTypeRef)(self)));
 }
 -(void)dealloc{
-    NSLog(@"释放");
+#ifdef DEBUG
+    printf("[⚠️] 已经释放 %s.\n", NSStringFromClass(self.class).UTF8String);
+#endif
  }
-
 
 
 @end

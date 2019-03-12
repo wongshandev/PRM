@@ -9,6 +9,7 @@
 #import "SJYMainViewController.h"
 #import "UIViewController+MMDrawerController.h"
 #import "MainViewCell.h"
+#import "MainViewHeadView.h"
 #import "MainModel.h"
 
 #define kMargain 5
@@ -41,17 +42,39 @@
 }
 
 -(void)bindViewModel{
+    [ self requestData_XMKZSpendingType];
     Weak_Self;
-    [self request_MainViewData];
+    self.collectionView.mj_header  = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+        [weakSelf request_MainViewData];
+    }];
+    [self.collectionView.mj_header beginRefreshing];
     self.collectionView.refreshBlock = ^{
         [weakSelf  request_MainViewData];
-    }; 
+    };
 }
+//开支类型
+-(void)requestData_XMKZSpendingType {
+    NSMutableArray *newArray = [NSMutableArray new];
+    [SJYRequestTool requestXMKZSpendingTypeSuccess:^(id responder) {
+        NSArray *spendingTypeArray = responder;
+        for (NSDictionary *dic in spendingTypeArray) {
+            XMKZSpendTypeModel *model = [XMKZSpendTypeModel modelWithDictionary:dic];
+            [newArray addObject:model];
+        }
+        [[SJYDefaultManager shareManager] saveXMKZSpendTypeArray:newArray];
+    } failure:^(int status, NSString *info) {
+        [[SJYDefaultManager shareManager] saveXMKZSpendTypeArray:newArray];
+    }];
+}
+
 -(void)request_MainViewData{
     NSLog(@"%@",[SJYUserManager sharedInstance].sjyloginData.Id);
     [QMUITips showLoading:@"数据加载中" inView:self.view];
     [ SJYRequestTool requestMainFunctionList:[SJYUserManager sharedInstance].sjyloginData.Id complete:^(id responder) {
         NSLog(@"%@",responder);
+        if (self.collectionView.mj_header.isRefreshing) {
+            [self.dateSource removeAllObjects];
+        }
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([[responder objectForKey:@"success"]boolValue]== YES) {
                 NSArray *menuArr = [responder objectForKey:@"menu"];
@@ -74,9 +97,10 @@
     }];
 }
 -(void)endRefreshWithError:(BOOL)havError{
+    [self.collectionView.mj_header endRefreshing];
     if (self.dateSource.count == 0) {
         self.collectionView.customImg = !havError ? [UIImage imageNamed:@"empty"]:SJYCommonImage(@"daoda");
-        self.collectionView.customMsg = !havError? @"没有数据了,休息一下吧":@"网络错误,请检查网络后重试";
+        self.collectionView.customMsg = !havError? @"没有数据了,休息下吧":@"网络错误,请检查网络后重试";
         self.collectionView.showNoData = YES;
         self.collectionView.isShowBtn =  havError;
     }
@@ -96,18 +120,10 @@
     return self.dateSource.count;
 }
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
-    UICollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"headView" forIndexPath:indexPath];
+    MainViewHeadView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:[MainViewHeadView className] forIndexPath:indexPath];
     MainModel *sectionModel = [self.dateSource objectAtIndex:indexPath.section];
-    UILabel *label = [[UILabel alloc] init];
-    label.text = sectionModel.text;
-    label.textColor = Color_White;
-    label.textAlignment = NSTextAlignmentCenter;
-    [headerView addSubview:label];
-    [label makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(UIEdgeInsetsZero);
-    }];
-    headerView.backgroundColor = Color_NavigationLightBlue;
-    return headerView;
+    headerView.model = sectionModel;
+     return headerView;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
@@ -117,11 +133,12 @@
 
 // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    MainViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MainViewCell" forIndexPath:indexPath];
+    //    MainViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MainViewCell" forIndexPath:indexPath];
     MainModel *sectionModel = [self.dateSource  objectAtIndex:indexPath.section];
     MainModel *cellModel = [sectionModel.children objectAtIndex:indexPath.row];
-    [cell showMainCellDataWithModel:cellModel];
-    return cell;
+    MainViewCell *cell = [MainViewCell cellWithCollectionView:collectionView atIndexPath:indexPath];
+    cell.model = cellModel;
+     return cell;
 }
 
 
@@ -141,7 +158,7 @@
             [self.navigationController pushViewController:jjqrVC animated:YES];
         }
             break;
-        case PurchaseOrderPay: //技术部 ----- 采购付款；
+        case PurchaseOrderPay: // 采购付款；
         {
             SJYCGFKListController *cgfkListVC = [[SJYCGFKListController alloc]init];
             cgfkListVC.mainModel = cellModel;
@@ -226,20 +243,42 @@
             [self.navigationController pushViewController:cgshVC animated:YES];
         }
             break;
+        case StockApprove: // 入库评审；
+        {
+            SJYRKPSViewController *rkpsVC = [[SJYRKPSViewController alloc] init];
+            rkpsVC.mainModel = cellModel;
+            rkpsVC.title = cellModel.text;
+            [self.navigationController pushViewController:rkpsVC animated:YES];
+        }
+            break;
+        case SpendingPB: // 项目开支；
+        {
+            SJYXMKZListController *xmkzVC = [[SJYXMKZListController alloc] init];
+            xmkzVC.mainModel = cellModel;
+            xmkzVC.title = cellModel.text;
+            [self.navigationController pushViewController:xmkzVC animated:YES];
+        }
+            break;
+        case SpendingApprove: // 开支审核；
+        {
+            SJYKZSHListController *kzshVC = [[SJYKZSHListController alloc] init];
+            kzshVC.mainModel = cellModel;
+            kzshVC.title = cellModel.text;
+            [self.navigationController pushViewController:kzshVC animated:YES];
+        }
+            break;
+        case Spending: // 开支审核；
+        {
+            SJYKZFKListController *kzshVC = [[SJYKZFKListController alloc] init];
+            kzshVC.mainModel = cellModel;
+            kzshVC.title = cellModel.text;
+            [self.navigationController pushViewController:kzshVC animated:YES];
+        }
+            break;
         default:
             break;
     }
 }
-
--(void)viewWillDisappear:(BOOL)animated{
-    [super viewWillDisappear:animated];
-    NSLog(@"Retain Count = %ld\n",CFGetRetainCount((__bridge CFTypeRef)(self)));
-}
-
--(void)dealloc{
-    NSLog(@"释放");
-}
-
 
 -(UICollectionView *)collectionView{
     if (!_collectionView) {
@@ -249,9 +288,8 @@
         _collectionView.dataSource = self;
         _collectionView.backgroundColor = [UIColor clearColor];
         _collectionView.showsVerticalScrollIndicator = NO;
-        [_collectionView registerClass:[MainViewCell class] forCellWithReuseIdentifier:NSStringFromClass([MainViewCell class])];
-        [_collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"headView"]; //注册头视图
-        
+        [_collectionView registerClass:MainViewCell.class forCellWithReuseIdentifier:MainViewCell.className];
+        [_collectionView registerClass:MainViewHeadView.class forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier: MainViewHeadView.className]; //注册头视图
         _collectionView.showNoData = YES;
         _collectionView.customImg = SJYCommonImage(@"empty");
         _collectionView.customMsg = @"没有数据了,休息下吧";
@@ -259,6 +297,27 @@
     return _collectionView;
 }
 
+//将不需要侧滑的界面   viewWillAppear:方面里面加上下面代码
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    NSLog(@"Retain Count = %ld\n",CFGetRetainCount((__bridge CFTypeRef)(self)));
+    self.mm_drawerController.openDrawerGestureModeMask = MMOpenDrawerGestureModeNone;
+    self.mm_drawerController.closeDrawerGestureModeMask = MMCloseDrawerGestureModeNone;
+}
+//将需要侧滑的界面   viewWillAppear:方面里面加上下面代码
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.mm_drawerController closeDrawerAnimated:YES completion:^(BOOL finished) {
+        [self.mm_drawerController setRightDrawerViewController:nil];
+    }];
+    self.mm_drawerController.openDrawerGestureModeMask = MMOpenDrawerGestureModeAll;
+    self.mm_drawerController.closeDrawerGestureModeMask = MMCloseDrawerGestureModeAll;
+}
 
+-(void)dealloc{
+#ifdef DEBUG
+    printf("[⚠️] 已经释放 %s.\n", NSStringFromClass(self.class).UTF8String);
+#endif
+}
 
 @end

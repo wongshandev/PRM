@@ -43,7 +43,7 @@
     [drawerController setRestorationIdentifier:@"MMDrawer"];
     drawerController.showsShadow = YES;
     drawerController.shouldStretchDrawer= NO;
-    [drawerController setMaximumLeftDrawerWidth:200.0];
+    [drawerController setMaximumLeftDrawerWidth:MainDrawerWidth];
     [drawerController setOpenDrawerGestureModeMask:MMOpenDrawerGestureModeAll];
     [drawerController setCloseDrawerGestureModeMask:MMCloseDrawerGestureModeAll];
     //抽屉动画样式

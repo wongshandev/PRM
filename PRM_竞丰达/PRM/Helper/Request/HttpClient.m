@@ -116,30 +116,9 @@ NSData *cookiesData = [NSKeyedArchiver archivedDataWithRootObject:cookies];\
         [QMUITips hideAllTips];
 //        SJYAlertShow(@"当前网络不可用,请检查网络", @"确定");
         [self alertView];
-
         return;
     }
 
-    //    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    //设置通讯格式
-    //    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/plain",@"text/html",@"application/json",@"text/javascript",nil];
-    //    [manager.requestSerializer willChangeValueForKey:@"timeoutInterval"];
-    //    manager.requestSerializer.timeoutInterval = 30;
-    //    [manager.requestSerializer didChangeValueForKey:@"timeoutInterval"];
-    //    //添加HTTPHeader
-    //    [manager.requestSerializer setValue:@"ios" forHTTPHeaderField:@"os"];
-    //    [manager.requestSerializer setValue:@"multipart/form-data" forHTTPHeaderField:@"Content-Type"];
-    //
-    //    NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:DEVICE_COOKIE];
-    //    if (data.length != 0) {
-    //        NSArray *cookieArray = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-    //        NSHTTPCookieStorage *cookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-    //        for (NSHTTPCookie *cookie in cookieArray) {
-    //            NSLog(@"HttpClientCookie:%@",cookie);
-    //            [cookieStorage setCookie:cookie];
-    //        }
-    //    }
- 
     AFHTTPSessionManager * manager = [self createSessionManager];
     //添加HTTPHeader
     [manager.requestSerializer setValue:@"ios" forHTTPHeaderField:@"os"];
@@ -158,7 +137,7 @@ NSData *cookiesData = [NSKeyedArchiver archivedDataWithRootObject:cookies];\
             [formatter setDateFormat:@"yyyyMMddHHmmss"];
             NSString *dateString = [formatter stringFromDate:[NSDate date]];
             NSString *fileName = [NSString  stringWithFormat:@"%@.jpg",[NSString stringWithFormat:@"%@%d",dateString,i]];
-            [formData appendPartWithFileData:imageData name:[NSString stringWithFormat:@"%@[]",name] fileName:fileName mimeType:@"image/jpeg"];
+            [formData appendPartWithFileData:imageData name:[NSString stringWithFormat:@"%@",name] fileName:fileName mimeType:@"image/jpeg"];
         }
     } progress:progress success:success  failure:failure];
     [uploadTask resume];

@@ -17,7 +17,7 @@
 @implementation SJYJJQRViewController
 
 -(void)setUpNavigationBar{
-    self.navBar.backButton.hidden = NO;
+    //    self.navBar.backButton.hidden = NO;
     self.navBar.titleLabel.text = self.title;
 }
 
@@ -88,7 +88,7 @@
     [self.tableView.mj_header endRefreshing];
     if (self.dataArray.count == 0) {
         self.tableView.customImg = !havError ? [UIImage imageNamed:@"empty"]:SJYCommonImage(@"daoda");
-        self.tableView.customMsg = !havError? @"没有数据了,休息一下吧":@"网络错误,请检查网络后重试";
+        self.tableView.customMsg = !havError? @"没有数据了,休息下吧":@"网络错误,请检查网络后重试";
         self.tableView.showNoData = YES;
         self.tableView.isShowBtn =  havError;
     }
@@ -103,7 +103,7 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     SJYJJQRListCell *cell = [SJYJJQRListCell cellWithTableView:tableView];
-    cell .indexPath = indexPath;
+    cell.indexPath = indexPath;
     cell.cellType =CellType_JJQRList;
     cell.data = self.dataArray[indexPath.row];
     [cell loadContent];
@@ -180,7 +180,7 @@
 
     [dialogViewController addCancelButtonWithText:@"取消" block:nil];
     Weak_Self;
-    [dialogViewController addSubmitButtonWithText:@"提交" block:^(QMUIDialogViewController *aDialogViewController) {
+    [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
         QMUIDialogSelectionViewController *dialogVC = (QMUIDialogSelectionViewController *)aDialogViewController;
 
         NSString *apiUrl;
@@ -230,7 +230,9 @@
 }
 
 -(void)dealloc{
-    NSLog(@"释放");
+#ifdef DEBUG
+    printf("[⚠️] 已经释放 %s.\n", NSStringFromClass(self.class).UTF8String);
+#endif
 }
 
 @end

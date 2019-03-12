@@ -22,14 +22,14 @@
 @implementation SGGLXCSHListCell
 
 
-+(instancetype)cellWithTableView:(UITableView *)tableView{
-    static   NSString *identifier = @"SGGLXCSHListCell";
-    SGGLXCSHListCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-    if (cell == nil) {
-        cell = [[SGGLXCSHListCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
-    }
-    return cell;
-}
+//+(instancetype)cellWithTableView:(UITableView *)tableView{
+//    static   NSString *identifier = @"SGGLXCSHListCell";
+//    SGGLXCSHListCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+//    if (cell == nil) {
+//        cell = [[SGGLXCSHListCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
+//    }
+//    return cell;
+//}
 
 -(void)setupCell{
     self.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -106,6 +106,7 @@
 -(void)loadContent{
     EngineeringModel *model = self.data;
     self.leftCircleLab.text = model.Code;
+//    self.leftCircleLab.contentEdgeInsets = UIEdgeInsetsMake(0, 5, 0, 5);
     self.mainFZRLab.text = model.InquiryName;
     self.titleLab.text = model.Name;
     self.mainSJRLab.text = model.DesignName;

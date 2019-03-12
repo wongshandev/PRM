@@ -90,7 +90,7 @@
         
     }];
 }
-
+ 
 
 -(DXNavBarView *)navBar{
     if (_navBar==nil) {

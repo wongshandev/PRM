@@ -156,7 +156,7 @@
         return cell; 
     }else{
         CGFKDetialFootCell *cell = [CGFKDetialFootCell cellWithTableView:tableView];
-        cell .indexPath = indexPath;
+        cell.indexPath = indexPath;
         cell.data = self.dataArray[indexPath.section][indexPath.row];
         [cell loadContent];
         return cell;
@@ -227,7 +227,8 @@
     [dialogViewController addCancelButtonWithText:@"取消" block:nil];
     [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
         [textView endEditing:YES];
-        if (textView.text.length == 0) {
+             NSString *content =  [textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        if (content.length == 0) {
             [QMUITips showInfo:@"请输入驳回原因" inView:[UIApplication sharedApplication].keyWindow hideAfterDelay:1.2];
             return ;
         }
@@ -235,7 +236,7 @@
                                                         @"PurchaseOrderID":self.listModel.Id,
                                                         @"EmployeeID":[SJYUserManager sharedInstance].sjyloginData.Id,
                                                         @"State":@"3",
-                                                        @"RejectReason":textView.text//(驳回时必要回传参数)
+                                                        @"RejectReason":content//(驳回时必要回传参数)
                                                         } success:^(id responder) {
                                                             [aDialogViewController hide];
                                                             [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];

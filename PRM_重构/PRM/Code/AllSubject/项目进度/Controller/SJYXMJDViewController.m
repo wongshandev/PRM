@@ -105,7 +105,7 @@
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     XMJDListCell *cell = [XMJDListCell cellWithTableView:tableView];
-    cell .indexPath = indexPath;
+    cell.indexPath = indexPath;
     cell.data = self.dataArray[indexPath.row];
     [cell loadContent];
     return cell;

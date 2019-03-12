@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SGGLXCSHListCell : DXBaseCell
 
-+(instancetype)cellWithTableView:(UITableView *)tableView;
+//+(instancetype)cellWithTableView:(UITableView *)tableView;
 
 @end
 

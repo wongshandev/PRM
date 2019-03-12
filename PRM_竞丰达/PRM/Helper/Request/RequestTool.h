@@ -98,6 +98,31 @@
 #pragma mark ============== 采购审核
 +(void)requestCGSHListWithSearchStateID:(NSInteger)searchStateID  SearchCode:(NSString *)searchCode page:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure;
 +(void)requestCGSHSubmitWithParameters:(NSDictionary *)paradic  success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure;
+#pragma mark ============== 入库评审
++(void)requestRKPSListWithSearchStateID:(NSInteger)searchStateID page:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure;
++(void)requestRKPSApprovelSubmitWithParaDic:(NSDictionary *)paradic success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure;
+#pragma mark ============== 项目开支
+//SpendingTypeID开支类型：调用网站根目录下/Scripts/Json/SpendingType.json数据
++(void)requestXMKZSpendingTypeSuccess:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure; 
++(void)requestXMKZListWithPage:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure;
++(void)requestXMKZDetialListWithProjectBranchID:(NSString *)projectBranchID Page:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure;
+//+(void)requestXMKZDetialSaveWithParaDic:(NSDictionary *)paradic success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure;
++(void)requestXMKZDetialSaveWithParaDic:(NSDictionary *)paradic imageArray:(NSArray *)imgArray fileName:(NSString *)fileName progerss:(void (^)(id))progress  success:(void (^) (NSURLSessionDataTask *dataTask,id responseObjcet))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure;
+
++(void)requestXMKZDetialSubmitWithParaDic:(NSDictionary *)paradic success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure;
++(void)requestXMKZDetialDeleteWithParaDic:(NSDictionary *)paradic success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure;
+#pragma mark ==============  开支审核
++(void)requestKZSHListWithSearchStateID:(NSInteger)searchStateID SearchSpendTypeID:(NSString *)searchSpendTypeID Page:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure;
+//开支审核 与项目开支提交接口相同仅参数不同
+//+(void)requestXMKZDetialSubmitWithParaDic:(NSDictionary *)paradic success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure;
+
+#pragma mark ==============  开支付款
++(void)requestKZFKListWithSearchStateID:(NSInteger)searchStateID  SearchSpendTypeID:(NSString *)searchSpendTypeID  Page:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure;
+//开支付款 与项目开支提交接口相同仅参数不同
+//+(void)requestXMKZDetialSubmitWithParaDic:(NSDictionary *)paradic success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure;
+
+
+
 @end
 
  

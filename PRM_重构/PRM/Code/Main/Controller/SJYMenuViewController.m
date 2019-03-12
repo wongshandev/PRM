@@ -20,104 +20,184 @@
 
 
 -(void)buildSubviews{
-    self.tableView = [[QMUITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width - 90, self.view.frame.size.height) style:(UITableViewStyleGrouped)];
+    self.tableView = [[QMUITableView alloc] initWithFrame:CGRectMake(0, 0, MainDrawerWidth, self.view.frame.size.height) style:UITableViewStyleGrouped];
     self.tableView.backgroundColor = [UIColor whiteColor];
     self.tableView.separatorInset = UIEdgeInsetsZero;
+    self.tableView.sectionHeaderHeight = 0;
+    self.tableView.sectionFooterHeight = 10;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.tableView.bounces = NO;
 
     [self.view addSubview:self.tableView];
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width - 100, 250)];
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.width, 250)];
+    headerView.backgroundColor = Color_NavigationLightBlue;
 
     UIImageView *imgView  = [UIImageView new];
     imgView.image = SJYCommonImage(@"AppIcon");
     [headerView addSubview:imgView];
+    QMUILabel *welcomeLab = [[QMUILabel alloc]init];
+    welcomeLab.textAlignment = NSTextAlignmentCenter;
+    welcomeLab.numberOfLines = 0;
+    welcomeLab.font = SJYBoldFont(17);
+    welcomeLab.textColor = UIColorWhite;
+    welcomeLab.text = [@"您好，" stringByAppendingString:[SJYDefaultManager shareManager].getEmployeeName];
+    [headerView addSubview:welcomeLab];
+
 
     [imgView makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(headerView.mas_left).offset(100);
-        make.centerY.equalTo(headerView);
+        make.centerX.equalTo(headerView.mas_left).offset(MainDrawerWidth/2);
+        make.centerY.equalTo(headerView.mas_centerY);
         make.width.equalTo(80);
         make.height.equalTo(80);
     }];
     [imgView rounded:4];
-    headerView.backgroundColor = Color_NavigationLightBlue;
+
+    [welcomeLab makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(imgView.mas_bottom).offset(20);
+        make.centerX.equalTo(headerView.mas_left).offset(MainDrawerWidth/2);
+        make.width.equalTo(MainDrawerWidth/2-15);
+    }];
     self.tableView.tableHeaderView = headerView;
- }
+    self.tableView.qmui_staticCellDataSource = [[QMUIStaticTableViewCellDataSource alloc]
+                                                initWithCellDataSections:@[ @[
+                                                                                ({
+        QMUIStaticTableViewCellData *cellData = [[QMUIStaticTableViewCellData alloc] init];
+        cellData.identifier = 0;
+        cellData.style = UITableViewCellStyleValue1;
+        cellData.text = @"当前版本";
+        cellData.detailText = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleShortVersionString"];
+        cellData.height = 60;
+        //            cellData.accessoryType = QMUIStaticTableViewCellAccessoryTypeDisclosureIndicator;
+        cellData.cellForRowBlock = ^(UITableView *tableView, __kindof QMUITableViewCell *cell, QMUIStaticTableViewCellData *cellData) {
+            cell.textLabel.font = Font_ListTitle;
+            cell.textLabel.textColor = Color_TEXT_HIGH;
+            cell.detailTextLabel.font = Font_ListTitle;
+            cell.detailTextLabel.textColor = Color_TEXT_NOMARL;
+        };
+        cellData; }),({
+            QMUIStaticTableViewCellData *cellData = [[QMUIStaticTableViewCellData alloc] init];
+            cellData.identifier = 1;
+            cellData.style = UITableViewCellStyleValue1;
+            cellData.text = @"服务器";
+            cellData.detailText = [[SJYDefaultManager shareManager].getIPAddress stringByAppendingFormat:@":%@",[SJYDefaultManager shareManager].getIPPort] ;
+            cellData.height = 60;
+            cellData.cellForRowBlock = ^(UITableView *tableView, __kindof QMUITableViewCell *cell, QMUIStaticTableViewCellData *cellData) {
+                cell.textLabel.font = Font_ListTitle;
+                cell.detailTextLabel.font = Font_ListTitle;
+                cell.textLabel.textColor = Color_TEXT_HIGH;
+                cell.detailTextLabel.textColor = Color_TEXT_NOMARL;
+            };
+            cellData; })],@[ ({
+                QMUIStaticTableViewCellData *cellData = [[QMUIStaticTableViewCellData alloc] init];
+                cellData.identifier = 2;
+                cellData.style = UITableViewCellStyleSubtitle;
+                //                cellData.image = SJYCommonImage(@"zx");
+                cellData.text = @"注销";
+                cellData.detailText = @"注销将清除缓存的用户信息";
+                cellData.height = 60;
+                cellData.didSelectTarget = self;
+                cellData.didSelectAction = @selector(selectCellAction:);
+                cellData.accessoryType = QMUIStaticTableViewCellAccessoryTypeDisclosureIndicator;
+                cellData.cellForRowBlock = ^(UITableView *tableView, __kindof QMUITableViewCell *cell, QMUIStaticTableViewCellData *cellData) {
+                    cell.textLabel.font = Font_ListTitle;
+                    cell.detailTextLabel.font = Font_ListOtherTxt;
+                    cell.textLabel.textColor = Color_TEXT_HIGH;
+                    cell.detailTextLabel.textColor = Color_TEXT_NOMARL;
+                };
+                cellData; }),({
+                    QMUIStaticTableViewCellData *cellData = [[QMUIStaticTableViewCellData alloc] init];
+                    cellData.identifier = 3;
+                    cellData.style = UITableViewCellStyleSubtitle;
+                    cellData.text = @"退出";
+                    cellData.detailText = @"退出不清除缓存";
+                    cellData.height = 60;
+                    cellData.didSelectTarget = self;
+                    cellData.didSelectAction = @selector(selectCellAction:);
+                    cellData.accessoryType = QMUIStaticTableViewCellAccessoryTypeDisclosureIndicator;
+                    cellData.cellForRowBlock = ^(UITableView *tableView, __kindof QMUITableViewCell *cell, QMUIStaticTableViewCellData *cellData) {
+                        cell.textLabel.font = Font_ListTitle;
+                        cell.detailTextLabel.font = Font_ListOtherTxt;
+                        cell.textLabel.textColor = Color_TEXT_HIGH;
+                        cell.detailTextLabel.textColor = Color_TEXT_NOMARL;
 
-#pragma mark - UITableViewDelegate
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    return 1;
+                    };
+                    cellData; }) ] ]];
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 4;
+#pragma mark - <QMUITableViewDataSource,  QMUITableViewDelegate>
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return  tableView.qmui_staticCellDataSource.cellDataSections.count;
 }
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 50;
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return tableView.qmui_staticCellDataSource.cellDataSections[section].count;
+}
+-(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
+    UIView *foot =[UIView new];
+    foot.backgroundColor = UIColorGrayLighten;
+    return foot;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    UITableViewCell *cell = nil;
-    NSString *identifier = @"cellIdentifier";
-    cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-    if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:(UITableViewCellStyleValue1) reuseIdentifier:identifier];
-    }
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    cell.selectionStyle =UITableViewCellSelectionStyleNone;
-
-     cell.imageView.backgroundColor = Color_Red;
-    NSString *rowStr = nil;
-
-    switch (indexPath.row) {
-        case 0:
-            rowStr = [NSString stringWithFormat:@"当前用户 : %@",[SJYDefaultManager shareManager].getEmployeeName];
-            cell.imageView.image = nil;
-            break;
-        case 1:
-             // 当前应用名称
-             rowStr = [NSString stringWithFormat:@"当前版本 : %@",[[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleShortVersionString"]];
-            cell.imageView.image = nil;
-            break;
-        case 2:
-            rowStr = @"注销";
-            cell.imageView.image = SJYCommonImage(@"zx");
-
-            break;
-        case 3:
-            rowStr = @"退出";
-            cell.imageView.image = SJYCommonImage(@"tc");
-            break;
-        default:
-            break;
-    }
-    cell.textLabel.text = rowStr;
-
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    QMUITableViewCell *cell = [tableView.qmui_staticCellDataSource cellForRowAtIndexPath:indexPath];
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-
-    switch (indexPath.row) {
-        case 2:
-            [self loginOut];
-            break;
-        case 3:
-            [self quitCurrentApp];
-            break;
-        default:
-            break;
+-(void)selectCellAction:(QMUIStaticTableViewCellData *)cellData{
+    QMUITableViewCell *cell = [self.tableView cellForRowAtIndexPath:cellData.indexPath];
+    NSString *string = nil;
+    if (cellData.identifier == 2) {
+        string = [cellData.detailText stringByAppendingFormat:@"，确定%@吗?",cellData.text];
+    } else {
+        string = [NSString stringWithFormat:@"确定%@吗?",cellData.text];
     }
+    [self alertMentiuonView:cellData messageStr: string];
+    [self.tableView deselectRowAtIndexPath:cellData.indexPath animated:YES];
+    ////     [[EBBannerView  bannerWithBlock:^(EBBannerViewMaker *make) {
+    ////        make.style = 10;
+    ////        make.content = @"iOS 10 style";
+    ////        make.content = @"MINE eye hath played the painter and hath stelled Thy beauty's form in table of my heart;My body is the frame wherein 'tis held,And perspective it is best painter's art.For through the painter must you see his skillTo fine where your true image pictured lies,Which in my bosom's shop is hanging still,That hath his windows glazèd with thine eyes.";
+    ////    }]show];
+}
+
+
+-(void)alertMentiuonView:(QMUIStaticTableViewCellData *)cellData messageStr:(NSString *)message{
+    QMUIModalPresentationViewController *modalViewController = [[QMUIModalPresentationViewController alloc] init];
+    QMUIDialogViewController *dialogViewController = [[QMUIDialogViewController alloc] init];
+    dialogViewController.title = cellData.text;
+
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 80)];
+    contentView.backgroundColor = UIColorWhite;
+    QMUILabel *label = [[QMUILabel alloc] init];
+    label.contentEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 10);
+    label.textAlignment = NSTextAlignmentLeft;
+    label.textColor = Color_TEXT_NOMARL;
+    label.font = Font_ListTitle;
+    label.numberOfLines = 0;
+    label.text = message;
+    [contentView addSubview:label];
+    [label makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(contentView).offset(UIEdgeInsetsMake(5, 10, 5, 10));
+    }];
+    dialogViewController.contentView = contentView;
+    [dialogViewController addCancelButtonWithText:@"取消" block:^(__kindof QMUIDialogViewController *aDialogViewController) {
+        [modalViewController hideInView:[UIApplication sharedApplication].keyWindow animated:YES completion:nil];
+    }];
+    [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
+        cellData.identifier == 2?({ [self loginOut];  }):({  [self quitCurrentApp];});
+        [modalViewController hideInView:[UIApplication sharedApplication].keyWindow animated:YES completion:nil];
+    }];
+    modalViewController.contentViewController = dialogViewController;
+    [modalViewController showInView:[UIApplication sharedApplication].keyWindow animated:YES completion:nil];
+}
+
 
 //     [[EBBannerView  bannerWithBlock:^(EBBannerViewMaker *make) {
 //        make.style = 10;
 //        make.content = @"iOS 10 style";
 //        make.content = @"MINE eye hath played the painter and hath stelled Thy beauty's form in table of my heart;My body is the frame wherein 'tis held,And perspective it is best painter's art.For through the painter must you see his skillTo fine where your true image pictured lies,Which in my bosom's shop is hanging still,That hath his windows glazèd with thine eyes.";
 //    }]show];
-    
-  }
+
 
 -(void)quitCurrentApp{
     if (![[SJYDefaultManager shareManager] isRemberPassword]) {

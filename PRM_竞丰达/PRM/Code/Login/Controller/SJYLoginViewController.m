@@ -2,14 +2,13 @@
 //  SJYLoginViewController.m
 //  PRM
 //
-//  Created by apple on 2019/1/9.
+//  Created by apple on 2019/3/4.
 //  Copyright © 2019年 apple. All rights reserved.
 //
 
 #import "SJYLoginViewController.h"
-
 #define BackView_H 44
-#define TF_Padding_Left 7  
+#define TF_Padding_Left 7
 @interface SJYLoginViewController()
 
 @property(nonatomic,strong)QMUIButton *remberPasswordBtn;
@@ -36,7 +35,7 @@
     }];
     [self.navBar.titleView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.navBar.leftButton.mas_right).offset(-SJYNUM(56)/2);
-    }]; 
+    }];
 }
 
 -(void)bindViewModel{
@@ -76,43 +75,67 @@
     _paragraph.alignment=NSTextAlignmentLeft;
     return _paragraph ;
 }
+
 - (void)buildSubviews{
     Weak_Self;
     self.view.backgroundColor = [UIColor whiteColor];
+
+    UIImageView *backImgView  = [UIImageView new];
+    backImgView.image = SJYCommonImage(@"loginBackImg");
+    backImgView.userInteractionEnabled = YES;
+    [self.view addSubview:backImgView];
+
     UIView *topView = [UIView new];
-     [self.view addSubview:topView];
+    [self.view addSubview:topView];
 
     UIImageView *imgView  = [UIImageView new];
-    imgView.image = SJYCommonImage(@"AppIcon");
+    imgView.image = SJYCommonImage(@"zxlogo");
     [topView addSubview:imgView];
 
     // 手机号码
     UIView *nameView = [[UIView alloc]init];
-    nameView.backgroundColor = Color_RGB_HEX(0xf0f0f0, 1);
+    nameView.backgroundColor = UIColorClear;
     [self.view addSubview:nameView];
+
+    UIImageView *nameImgView = [[UIImageView alloc] init];
+    nameImgView.image = SJYCommonImage(@"username");
+    [nameView addSubview:nameImgView];
 
     QMUITextField *nameTF = [[QMUITextField alloc] init];
     nameTF.font = SJYFont(16);
     nameTF.borderStyle = UITextBorderStyleNone;
     nameTF.placeholder = @"用户名";
-    nameTF.placeholderColor = Color_RGB_HEX(0xc6c6cc, 1);
+    nameTF.placeholderColor = Color_TEXT_WEAK;
     [nameView addSubview: nameTF];
     [nameTF addTarget:self action:@selector(textFieldsDidChangeText:) forControlEvents:UIControlEventEditingChanged];
     self.nameTF = nameTF;
 
+    QMUILabel *nameSepLine = [[QMUILabel alloc]init];
+    nameSepLine.backgroundColor = Color_SrprateLine;
+    [nameView addSubview: nameSepLine];
+
+
     // 密码
     UIView *passwordView = [[UIView alloc]init];
-    passwordView.backgroundColor = Color_RGB_HEX(0xf0f0f0, 1);
+    passwordView.backgroundColor = UIColorClear;
     [self.view addSubview:passwordView];
+
+    UIImageView *passImgView = [[UIImageView alloc] init];
+    passImgView.image = SJYCommonImage(@"mm");
+    [passwordView addSubview:passImgView];
 
     QMUITextField *passwordTF = [[QMUITextField alloc] init];
     passwordTF.font = SJYFont(16);
     passwordTF.borderStyle = UITextBorderStyleNone;
     passwordTF.secureTextEntry = YES;
     passwordTF.placeholder = @"密码";
-    passwordTF.placeholderColor = Color_RGB_HEX(0xc6c6cc, 1);
+    passwordTF.placeholderColor = Color_TEXT_WEAK;
     [passwordView addSubview: passwordTF];
     self.passwordTF = passwordTF;
+
+    QMUILabel *passSepLine = [[QMUILabel alloc]init];
+    passSepLine.backgroundColor = Color_SrprateLine;
+    [passwordView addSubview: passSepLine];
 
     // 登录
     QMUIFillButton *loginBtn = [[QMUIFillButton alloc] init];
@@ -125,7 +148,7 @@
     [loginBtn clickWithBlock:^{
         [weakSelf.view endEditing:YES];
         if (weakSelf.nameTF.text.length == 0 ||  weakSelf.passwordTF.text.length == 0) {
-            [QMUITips showWithText:@"登录信息不完善" inView:weakSelf.view
+            [QMUITips showWithText:@"请输入用户名或密码" inView:weakSelf.view
                     hideAfterDelay:1.3];
             return ;
         }
@@ -134,16 +157,16 @@
             [QMUITips hideAllTipsInView: weakSelf.view];
             [SJYUserManager sharedInstance].loginModel= loginInfo;
             [[SJYUserManager sharedInstance]updateLoginModel];
-            
+
             [SJYUserManager sharedInstance].sjyloginData= loginInfo.uc;
             [[SJYUserManager sharedInstance] updateLoginData];
-            
+
             [QMUITips showSucceed:@"登录成功" inView:weakSelf.view hideAfterDelay:0.6];
             if ([[SJYDefaultManager shareManager] isRemberPassword]) {
                 [[SJYDefaultManager shareManager] saveUserName:weakSelf.nameTF.text password:weakSelf.passwordTF.text];
             }
             [[SJYDefaultManager shareManager] saveEmployeeName:loginInfo.employeeName Dt_Info:loginInfo.dt EmployeeID:loginInfo.employeeID DepartmentID:loginInfo.departmentID PositionID:loginInfo.positionID];
-            
+
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 SJYMainViewController *mainVC = [[SJYMainViewController alloc] init];
                 [weakSelf.navigationController qmui_pushViewController:mainVC animated:YES completion:^{
@@ -151,21 +174,21 @@
                     [delegate gotoMainVC];
                 }];
             });
-            
+
         } failure:^(int status, NSString *info) {
             [QMUITips hideAllTipsInView: weakSelf.view];
             [QMUITips showError:info inView:weakSelf.view hideAfterDelay:1.5];
-        }]; 
+        }];
     }];
 
     // 记住密码
     QMUIButton *remeberPasswordBtn = [[QMUIButton alloc] init];
     remeberPasswordBtn.spacingBetweenImageAndTitle = 15;
     [remeberPasswordBtn setTitle:@"记住密码" forState:UIControlStateNormal];
-    [remeberPasswordBtn setTitleColor:Color_RGB_HEX(0x3d3d45, 1) forState:UIControlStateNormal];
+    [remeberPasswordBtn setTitleColor:Color_TEXT_HIGH forState:UIControlStateNormal];
     [remeberPasswordBtn setImage:SJYCommonImage(@"deselect") forState:UIControlStateNormal];
     [remeberPasswordBtn setImage:SJYCommonImage(@"select") forState:UIControlStateSelected];
-    remeberPasswordBtn.titleLabel.font = [UIFont  boldSystemFontOfSize:SJYNUM(16)];
+    remeberPasswordBtn.titleLabel.font = [UIFont  boldSystemFontOfSize:SJYNUM(14)];
     //    remeberPasswordBtn.selected = [[SJYDefaultManager shareManager]isRemberPassword];
     [self.view addSubview:remeberPasswordBtn];
     self.remberPasswordBtn = remeberPasswordBtn;
@@ -176,16 +199,29 @@
 
     }];
 
+    // 版权所有
+    QMUILabel *visionBelongLab = [[QMUILabel alloc]init];
+    visionBelongLab.textAlignment = NSTextAlignmentCenter;
+    visionBelongLab.numberOfLines = 0;
+    visionBelongLab.font = [UIFont  systemFontOfSize:SJYNUM(14)];
+    visionBelongLab.textColor = Color_TEXT_NOMARL;
+    visionBelongLab.text =  @"版权所有: 常州正选软件科技有限公司";
+    [self.view addSubview:visionBelongLab];
+
+    [backImgView makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view);
+    }];
+
     [topView makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.navBar.bottom);
         make.left.equalTo(self.view);
         make.right.equalTo(self.view);
-        make.height.equalTo(120);
+        make.height.equalTo(150);
     }];
 
     [imgView makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(topView);
-        make.centerY.equalTo(topView);
+        make.centerY.equalTo(topView).offset(15);
         make.width.equalTo(80);
         make.height.equalTo(80);
     }];
@@ -196,12 +232,25 @@
         make.height.equalTo(SJYNUM(BackView_H));
         make.width.equalTo(SJYNUM(310));
     }];
-    [nameView rounded:SJYNUM(BackView_H/2)];
+
+    [nameImgView makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(nameView.mas_centerY);
+        make.left.equalTo(nameView);
+        make.width.mas_equalTo(SJYNUM(25));
+        make.height.mas_equalTo(SJYNUM(25));
+    }];
+
     [nameTF makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(nameView);
-        make.centerX.equalTo(nameView.mas_centerX);
-        make.left.equalTo(nameView.mas_left).offset(SJYNUM(BackView_H/2-TF_Padding_Left));
+        make.left.equalTo(nameImgView.mas_right);
+        make.right.equalTo(nameView.mas_right);
         make.bottom.equalTo(nameView);
+    }];
+    [nameSepLine makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(nameView.mas_centerX);
+        make.width.equalTo(nameView);
+        make.bottom.equalTo(nameView.mas_bottom);
+        make.height.equalTo(2);
     }];
 
     [passwordView makeConstraints:^(MASConstraintMaker *make) {
@@ -210,25 +259,43 @@
         make.height.equalTo(nameView.mas_height);
         make.width.equalTo(nameView.mas_width);
     }];
-    [passwordView rounded:SJYNUM(BackView_H/2)];
+
+    [passImgView makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(passwordView.mas_centerY);
+        make.left.equalTo(passwordView);
+        make.width.mas_equalTo(SJYNUM(25));
+        make.height.mas_equalTo(SJYNUM(25));
+    }];
 
     [passwordTF makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(passwordView);
-        make.centerX.equalTo(passwordView.mas_centerX);
-        make.left.equalTo(passwordView.mas_left).offset(SJYNUM(BackView_H/2-TF_Padding_Left));
+        make.left.equalTo(passImgView.mas_right);
+        make.right.equalTo(passwordView.mas_right);
         make.bottom.equalTo(passwordView);
     }];
-
+    [passSepLine makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(passwordView.mas_centerX);
+        make.width.equalTo(passwordView);
+        make.bottom.equalTo(passwordView.mas_bottom);
+        make.height.equalTo(2);
+    }];
     [remeberPasswordBtn makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(passwordView.mas_bottom).offset(SJYNUM(20));
-        make.height.equalTo( 30);
-        make.right.equalTo(self.view).offset(-SJYNUM(44));
+        make.top.equalTo(passwordView.mas_bottom).offset(SJYNUM(10));
+        make.height.equalTo(30);
+        //        make.right.equalTo(self.view).offset(-SJYNUM(44));
+        make.left.equalTo(passwordView.mas_left);
     }];
     [loginBtn makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(remeberPasswordBtn.mas_bottom).offset(SJYNUM(20));
+        make.top.equalTo(remeberPasswordBtn.mas_bottom).offset(SJYNUM(10));
         make.centerX.equalTo(passwordView.mas_centerX);
         make.height.equalTo(BackView_H);
         make.width.equalTo(passwordView.mas_width);
+    }];
+    [visionBelongLab makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(self.view.mas_centerX);
+        make.width.equalTo(SJYNUM(310));
+        //        make.top.equalTo(self.view.mas_bottom).offset(-15);
+        make.top.equalTo(loginBtn.mas_bottom).offset(50);
     }];
 }
 
@@ -249,8 +316,9 @@
 }
 
 -(void)dealloc{
-    NSLog(@"释放");
+#ifdef DEBUG
+    printf("[⚠️] 已经释放 %s.\n", NSStringFromClass(self.class).UTF8String);
+#endif
 }
-
 
 @end

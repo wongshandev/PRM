@@ -11,10 +11,7 @@
 #import "XCSCRecordCell.h"
 #import "XCSHRecordDetialController.h"
 
-#define  ListModelSTATEArray  @[@"",@"计划",@"已提交",@"已驳回",@"财务已审",@"总经理已审",@"待付款",@"已付款",@"已入库",@"已发运",@"接收中",@"已计划"]
-#define  ListSTATEColorArray  @[Color_NavigationLightBlue,UIColorHex(#007BD3),UIColorHex(#007BD3),UIColorHex(#FF0000),UIColorHex(#FE6D4B),UIColorHex(#EF5362),UIColorHex(#F79746),UIColorHex(#3FD0AD),UIColorHex(#2BBDF3),UIColorHex(#EE85C1),UIColorHex(#AC8FEF),UIColorHex(#9FD661)]
-//#define  ListSTATEColorArray  @[[UIColor whiteColor],UIColorHex(#3FD0AD),UIColorHex(#007BD3),]
-
+#define  ListXCSHStateArray  @[@"",@"已计划",@"已申请",@"已驳回",@"已审核",@"已下单",@"已采购",@"已完成"]
 @interface SJYXCSHRecordController ()
 
 @end
@@ -23,7 +20,7 @@
 
 
 -(void)setUpNavigationBar{
-    self.navBar.backButton.hidden = NO;
+    //    self.navBar.backButton.hidden = NO;
     self.navBar.titleLabel.text = self.engineerModel.Name;
 }
 
@@ -44,9 +41,12 @@
     self.tableView.refreshBlock = ^{
         [weakSelf.tableView.mj_header beginRefreshing];
     };
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshXCSHRecordListView) name:@"refreshXCSHRecordListView" object:nil];
+
 }
 
 -(void)requestData_RecordList{
+//    value == 1 ? "已计划" : value == 2 ? "已申请" : value == 3 ? "已驳回" : value == 4 ? "已审核" : value == 5 ? "已下单" : value == 6 ? "已采购" : "已完成"
     [SJYRequestTool  requestXCSHRecordList:self.engineerModel.Id success:^(id responder) {
         NSArray *rowsArr = [responder objectForKey:@"rows"];
         [self.dataArray removeAllObjects];
@@ -55,8 +55,11 @@
             XCSHRecordModel *model = [XCSHRecordModel  modelWithDictionary:dic];
             NSString *titlStr =  model.SiteState.integerValue == 1? [model.SupplierName stringByAppendingFormat:@"  (%@)  ",  @"采购接收"]: [model.Approval stringByAppendingFormat:@"  (%@)  ",  @"总部发货"];
             model.titleName = titlStr;
-            BOOL isHav = [ListModelSTATEArray containsObject:model.StateName];
-            model.stateColor = isHav?[ListSTATEColorArray objectAtIndex:[ListModelSTATEArray indexOfObject:model.StateName]]:ListSTATEColorArray.firstObject;
+
+            BOOL isHav = [StateCodeStringArray containsObject:model.StateName];
+            StateCode idx = [StateCodeStringArray indexOfObject:model.StateName];
+            model.stateColor = isHav ?  [StateCodeColorHexArray objectAtIndex:idx] : StateCodeColorHexArray.firstObject;
+
             [self.dataArray addObject:model];
         }
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -75,7 +78,7 @@
     [self.tableView.mj_header endRefreshing];
     if (self.dataArray.count == 0) {
         self.tableView.customImg = !havError ? [UIImage imageNamed:@"empty"]:SJYCommonImage(@"daoda");
-        self.tableView.customMsg = !havError? @"没有数据了,休息一下吧":@"网络错误,请检查网络后重试";
+        self.tableView.customMsg = !havError? @"没有数据了,休息下吧":@"网络错误,请检查网络后重试";
         self.tableView.showNoData = YES;
         self.tableView.isShowBtn =  havError;
     }
@@ -90,7 +93,7 @@
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     XCSCRecordCell *cell = [XCSCRecordCell cellWithTableView:tableView];
-    cell .indexPath = indexPath;
+    cell.indexPath = indexPath;
     cell.data = self.dataArray[indexPath.row];
     [cell loadContent];
     return cell;
@@ -110,7 +113,9 @@
 }
 
 -(void)dealloc{
-    NSLog(@"释放");
+#ifdef DEBUG
+    printf("[⚠️] 已经释放 %s.\n", NSStringFromClass(self.class).UTF8String);
+#endif
     [[NSNotificationCenter defaultCenter]removeObserver:self name:@"refreshXCSHRecordListView" object:nil];
 }
 -(void)refreshXCSHRecordListView{

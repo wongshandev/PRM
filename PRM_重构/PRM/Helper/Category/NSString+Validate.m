@@ -46,6 +46,13 @@
     }
     return NO;
 }
++ (BOOL)isAvailableStr:(NSString *)str WithFormat:(NSString *)format{
+    NSPredicate *pred = [NSPredicate predicateWithFormat:@"SELF MATCHES %@",format];
+    if ([pred evaluateWithObject:str]) {
+        return YES;
+    }
+    return NO;
+}
 
 +(NSString *)matchType:(NSString *)fileName{
     // 后缀获取

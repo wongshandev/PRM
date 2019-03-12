@@ -47,6 +47,10 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSString *)getDepartmentID;
 -(NSString *)getPositionID;
 
+#pragma mark -----------存取项目开支状态信息
+-(void)saveXMKZSpendTypeArray:(NSArray *)array;
+-(NSArray *)getXMKZSpendTypeArray;
+ 
 
 @end
 

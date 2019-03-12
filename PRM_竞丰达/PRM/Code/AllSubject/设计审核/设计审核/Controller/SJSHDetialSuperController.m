@@ -23,7 +23,7 @@
 @implementation SJSHDetialSuperController 
 
 -(void)setUpNavigationBar{
-    self.navBar.backButton.hidden = NO;
+    //    self.navBar.backButton.hidden = NO;
     self.navBar.titleLabel.text = self.title;
     [self createSaveagreeBtn];
 }
@@ -134,7 +134,9 @@
 }
 
 -(void)dealloc{
-    NSLog(@"释放");
+#ifdef DEBUG
+    printf("[⚠️] 已经释放 %s.\n", NSStringFromClass(self.class).UTF8String);
+#endif
 }
 
 
@@ -208,11 +210,13 @@
     QMUITextView *textView = [[QMUITextView alloc] init];
     [contentView addSubview:textView];
     textView.shouldResponseToProgrammaticallyTextChanges = YES;
+    textView.shouldCountingNonASCIICharacterAsTwo = YES;
     textView.font = Font_ListTitle;
     textView.delegate = self;
-    textView.maximumTextLength = 32;
+    textView.maximumTextLength = 64;
     textView.maximumHeight = 90;
     textView.placeholder = @"请输入(限32字)";
+
     [typeBtn clickWithBlock:^{
         [textView endEditing:YES];
         [BRStringPickerView showStringPickerWithTitle:@"驳回至" dataSource:@[@"合同",@"深化设计"] defaultSelValue:typeBtn.currentTitle isAutoSelect:NO themeColor:Color_NavigationLightBlue resultBlock:^(id selectValue) {
@@ -248,8 +252,9 @@
     [dialogViewController addCancelButtonWithText:@"取消" block:nil];
     [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
         [textView endEditing:YES];
-        if (textView.text.length == 0) {
-            [QMUITips showInfo:@"请输入驳回原因" inView:[UIApplication sharedApplication].keyWindow hideAfterDelay:1.2];
+        NSString *content =  [textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]; 
+        if (content.length == 0) {
+            [QMUITips showInfo:@"请输入驳回理由" inView:[UIApplication sharedApplication].keyWindow hideAfterDelay:1.2];
             return ;
         }
         [SJYRequestTool requestSJSHWithAPI:API_SJSH_SH parameters:@{
@@ -257,7 +262,7 @@
                                                                     @"DeepenDesignID":self.sjshListModel.Id,
                                                                     @"EmployeeID":[SJYUserManager sharedInstance].sjyloginData.Id,
                                                                     @"State":[typeBtn.currentTitle isEqualToString:@"合同"]?@"0":@"3",
-                                                                    @"RejectReason":textView.text//(驳回时必要回传参数)
+                                                                    @"RejectReason":content//(驳回时必要回传参数)
                                                                     } success:^(id responder) {
                                                                         [aDialogViewController hide];
                                                                         [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
@@ -278,5 +283,10 @@
     [dialogViewController show];
     //    [textView becomeFirstResponder];
 }
-
+//-(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
+//    if (([text isEqualToString:@"\n"] || [text isEqualToString:@" "]) && textView.text.length == 0) {
+//        return NO;
+//    }
+//    return YES;
+//}
 @end

@@ -68,7 +68,8 @@
            NSMutableArray *footSectionArr = [NSMutableArray new];
            for (NSDictionary *dic in footerArr) {
                BJQDListModel *model = [BJQDListModel  modelWithDictionary:dic];
-               model.QuotedPriceStr = [model.Name isEqualToString:@"甲供合计"]?@"": [NSString numberMoneyFormattor:model.QuotedPrice];
+               model.QuotedPriceStr = [NSString numberMoneyFormattor:model.QuotedPrice];
+                 // [model.Name isEqualToString:@"甲供合计"]?@"": [NSString numberMoneyFormattor:model.QuotedPrice];
                [footSectionArr addObject:model];
            }
            [self.dataArray addObject:footSectionArr];
@@ -90,7 +91,7 @@
     [self.tableView.mj_header endRefreshing];
     if (self.dataArray.count == 0) {
         self.tableView.customImg = !havError ? [UIImage imageNamed:@"empty"]:SJYCommonImage(@"daoda");
-        self.tableView.customMsg = !havError? @"没有数据了,休息一下吧":@"网络错误,请检查网络后重试";
+        self.tableView.customMsg = !havError? @"没有数据了,休息下吧":@"网络错误,请检查网络后重试";
         self.tableView.showNoData = YES;
         self.tableView.isShowBtn =  havError;
     }
@@ -119,12 +120,12 @@
     if (indexPath.section == 0) {
         BJQDListCell *cell = [BJQDListCell cellWithTableView:tableView];
         cell.indexPath = indexPath;
-        cell.data = self.dataArray[indexPath.section][indexPath.row];
+            cell.data = self.dataArray[indexPath.section][indexPath.row];
         [cell loadContent];
         return cell;
     }else{
         BJQDListFootCell *cell = [BJQDListFootCell cellWithTableView:tableView];
-        cell .indexPath = indexPath;
+        cell.indexPath = indexPath;
         cell.data = self.dataArray[indexPath.section][indexPath.row];
         [cell loadContent];
         return cell;

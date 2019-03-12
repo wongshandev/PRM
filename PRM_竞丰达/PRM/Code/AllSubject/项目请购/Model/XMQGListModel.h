@@ -21,6 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *MarketDate;
 
 @property (nonatomic, copy) NSString *titleStr;
+@property (nonatomic, copy) NSString *stateStr;
+@property (nonatomic, strong) UIColor *stateColor;
 
 @end
 

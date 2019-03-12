@@ -13,6 +13,7 @@
 @interface MainViewCell ( )
 @property (strong, nonatomic)   UIImageView *mainImageView;
 @property (strong, nonatomic)   QMUILabel *mainTitleLabe;
+@property (nonatomic,strong)NSIndexPath *indexPath;
 
 @end
 @implementation MainViewCell
@@ -31,21 +32,21 @@
 
 -(instancetype)init{
     if (self = [super init]) {
-        [self buildSubViews];
-        [self layoutSubviews];
+        [self setupCell];
+        [self buildSubview];
     }
     return self;
 }
 
 -(instancetype)initWithFrame:(CGRect)frame{
     if (self = [super initWithFrame:frame]) {
-        [self buildSubViews];
-        [self layoutSubviews];
+        [self setupCell];
+        [self buildSubview];
     }
     return self;
 }
 
--(void)buildSubViews{
+-(void)setupCell{
     self.mainImageView = [[UIImageView alloc] init];
      self.mainImageView.userInteractionEnabled = YES;
     [self.contentView addSubview:self.mainImageView];
@@ -56,8 +57,7 @@
 }
 
 
--(void)layoutSubviews{
-    [super layoutSubviews];
+-(void)buildSubview{
     [self.mainImageView  mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.contentView.mas_top).mas_offset(SJYNUM(5));
         make.centerX.mas_equalTo(self.contentView.mas_centerX);
@@ -74,22 +74,29 @@
     }];
     [self.contentView rounded:3];
 }
--(void)setIndexPath:(NSIndexPath *)indexPath{
-    _indexPath = indexPath;
-}
--(void)showMainCellDataWithModel:(MainModel *)model{
+
+-(void)setModel:(MainModel *)model{
+    _model = model;
+//    MainModel *model = self.data;
     NSString *imageStr = [model.iconURL stringByReplacingOccurrencesOfString:@"../.." withString:API_ImageUrl];
     NSURL *icomUrl = [NSURL URLWithString:imageStr];
-    [self.mainImageView sd_setImageWithURL:icomUrl placeholderImage:[UIImage imageNamed:@"faliureImg"] options:SDWebImageRefreshCached];
-    self.mainTitleLabe.text = [NSString stringWithFormat:@"%@",model.text];
-}
+    //    [self.mainImageView sd_setImageWithURL:icomUrl placeholderImage: SJYCommonImage(@"faliureImg") options:SDWebImageRefreshCached | SDWebImageRetryFailed];
+    [self.mainImageView sd_setImageWithURL:icomUrl placeholderImage:SJYCommonImage(@"faliureImg") options:SDWebImageRetryFailed | SDWebImageRefreshCached completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.mainImageView.image = image;
+        });
+    }];
 
--(QMUILabel*)createLabelWithTextColor:(UIColor *)textColor Font:(UIFont *)font numberOfLines:(NSInteger)number {
+    
+    self.mainTitleLabe.text = model.text;
+}
+ 
+-(QMUILabel *)createLabelWithTextColor:(UIColor *)textColor Font:(UIFont *)font numberOfLines:(NSInteger)number {
     QMUILabel *label = [[QMUILabel alloc] init];
+    label.lineBreakMode = NSLineBreakByCharWrapping;
     label.font = font;
     label.textColor = textColor;
     label.numberOfLines = number;
     return label;
 }
-
 @end

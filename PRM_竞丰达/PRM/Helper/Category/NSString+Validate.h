@@ -22,6 +22,8 @@
 /* 纯数字*/
 + (BOOL)isPureNumber:(NSString *)str;
 
+/* 正则校验*/
++ (BOOL)isAvailableStr:(NSString *)str WithFormat:(NSString *)format;
 
 +(NSString *)matchType:(NSString *)fileName;
 

@@ -84,40 +84,36 @@
 }
 //市场
 -(void)requestPerson_SCB0{
-    [QMUITips showLoadingInView:self.view];
+    [QMUITips showLoading:@"" inView:self.view];
     NSDictionary *LeaderParaDic = @{@"DtType":@"1"};
     [SJYRequestTool requestRWFPPersonData:LeaderParaDic success:^(id responder) {
         for (NSDictionary *dic in responder) {
             DistributionPerson *person = [DistributionPerson modelWithDictionary:dic];
             [self.mainLeaderArray addObject:person];
         }
-        [QMUITips hideAllTipsInView:self.view];
-        [self requestPerson_SJB1];
+         [self requestPerson_SJB1];
     } failure:^(int status, NSString *info) {
-        [QMUITips hideAllTipsInView:self.view];
+        [QMUITips hideAllTips];
         [QMUITips showError:info inView:self.view hideAfterDelay:1.2];
     }];
 }
 //设计
 -(void)requestPerson_SJB1{
-    [QMUITips showLoadingInView:self.view];
-    NSDictionary *desiginParaDic = @{@"DtType":@"2"};
+     NSDictionary *desiginParaDic = @{@"DtType":@"2"};
     [SJYRequestTool requestRWFPPersonData:desiginParaDic success:^(id responder) {
         for (NSDictionary *dic in responder) {
             DistributionPerson *person = [DistributionPerson modelWithDictionary:dic];
             [self.designerArray addObject:person];
         }
-        [QMUITips hideAllTipsInView:self.view];
-        [self requestPerson_GCB2];
+         [self requestPerson_GCB2];
     } failure:^(int status, NSString *info) {
-        [QMUITips hideAllTipsInView:self.view];
+        [QMUITips hideAllTips];
         [QMUITips showError:info inView:self.view hideAfterDelay:1.2];
     }];
 }
 // 工程
 -(void)requestPerson_GCB2{
-    [QMUITips showLoadingInView:self.view];
-    NSDictionary *PMParaDic = @{@"DtType":@"3",@"Dt":@"1"};
+     NSDictionary *PMParaDic = @{@"DtType":@"3",@"Dt":@"1"};
     [SJYRequestTool requestRWFPPersonData:PMParaDic success:^(id responder) {
         for (NSDictionary *dic in responder) {
             DistributionPerson *person = [DistributionPerson modelWithDictionary:dic];
@@ -125,10 +121,10 @@
         }
         dispatch_async(dispatch_get_main_queue(), ^{
             [self  setTableViewStaticData];
-            [QMUITips hideAllTipsInView:self.view];
+            [QMUITips hideAllTips];
         });
     } failure:^(int status, NSString *info) {
-        [QMUITips hideAllTipsInView:self.view];
+        [QMUITips hideAllTips];
         [QMUITips showError:info inView:self.view hideAfterDelay:1.2];
     }];
 }

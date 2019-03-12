@@ -35,6 +35,7 @@
         XMBGDetailModel *model = [[XMBGDetailModel alloc]init];
         model.isNewAdd = YES;
         model.Id = @"0";
+        model.ChangeType = @"1";
 
         newAddVC.title =@"新增变更";
         newAddVC.projectBranchID = self.listModel.Id;
@@ -291,7 +292,7 @@
  }];
 
  if (model.isNewAdd) {
- [dialogViewController addSubmitButtonWithText:@"提交" block:^(QMUIDialogViewController *aDialogViewController) {
+ [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
  [modalViewController hideInView:self.view animated:YES completion:^(BOOL finished) {
  [weakSelf.tableView.mj_header beginRefreshing];
  }];

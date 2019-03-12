@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "DXNavBarView.h"
 #import "QMUICommonViewController.h"
-
 @interface DXSuperViewController : QMUICommonViewController
 @property (nonatomic,strong) DXNavBarView *navBar;
  

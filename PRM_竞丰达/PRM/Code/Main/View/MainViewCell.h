@@ -9,11 +9,8 @@
 #import <UIKit/UIKit.h>
 
 @interface MainViewCell : UICollectionViewCell
-
-@property (nonatomic,strong)NSIndexPath *indexPath;
 + (instancetype)cellWithCollectionView:(UICollectionView *)collectionView atIndexPath:(NSIndexPath *)index;
--(void)showMainCellDataWithModel:(MainModel *)model;
-
-@end
+ @property(nonatomic,strong)MainModel *model;
+  @end
 
 

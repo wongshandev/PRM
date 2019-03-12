@@ -111,6 +111,15 @@ static SJYDefaultManager *sharedUser;
 }
 
 
+-(void)saveXMKZSpendTypeArray:(NSArray *)array{
+    NSData *arrayData = [NSKeyedArchiver archivedDataWithRootObject:array];
+    [[NSUserDefaults standardUserDefaults] setObject:arrayData forKey:@"spendType"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+-(NSArray *)getXMKZSpendTypeArray{
+    NSData *arrayData = [[NSUserDefaults standardUserDefaults]  objectForKey:@"spendType"];
+    return  [NSKeyedUnarchiver unarchiveObjectWithData:arrayData];
+}
 
 
 

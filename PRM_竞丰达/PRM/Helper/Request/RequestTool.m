@@ -278,5 +278,96 @@
 +(void)requestCGSHSubmitWithParameters:(NSDictionary *)paradic  success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
     [HttpClient post:API_CGSHSubmitList parameters:paradic success:success failure:failure];
 }
+#pragma mark ============== 入库评审
++(void)requestRKPSListWithSearchStateID:(NSInteger)searchStateID page:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
+
+    NSDictionary *params = @{
+                            @"rows":@"20",
+                             @"page":@(page),
+                             @"SearchStateID":@(searchStateID),
+                             @"EmployeeID":KEmployID
+                             };
+    NSLog(@"%@",API_RKPSList);
+    NSLog(@"%@",params);
+    [HttpClient post:API_RKPSList parameters:params success:success failure:failure];
+}
++(void)requestRKPSApprovelSubmitWithParaDic:(NSDictionary *)paradic success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
+    NSLog(@"%@",API_RKPSSubmit);
+    NSLog(@"%@",paradic);
+    [HttpClient post:API_RKPSSubmit parameters:paradic success:success failure:failure];
+
+}
+
+#pragma mark ============== 项目开支
+//SpendingTypeID开支类型：调用网站根目录下/Scripts/Json/SpendingType.json数据
++(void)requestXMKZSpendingTypeSuccess:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
+    [HttpClient get:API_XMKZSpendingType parameters:@{} success:success failure:failure];
+}
++(void)requestXMKZListWithPage:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
+    NSDictionary *params = @{
+                             @"rows":@"20",
+                             @"page":@(page),
+                             @"EmployeeID":KEmployID,
+                             @"PositionID":KPositionID
+                             };
+    NSLog(@"%@",API_XMKZList);
+    NSLog(@"%@",params);
+    [HttpClient post:API_XMKZList parameters:params success:success failure:failure];
+}
++(void)requestXMKZDetialListWithProjectBranchID:(NSString *)projectBranchID Page:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
+    NSDictionary *params = @{
+                             @"rows":@"20",
+                             @"page":@(page),
+                            @"ProjectBranchID":projectBranchID,
+                             @"EmployeeID":KEmployID
+                             };
+    NSLog(@"%@",API_XMKZSecondList);
+    NSLog(@"%@",params);
+    [HttpClient post:API_XMKZSecondList parameters:params success:success failure:failure];
+}
+//+(void)requestXMKZDetialSaveWithParaDic:(NSDictionary *)paradic success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
+//    [HttpClient post:API_XMKZDetialAddSave parameters:paradic success:success failure:failure];
+//}
++(void)requestXMKZDetialSaveWithParaDic:(NSDictionary *)paradic imageArray:(NSArray *)imgArray fileName:(NSString *)fileName progerss:(void (^)(id))progress  success:(void (^) (NSURLSessionDataTask *dataTask,id responseObjcet))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
+    [HttpClient upLoadMoreImageWithURLString:API_XMKZDetialAddSave parameters:paradic imageArray:imgArray fileName:fileName progerss:progress success:success failure:failure];
+}
+
++(void)requestXMKZDetialSubmitWithParaDic:(NSDictionary *)paradic success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
+    [HttpClient post:API_XMKZDetialSubmit parameters:paradic success:success failure:failure];
+}
++(void)requestXMKZDetialDeleteWithParaDic:(NSDictionary *)paradic success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
+    [HttpClient post:API_XMKZDetialDelete parameters:paradic success:success failure:failure];
+}
+#pragma mark ==============  开支审核
++(void)requestKZSHListWithSearchStateID:(NSInteger)searchStateID SearchSpendTypeID:(NSString *)searchSpendTypeID Page:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
+    NSDictionary *params = @{
+                             @"rows":@"20",
+                             @"page":@(page),
+                             @"AEmp":[[SJYUserManager sharedInstance].sjyloginData modelToJSONString],
+                             @"SearchSpendingTypeID":searchSpendTypeID,
+                             @"SearchStateID":@(searchStateID)
+                             };
+    NSLog(@"%@",API_KZSHList);
+    NSLog(@"%@",params);
+    [HttpClient post:API_KZSHList parameters:params success:success failure:failure];
+}
+//开支审核 与项目开支提交接口相同仅参数不同
+//+(void)requestXMKZDetialSubmitWithParaDic:(NSDictionary *)paradic success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure;
+
+#pragma mark ==============  开支付款
++(void)requestKZFKListWithSearchStateID:(NSInteger)searchStateID  SearchSpendTypeID:(NSString *)searchSpendTypeID  Page:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
+    NSDictionary *params = @{
+                             @"rows":@"20",
+                             @"page":@(page),
+                             @"AEmp":[[SJYUserManager sharedInstance].sjyloginData modelToJSONString],
+                             @"SearchSpendingTypeID":searchSpendTypeID,
+                             @"SearchStateID":@(searchStateID)
+                             };
+    NSLog(@"%@",API_KZFKList);
+    NSLog(@"%@",params);
+    [HttpClient post:API_KZFKList parameters:params success:success failure:failure];
+}
+//开支付款 与项目开支提交接口相同仅参数不同
+//+(void)requestXMKZDetialSubmitWithParaDic:(NSDictionary *)paradic success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure;
 
 @end

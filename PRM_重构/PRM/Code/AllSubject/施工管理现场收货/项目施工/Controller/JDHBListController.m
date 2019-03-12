@@ -9,15 +9,23 @@
 #import "JDHBListController.h"
 #import "JDHBListCell.h"
 #import "JDHBListModel.h"
+#import "NumTFBZTVAlertView.h"
 
-@interface JDHBListController()
+@interface JDHBListController()<QMUITextViewDelegate,QMUITextFieldDelegate>
 @property(nonatomic,strong)NSMutableArray *updateArray;
 @property(nonatomic,strong)QMUIFillButton *updateBtn;
+@property(nonatomic,strong)NumTFBZTVAlertView *alertView;
+
 @end
 
 
 @implementation JDHBListController
-
+-(NSMutableArray *)updateArray{
+    if (!_updateArray) {
+        _updateArray= [NSMutableArray new];
+    }
+    return _updateArray;
+}
 -(void)setUpNavigationBar{
     self.navBar.hidden = YES;
 }
@@ -96,12 +104,11 @@
         [QMUITips showInfo:@"无数据需要提交" inView:self.view hideAfterDelay:1.2];
         return ;
     }
-    //    NSString *jsonStr = [self.updateArray modelToJSONString];
-    
-    NSError *jsonError;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self.updateArray options:NSJSONWritingPrettyPrinted error:&jsonError];
-    NSString *jsonStr = [[[[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding] stringByReplacingOccurrencesOfString:@"\n" withString:@""] stringByReplacingOccurrencesOfString:@" " withString:@""] stringByReplacingOccurrencesOfString:@"\\" withString:@""];
-    
+//    NSError *jsonError;
+//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self.updateArray options:NSJSONWritingPrettyPrinted error:&jsonError];
+//    NSString *jsonStr = [[[[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding] stringByReplacingOccurrencesOfString:@"\n" withString:@""] stringByReplacingOccurrencesOfString:@" " withString:@""] stringByReplacingOccurrencesOfString:@"\\" withString:@""];
+
+    NSString *jsonStr = [self.updateArray modelToJSONString];
     [SJYRequestTool requestJDHBUpdateWithEmployeeID:[SJYUserManager sharedInstance].sjyloginData.Id updated:jsonStr success:^(id responder) {
         [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
         if ([[responder valueForKey:@"success"] boolValue]== YES) {
@@ -131,7 +138,7 @@
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     JDHBListCell *cell = [JDHBListCell cellWithTableView:tableView];
-    cell .indexPath = indexPath;
+    cell.indexPath = indexPath;
     cell.data = self.dataArray[indexPath.row];
     [cell loadContent];
     return cell;
@@ -141,52 +148,89 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     JDHBListModel *model = self.dataArray[indexPath.row];
     JDHBListCell * cell = [tableView cellForRowAtIndexPath:indexPath];
-    [self clickProgressReportCell:cell alertViewWithModel:model];
+    [self click_ProgressReportCell:cell alertViewWithModel:model];
+    //    [self clickProgressReportCell:cell alertViewWithModel:model];
 }
--(void)clickProgressReportCell:(JDHBListCell *)cell alertViewWithModel:(JDHBListModel *)model{
+#pragma mark ---------------- QMUIDialogViewController 处理
+-(void)click_ProgressReportCell:(JDHBListCell *)cell alertViewWithModel:(JDHBListModel *)model{
     if (model.CompletionRate.integerValue >=100) {
         return;
     }
-    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:model.Name message:[NSString stringWithFormat:@"进度及备注信息设置, 输入的进度范围在%@ ~ 100 之间",model.CompletionRate] preferredStyle:UIAlertControllerStyleAlert];
-    //进度输入框
-    [alertVC addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        textField.placeholder =@"请输入进度";
-        textField.keyboardType = UIKeyboardTypeNumberPad;
-        //        textField.text = model.canChangeRate;
-        textField.text = model.canChangeRate.integerValue == 0 ?nil : model.canChangeRate;
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertTextFieldDidChange:) name:UITextFieldTextDidChangeNotification object:textField];
+    //    self.minNumThis = model.CompletionRate;
 
+    //创建弹窗 对话框
+    //    QMUIModalPresentationViewController *modalViewController = [[QMUIModalPresentationViewController alloc] init];
+    QMUIDialogViewController *dialogViewController = [[QMUIDialogViewController alloc] init];
+    dialogViewController.title = model.Name;
+    dialogViewController.headerViewHeight = 40;
+    dialogViewController.headerSeparatorColor = UIColorWhite;
+    dialogViewController.headerViewBackgroundColor = UIColorWhite;
+
+    //对话框的view 即 自定义内容页
+    self.alertView = [[NumTFBZTVAlertView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_W -20 *2, 180)];
+    self.alertView.backgroundColor = UIColorWhite;
+
+    self.alertView.numMentionLab.text = [NSString stringWithFormat:@"可输入范围: %@ ~ 100",model.CompletionRate];
+    //TextField 配置
+    self.alertView.numTF.delegate = self;
+    self.alertView.numTF.placeholder =@"请输入进度";
+    self.alertView.numTF.text = model.canChangeRate.integerValue == 0 ?@"": model.canChangeRate;
+
+    [self.alertView.numTF addTarget:self action:@selector(alert_TextFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
+    //textView 配置
+    self.alertView.BZTV.delegate = self;
+    self.alertView.BZTV.text = model.canChangeRemark;
+
+    //内容页子控件  布局处理
+    [self.alertView.numMentionLab makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.alertView.mas_top).mas_offset(NumTFPading);
+        make.left.mas_equalTo(self.alertView.mas_left).mas_offset(NumTFMargin);
+        make.right.mas_equalTo(self.alertView.mas_right).mas_offset(-NumTFMargin);
+        make.height.mas_equalTo(MentionHeight);
     }];
-    //备注信息输入框
-    [alertVC addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        textField.placeholder =@"请输入备注信息";
-        textField.text = model.canChangeRemark;
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertTextFieldDidChange:) name:UITextFieldTextDidChangeNotification object:textField];
+    [self.alertView.numTF makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.alertView.numMentionLab.mas_bottom).mas_offset(NumTFPading);
+        make.left.mas_equalTo(self.alertView.mas_left).mas_offset(NumTFMargin);
+        make.right.mas_equalTo(self.alertView.mas_right).mas_offset(-NumTFMargin);
+        make.height.mas_equalTo(NumTFHeight);
     }];
-    [alertVC.textFields[0] makeConstraints:^(MASConstraintMaker *make) {
-        make.height.equalTo(35);
+    [self.alertView.sepLine makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.alertView.numTF.mas_bottom);
+        make.left.mas_equalTo(self.alertView.numTF.mas_left);
+        make.right.mas_equalTo(self.alertView.numTF.mas_right);
+        make.height.mas_equalTo(2);
     }];
-    [alertVC.textFields[1] makeConstraints:^(MASConstraintMaker *make) {
-        make.height.equalTo(35);
+    [self.alertView.bzMentionLab makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.alertView.sepLine.mas_bottom).offset(NumTFPading);
+        make.left.mas_equalTo(self.alertView.numTF.mas_left);
+        make.right.mas_equalTo(self.alertView.numTF.mas_right);
+        make.height.mas_equalTo(MentionHeight);
     }];
-    for (UITextField *textField in alertVC.textFields) {
-        textField.font= Font_ListTitle;
-    }
-    //确定按钮
-    UIAlertAction *confirmAction =  [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];
+    [self.alertView.BZTV makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.alertView.bzMentionLab.mas_bottom).offset(NumTFPading);
+        make.left.mas_equalTo(self.alertView.numTF.mas_left);
+        make.right.mas_equalTo(self.alertView.numTF.mas_right);
+        make.bottom.mas_equalTo(self.alertView.mas_bottom).offset(-NumTFPading);
+    }];
+
+    //    Weak_Self;
+    dialogViewController.contentView = self.alertView;
+
+    [dialogViewController addCancelButtonWithText:@"取消" block:^(__kindof QMUIDialogViewController *aDialogViewController) {
+    }];
+    [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
+        [self.alertView.BZTV endEditing:YES];
         //  cell 界面 数据 的调整
-        if ([alertVC.textFields[0].text integerValue] > 100 ) {
+        if ([self.alertView.numTF.text integerValue] > 100 ) {
             model.canChangeRate = @"100";
             [QMUITips showInfo:@"超出默认范围上限" inView:self.view hideAfterDelay:1.2];
-        }else if([alertVC.textFields[0].text integerValue] < model.CompletionRate.integerValue){
+        }else if([self.alertView.numTF.text integerValue] < model.CompletionRate.integerValue){
             model.canChangeRate = model.CompletionRate;
             [QMUITips showInfo:@"超出默认范围下限" inView:self.view hideAfterDelay:1.2];
         }else{
-            model.canChangeRate = alertVC.textFields[0].text;
+            model.canChangeRate = self.alertView.numTF.text.length==0?model.CompletionRate:self.alertView.numTF.text;
         }
-        model.canChangeRemark = alertVC.textFields.lastObject.text;
-        
+        model.canChangeRemark = self.alertView.BZTV.text;
         if (![model.canChangeRate isEqualToString:model.CompletionRate] || ![model.Remark isEqualToString:model.canChangeRemark]) {
             [cell loadContent];
             //数据处理 添加进入数组
@@ -207,40 +251,151 @@
             }
             NSLog(@"%@", self.updateArray);
         }
+        [aDialogViewController hide];
     }];
-    //取消按钮
-    [alertVC addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];
-    }]];
-    confirmAction.enabled = NO;
-    [alertVC addAction:confirmAction];
-    [self presentViewController:alertVC animated:YES completion:nil];
+    dialogViewController.submitButton.enabled = (self.alertView.numTF.text.length || self.alertView.BZTV.text.length);
+    [dialogViewController show];
+}
+-(void)textFieldDidBeginEditing:(UITextField *)textField{
+    self.alertView.sepLine.backgroundColor = Color_NavigationLightBlue;
+}
+-(void)textFieldDidEndEditing:(UITextField *)textField{
+    self.alertView.sepLine.backgroundColor = Color_SrprateLine;
+}
+-(void)textViewDidEndEditing:(UITextView *)textView{
+    //结束编辑时移除首尾的空格和换行
+    textView.text = [textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+}
+-(void)textViewDidChange:(QMUITextView *)textView{
+    QMUIDialogViewController *adialogVC = (QMUIDialogViewController *)self.alertView.viewController;
+    QMUIButton *okAction = adialogVC.submitButton;
+    okAction.enabled = self.alertView.numTF.text.length || self.alertView.BZTV.text.length;
+}
+- (void)alert_TextFieldDidChange:(QMUITextField *)textField{
+    QMUIDialogViewController *adialogVC = (QMUIDialogViewController *)self.alertView.viewController;
+    QMUIButton *okAction = adialogVC.submitButton;
+    //    if([textField.text hasPrefix:@"00"] || [textField.text hasPrefix:@"0"]){
+    //        textField.text = @"0";
+    //    }
+    //    if (textField.text.integerValue >= 100) {
+    //        if ([textField.text hasPrefix:@"1"] && textField.text.length >= @(100).stringValue.length) {
+    //            textField.text = @"100";
+    //        }else{
+    //            textField.text = [textField.text substringToIndex:@(100).stringValue.length-1];
+    //        }
+    //    }
+    okAction.enabled = textField.text.length || self.alertView.BZTV.text.length;
 }
 
-- (void)alertTextFieldDidChange:(NSNotification *)notification{
-    UITextField *TF = (UITextField *)notification.object;
-
-    UIAlertController *alertController = (UIAlertController *)self.presentedViewController;
-    if (alertController) {
-        UITextField *textField = alertController.textFields.firstObject;
-        UITextField *bzTF = alertController.textFields.lastObject;
-
-        UIAlertAction *okAction = alertController.actions.lastObject;
-        if (TF == textField) {
-            if([textField.text hasPrefix:@"00"] || [textField.text hasPrefix:@"0"]){
-                textField.text = @"0";
-            }
-            if (textField.text.integerValue >= 100) {
-                if ([textField.text hasPrefix:@"1"] && textField.text.length >= @(100).stringValue.length) {
-                    textField.text = @"100";
-                }else{
-                    textField.text = [textField.text substringToIndex:@(100).stringValue.length-1];
-                }
-            }
-        }
-        okAction.enabled = textField.text.length || bzTF.text.length;
+-(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+    NSString *str =[textField.text stringByAppendingString:string];
+    if (![NSString isAvailableStr:str WithFormat:@"^(0|[1-9][0-9]*)$"]) {
+        return NO;
     }
+    if (str.integerValue > 100) {// ||  (str.integerValue < self.minNumThis.integerValue)
+        return NO;
+    }
+    return YES;
 }
+#pragma mark ---------------- 系统 UIAlertController处理
+//-(void)clickProgressReportCell:(JDHBListCell *)cell alertViewWithModel:(JDHBListModel *)model{
+//    if (model.CompletionRate.integerValue >=100) {
+//        return;
+//    }
+//    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:model.Name message:[NSString stringWithFormat:@"进度及备注信息设置, 输入的进度范围在%@ ~ 100 之间",model.CompletionRate] preferredStyle:UIAlertControllerStyleAlert];
+//    //进度输入框
+//    [alertVC addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+//        textField.placeholder =@"请输入进度";
+//        textField.keyboardType = UIKeyboardTypeNumberPad;
+//        //        textField.text = model.canChangeRate;
+//        textField.text = model.canChangeRate.integerValue == 0 ?nil : model.canChangeRate;
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertTextFieldDidChange:) name:UITextFieldTextDidChangeNotification object:textField];
+//
+//    }];
+//    //备注信息输入框
+//    [alertVC addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+//        textField.placeholder =@"请输入备注信息";
+//        textField.text = model.canChangeRemark;
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertTextFieldDidChange:) name:UITextFieldTextDidChangeNotification object:textField];
+//    }];
+//    [alertVC.textFields[0] makeConstraints:^(MASConstraintMaker *make) {
+//        make.height.equalTo(35);
+//    }];
+//    [alertVC.textFields[1] makeConstraints:^(MASConstraintMaker *make) {
+//        make.height.equalTo(35);
+//    }];
+//    for (UITextField *textField in alertVC.textFields) {
+//        textField.font= Font_ListTitle;
+//    }
+//    //确定按钮
+//    UIAlertAction *confirmAction =  [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//        [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];
+//        //  cell 界面 数据 的调整
+//        if ([alertVC.textFields[0].text integerValue] > 100 ) {
+//            model.canChangeRate = @"100";
+//            [QMUITips showInfo:@"超出默认范围上限" inView:self.view hideAfterDelay:1.2];
+//        }else if([alertVC.textFields[0].text integerValue] < model.CompletionRate.integerValue){
+//            model.canChangeRate = model.CompletionRate;
+//            [QMUITips showInfo:@"超出默认范围下限" inView:self.view hideAfterDelay:1.2];
+//        }else{
+//            model.canChangeRate = alertVC.textFields[0].text;
+//        }
+//        model.canChangeRemark = alertVC.textFields.lastObject.text;
+//
+//        if (![model.canChangeRate isEqualToString:model.CompletionRate] || ![model.Remark isEqualToString:model.canChangeRemark]) {
+//            [cell loadContent];
+//            //数据处理 添加进入数组
+//            NSMutableDictionary *currentDic= [NSMutableDictionary dictionary];
+//            [currentDic setValue:model.canChangeRemark forKey:@"Remark"];
+//            [currentDic setValue:model.canChangeRate forKey:@"CompletionRate"];
+//            [currentDic setValue:model.Id forKey:@"Id"];
+//
+//            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Id == %@", model.Id];
+//            NSMutableDictionary *havDic = [self.updateArray filteredArrayUsingPredicate:predicate].firstObject;
+//            if (havDic) {
+//                if (![[havDic valueForKey:@"Remark"] isEqualToString:[currentDic valueForKey:@"Remark"]] || ![[havDic valueForKey:@"CompletionRate"] isEqualToString:[currentDic valueForKey:@"CompletionRate"]]) {
+//                    [havDic setValue:model.canChangeRate forKey:@"CompletionRate"];
+//                    [havDic setValue:model.canChangeRemark forKey:@"Remark"];
+//                }
+//            }else{
+//                [self.updateArray addObject:currentDic];
+//            }
+//            NSLog(@"%@", self.updateArray);
+//        }
+//    }];
+//    //取消按钮
+//    [alertVC addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+//        [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];
+//    }]];
+//    confirmAction.enabled = NO;
+//    [alertVC addAction:confirmAction];
+//    [self presentViewController:alertVC animated:YES completion:nil];
+//}
+//
+//- (void)alertTextFieldDidChange:(NSNotification *)notification{
+//    UITextField *TF = (UITextField *)notification.object;
+//
+//    UIAlertController *alertController = (UIAlertController *)self.presentedViewController;
+//    if (alertController) {
+//        UITextField *textField = alertController.textFields.firstObject;
+//        UITextField *bzTF = alertController.textFields.lastObject;
+//
+//        UIAlertAction *okAction = alertController.actions.lastObject;
+//        if (TF == textField) {
+//            if([textField.text hasPrefix:@"00"] || [textField.text hasPrefix:@"0"]){
+//                textField.text = @"0";
+//            }
+//            if (textField.text.integerValue >= 100) {
+//                if ([textField.text hasPrefix:@"1"] && textField.text.length >= @(100).stringValue.length) {
+//                    textField.text = @"100";
+//                }else{
+//                    textField.text = [textField.text substringToIndex:@(100).stringValue.length-1];
+//                }
+//            }
+//        }
+//        okAction.enabled = textField.text.length || bzTF.text.length;
+//    }
+//}
 
 
 -(void)viewWillDisappear:(BOOL)animated{
@@ -252,10 +407,5 @@
     NSLog(@"释放");
 }
 
--(NSMutableArray *)updateArray{
-    if (!_updateArray) {
-        _updateArray= [NSMutableArray new];
-    }
-    return _updateArray;
-}
+
 @end

@@ -119,7 +119,7 @@
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     WLJHListCell *cell = [WLJHListCell cellWithTableView:tableView];
-    cell .indexPath = indexPath;
+    cell.indexPath = indexPath;
     cell.cellType = CellType_WLJH;
     cell.data = self.dataArray[indexPath.row];
     [cell loadContent];

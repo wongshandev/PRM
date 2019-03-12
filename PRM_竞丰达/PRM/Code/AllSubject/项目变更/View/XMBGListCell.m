@@ -119,6 +119,7 @@
 -(void)loadContent{
     XMBGListModel *model = self.data;
     self.leftCircleLab.text = model.Code;
+//    self.leftCircleLab.contentEdgeInsets = UIEdgeInsetsMake(0, 5, 0, 5);
     self.addressLab.text = model.Address;
     self.mainFZRLab.text = model.InquiryName;
     self.titleLab.text = model.Name;

@@ -20,8 +20,27 @@
 @implementation SJYSGGLDetailController
 
 -(void)setUpNavigationBar{
-     self.navBar.backButton.hidden = NO;
+     //    self.navBar.backButton.hidden = NO;
     self.navBar.titleLabel.text = self.engineerModel.Name;
+    Weak_Self;
+    [self.navBar.backButton clickWithBlock:^{
+        __block BOOL isNeedSave = NO;
+        __block JDHBListController *jdhbVC = nil;
+        [weakSelf.childViewControllers enumerateObjectsUsingBlock:^(__kindof UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj isKindOfClass:[JDHBListController class]]) {
+                 jdhbVC = (JDHBListController *)obj;
+                if (jdhbVC.updateArray.count !=0) {
+                    isNeedSave = YES;
+                }
+                *stop = YES;
+            }
+        }];
+        if (isNeedSave) {
+            [jdhbVC alertWithSaveMention:@"您修改了进度 , 需要保存吗?" withAction:@selector(update_JDHBDataForParentVC)];
+        }else{
+            [weakSelf.navigationController popViewControllerAnimated:YES];
+        }
+    }];
  }
 
 -(void)buildSubviews{
@@ -87,7 +106,9 @@
 }
 
 -(void)dealloc{
-    NSLog(@"释放");
+#ifdef DEBUG
+    printf("[⚠️] 已经释放 %s.\n", NSStringFromClass(self.class).UTF8String);
+#endif
 }
 
 @end

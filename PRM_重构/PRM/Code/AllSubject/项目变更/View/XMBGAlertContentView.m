@@ -53,9 +53,12 @@
 -(QMUITextView *)xmbgDescriptTV{
     if (!_xmbgDescriptTV) {
         _xmbgDescriptTV = [[QMUITextView alloc] init];
+        _xmbgDescriptTV.shouldResponseToProgrammaticallyTextChanges = YES;
+        _xmbgDescriptTV.shouldCountingNonASCIICharacterAsTwo = YES;
         _xmbgDescriptTV.font = Font_ListTitle;
         _xmbgDescriptTV.maximumHeight = 10;
-        _xmbgDescriptTV.placeholder = @"请输入变更描述";
+        _xmbgDescriptTV.placeholder = @"请输入(限512字)";
+        _xmbgDescriptTV.maximumTextLength = 1024; 
          [_xmbgDescriptTV rounded:5 width:2 color:Color_LINE_NOMARL];
          [self addSubview:_xmbgDescriptTV];
     }

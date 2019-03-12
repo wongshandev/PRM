@@ -40,6 +40,8 @@
     self.tableView.refreshBlock = ^{
         [weakSelf.tableView.mj_header beginRefreshing];
     };
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshXCSHRecordListView) name:@"refreshXCSHRecordListView" object:nil];
+
 }
 
 -(void)requestData_RecordList{
@@ -84,7 +86,7 @@
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     XCSCRecordCell *cell = [XCSCRecordCell cellWithTableView:tableView];
-    cell .indexPath = indexPath;
+    cell.indexPath = indexPath;
     cell.data = self.dataArray[indexPath.row];
     [cell loadContent];
     return cell;

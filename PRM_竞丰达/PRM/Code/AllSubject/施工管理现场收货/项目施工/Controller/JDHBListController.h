@@ -14,6 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface JDHBListController : DXSuperTabViewController<ZJScrollPageViewChildVcDelegate>
 @property(nonatomic,strong)EngineeringModel *engineerModel;
 
+@property(nonatomic,strong)NSMutableArray *updateArray;
+-(void)update_JDHBDataForParentVC;
+
 @end
 
 NS_ASSUME_NONNULL_END

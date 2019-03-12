@@ -22,9 +22,9 @@
 -(QMUIFloatLayoutView *)tagView{
     if (!_tagView) {
         _tagView = [[QMUIFloatLayoutView alloc] init];
-        _tagView.padding = UIEdgeInsetsMake(5, 0, 5, 5);
+        _tagView.padding = UIEdgeInsetsMake(5, 0, 5, 0);
         _tagView.itemMargins = UIEdgeInsetsMake(0, 0, 10, 10);
-        _tagView.minimumItemSize =  CGSizeMake(50, 25);
+        _tagView.minimumItemSize =  CGSizeMake(10, 25);
     }
     return _tagView;
 }
@@ -105,15 +105,6 @@
     free(properties);
     return props;
 }
-
- 
-
-
-
-
-
-
-
 
 
 

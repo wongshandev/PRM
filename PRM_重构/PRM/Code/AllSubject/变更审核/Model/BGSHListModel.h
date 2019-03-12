@@ -23,6 +23,7 @@
 @property (nonatomic, copy) NSString *titleStr;
 @property (nonatomic, copy) NSString *subtitleStr;
 @property (nonatomic, copy) NSString *stateStr;
+@property (nonatomic, strong) UIColor *stateColor;
 
 @end
 

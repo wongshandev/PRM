@@ -120,6 +120,7 @@
 		18A7CC5121E5BE1C00EDB754 /* DXBaseTableHeaderFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A7CC5021E5BE1B00EDB754 /* DXBaseTableHeaderFooterView.m */; };
 		18A7CC5421E5BE7200EDB754 /* DXCellDataAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A7CC5221E5BE6C00EDB754 /* DXCellDataAdapter.m */; };
 		18A7CC5721E5BF5200EDB754 /* SJYLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A7CC5621E5BF5200EDB754 /* SJYLoginViewController.m */; };
+		18B4E6152228A9F4008AE622 /* NumTFBZTVAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B4E6132228A9F4008AE622 /* NumTFBZTVAlertView.m */; };
 		18CBFC7921DF551400672EF4 /* UIView+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 18CBFC7721DF551400672EF4 /* UIView+Extension.m */; };
 		18CBFC7A21DF551400672EF4 /* NSDate+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 18CBFC7821DF551400672EF4 /* NSDate+Extension.m */; };
 		18CBFC8821DF5D5400672EF4 /* UIButton+CrazyClick.m in Sources */ = {isa = PBXBuildFile; fileRef = 18CBFC8621DF5D5400672EF4 /* UIButton+CrazyClick.m */; };
@@ -363,6 +364,8 @@
 		18A7CC5321E5BE6F00EDB754 /* DXCellDataAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DXCellDataAdapter.h; sourceTree = "<group>"; };
 		18A7CC5521E5BF5200EDB754 /* SJYLoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SJYLoginViewController.h; sourceTree = "<group>"; };
 		18A7CC5621E5BF5200EDB754 /* SJYLoginViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SJYLoginViewController.m; sourceTree = "<group>"; };
+		18B4E6132228A9F4008AE622 /* NumTFBZTVAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NumTFBZTVAlertView.m; sourceTree = "<group>"; };
+		18B4E6142228A9F4008AE622 /* NumTFBZTVAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NumTFBZTVAlertView.h; sourceTree = "<group>"; };
 		18CBFC6A21DF525600672EF4 /* APIConfiger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = APIConfiger.h; sourceTree = "<group>"; };
 		18CBFC6D21DF52A500672EF4 /* SJYMacro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SJYMacro.h; sourceTree = "<group>"; };
 		18CBFC7021DF52DD00672EF4 /* SJYHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SJYHeader.h; sourceTree = "<group>"; };
@@ -837,6 +840,8 @@
 				1845673F21EECE9F00AF55DF /* WLJHListCell.m */,
 				1843789921EF3AB500AA14DC /* WLJHDetialCell.h */,
 				1843789A21EF3AB500AA14DC /* WLJHDetialCell.m */,
+				18B4E6142228A9F4008AE622 /* NumTFBZTVAlertView.h */,
+				18B4E6132228A9F4008AE622 /* NumTFBZTVAlertView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1686,6 +1691,7 @@
 				189EEAEE21FAA32A0027E1A3 /* GCJDListViewController.m in Sources */,
 				18838A8B21F32E38004033CB /* XMBGDetailCell.m in Sources */,
 				189EEAFF21FAABF50027E1A3 /* BJQDListFrame.m in Sources */,
+				18B4E6152228A9F4008AE622 /* NumTFBZTVAlertView.m in Sources */,
 				18255E1221E71B9800095143 /* UITableView+NoData.m in Sources */,
 				189EEAEC21FAA32A0027E1A3 /* SJSHDetialSuperController.m in Sources */,
 				189EEAB521F9CB6A0027E1A3 /* CGFKDetialFrame.m in Sources */,

@@ -24,10 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) CellType cellType;
 
-
-+(instancetype)cellWithTableView:(UITableView *)tableView;
-
-
+//+(instancetype)cellWithTableView:(UITableView *)tableView; 
 
 @end
 

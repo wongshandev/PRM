@@ -49,7 +49,7 @@
             
             //实际
             ganntModel.sjKSRQ =[self dateStringFormJSDateString:model.ActualBeginDate];
-            ganntModel.sjJSRQ =[self dateStringFormJSDateString:model.LastModifyDate];
+            ganntModel.sjJSRQ =[self dateStringFormJSDateString:model.ActualEndDate];
             //规划
             ganntModel.jhKSRQ = [self dateStringFormJSDateString:model.BeginDate];
             ganntModel.jhJSRQ = [self dateStringFormJSDateString:model.EndDate]; 

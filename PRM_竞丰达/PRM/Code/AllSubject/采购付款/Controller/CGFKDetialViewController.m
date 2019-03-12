@@ -138,7 +138,7 @@
     [self.tableView.mj_header endRefreshing];
     if (self.dataArray.count == 0) {
         self.tableView.customImg = !havError ? [UIImage imageNamed:@"empty"]:SJYCommonImage(@"daoda");
-        self.tableView.customMsg = !havError? @"没有数据了,休息一下吧":@"网络错误,请检查网络后重试";
+        self.tableView.customMsg = !havError? @"没有数据了,休息下吧":@"网络错误,请检查网络后重试";
         self.tableView.showNoData = YES;
         self.tableView.isShowBtn =  havError;
     }
@@ -172,7 +172,7 @@
         return cell; 
     }else{
         CGFKDetialFootCell *cell = [CGFKDetialFootCell cellWithTableView:tableView];
-        cell .indexPath = indexPath;
+        cell.indexPath = indexPath;
         cell.data = self.dataArray[indexPath.section][indexPath.row];
         [cell loadContent];
         return cell;
@@ -227,7 +227,6 @@
         } failure:^(int status, NSString *info) {
             [QMUITips showError:info inView:self.view hideAfterDelay:1.2];
         }];
-        
         [aDialogViewController hide];
     }];
     [dialogViewController show];
@@ -245,16 +244,18 @@
         make.edges.equalTo(contentView).offset(UIEdgeInsetsMake(5, 10, 5, 10));
     }];
     textView.shouldResponseToProgrammaticallyTextChanges = YES;
+    textView.shouldCountingNonASCIICharacterAsTwo = YES;
     textView.font = Font_ListTitle;
     textView.delegate = self;
-    textView.maximumTextLength = 32;
+    textView.maximumTextLength = 64;
     textView.maximumHeight = 90;
     textView.placeholder = @"请输入(限32字)";
     dialogViewController.contentView = contentView;
     [dialogViewController addCancelButtonWithText:@"取消" block:nil];
     [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
         [textView endEditing:YES];
-        if (textView.text.length == 0) {
+        NSString *content =  [textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]; 
+        if (content.length == 0) {
             [QMUITips showInfo:@"请输入驳回原因" inView:[UIApplication sharedApplication].keyWindow hideAfterDelay:1.2];
             return ;
         }
@@ -262,7 +263,7 @@
                                                  @"PurchaseOrderID":self.listModel.Id,
                                                  @"EmployeeID":[SJYUserManager sharedInstance].sjyloginData.Id,
                                                  @"State":@"3",
-                                                 @"RejectReason":textView.text//(驳回时必要回传参数)
+                                                 @"RejectReason":content//(驳回时必要回传参数)
                                                  } success:^(id responder) {
                                                      [aDialogViewController hide];
                                                      [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
@@ -285,6 +286,5 @@
     [dialogViewController show];
     [textView becomeFirstResponder];
 }
-
 
 @end

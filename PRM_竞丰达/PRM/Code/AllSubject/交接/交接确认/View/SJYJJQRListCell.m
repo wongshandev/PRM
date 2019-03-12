@@ -97,6 +97,7 @@
     if (self.cellType == CellType_JJQRList) {
         SJYJJQRListModel *model = self.data;
         self.leftCircleLab.text = model.Code;
+//        self.leftCircleLab.contentEdgeInsets = UIEdgeInsetsMake(0, 5, 0, 5); 
         self.mainFZRLab.text = model.DesignName;
         self.titleLab.text = model.titleStr;
         self.mainSJRLab.text = model.InquiryName;

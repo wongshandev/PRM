@@ -23,14 +23,14 @@
 @end
 @implementation WLJHDetialCell
 
-+(instancetype)cellWithTableView:(UITableView *)tableView{
-    static   NSString *identifier = @"WLJHDetialCell";
-    WLJHDetialCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-    if (cell == nil) {
-        cell = [[WLJHDetialCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
-    }
-    return cell;
-}
+//+(instancetype)cellWithTableView:(UITableView *)tableView{
+//    static   NSString *identifier = @"WLJHDetialCell";
+//    WLJHDetialCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+//    if (cell == nil) {
+//        cell = [[WLJHDetialCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
+//    }
+//    return cell;
+//}
 
 -(void)setupCell{
     self.selectionStyle = UITableViewCellSelectionStyleNone;

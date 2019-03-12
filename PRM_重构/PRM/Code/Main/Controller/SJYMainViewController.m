@@ -211,19 +211,8 @@
             break;
         default:
             break;
-            
     }
 }
-
--(void)viewWillDisappear:(BOOL)animated{
-    [super viewWillDisappear:animated];
-    NSLog(@"Retain Count = %ld\n",CFGetRetainCount((__bridge CFTypeRef)(self)));
-}
-
--(void)dealloc{
-    NSLog(@"释放");
-}
-
 
 -(UICollectionView *)collectionView{
     if (!_collectionView) {
@@ -242,6 +231,25 @@
     return _collectionView;
 }
 
+//将不需要侧滑的界面   viewWillAppear:方面里面加上下面代码
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    NSLog(@"Retain Count = %ld\n",CFGetRetainCount((__bridge CFTypeRef)(self)));
+    self.mm_drawerController.openDrawerGestureModeMask = MMOpenDrawerGestureModeNone;
+    self.mm_drawerController.closeDrawerGestureModeMask = MMCloseDrawerGestureModeNone;
+}
+//将需要侧滑的界面   viewWillAppear:方面里面加上下面代码
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.mm_drawerController closeDrawerAnimated:YES completion:^(BOOL finished) {
+        [self.mm_drawerController setRightDrawerViewController:nil];
+    }];
+    self.mm_drawerController.openDrawerGestureModeMask = MMOpenDrawerGestureModeAll;
+    self.mm_drawerController.closeDrawerGestureModeMask = MMCloseDrawerGestureModeAll;
+}
+-(void)dealloc{
+    NSLog(@"释放");
+} 
 
 
 @end

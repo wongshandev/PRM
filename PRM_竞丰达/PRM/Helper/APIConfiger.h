@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define kEmployeeID        [[SJYDefaultManager shareManager] getEmployeeID]
 
 #define KEmployID            [SJYUserManager sharedInstance].sjyloginData.Id
-
+#define KPositionID            [SJYUserManager sharedInstance].sjyloginData.PositionID
 
 @interface APIConfiger : NSObject
 #define API_BaseUrl                             [NSString stringWithFormat:@"http://%@:%@/App",IP_Address,IP_Port]
@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 //请求接口       拼接参数 loginName、password   post传递
 #define API_Request(functionName)    [NSString stringWithFormat:@"%@/%@",API_BaseUrl,functionName]
 
+#define API_RootUrl(functionName)    [NSString stringWithFormat:@"%@%@",API_ImageUrl,functionName]
 
 
   // 登录
@@ -106,7 +107,45 @@ NS_ASSUME_NONNULL_BEGIN
 // 采购审核
 #define API_CGSHList                            API_Request(@"AppApprovalPurchaseOrderList")
 #define API_CGSHSubmitList                API_Request(@"AppSubmitPO") // AppSubmitPO,参数:State=6,AEmp(登录成功后的uc)
+//入库评审
+#define API_RKPSList                            API_Request(@"AppStockApproveList")
+#define API_RKPSSubmit                      API_Request(@"AppStApprove")
 
+//项目开支
+//SpendingTypeID开支类型：调用网站根目录下/Scripts/Json/SpendingType.json数据
+#define API_XMKZSpendingType          API_RootUrl(@"/Scripts/Json/SpendingType.json")
+
+#define API_XMKZList                            API_Request(@"AppSpendingPBList?Stat=")
+#define API_XMKZSecondList               API_Request(@"AppSpendingList")
+#define API_XMKZDetialAddSave         API_Request(@"AppSaveSpending")
+#define API_XMKZDetialSubmit            API_Request(@"AppApproveSpending")
+#define API_XMKZDetialDelete            API_Request(@"AppDelSpending")
+
+/*
+ int Id(开支Id)
+ int State=2
+ int EmployeeID(操作人Id)
+*/
+
+
+//开支审核
+#define API_KZSHList                            API_Request(@"AppSpendingApproveList")
+#define API_KZSHSubmit                      API_Request(@"AppApproveSpending")
+/*
+ int Id  EmployeeID
+ int State=7(同意) =3(驳回) =-1(作废)
+ string AEmp(登录成功后的uc State=7时必须回传)
+ string RejectReason(State.In(3,-1)必须回传)
+ */
+
+//开支付款
+#define API_KZFKList                            API_Request(@"AppSpendingPayList")
+#define API_KZFKSubmit                      API_Request(@"AppApproveSpending")
+/*
+int Id
+int EmployeeID
+int State=8
+*/
 @end
 
 NS_ASSUME_NONNULL_END

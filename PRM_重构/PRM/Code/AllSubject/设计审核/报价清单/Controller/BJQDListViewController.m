@@ -68,7 +68,8 @@
         NSMutableArray *footSectionArr = [NSMutableArray new];
         for (NSDictionary *dic in footerArr) {
              BJQDListModel *model = [BJQDListModel  modelWithDictionary:dic];
-            model.QuotedPriceStr = [model.Name isEqualToString:@"甲供合计"]?@"": [NSString numberMoneyFormattor:model.QuotedPrice];
+            model.QuotedPriceStr = [NSString numberMoneyFormattor:model.QuotedPrice];
+            // [model.Name isEqualToString:@"甲供合计"]?@"": [NSString numberMoneyFormattor:model.QuotedPrice];
             [footSectionArr addObject:model];
         }
         [self.dataArray addObject:footSectionArr];
@@ -125,7 +126,7 @@
         return cell;
     }else{
         BJQDListFootCell *cell = [BJQDListFootCell cellWithTableView:tableView];
-        cell .indexPath = indexPath;
+        cell.indexPath = indexPath;
         cell.data = self.dataArray[indexPath.section][indexPath.row];
         [cell loadContent];
         return cell;

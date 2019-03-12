@@ -16,7 +16,7 @@
 
 -(void)setUpNavigationBar{
     self.navBar.titleLabel.text = @"文件选择列表";
-     self.navBar.backButton.hidden = NO;
+     //    self.navBar.backButton.hidden = NO;
 
 }
 -(void)setupTableView{

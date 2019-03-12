@@ -106,6 +106,7 @@
     }];
 
 }
+
 -(void)endRefreshWithError:(BOOL)havError{
     [self.tableView.mj_header endRefreshing];
     if (self.dataArray.count == 0) {
@@ -125,7 +126,7 @@
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     XMQGDetialCell *cell = [XMQGDetialCell cellWithTableView:tableView];
-    cell .indexPath = indexPath;
+    cell.indexPath = indexPath;
     cell.data = self.dataArray[indexPath.row];
     [cell loadContent];
     return cell;
@@ -212,7 +213,8 @@
     [dialogViewController addCancelButtonWithText:@"取消" block:nil];
     [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
         [textView endEditing:YES];
-        if (textView.text.length == 0) {
+        NSString *content =  [textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        if (content.length == 0) {
             [QMUITips showInfo:@"请输入驳回理由" inView:[UIApplication sharedApplication].keyWindow hideAfterDelay:1.2];
             return ;
         }
@@ -221,7 +223,7 @@
                                                         @"State":@"3",
                                                         @"MarketOrderID":self.marketOrderID,
                                                         @"PurchaseId": [SJYUserManager sharedInstance].sjyloginData.PurchaseId,  //(待办通知人Id,uc.PurchaseId，同意时必要回传)
-                                                        @"RejectReason":textView.text//(驳回时必要回传参数)
+                                                        @"RejectReason":content//(驳回时必要回传参数)
                                                         } success:^(id responder) {
                                                             [aDialogViewController hide];
                                                             [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
@@ -235,7 +237,6 @@
                                                         } failure:^(int status, NSString *info) {
                                                             [QMUITips showError:info inView:self.view hideAfterDelay:1.2];
                                                             [aDialogViewController hide];
-
                                                         }];
 
 
@@ -243,8 +244,11 @@
     [dialogViewController show];
     [textView becomeFirstResponder];
 }
-
-
-
-
+ 
+//-(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
+//    if (([text isEqualToString:@"\n"] || [text isEqualToString:@" "]) && textView.text.length == 0) {
+//        return NO;
+//    }
+//    return YES;
+//}
 @end

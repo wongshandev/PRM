@@ -15,18 +15,20 @@
  @property (nonatomic, strong) QMUILabel *titleLab;
 @property (nonatomic, strong) QMUILabel *ksjsDateLab;
 @property (nonatomic, strong) QMUILabel *lastDateLab;
+@property (nonatomic, strong) QMUILabel *bzLab;
 
 @end
 @implementation JDHBListCell
 
-+(instancetype)cellWithTableView:(UITableView *)tableView{
-    static   NSString *identifier = @"JDHBListCell";
-    JDHBListCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-    if (cell == nil) {
-        cell = [[JDHBListCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
-    }
-    return cell;
-}
+//+(instancetype)cellWithTableView:(UITableView *)tableView{
+//    static   NSString *identifier = @"JDHBListCell";
+//    JDHBListCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+//    if (cell == nil) {
+//        cell = [[JDHBListCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
+//    }
+//    cell.tableView = tableView;
+//    return cell;
+//}
 
 -(void)setupCell{
     self.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -40,52 +42,69 @@
     [self addSubview: circleProgress];
     self.circleProgress = circleProgress;
 
-    QMUILabel *titleLab = [self createLabelWithTextColor:Color_TEXT_HIGH Font:Font_ListTitle numberOfLines:1];
+    QMUILabel *titleLab = [self createLabelWithTextColor:Color_TEXT_HIGH Font:Font_ListTitle numberOfLines:0];
     [self addSubview:titleLab];
     self.titleLab = titleLab;
 
-    QMUILabel *ksjsDateLab = [self createLabelWithTextColor:Color_TEXT_NOMARL Font:Font_ListOtherTxt numberOfLines:1];
+    QMUILabel *ksjsDateLab = [self createLabelWithTextColor:Color_TEXT_NOMARL Font:Font_ListOtherTxt numberOfLines:0];
     [self addSubview:ksjsDateLab];
     self.ksjsDateLab = ksjsDateLab;
+
+    QMUILabel *bzLab = [self createLabelWithTextColor:Color_TEXT_NOMARL Font:Font_ListOtherTxt numberOfLines:0];
+    [self addSubview:bzLab];
+    self.bzLab = bzLab;
 
     QMUILabel *lastDateLab = [self createLabelWithTextColor:Color_Red Font:Font_ListOtherTxt numberOfLines:1];
     [self addSubview:lastDateLab];
     self.lastDateLab = lastDateLab;
 }
 -(void)buildSubview{
+//    CGSize titleSize = [@"2020-02-20" sizeWithFont:Font_ListOtherTxt constrainedToSize:CGSizeMake(MAXFLOAT, 25)];
+    [self.lastDateLab makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self).offset(10);
+        make.right.equalTo(self).offset(-10);
+        make.width.equalTo(0);
+    }];
     [self.circleProgress makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self);
+        make.top.mas_equalTo(10);
         make.left.equalTo(10);
         make.width.equalTo(50);
         make.height.equalTo(50);
     }];
-
     [self.titleLab makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self).offset(10);
         make.left.equalTo(self.circleProgress.mas_right).offset(10);
+         make.right.equalTo(self.lastDateLab.mas_left);
+        make.height.greaterThanOrEqualTo(25);
      }];
-
     [self.ksjsDateLab makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.titleLab.mas_bottom).offset(5);
          make.left.equalTo(self.titleLab.mas_left);
         make.right.equalTo(self).offset(-10);
-        make.height.equalTo(self.titleLab.mas_height);
-        make.bottom.mas_equalTo(self).offset(-10);
-    }];
-
-    [self.lastDateLab makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self.titleLab.mas_centerY);
+        make.height.greaterThanOrEqualTo(20);
+     }];
+    [self.bzLab makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.ksjsDateLab.mas_bottom).offset(5);
+        make.left.equalTo(self.circleProgress.mas_left);
         make.right.equalTo(self).offset(-10);
-        make.height.equalTo(self.titleLab);
-        make.width.equalTo(self.titleLab.mas_width);
+        make.bottom.mas_equalTo(self).offset(-5);
     }];
 }
 -(void)loadContent{
     JDHBListModel *model = self.data;
+    CGSize titleSize = [model.LastModifyDate sizeWithFont:Font_ListOtherTxt constrainedToSize:CGSizeMake(MAXFLOAT, 25)];
+    [self.lastDateLab updateConstraints:^(MASConstraintMaker *make) {
+        make.width.equalTo(titleSize.width);
+    }];
     self.circleProgress.progress = model.canChangeRate.integerValue/100.0;
-    self.titleLab.text = model.Name;
-    self.ksjsDateLab.text = [@[model.BeginDate, model.EndDate] componentsJoinedByString:@"--"];
+    self.titleLab.text = model.titleStr;
+    self.ksjsDateLab.text = [@[model.BeginDate, model.EndDate] componentsJoinedByString:@"~"];
     self.lastDateLab.text = model.LastModifyDate;
+    self.bzLab.text = model.canChangeRemark;
+    if ( model.isModelChange) {
+        [self.tableView beginUpdates];
+        [self.tableView endUpdates];
+    }
 }
 
 

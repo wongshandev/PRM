@@ -12,15 +12,16 @@
 #import "BGSHListModel.h"
 #import "SJYBGSHSearchAlertView.h"
 
-#define  STATEArray  @[@"未审核",@"已审核",@"全部"]
-
+//#define  STATEArray  @[@"未审核",@"已审核",@"全部"]
+#define  STATEArray  @[@"全部",@"未审核",@"已审核"]
+#define  ListSTATEColorArray  @[[UIColor whiteColor],UIColorHex(#EF5362),UIColorHex(#007BD3),]
 @interface SJYBGSHViewController ()<UIDocumentInteractionControllerDelegate,QMUITextFieldDelegate>
 @property (nonatomic, strong) UIDocumentInteractionController * documentInteractionController;
 @property (nonatomic, strong) SJYBGSHSearchAlertView * searchAlertView;
 
 @property(nonatomic,assign)NSInteger page;
 @property(nonatomic,assign)NSInteger totalNum;
-@property(nonatomic,copy)NSString * shStateType;
+@property(nonatomic,assign)NSInteger  shStateType;
 @property(nonatomic,copy)NSString * searchCode;
 
 @end
@@ -32,7 +33,7 @@
     Weak_Self;
     self.navBar.backButton.hidden = NO;
     self.navBar.titleLabel.text = self.title;
-    self.shStateType = @"0";
+    self.shStateType = 0;
     self.searchCode = @"";
 
     [self.navBar.rightButton setTitle:@"查询" forState:UIControlStateNormal];
@@ -51,7 +52,7 @@
     self.searchAlertView.backgroundColor = UIColorWhite;
     self.searchAlertView.codeTF.delegate = self;
     self.searchAlertView.codeTF.text = self.searchCode;
-    [self.searchAlertView.stateBtn  setTitle:[STATEArray objectAtIndex:self.shStateType.integerValue] forState:UIControlStateNormal];
+    [self.searchAlertView.stateBtn  setTitle:[STATEArray objectAtIndex:self.shStateType +1] forState:UIControlStateNormal];
     self.searchAlertView.rightdownImgView.image = SJYCommonImage(@"downBlack");
     [self.searchAlertView.stateLab makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.searchAlertView.mas_top).offset(5);
@@ -100,7 +101,8 @@
         [self.searchAlertView endEditing:YES];
         [BRStringPickerView showStringPickerWithTitle:@"项目状态" dataSource:STATEArray defaultSelValue:weakSelf.searchAlertView.stateBtn isAutoSelect:NO themeColor:Color_NavigationLightBlue resultBlock:^(id selectValue) {
             [weakSelf.searchAlertView.stateBtn setTitle:selectValue forState:UIControlStateNormal];
-            weakSelf.shStateType = [@([STATEArray indexOfObject:selectValue]) stringValue];
+            NSInteger index = [STATEArray indexOfObject:selectValue] -1;
+            weakSelf.shStateType = index;
         }];
     }];
 
@@ -109,13 +111,11 @@
         [modalViewController hideInView:self.view animated:YES completion:nil];
     }];
     
-    [dialogViewController addSubmitButtonWithText:@"提交" block:^(QMUIDialogViewController *aDialogViewController) {
-
+    [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
         [modalViewController hideInView:self.view animated:YES completion:^(BOOL finished) {
             [weakSelf.tableView.mj_header beginRefreshing];
         }];
     }];
-
      modalViewController.contentViewController = dialogViewController;
     [modalViewController showInView:self.view animated:YES completion:nil];
 }
@@ -150,7 +150,7 @@
 -(void)requestData_BGSH{
 //    NSString *stateString = [stateStr isEqual: @"未审核"]?@"0":([stateStr  isEqual:@"全部"]?@"2":@"1");
 
-    [SJYRequestTool requestBGSHListWithEmployID:[SJYUserManager sharedInstance].sjyloginData.Id SearchStateID:self.shStateType SearchCode:self.searchCode page:self.page success:^(id responder) {
+    [SJYRequestTool requestBGSHListWithEmployID:[SJYUserManager sharedInstance].sjyloginData.Id SearchStateID:@(self.shStateType).stringValue SearchCode:self.searchCode page:self.page success:^(id responder) {
 
         NSArray *rowsArr = [responder objectForKey:@"rows"];
         self.totalNum = [[responder objectForKey:@"total"] integerValue];
@@ -162,8 +162,10 @@
             model.titleStr = [model.Name  stringByAppendingFormat:@" (%@)", model.Code];
             NSString *string = model.ChangeType.integerValue == 1 ? @"签证变更":@"乙方责任";
             model.subtitleStr = [model.CName  stringByAppendingFormat:@"(%@)", string];
-            model.stateStr =  model.ApprovalID.integerValue>0?[STATEArray objectAtIndex:1]:STATEArray.firstObject;
-             [self.dataArray addObject:model];
+            BOOL isYSH = model.ApprovalID.integerValue>0;
+            model.stateStr = isYSH ?STATEArray.lastObject:[STATEArray objectAtIndex:1];
+            model.stateColor = isYSH ?ListSTATEColorArray.lastObject:[ListSTATEColorArray objectAtIndex:1];
+            [self.dataArray addObject:model];
         }
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView reloadData];
@@ -202,13 +204,11 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     BGSHListCell *cell = [BGSHListCell cellWithTableView:tableView];
     BGSHListModel *model =  self.dataArray[indexPath.row];
-
-    cell .indexPath = indexPath;
+    cell.indexPath = indexPath;
     cell.data = model;
     [cell loadContent];
     [cell.fujianBtn clickWithBlock:^{
         [self downLoadOrLookFile:model];
-
     }];
     return cell;
 }

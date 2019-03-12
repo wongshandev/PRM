@@ -93,7 +93,7 @@
 -(void)loadContent{
     BGSHListModel *model = self.data;
     self.leftCircleLab.text= model.stateStr;
-    self.leftCircleLab.backgroundColor =  model.ApprovalID.integerValue > 0 ?  Color_NavigationLightBlue:Color_Red;
+    self.leftCircleLab.backgroundColor =  model.stateColor;
 
     self.descriptionLab.text = model.Remark;
     self.titleLab.text = model.titleStr;
@@ -108,13 +108,13 @@
 -(void)setSelected:(BOOL)highlighted animated:(BOOL)animated{
     [super setSelected:highlighted animated:animated];//加上这句哦
     BGSHListModel *model = self.data;
-    _leftCircleLab.backgroundColor = model.ApprovalID.integerValue > 0 ?  Color_NavigationLightBlue:Color_Red;
+    _leftCircleLab.backgroundColor = model.stateColor;
 }
 
 -(void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated{
     [super setHighlighted:highlighted animated:animated];//加上这句哦
     BGSHListModel *model = self.data;
-    _leftCircleLab.backgroundColor = model.ApprovalID.integerValue > 0 ?  Color_NavigationLightBlue:Color_Red;
+    _leftCircleLab.backgroundColor = model.stateColor;
 }
 
 @end

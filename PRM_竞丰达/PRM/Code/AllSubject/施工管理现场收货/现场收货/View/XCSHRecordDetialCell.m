@@ -20,6 +20,7 @@
 @property (nonatomic, strong) QMUILabel *totalLab;
 @property (nonatomic, strong) QMUILabel *receiveLab;
 @property (nonatomic, strong) QMUILabel *thisLab;
+@property (nonatomic, strong) QMUILabel *bzLab;
 
 @end
 @implementation XCSHRecordDetialCell
@@ -86,11 +87,17 @@
     [self addSubview:thisLab];
     self.thisLab = thisLab;
 
+    //备注
+    QMUILabel *bzLab = [self createLabelWithTextColor:Color_TEXT_NOMARL Font:Font_ListOtherTxt numberOfLines:0];
+    [self addSubview:bzLab];
+     self.bzLab = bzLab;
+
 }
 -(void)buildSubview{
     //标题
     [self.titleLab makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self).offset(TopMargin);
+//        make.top.equalTo(self).offset(TopMargin);
+        make.top.equalTo(self).offset(TopMargin*2);
         make.left.equalTo(self).offset(10);
         make.right.equalTo(self).offset(-10);
         make.height.greaterThanOrEqualTo(20);
@@ -100,6 +107,13 @@
         make.left.equalTo(self.titleLab.mas_left);
         make.width.equalTo(50);
         make.height.equalTo(50);
+        //        make.bottom.equalTo(self).offset(-TopMargin);
+    }];
+    //备注
+    [self.bzLab makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.circleProgress.mas_bottom).offset(TopMargin);
+        make.left.equalTo(self.circleProgress.mas_left);
+        make.right.equalTo(self.titleLab.mas_right);
         make.bottom.equalTo(self).offset(-TopMargin);
     }];
     //总数提示
@@ -156,6 +170,12 @@
     self.totalLab.text = model.Quantity;
     self.receiveLab.text = model.QuantityReceive;
     self.thisLab.text = model.changeQuantityCheck;
+    self.bzLab.text = model.changeRemark;
+    if (model.isModelChange) {
+        [self.tableView beginUpdates];
+        [self.tableView endUpdates];
+    }
+//    [self.tableView reloadRowAtIndexPath:self.indexPath withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
 @end

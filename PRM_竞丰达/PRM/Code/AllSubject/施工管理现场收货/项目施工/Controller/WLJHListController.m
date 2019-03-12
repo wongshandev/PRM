@@ -10,6 +10,7 @@
 #import "WLJHListCell.h"
 #import "WLJHDetialController.h"
 
+#define  ListWLJHStateArray  @[@"", @"已计划", @"已申请", @"已驳回", @"已审核", @"已下单",@"已采购" ,@"已完成"]
 @interface WLJHListController ()
 @property(copy,nonatomic)NSString *dState;
 @property(nonatomic,strong)QMUIFillButton *addBtn;
@@ -33,7 +34,6 @@
     [self.tableView updateConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view).offset(UIEdgeInsetsMake(0, 0, 0, 0));
     }];
-
     Weak_Self;
     QMUIFillButton *addButton = [QMUIFillButton  buttonWithType:UIButtonTypeCustom];
     addButton.fillColor = Color_NavigationLightBlue;
@@ -82,9 +82,14 @@
         self.dState = [responder objectForKey:@"dState"];
         self.addBtn.hidden = self.dState.integerValue < 7;
         NSArray *rowsArr = [responder objectForKey:@"rows"];
-
-        for (NSDictionary *dic in rowsArr) {
+         for (NSDictionary *dic in rowsArr) {
             WLJHListModel *model = [WLJHListModel  modelWithDictionary:dic];
+            if (model.State.integerValue < ListWLJHStateArray.count ) {
+                model.stateString = [ListWLJHStateArray objectAtIndex:model.State.integerValue];
+                 StateCode idx = [StateCodeStringArray indexOfObject:model.stateString];
+                model.stateColor =   [StateCodeColorHexArray objectAtIndex:idx];
+             }
+
             [self.dataArray addObject:model];
         }
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -103,7 +108,7 @@
     [self.tableView.mj_header endRefreshing];
     if (self.dataArray.count == 0) {
         self.tableView.customImg = !havError ? [UIImage imageNamed:@"empty"]:SJYCommonImage(@"daoda");
-        self.tableView.customMsg = !havError? @"没有数据了,休息一下吧":@"网络错误,请检查网络后重试";
+        self.tableView.customMsg = !havError? @"没有数据了,休息下吧":@"网络错误,请检查网络后重试";
         self.tableView.showNoData = YES;
         self.tableView.isShowBtn =  havError;
     }
@@ -118,7 +123,7 @@
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     WLJHListCell *cell = [WLJHListCell cellWithTableView:tableView];
-    cell .indexPath = indexPath;
+    cell.indexPath = indexPath;
     cell.cellType = CellType_WLJH;
     cell.data = self.dataArray[indexPath.row];
     [cell loadContent];
@@ -146,7 +151,9 @@
 }
 
 -(void)dealloc{
-    NSLog(@"释放");
+#ifdef DEBUG
+    printf("[⚠️] 已经释放 %s.\n", NSStringFromClass(self.class).UTF8String);
+#endif
     [[NSNotificationCenter defaultCenter]removeObserver:self name:@"refreshListView" object:nil];
 }
 

@@ -43,6 +43,8 @@
 				<string>public.movie</string>
 				<string>public.text</string>
 				<string>public.data</string>
+				<string>public.docx</string>
+				<string>public.doc</string>
 				<string>public.truetype-ttf-font
 </string>
 			</array>
@@ -92,9 +94,6 @@
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 </dict>
 </plist>

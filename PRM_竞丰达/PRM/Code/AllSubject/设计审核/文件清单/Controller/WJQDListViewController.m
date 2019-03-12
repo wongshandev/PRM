@@ -73,7 +73,7 @@
     [self.tableView.mj_header endRefreshing];
     if (self.dataArray.count == 0) {
         self.tableView.customImg = !havError ? [UIImage imageNamed:@"empty"]:SJYCommonImage(@"daoda");
-        self.tableView.customMsg = !havError? @"没有数据了,休息一下吧":@"网络错误,请检查网络后重试";
+        self.tableView.customMsg = !havError? @"没有数据了,休息下吧":@"网络错误,请检查网络后重试";
         self.tableView.showNoData = YES;
         self.tableView.isShowBtn =  havError;
     }
@@ -162,27 +162,51 @@
 
 }
 #pragma mark ***************查看文件
+//-(void)openFileAtPath:(NSURL *)filePath{
+//    if (filePath) {
+//        if ([[NSString stringWithFormat:@"%@",filePath] hasSuffix:@"TTF"]) {
+//            [QMUITips showWithText:@"不支持的文件格式" inView:self.view hideAfterDelay:1.5];
+//        }else{
+//            self.documentInteractionController = [UIDocumentInteractionController interactionControllerWithURL:filePath];
+//            //self.documentInteractionController
+//            [self.documentInteractionController setDelegate:self];
+//
+//            if ([self.documentInteractionController presentPreviewAnimated:YES]){
+//                NSLog(@"打开成功");
+//            } else{
+//                CGRect navRect = self.navigationController.navigationBar.frame;
+//                navRect.size =CGSizeMake(SCREEN_W*3,40.0f);
+//                [self.documentInteractionController presentOpenInMenuFromRect:navRect inView:self.view animated:YES];
+//                NSLog(@"打开失败");
+//            }
+//
+//        }
+//    } else {
+//        UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"打开失败" message:@"打开文档失败，可能文档损坏，请重试" preferredStyle:UIAlertControllerStyleAlert];
+//        [alert addAction:[UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleCancel handler:nil]];
+//        [self presentViewController:alert animated:YES completion:nil];
+//    }
+//}
+
 -(void)openFileAtPath:(NSURL *)filePath{
     if (filePath) {
-        if ([[NSString stringWithFormat:@"%@",filePath] hasSuffix:@"TTF"]) {
-            [QMUITips showWithText:@"不支持的文件格式" inView:self.view hideAfterDelay:1.5];
-        }else{
             self.documentInteractionController = [UIDocumentInteractionController interactionControllerWithURL:filePath];
-            //self.documentInteractionController
-            [self.documentInteractionController setDelegate:self];
-            [self.documentInteractionController presentPreviewAnimated:YES];
-        }
-    } else {
+             [self.documentInteractionController setDelegate:self];
+
+            if ([self.documentInteractionController presentPreviewAnimated:YES]){
+                NSLog(@"打开成功");
+            } else{
+                CGRect navRect = self.navigationController.navigationBar.frame;
+                navRect.size =CGSizeMake(SCREEN_W*3,40.0f);
+                [self.documentInteractionController presentOpenInMenuFromRect:navRect inView:self.view animated:YES];
+                NSLog(@"打开失败");
+            }
+     } else {
         UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"打开失败" message:@"打开文档失败，可能文档损坏，请重试" preferredStyle:UIAlertControllerStyleAlert];
         [alert addAction:[UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleCancel handler:nil]];
         [self presentViewController:alert animated:YES completion:nil];
     }
 }
-
-
-
-
-
 
 
 

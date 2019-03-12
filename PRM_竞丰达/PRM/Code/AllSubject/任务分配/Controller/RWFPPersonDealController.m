@@ -11,7 +11,7 @@
 #import "DistributionPerson.h"
 
 
-#define TypeArray @[@"负责人",@"工程经理",@"主设计人",@"辅助设计"]
+#define TypeArray @[@"负责人",@"工程经理",@"设计人",@"辅助设计"]
 
 @interface RWFPPersonDealController ()
 @property(nonatomic,strong)NSMutableArray<DistributionPerson *> *mainLeaderArray;
@@ -39,7 +39,18 @@
 //        [weakSelf requestRWFP_submit];
         [weakSelf requestRWFP_submit_JFD];
     }];
-
+    [self.navBar.backButton clickWithBlock:^{
+        if([self.listModel.ProjectTypeName isEqualToString:@"维保"] && [weakSelf.stasticDic[@"FZR"] length]){
+            [weakSelf alertWithSaveMention:@"信息已修改 , 需要保存吗?" withAction:@selector(requestRWFP_submit_JFD)];
+            return ;
+        }else{
+            if ([weakSelf.stasticDic[@"FZR"] length] && [weakSelf.stasticDic[@"ZSJR"] length]  ) {
+                [weakSelf alertWithSaveMention:@"信息已修改 , 需要保存吗?" withAction:@selector(requestRWFP_submit_JFD)];
+                return ;
+            }
+        }
+        [weakSelf.navigationController popViewControllerAnimated:YES];
+    }];
 }
 
 -(void)setupTableView{
@@ -85,39 +96,35 @@
 }
 //市场
 -(void)requestPerson_SCB0{
-    [QMUITips showLoadingInView:self.view];
+    [QMUITips showLoading:@"" inView:self.view];
     NSDictionary *LeaderParaDic = @{@"DtType":@"1"};
     [SJYRequestTool requestRWFPPersonData:LeaderParaDic success:^(id responder) {
         for (NSDictionary *dic in responder) {
             DistributionPerson *person = [DistributionPerson modelWithDictionary:dic];
             [self.mainLeaderArray addObject:person];
         }
-        [QMUITips hideAllTipsInView:self.view];
         [self requestPerson_SJB1];
     } failure:^(int status, NSString *info) {
-        [QMUITips hideAllTipsInView:self.view];
+        [QMUITips hideAllTips];
         [QMUITips showError:info inView:self.view hideAfterDelay:1.2];
     }];
 }
 //设计
 -(void)requestPerson_SJB1{
-    [QMUITips showLoadingInView:self.view];
     NSDictionary *desiginParaDic = @{@"DtType":@"2"};
     [SJYRequestTool requestRWFPPersonData:desiginParaDic success:^(id responder) {
         for (NSDictionary *dic in responder) {
             DistributionPerson *person = [DistributionPerson modelWithDictionary:dic];
             [self.designerArray addObject:person];
         }
-        [QMUITips hideAllTipsInView:self.view];
         [self requestPerson_GCB2];
     } failure:^(int status, NSString *info) {
-        [QMUITips hideAllTipsInView:self.view];
+        [QMUITips hideAllTips];
         [QMUITips showError:info inView:self.view hideAfterDelay:1.2];
     }];
 }
 // 工程
 -(void)requestPerson_GCB2{
-    [QMUITips showLoadingInView:self.view];
     NSDictionary *PMParaDic = @{@"DtType":@"3",@"Dt":@"1"};
     [SJYRequestTool requestRWFPPersonData:PMParaDic success:^(id responder) {
         for (NSDictionary *dic in responder) {
@@ -127,10 +134,10 @@
         dispatch_async(dispatch_get_main_queue(), ^{
 //            [self  setTableViewStaticData];
             [self  setTableViewStaticData_JFD];
-            [QMUITips hideAllTipsInView:self.view];
+            [QMUITips hideAllTips];
         });
     } failure:^(int status, NSString *info) {
-        [QMUITips hideAllTipsInView:self.view];
+        [QMUITips hideAllTips];
         [QMUITips showError:info inView:self.view hideAfterDelay:1.2];
     }];
 }
@@ -197,7 +204,7 @@
                                      @"isMust":@""
                                      },
                                  @{
-                                     @"titleStr":@"主设计人",
+                                     @"titleStr":@"设计人",
                                      @"subtitleStr":self.stasticDic[@"ZSJR"],
                                      @"IdString":@"",
                                      @"isMust":@""
@@ -208,20 +215,23 @@
         RWFPDealListModel *model  = [RWFPDealListModel  modelWithDictionary:dataArr[i]];
         [modelArray addObject:model];
     }
-    switch (self.listModel.ProjectTypeID.integerValue) {
-        case 2:  //2：销售项目禁用工程下拉框
-        {
-            //            [modelArray removeObjectAtIndex:1];
-        }
-            break;
-        case 3:  //3：维保项目禁用设计下拉框
-        {
-            [modelArray removeLastObject];
-        }
-            break;
-        default:
-            break;
+    if ([self.listModel.ProjectTypeName isEqualToString:@"维保"]) {
+        [modelArray removeLastObject];
     }
+//    switch (self.listModel.ProjectTypeID.integerValue) {
+//        case 2:  //2：销售项目禁用工程下拉框
+//        {
+//            //            [modelArray removeObjectAtIndex:1];
+//        }
+//            break;
+//        case 3:  //3：维保项目禁用设计下拉框
+//        {
+//            [modelArray removeLastObject];
+//        }
+//            break;
+//        default:
+//            break;
+//    }
     self.dataArray = modelArray;
     [self.tableView reloadData];
 }
@@ -313,7 +323,7 @@
     [fuzhuShejiRen addObjectsFromArray:zhushejiRen];
     if ([model.titleStr isEqualToString:TypeArray[3]]) {
         if ([self.stasticDic[@"ZSJR"] length] == 0 ) {
-            [QMUITips showWithText:@"请优先选择主设计人" inView:self.view hideAfterDelay:1.2];
+            [QMUITips showWithText:@"请优先选择设计人" inView:self.view hideAfterDelay:1.2];
             return;
         }
         dialogViewController.items = fuzhuShejiRen;
@@ -407,8 +417,6 @@
     [dialogViewController show];
 }
 
-
-
 -(void)requestRWFP_submit{
     /**
      int InquiryID(市场负责人Id)
@@ -497,11 +505,6 @@
     }];
 }
 
-
-
-
-
-
 -(void)requestRWFP_submit_JFD{
     /**
      int InquiryID(市场负责人Id)
@@ -518,11 +521,13 @@
     [self.mainLeaderArray enumerateObjectsUsingBlock:^(DistributionPerson * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([obj.Name isEqualToString:self.stasticDic[@"FZR"]]) {
             _InquiryID = obj.Id;
+            *stop = YES;
         }
     }];
     [self.designerArray enumerateObjectsUsingBlock:^(DistributionPerson * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([obj.Name isEqualToString:self.stasticDic[@"ZSJR"]]) {
             _DesignID = obj.Id;
+            *stop = YES;
         }
     }];
 //    [self.PMArray enumerateObjectsUsingBlock:^(DistributionPerson * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -610,7 +615,9 @@
 }
 
 -(void)dealloc{
-    NSLog(@"释放");
+#ifdef DEBUG
+    printf("[⚠️] 已经释放 %s.\n", NSStringFromClass(self.class).UTF8String);
+#endif
     [[NSNotificationCenter defaultCenter]removeObserver:self name:@"refreshXMQKListView" object:nil];
 } 
 @end

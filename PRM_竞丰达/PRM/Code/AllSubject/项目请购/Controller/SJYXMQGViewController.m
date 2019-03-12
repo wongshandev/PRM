@@ -11,6 +11,8 @@
 #import "XMQGListModel.h"
 #import "XMQGDetialController.h"
 
+#define   ListXMQGStateArray   @[@"", @"已计划", @"已申请", @"已驳回", @"已审核", @"已下单",@"已采购" ,@"已完成"]
+ 
 @interface SJYXMQGViewController ()
 @property(nonatomic,assign)NSInteger page;
 @property(nonatomic,assign)NSInteger totalNum;
@@ -65,7 +67,10 @@
         }
         for (NSDictionary *dic in rowsArr) {
             XMQGListModel *model = [XMQGListModel  modelWithDictionary:dic];
-            model.titleStr = [model.Name stringByAppendingFormat:@": %@ (%@)",model.ProjectName,model.ProjectCode]; 
+            model.titleStr = [model.Name stringByAppendingFormat:@": %@ (%@)",model.ProjectName,model.ProjectCode];
+            model.stateStr = [ListXMQGStateArray objectAtIndex:model.State.integerValue];
+            StateCode idx = [StateCodeStringArray indexOfObject:model.stateStr];
+            model.stateColor =   [StateCodeColorHexArray objectAtIndex:idx];
             [self.dataArray addObject:model];
         }
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -91,7 +96,7 @@
 
     if (self.dataArray.count == 0) {
         self.tableView.customImg = !havError ? [UIImage imageNamed:@"empty"]:SJYCommonImage(@"daoda");
-        self.tableView.customMsg = !havError? @"没有数据了,休息一下吧":@"网络错误,请检查网络后重试";
+        self.tableView.customMsg = !havError? @"没有数据了,休息下吧":@"网络错误,请检查网络后重试";
         self.tableView.showNoData = YES;
         self.tableView.isShowBtn =  havError;
     }
@@ -106,7 +111,7 @@
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     WLJHListCell *cell = [WLJHListCell cellWithTableView:tableView];
-    cell .indexPath = indexPath;
+    cell.indexPath = indexPath;
     cell.cellType = CellType_XMQG;
     cell.data = self.dataArray[indexPath.row];
     [cell loadContent];
@@ -128,7 +133,9 @@
 }
 
 -(void)dealloc{
-    NSLog(@"释放");
+#ifdef DEBUG
+    printf("[⚠️] 已经释放 %s.\n", NSStringFromClass(self.class).UTF8String);
+#endif
     [[NSNotificationCenter defaultCenter]removeObserver:self name:@"refreshXMQKListView" object:nil];
 }
 

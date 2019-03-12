@@ -34,7 +34,7 @@
     self.floatLayoutView = [[QMUIFloatLayoutView alloc] init];
     self.floatLayoutView.padding = UIEdgeInsetsMake(5, 10, 5, 10);
     self.floatLayoutView.itemMargins = UIEdgeInsetsMake(0, 0, 10, 10);
-    self.floatLayoutView.minimumItemSize = CGSizeMake(50, 25);// 以2个字的按钮作为最小宽度
+    self.floatLayoutView.minimumItemSize = CGSizeMake(20, 25);// 以2个字的按钮作为最小宽度
     [self addSubview:self.floatLayoutView];
   
 }
@@ -78,9 +78,9 @@
     [self.floatLayoutView removeAllSubviews];
     if ( self.indexPath.section ==0) {
         if (frame.model._parentId.integerValue == 0) {
-            self.moneyLab.text =@"";
+            self.moneyLab.text = @"";
             self.titleLab.contentEdgeInsets = UIEdgeInsetsZero;
-        }else {
+        }else{
             if (frame.model.IsSubTotal.boolValue) {
                 self.moneyLab.text = frame.model.QuotedPriceStr;
                 self.titleLab.contentEdgeInsets = UIEdgeInsetsZero; 

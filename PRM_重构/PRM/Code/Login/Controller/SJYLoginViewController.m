@@ -80,9 +80,14 @@
 - (void)buildSubviews{
     Weak_Self;
     self.view.backgroundColor = [UIColor whiteColor];
+
+    UIImageView *backImgView  = [UIImageView new];
+    backImgView.image = SJYCommonImage(@"loginBackImg");
+    backImgView.userInteractionEnabled = YES;
+    [self.view addSubview:backImgView];
+
     UIView *topView = [UIView new];
      [self.view addSubview:topView];
-
 
     UIImageView *imgView  = [UIImageView new];
     imgView.image = SJYCommonImage(@"AppIcon");
@@ -199,7 +204,23 @@
         [[SJYDefaultManager shareManager]saveRemberPassword:remeberPasswordBtn.selected];
 
     }];
+    // 版权所有
+    QMUILabel *visionBelongLab = [[QMUILabel alloc]init];
+    visionBelongLab.textAlignment = NSTextAlignmentCenter;
+    visionBelongLab.numberOfLines = 0;
+    visionBelongLab.font = [UIFont  systemFontOfSize:SJYNUM(16)];
+    visionBelongLab.textColor = Color_RGB_HEX(0x3d3d45, 1);
+    visionBelongLab.text =  @"版权: 常州正选科技有限公司";
+    [self.view addSubview:visionBelongLab];
 
+    [backImgView makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view);
+    }];
+    [visionBelongLab makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(self.view.mas_centerX);
+        make.width.equalTo(SJYNUM(310));
+        make.bottom.equalTo(self.view).offset(-15);
+    }];
     [topView makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.navBar.bottom);
         make.left.equalTo(self.view);
@@ -244,12 +265,12 @@
     }];
 
     [remeberPasswordBtn makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(passwordView.mas_bottom).offset(SJYNUM(20));
+        make.top.equalTo(passwordView.mas_bottom).offset(SJYNUM(10));
         make.height.equalTo( 30);
         make.right.equalTo(self.view).offset(-SJYNUM(44));
     }];
     [loginBtn makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(remeberPasswordBtn.mas_bottom).offset(SJYNUM(20));
+        make.top.equalTo(remeberPasswordBtn.mas_bottom).offset(SJYNUM(10));
         make.centerX.equalTo(passwordView.mas_centerX);
         make.height.equalTo(BackView_H);
         make.width.equalTo(passwordView.mas_width);

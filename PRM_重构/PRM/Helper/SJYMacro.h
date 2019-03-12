@@ -102,11 +102,11 @@
 #endif
 
 //提示框
-#define SJYAlertShow(messageText,buttonName) \
-UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:(messageText) \
-delegate:nil cancelButtonTitle:(buttonName) otherButtonTitles: nil];\
-[alert show];
-
+#define SJYAlertShow(messageText,buttonName)\
+UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"提示" message:(messageText) preferredStyle:UIAlertControllerStyleAlert];\
+[alertVC addAction: [UIAlertAction actionWithTitle:(buttonName) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {\
+}]];\
+[kWindow.rootViewController presentViewController:alertVC animated:YES completion:nil];
 
 
 #define SJYCommonImage(imageName) [UIImage imageNamed:imageName]
@@ -164,7 +164,8 @@ typedef NS_ENUM(NSUInteger, JumpURL) {
 
 
 
-
+//抽屉宽度
+#define MainDrawerWidth  SCREEN_W*0.85
 
 
 #endif /* SJYMacro_h */

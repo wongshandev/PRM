@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic,strong) SJYLoginInfo *sjyloginData;
 -(void)updateLoginData;
+-(void)clearLoginData;
 
 @end
 

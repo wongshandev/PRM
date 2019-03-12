@@ -40,21 +40,16 @@
 -(void)buildSubviews{
     Weak_Self;
     self.view.backgroundColor = [UIColor whiteColor];
-    //    UILabel *loginLabel = [[UILabel alloc] init];
-    //    loginLabel.text = @"登录";
-    //    loginLabel.textColor = Color_RGB_HEX(0x3d3d45, 1);
-    //    loginLabel.font = [UIFont boldSystemFontOfSize:SJYNUM(34)];
-    //    [self.view addSubview:loginLabel];
     
     //IP提示
     UILabel *ipAddressLab = [[UILabel alloc] init];
     ipAddressLab.font = SJYFont(16);
-    ipAddressLab.textColor =Color_RGB_HEX(0x333333, 1);
+    ipAddressLab.textColor =Color_TEXT_HIGH;
     ipAddressLab.text = @"IP地址:";
     [self.view addSubview:ipAddressLab];
     // IP 地址
     UIView *addressView = [[UIView alloc]init];
-    addressView.backgroundColor = Color_RGB_HEX(0xf0f0f0, 1);
+    addressView.backgroundColor = UIColorClear;
     [self.view addSubview:addressView];
 
     QMUITextField *addressTF = [[QMUITextField alloc] init];
@@ -62,30 +57,36 @@
     addressTF.keyboardType = UIKeyboardTypeDecimalPad;
     addressTF.borderStyle = UITextBorderStyleNone;
     addressTF.placeholder = @"58.216.202.186";
-    addressTF.placeholderColor = Color_RGB_HEX(0xc6c6cc, 1);
+    addressTF.placeholderColor =Color_TEXT_WEAK;
     [addressView addSubview: addressTF];
     self.ipAddressTF = addressTF;
 
+    QMUILabel *ipSepLine = [[QMUILabel alloc]init];
+    ipSepLine.backgroundColor = Color_Gray;
+    [addressView addSubview: ipSepLine];
     //端口提示
     UILabel *ippotLab = [[UILabel alloc] init];
     ippotLab.text = @"端口:";
     ippotLab.font = SJYFont(16);
-    ippotLab.textColor =Color_RGB_HEX(0x333333, 1);
+    ippotLab.textColor =Color_TEXT_HIGH;
     [self.view addSubview:ippotLab];
     //  IP端口
     UIView *ippotView = [[UIView alloc]init];
-    ippotView.backgroundColor = Color_RGB_HEX(0xf0f0f0, 1);
+    ippotView.backgroundColor = UIColorClear;
     [self.view addSubview:ippotView];
 
     QMUITextField *ipportTF = [[QMUITextField alloc] init];
      ipportTF.font = SJYFont(16);
     ipportTF.keyboardType = UIKeyboardTypeNumberPad;
     ipportTF.borderStyle = UITextBorderStyleNone;
-    ipportTF.placeholder = @"8811";
-    ipportTF.placeholderColor = Color_RGB_HEX(0xc6c6cc, 1);
+    ipportTF.placeholder = @"8817";
+    ipportTF.placeholderColor = Color_TEXT_WEAK;
     [ippotView addSubview: ipportTF];
     self.ipPortTF = ipportTF;
 
+    QMUILabel *portSepLine = [[QMUILabel alloc]init];
+    portSepLine.backgroundColor = Color_Gray;
+    [ippotView addSubview: portSepLine];
     // 登录
     QMUIFillButton *saveBtn = [[QMUIFillButton alloc] init];
     saveBtn.fillColor =Color_NavigationLightBlue; //Color_RGB_HEX(0x22cc65, 1);
@@ -129,14 +130,19 @@
         make.height.equalTo(SJYNUM(BackView_H));
         make.width.equalTo(SJYNUM(310));
     }];
-    [addressView rounded:SJYNUM(BackView_H/2)];
+//    [addressView rounded:SJYNUM(BackView_H/2)];
     [addressTF makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(addressView);
         make.centerX.equalTo(addressView.mas_centerX);
-        make.left.equalTo(addressView.mas_left).offset(SJYNUM(BackView_H/2-TF_Padding_Left));
+        make.left.equalTo(addressView.mas_left);
         make.bottom.equalTo(addressView);
     }];
-
+    [ipSepLine makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(addressView.mas_centerX);
+        make.width.equalTo(addressView);
+        make.bottom.equalTo(addressView.mas_bottom);
+        make.height.equalTo(2);
+    }];
     [ippotLab makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(addressView.mas_bottom).offset(SJYNUM(10));
         make.centerX.equalTo(addressView.mas_centerX);
@@ -149,15 +155,20 @@
         make.height.equalTo(addressView.mas_height);
         make.width.equalTo(addressView.mas_width);
     }];
-    [ippotView rounded:SJYNUM(BackView_H/2)];
+//    [ippotView rounded:SJYNUM(BackView_H/2)];
 
     [ipportTF makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(ippotView);
         make.centerX.equalTo(ippotView.mas_centerX);
-        make.left.equalTo(ippotView.mas_left).offset(SJYNUM(BackView_H/2-TF_Padding_Left));
+        make.left.equalTo(ippotView.mas_left);
         make.bottom.equalTo(ippotView);
     }];
-
+    [portSepLine makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(ippotView.mas_centerX);
+        make.width.equalTo(ippotView);
+        make.bottom.equalTo(ippotView.mas_bottom);
+        make.height.equalTo(2);
+    }];
     [saveBtn makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(ippotView.mas_bottom).offset(SJYNUM(20));
         make.centerX.equalTo(ippotView.mas_centerX);
@@ -186,6 +197,8 @@
 }
 
 -(void)dealloc{
-    NSLog(@"释放");
+#ifdef DEBUG
+    printf("[⚠️] 已经释放 %s.\n", NSStringFromClass(self.class).UTF8String);
+#endif
 }
 @end

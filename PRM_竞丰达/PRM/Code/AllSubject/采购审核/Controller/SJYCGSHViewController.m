@@ -12,10 +12,8 @@
 #import "CGFKDetialViewController.h"
 //value == 1 ? "计划" : (value == 2) ? "已提交" : (value == 3) ? "已驳回" : (value == 4) ? "财务已审" : (value == 5) ? "总经理已审" : (value == 6) ? "待付款" : (value == 7) ? "已付款" : "已入库";
 #define  STATEArray  @[@"全部",@"未审核",@"已审核"]
-//#define  ListModelSTATEArray  @[@"",@"计划",@"已提交",@"已驳回",@"财务已审",@"总经理已审",@"待付款",@"已付款",@"已入库"]
-//#define  ListSTATEColorArray  @[Color_NavigationLightBlue,UIColorHex(#007BD3),UIColorHex(#007BD3),UIColorHex(#FF0000),UIColorHex(#FE6D4B),UIColorHex(#EF5362),UIColorHex(#F79746),UIColorHex(#3FD0AD),UIColorHex(#2BBDF3)]
-#define  ListModelSTATEArray  @[@"",@"计划",@"已提交",@"已驳回",@"财务已审",@"总经理已审",@"待付款",@"已付款",@"已入库",@"已发运",@"接收中",@"已计划"]
-#define  ListSTATEColorArray  @[Color_NavigationLightBlue,UIColorHex(#007BD3),UIColorHex(#007BD3),UIColorHex(#FF0000),UIColorHex(#FE6D4B),UIColorHex(#EF5362),UIColorHex(#F79746),UIColorHex(#3FD0AD),UIColorHex(#2BBDF3),UIColorHex(#EE85C1),UIColorHex(#AC8FEF),UIColorHex(#9FD661)]
+
+#define  ListCGSHStateArray  @[@"",@"计划",@"已提交",@"已驳回",@"财务已审",@"总经理已审",@"待付款",@"已付款",@"已入库",@"已发运",@"接收中",@"已计划"]
 @interface SJYCGSHViewController ()<QMUITextFieldDelegate>
 @property (nonatomic, strong) SJYCGSHSearchAlertView * searchAlertView;
 
@@ -32,7 +30,7 @@
 
 -(void)setUpNavigationBar{
     Weak_Self;
-    self.navBar.backButton.hidden = NO;
+    //    self.navBar.backButton.hidden = NO;
     self.navBar.titleLabel.text = self.title;
     self.shStateType = 0;
     self.searchCode = @"";
@@ -111,7 +109,7 @@
         [modalViewController hideInView:self.view animated:YES completion:nil];
     }];
     
-    [dialogViewController addSubmitButtonWithText:@"提交" block:^(QMUIDialogViewController *aDialogViewController) {
+    [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
         [modalViewController hideInView:self.view animated:YES completion:^(BOOL finished) {
             [weakSelf.tableView.mj_header beginRefreshing];
         }];
@@ -155,14 +153,13 @@
         for (NSDictionary *dic in rowsArr) {
             CGFKListModel *model = [CGFKListModel  modelWithDictionary:dic];
             model.isCGFK = NO;
-            if(model.State <= ListSTATEColorArray.count){
-                //                BOOL isHav = [ListModelSTATEArray containsObject:model.StateName];
-                //                model.stateColor = isHav?[ListSTATEColorArray objectAtIndex:[ListModelSTATEArray indexOfObject:model.StateName]]:Color_NavigationLightBlue;
-                model.StateStr = [ListModelSTATEArray objectAtIndex:model.State];
-                model.StateColor = [ ListSTATEColorArray objectAtIndex:model.State];
+            if(model.State < [ListCGSHStateArray count]){
+                model.StateStr = [ListCGSHStateArray objectAtIndex:model.State];
+                StateCode idx = [StateCodeStringArray indexOfObject:model.StateStr];
+                model.StateColor =   [StateCodeColorHexArray objectAtIndex:idx];
             }else{
-                model.StateStr =  ListModelSTATEArray.firstObject;
-                model.StateColor = ListSTATEColorArray.firstObject;
+                model.StateStr =  ListCGSHStateArray.firstObject;
+                model.StateColor = StateCodeColorHexArray.firstObject;
             }
             model.titleStr = model.CreateName.length?[NSString stringWithFormat:@"(%@)  %@",model.CreateName,model.Name]:model.Name;
             [self.dataArray addObject:model];
@@ -189,7 +186,7 @@
     }
     if (self.dataArray.count == 0) {
         self.tableView.customImg = !havError ? [UIImage imageNamed:@"empty"]:SJYCommonImage(@"daoda");
-        self.tableView.customMsg = !havError? @"没有数据了,休息一下吧":@"网络错误,请检查网络后重试";
+        self.tableView.customMsg = !havError? @"没有数据了,休息下吧":@"网络错误,请检查网络后重试";
         self.tableView.showNoData = YES;
         self.tableView.isShowBtn =  havError;
     }
@@ -202,7 +199,7 @@
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     CGFKListCell *cell = [CGFKListCell cellWithTableView:tableView];
-    cell .indexPath = indexPath;
+    cell.indexPath = indexPath;
     cell.cellType = CellType_CGSHList;
     cell.data = self.dataArray[indexPath.row];
     [cell loadContent];
@@ -224,7 +221,9 @@
     NSLog(@"Retain Count = %ld\n",CFGetRetainCount((__bridge CFTypeRef)(self)));
 }
 -(void)dealloc{
-    NSLog(@"释放");
+#ifdef DEBUG
+    printf("[⚠️] 已经释放 %s.\n", NSStringFromClass(self.class).UTF8String);
+#endif
     [[NSNotificationCenter defaultCenter]removeObserver:self name:@"refreshCGSHListView" object:nil];
 }
 -(void)refreshListView{

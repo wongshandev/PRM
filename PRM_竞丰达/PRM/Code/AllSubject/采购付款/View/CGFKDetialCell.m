@@ -27,9 +27,9 @@
 
 
     self.floatLayoutView = [[QMUIFloatLayoutView alloc] init];
-    self.floatLayoutView.padding = UIEdgeInsetsMake(5, 0, 5, 5);
+    self.floatLayoutView.padding = UIEdgeInsetsMake(5, 0, 5, 0);
     self.floatLayoutView.itemMargins = UIEdgeInsetsMake(0, 0, 10, 10);
-    self.floatLayoutView.minimumItemSize = CGSizeMake(50, 25);// 以2个字的按钮作为最小宽度
+    self.floatLayoutView.minimumItemSize = CGSizeMake(10, 25);// 以2个字的按钮作为最小宽度
     [self addSubview:self.floatLayoutView];
 
 

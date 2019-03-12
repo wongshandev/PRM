@@ -9,7 +9,6 @@
 #import "BaseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
 @interface WLJHListModel : BaseModel
 
 @property (nonatomic, copy) NSString *Id;
@@ -20,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *Name;
 @property (nonatomic, copy) NSString *CreateDate;
 
+@property (nonatomic, copy) NSString *stateString;
+@property (nonatomic, strong) UIColor *stateColor;
 
 
 
