@@ -44,7 +44,7 @@
         model.modelType = ModelType_XMKZ;
         
         xmkzVC.detialModel = model;
-        xmkzVC.listModel = self.listModel;
+        xmkzVC.listModel = weakSelf.listModel;
         xmkzVC.title =  weakSelf.title;
         [weakSelf.navigationController pushViewController:xmkzVC animated:YES];
     }];
@@ -84,8 +84,7 @@
     };
 }
 
--(void)requestData_XMKZDetialList {
-
+-(void)requestData_XMKZDetialList { 
     [SJYRequestTool requestXMKZDetialListWithProjectBranchID:self.listModel.Id Page:self.page success:^(id responder) {
         NSArray *rowsArr = [responder objectForKey:@"rows"];
         self.totalNum = [[responder objectForKey:@"total"] integerValue];

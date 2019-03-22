@@ -47,7 +47,11 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
     return 0.001;
 }
-
+//处理 cell 隔行换色
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    UIColor *color = ((indexPath.row % 2) == 1) ? Color_CellBackground: [UIColor clearColor];
+    cell.backgroundColor = color;
+}
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
 
     DXBaseCell * cell = [tableView dequeueReusableCellWithIdentifier:@"ID"];

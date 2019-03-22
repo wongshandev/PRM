@@ -32,7 +32,8 @@
     self.tableView.estimatedRowHeight = 90;
  }
 -(void)refreshCurrentList{
-    [self.tableView.mj_header beginRefreshing];
+    self.page = 0;
+    [self requestData_XMKZList];
 }
 #pragma mark ======================= 数据绑定
 -(void)bindViewModel{

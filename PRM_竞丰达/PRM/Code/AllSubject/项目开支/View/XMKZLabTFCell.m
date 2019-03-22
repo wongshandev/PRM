@@ -17,9 +17,10 @@
 
     self.textField = [[QMUITextField alloc]init];
     self.textField.maximumTextLength = 16;
-    self.textField.placeholder = @"请输入";
-     self.textField.textAlignment = NSTextAlignmentRight;
+    self.textField.placeholder = @"0.00";
+      self.textField.textAlignment = NSTextAlignmentRight;
     self.textField.keyboardType = UIKeyboardTypeDecimalPad;
+    self.textField.returnKeyType = UIReturnKeyDone;
     [self.contentView addSubview:self.textField];
     [self.textField mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.textLabel);
@@ -30,7 +31,7 @@
     self.textLabel.textColor = Color_TEXT_HIGH;
     self.textField.font = Font_ListTitle;
     self.textField.textColor = Color_TEXT_NOMARL;
-    self.textField.placeholderColor = Color_TEXT_NOMARL;
+    self.textField.placeholderColor = Color_TEXT_WEAK;
 
 }
 

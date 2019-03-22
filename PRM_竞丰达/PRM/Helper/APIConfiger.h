@@ -14,8 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 #define IP_Port                  [[SJYDefaultManager shareManager] getIPPort]
 #define kEmployeeID        [[SJYDefaultManager shareManager] getEmployeeID]
 
-#define KEmployID            [SJYUserManager sharedInstance].sjyloginData.Id
-#define KPositionID            [SJYUserManager sharedInstance].sjyloginData.PositionID
+#define KEmployID            [SJYUserManager sharedInstance].sjyloginUC.Id
+#define KPositionID            [SJYUserManager sharedInstance].sjyloginUC.PositionID
 
 @interface APIConfiger : NSObject
 #define API_BaseUrl                             [NSString stringWithFormat:@"http://%@:%@/App",IP_Address,IP_Port]

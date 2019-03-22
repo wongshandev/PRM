@@ -17,9 +17,9 @@ typedef enum : NSUInteger {
 } RKPSApproveState;
 
 @interface RKPSApproveAlertView : UIView
+
 @property(nonatomic,assign)RKPSApproveState state;
-
-
+@property(nonatomic,strong)  QMUILabel *bzMenLab;
 @property(nonatomic,strong)  QMUITextView *bzTV;
 
 @end

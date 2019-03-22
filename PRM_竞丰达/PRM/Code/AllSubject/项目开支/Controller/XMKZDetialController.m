@@ -99,7 +99,7 @@ QMUITextFieldDelegate,QMUITextViewDelegate>{
         [weakSelf.tableView endEditing:YES];
         if (![weakSelf.detialModel.OccurDateChange isEqualToString:weakSelf.detialModel.OccurDate]
             || ![weakSelf.detialModel.SpendingTypeIDChange isEqualToString:weakSelf.detialModel.SpendingTypeID]
-            || ![weakSelf.detialModel.AmountChange isEqualToString:weakSelf.detialModel.Amount]
+            ||  weakSelf.detialModel.AmountChange.floatValue != weakSelf.detialModel.Amount.floatValue
             || ![weakSelf.detialModel.RemarkChange isEqualToString:weakSelf.detialModel.Remark]) {
             [weakSelf alertWithSaveMention:@"信息已修改 , 需要保存吗?" withAction:@selector(request_SaveFunction)];
             return ;
@@ -132,9 +132,9 @@ QMUITextFieldDelegate,QMUITextViewDelegate>{
 
 #pragma mark ----------------------- 静态数据源
     Weak_Self;
-    self.tableView.qmui_staticCellDataSource = [[QMUIStaticTableViewCellDataSource alloc] initWithCellDataSections:@[@[ ({
+    self.tableView.qmui_staticCellDataSource = [[QMUIStaticTableViewCellDataSource alloc] initWithCellDataSections:@[@[({
         QMUIStaticTableViewCellData *cellData = [[QMUIStaticTableViewCellData alloc] init];
-        cellData.accessoryType = QMUIStaticTableViewCellAccessoryTypeDisclosureIndicator;
+        cellData.accessoryType = self.saveBtn.hidden?QMUIStaticTableViewCellAccessoryTypeNone: QMUIStaticTableViewCellAccessoryTypeDisclosureIndicator;
         cellData.style = UITableViewCellStyleValue1;
         cellData.height = CellHigh;
         cellData.identifier = 0;
@@ -150,7 +150,7 @@ QMUITextFieldDelegate,QMUITextViewDelegate>{
         };
         cellData; }) ,({
             QMUIStaticTableViewCellData *cellData = [[QMUIStaticTableViewCellData alloc] init];
-            cellData.accessoryType = QMUIStaticTableViewCellAccessoryTypeDisclosureIndicator;
+            cellData.accessoryType = self.saveBtn.hidden?QMUIStaticTableViewCellAccessoryTypeNone: QMUIStaticTableViewCellAccessoryTypeDisclosureIndicator;
             cellData.style = UITableViewCellStyleValue1;
             cellData.height = CellHigh;
             cellData.identifier = 1;
@@ -176,10 +176,11 @@ QMUITextFieldDelegate,QMUITextViewDelegate>{
                 cellData.didSelectAction = @selector(selectCellAction:);
                 cellData.cellForRowBlock = ^(UITableView *tableView, __kindof QMUITableViewCell *cell, QMUIStaticTableViewCellData *cellData) {
                     XMKZLabTFCell *TFCell = (XMKZLabTFCell *)cell;
-                    //            TFCell.detailTextLabel.text = @"";
+                    //    TFCell.detailTextLabel.text = @"";
                     TFCell.textField.text = cellData.detailText;
                     TFCell.textField.delegate = weakSelf;
                     TFCell.textField.enabled = !weakSelf.saveBtn.hidden;
+                    //   TFCell.textField.placeholder =  weakSelf.saveBtn.hidden?@"":@"请输入";
                 };
                 cellData; })  ]]];
 #pragma mark --------------键盘监听
@@ -197,18 +198,18 @@ QMUITextFieldDelegate,QMUITextViewDelegate>{
     CGFloat submitWidth = (self.detialModel.State == 1) && self.detialModel.modelType == ModelType_XMKZ  ?45: 0;
     CGFloat approvelPayWidth = (self.detialModel.PayID == 0) && self.detialModel.modelType == ModelType_KZFK  ?45: 0;
 
-    CGFloat approvelWidth = ((self.detialModel.State == 2 && (self.detialModel.EmployeeID == 1 || self.detialModel.EmployeeID == self.eld ))
-                             ||  (self.detialModel.State == 4 && (self.detialModel.ApprovalID == 0 || self.detialModel.ApprovalID == self.eld ) &&  !(self.eld ==self.detialModel.ApprovalID || self.eld == self.detialModel.EmployeeID || self.eld == self.detialModel.BossID))
-                             ||  (self.detialModel.State == 5 && (self.detialModel.ManagerID == 0 || self.detialModel.ManagerID == self.eld ) &&  !(self.eld ==self.detialModel.ApprovalID || self.eld == self.detialModel.EmployeeID || self.eld == self.detialModel.BossID))
-                             ||  (self.detialModel.State == 6 && (self.detialModel.BossID == 0 || self.detialModel.BossID == self.eld ) &&  !(self.eld ==self.detialModel.ApprovalID || self.eld == self.detialModel.EmployeeID || self.eld == self.detialModel.BossID))
-                             ) && self.detialModel.modelType == ModelType_KZSH  ?45: 0;
+     CGFloat approvelWidth = ((self.detialModel.State == 2 && (self.detialModel.EmployeeID == 1 || self.detialModel.EmployeeID == self.eld ))
+                             ||  (self.detialModel.State == 4 && (self.detialModel.ApprovalID == 0 || self.detialModel.ApprovalID == self.eld ) &&  !(self.eld ==self.detialModel.EmployeeID || self.eld == self.detialModel.ManagerID || self.eld == self.detialModel.BossID))
+                             ||  (self.detialModel.State == 5 && (self.detialModel.ManagerID == 0 || self.detialModel.ManagerID == self.eld ) &&  !(self.eld ==self.detialModel.EmployeeID || self.eld == self.detialModel.ApprovalID || self.eld == self.detialModel.BossID))
+                             ||  (self.detialModel.State == 6 && (self.detialModel.BossID == 0 || self.detialModel.BossID == self.eld ) &&  !(self.eld ==self.detialModel.EmployeeID || self.eld == self.detialModel.ApprovalID || self.eld == self.detialModel.ManagerID))
+                             ) && self.detialModel.modelType == ModelType_KZSH ?45: 0;
 
     //(row.State == 2 && row.EmployeeID.inArray(1, eId))
     //|| (row.State == 4 && row.ApprovalID.inArray(0, eId) && !eId.inArray([row.EmployeeID, row.ManagerID, row.BossID]))
     //|| (row.State == 5 && row.ManagerID.inArray(0, eId) && !eId.inArray([row.EmployeeID, row.ApprovalID, row.BossID]))
     //|| (row.State == 6 && row.BossID.inArray(0, eId) && !eId.inArray([row.EmployeeID, row.ApprovalID, row.ManagerID]))
 
-#pragma mark -----------------------项目开支 删除
+ #pragma mark -----------------------项目开支 删除
 
     Weak_Self;
     QMUIButton *deleteBtn = [QMUIButton  buttonWithType:UIButtonTypeCustom];
@@ -235,6 +236,7 @@ QMUITextFieldDelegate,QMUITextViewDelegate>{
     }];
 
 #pragma mark -----------------------项目开支  保存
+
     QMUIButton *saveBtn = [QMUIButton  buttonWithType:UIButtonTypeCustom];
     [saveBtn setTitle:@"保存" forState:UIControlStateNormal];
     [saveBtn setTitleColor:Color_White forState:UIControlStateNormal];
@@ -247,6 +249,7 @@ QMUITextFieldDelegate,QMUITextViewDelegate>{
     }];
 
 #pragma mark -----------------------开支审核  审核
+    
     QMUIButton *approvelBtn = [QMUIButton  buttonWithType:UIButtonTypeCustom];
     [approvelBtn setTitle:@"审核" forState:UIControlStateNormal];
     [approvelBtn setTitleColor:Color_White forState:UIControlStateNormal];
@@ -272,7 +275,7 @@ QMUITextFieldDelegate,QMUITextViewDelegate>{
 
     [self.deleteBtn makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.navBar.mas_top).offset(NAVNOMARLHEIGHT-44);
-        make.right.equalTo(self.navBar.mas_right);
+        make.right.equalTo(self.navBar.mas_right).offset(-10);
         make.height.equalTo(44);
         make.width.equalTo(deleteWidth);
     }];
@@ -347,7 +350,7 @@ QMUITextFieldDelegate,QMUITextViewDelegate>{
     bzTV.shouldCountingNonASCIICharacterAsTwo = YES;
     bzTV.shouldResponseToProgrammaticallyTextChanges = YES;
     bzTV.delegate = self;
-    bzTV.placeholderColor = Color_TEXT_NOMARL;
+    bzTV.placeholderColor = Color_TEXT_WEAK;
     bzTV.maximumTextLength = 1024;
     bzTV.placeholder = self.saveBtn.hidden?@"":@"请输入(限512字)";
     bzTV.text = self.detialModel.RemarkChange;
@@ -474,13 +477,36 @@ QMUITextFieldDelegate,QMUITextViewDelegate>{
 #pragma mark -----------------------项目开支 ==保存 / 提交 / 删除
 
 -(void)request_SubmitFunction{
+    [self.tableView endEditing:YES];
     if (![self.detialModel.OccurDateChange isEqualToString:self.detialModel.OccurDate]
         || ![self.detialModel.SpendingTypeIDChange isEqualToString:self.detialModel.SpendingTypeID]
-        || ![self.detialModel.AmountChange isEqualToString:self.detialModel.Amount]
+        || self.detialModel.AmountChange.floatValue != self.detialModel.Amount.floatValue
         || ![self.detialModel.RemarkChange isEqualToString:self.detialModel.Remark]) {
         [QMUITips showWithText:@"数据已更改,请先保存" inView:[UIApplication sharedApplication].keyWindow hideAfterDelay:1.2];
         return;
     }
+
+    QMUIModalPresentationViewController *modalViewController = [[QMUIModalPresentationViewController alloc] init];
+    QMUIDialogViewController *dialogViewController = [[QMUIDialogViewController alloc] init];
+    dialogViewController.title = @"提醒";
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 80)];
+    contentView.backgroundColor = UIColorWhite;
+    QMUILabel *label = [[QMUILabel alloc] init];
+    label.contentEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 10);
+    label.textAlignment = NSTextAlignmentLeft;
+    label.textColor = Color_TEXT_NOMARL;
+    label.font = Font_ListTitle;
+    label.numberOfLines = 0;
+    label.text = @"确定提交吗?";
+    [contentView addSubview:label];
+    [label makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(contentView).offset(UIEdgeInsetsMake(5, 10, 5, 10));
+    }];
+    dialogViewController.contentView = contentView;
+    [dialogViewController addCancelButtonWithText:@"取消" block:^(__kindof QMUIDialogViewController *aDialogViewController) {
+        [modalViewController hideInView:[UIApplication sharedApplication].keyWindow animated:YES completion:nil];
+    }];
+    [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) { 
     [QMUITips showLoading:@"数据传输中" inView:[UIApplication sharedApplication].keyWindow];
     [SJYRequestTool requestXMKZDetialSubmitWithParaDic:@{@"Id":self.detialModel.Id,
                                                          @"State":@(2),
@@ -489,6 +515,8 @@ QMUITextFieldDelegate,QMUITextViewDelegate>{
                                                              [QMUITips hideAllTips];
                                                              if ([[responder valueForKey:@"success"] boolValue]== YES) {
                                                                  [QMUITips showWithText:[responder valueForKey:@"msg"] inView:[UIApplication sharedApplication].keyWindow hideAfterDelay:1.2];
+                                                                 [modalViewController hideInView:[UIApplication sharedApplication].keyWindow animated:YES completion:nil];
+
                                                                  [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshSJYXMKZDetiallList" object:nil];
                                                                  dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                                                                      [self.navigationController popViewControllerAnimated:YES];
@@ -500,6 +528,9 @@ QMUITextFieldDelegate,QMUITextViewDelegate>{
                                                              [QMUITips hideAllTips];
                                                              [QMUITips showError:info inView:[UIApplication sharedApplication].keyWindow hideAfterDelay:1.2];
                                                          }];
+    }];
+    modalViewController.contentViewController = dialogViewController;
+    [modalViewController showInView:[UIApplication sharedApplication].keyWindow animated:YES completion:nil];
 }
 
 -(void)request_SaveFunction{
@@ -527,10 +558,11 @@ QMUITextFieldDelegate,QMUITextViewDelegate>{
     //    }
     [QMUITips showLoading:@"数据传输中" inView:[UIApplication sharedApplication].keyWindow];
     [SJYRequestTool requestXMKZDetialSaveWithParaDic:self.viewDataDic imageArray:self.imagesPicker.images fileName:@"" progerss:^(id progress) {
+        [QMUITips hideAllTips];
         NSProgress *uploadProgress = progress;
-        CGFloat    pro = uploadProgress.fractionCompleted;
+        CGFloat    pro = uploadProgress.fractionCompleted *100;
         dispatch_async(dispatch_get_main_queue(), ^{
-            [QMUITips showLoading:[NSString stringWithFormat:@"%.2f", pro] inView:[UIApplication sharedApplication].keyWindow];
+            [QMUITips showLoading:[NSString stringWithFormat:@"%.0f%%", pro] inView:[UIApplication sharedApplication].keyWindow];
         });
     } success:^(id responder) {
         [QMUITips hideAllTips];
@@ -549,22 +581,47 @@ QMUITextFieldDelegate,QMUITextViewDelegate>{
     }];
 }
 -(void)request_DeleteFunction{
-    [QMUITips showLoading:@"数据传输中" inView:[UIApplication sharedApplication].keyWindow];
-    [SJYRequestTool requestXMKZDetialDeleteWithParaDic:@{@"Id":self.detialModel.Id, @"EmployeeID":KEmployID } success:^(id responder) {
-        [QMUITips hideAllTips];
-        if ([[responder valueForKey:@"success"] boolValue]== YES) {
-            [QMUITips showWithText:[responder valueForKey:@"msg"] inView:[UIApplication sharedApplication].keyWindow hideAfterDelay:1.2];
-            [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshSJYXMKZDetiallList" object:nil];
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self.navigationController popViewControllerAnimated:YES];
-            });
-        }else{
-            [QMUITips showWithText:[responder valueForKey:@"msg"] inView:[UIApplication sharedApplication].keyWindow hideAfterDelay:1.2];
-        }
-    } failure:^(int status, NSString *info) {
-        [QMUITips hideAllTips];
-        [QMUITips showError:info inView:[UIApplication sharedApplication].keyWindow hideAfterDelay:1.2];
+    QMUIModalPresentationViewController *modalViewController = [[QMUIModalPresentationViewController alloc] init];
+    QMUIDialogViewController *dialogViewController = [[QMUIDialogViewController alloc] init];
+    dialogViewController.title = @"提醒";
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 80)];
+    contentView.backgroundColor = UIColorWhite;
+    QMUILabel *label = [[QMUILabel alloc] init];
+    label.contentEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 10);
+    label.textAlignment = NSTextAlignmentLeft;
+    label.textColor = Color_TEXT_NOMARL;
+    label.font = Font_ListTitle;
+    label.numberOfLines = 0;
+    label.text = @"确定删除吗?";
+    [contentView addSubview:label];
+    [label makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(contentView).offset(UIEdgeInsetsMake(5, 10, 5, 10));
     }];
+    dialogViewController.contentView = contentView;
+    [dialogViewController addCancelButtonWithText:@"取消" block:^(__kindof QMUIDialogViewController *aDialogViewController) {
+        [modalViewController hideInView:[UIApplication sharedApplication].keyWindow animated:YES completion:nil];
+    }];
+    [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
+        [QMUITips showLoading:@"数据传输中" inView:[UIApplication sharedApplication].keyWindow];
+        [SJYRequestTool requestXMKZDetialDeleteWithParaDic:@{@"Id":self.detialModel.Id, @"EmployeeID":KEmployID } success:^(id responder) {
+            [QMUITips hideAllTips];
+            if ([[responder valueForKey:@"success"] boolValue]== YES) {
+                [QMUITips showWithText:[responder valueForKey:@"msg"] inView:[UIApplication sharedApplication].keyWindow hideAfterDelay:1.2];
+                [modalViewController hideInView:[UIApplication sharedApplication].keyWindow animated:YES completion:nil];
+                [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshSJYXMKZDetiallList" object:nil];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self.navigationController popViewControllerAnimated:YES];
+                });
+            }else{
+                [QMUITips showWithText:[responder valueForKey:@"msg"] inView:[UIApplication sharedApplication].keyWindow hideAfterDelay:1.2];
+            }
+        } failure:^(int status, NSString *info) {
+            [QMUITips hideAllTips];
+            [QMUITips showError:info inView:[UIApplication sharedApplication].keyWindow hideAfterDelay:1.2];
+        }];
+    }];
+    modalViewController.contentViewController = dialogViewController;
+    [modalViewController showInView:[UIApplication sharedApplication].keyWindow animated:YES completion:nil];
 }
 
 
@@ -588,7 +645,8 @@ QMUITextFieldDelegate,QMUITextViewDelegate>{
     [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
         NSString *content =  [self.approvelAlertView.bzTV.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
         if ((self.approvelAlertView.state == KZSHApproveState_BH  ||  self.approvelAlertView.state == KZSHApproveState_ZF ) && content.length == 0) {
-            [QMUITips showWithText:@"请输入备注" inView:[UIApplication sharedApplication].keyWindow hideAfterDelay:1.2];
+            NSString *mention = [[@"请输入"  stringByAppendingString:self.approvelAlertView.bzMenLab.text] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" :"]];
+            [QMUITips showWithText:mention inView:[UIApplication sharedApplication].keyWindow hideAfterDelay:1.2];
             [self.approvelAlertView.bzTV becomeFirstResponder];
             return ;
         }
@@ -597,7 +655,7 @@ QMUITextFieldDelegate,QMUITextViewDelegate>{
         NSDictionary *paradic =@{
                                  @"Id":self.detialModel.Id,
                                  @"EmployeeID":KEmployID,
-                                 @"AEmp":[[SJYUserManager sharedInstance].sjyloginData modelToJSONString],
+                                 @"AEmp":[[SJYUserManager sharedInstance].ucAemp  modelToJSONString],
                                  @"State":@(self.approvelAlertView.state).stringValue, //State=7(同意) =3(驳回) =-1(作废)
                                  @"RejectReason":content
                                  };
@@ -740,7 +798,8 @@ QMUITextFieldDelegate,QMUITextViewDelegate>{
 - (void)photosView:(PYPhotosView *)photosView didAddImageClickedWithImages:(NSMutableArray *)images {
     // 在这里做当点击添加图片按钮时，你想做的事。
     // 这里我利用导入的图片，模拟从相册选图片或者拍照。(这里默认最多导入9张，超过时取前九张)
-
+    [self.footView endEditing:YES];
+    [self.tableView endEditing:YES];
     UIAlertController *alertVC= [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     [alertVC addAction:[UIAlertAction actionWithTitle:@"从相机拍照" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [self handleTakePhotoButtonClick:nil];
@@ -935,18 +994,28 @@ QMUITextFieldDelegate,QMUITextViewDelegate>{
 }
 
 -(BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
+    if (textField.text.floatValue == 0) {
+        textField.text = @"";
+    }
+   textField.placeholder = @"请输入";
     textField.text = [textField.text stringByReplacingOccurrencesOfString:@"," withString:@""];
     return YES;
 }
 -(void)textFieldDidEndEditing:(UITextField *)textField{
     textField.text = [NSString numberMoneyFormattor:textField.text];
-    self.detialModel.AmountChange = textField.text.length == 0?@"":textField.text;
+    self.detialModel.AmountChange = [(textField.text.length == 0?@"":textField.text) stringByReplacingOccurrencesOfString:@"," withString:@""];
     [self.viewDataDic setObject:self.detialModel.AmountChange forKey:@"Amount"];
 }
-
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    [textField endEditing:YES];
+    return YES;
+}
 -(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
     NSString *str =[textField.text stringByAppendingString:string];
     if (![NSString isAvailableStr:str WithFormat:@"^(([1-9]{1}\\d*)|([0]{1}))(\\.(\\d){0,2})?$"]) {//@"^([1-9][0-9]*)$"
+        return NO;
+    }
+    if (str.floatValue>10000000) {
         return NO;
     }
     return YES;

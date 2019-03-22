@@ -68,9 +68,9 @@
 }
 
 -(void)request_MainViewData{
-    NSLog(@"%@",[SJYUserManager sharedInstance].sjyloginData.Id);
+    NSLog(@"%@",[SJYUserManager sharedInstance].sjyloginUC.Id);
     [QMUITips showLoading:@"数据加载中" inView:self.view];
-    [ SJYRequestTool requestMainFunctionList:[SJYUserManager sharedInstance].sjyloginData.Id complete:^(id responder) {
+    [ SJYRequestTool requestMainFunctionList:[SJYUserManager sharedInstance].sjyloginUC.Id complete:^(id responder) {
         NSLog(@"%@",responder);
         if (self.collectionView.mj_header.isRefreshing) {
             [self.dateSource removeAllObjects];

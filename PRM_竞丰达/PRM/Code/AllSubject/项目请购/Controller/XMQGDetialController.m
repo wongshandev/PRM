@@ -45,7 +45,7 @@
     }];
     [self.rejectBtn makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.navBar.mas_top).offset(NAVNOMARLHEIGHT-44);
-        make.right.equalTo(self.navBar.mas_right);
+        make.right.equalTo(self.navBar.mas_right).offset(-10);
         make.height.equalTo(44);
         make.width.equalTo(45);
     }];
@@ -171,10 +171,10 @@
     [dialogViewController addCancelButtonWithText:@"取消" block:nil];
     [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
         [SJYRequestTool requestXMQGApprovelWithParam: @{
-                                                        @"EmployeeID":[SJYUserManager sharedInstance].sjyloginData.Id,
+                                                        @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id,
                                                         @"State":@"4",
                                                         @"MarketOrderID":self.marketOrderID,
-                                                        @"PurchaseId": [SJYUserManager sharedInstance].sjyloginData.PurchaseId,  //(待办通知人Id,uc.PurchaseId，同意时必要回传)
+                                                        @"PurchaseId": [SJYUserManager sharedInstance].sjyloginUC.PurchaseId,  //(待办通知人Id,uc.PurchaseId，同意时必要回传)
                                                         @"RejectReason":@""//(驳回时必要回传参数)
                                                         } success:^(id responder) {
                                                             [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
@@ -222,10 +222,10 @@
             return ;
         }
         [SJYRequestTool requestXMQGApprovelWithParam: @{
-                                                        @"EmployeeID":[SJYUserManager sharedInstance].sjyloginData.Id,
+                                                        @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id,
                                                         @"State":@"3",
                                                         @"MarketOrderID":self.marketOrderID,
-                                                        @"PurchaseId": [SJYUserManager sharedInstance].sjyloginData.PurchaseId,  //(待办通知人Id,uc.PurchaseId，同意时必要回传)
+                                                        @"PurchaseId": [SJYUserManager sharedInstance].sjyloginUC.PurchaseId,  //(待办通知人Id,uc.PurchaseId，同意时必要回传)
                                                         @"RejectReason":content//(驳回时必要回传参数)
                                                         } success:^(id responder) {
                                                             [aDialogViewController hide];

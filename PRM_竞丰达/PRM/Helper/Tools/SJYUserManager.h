@@ -22,9 +22,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) LoginModel *loginModel;
 -(void)updateLoginModel;
 
-@property (nonatomic,strong) SJYLoginInfo *sjyloginData;
--(void)updateLoginData;
--(void)clearLoginData;
+@property (nonatomic,strong) SJYLoginInfo *sjyloginUC;
+-(void)updateLoginUC;
+-(void)clearLoginUC;
+
+@property (nonatomic,strong) NSDictionary *ucAemp;
+-(void)updateUcAemp;
+-(void)clearUcAemp;
+
+
 
 @end
 

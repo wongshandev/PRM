@@ -95,24 +95,26 @@
         make.height.mas_equalTo(2);
     }];
     
-    
+    __block NSInteger shStateType = self.shStateType;
     Weak_Self;
     [self.searchAlertView.stateBtn clickWithBlock:^{
         [self.searchAlertView endEditing:YES];
         [BRStringPickerView showStringPickerWithTitle:@"状态" dataSource:STATEArray defaultSelValue:weakSelf.searchAlertView.stateBtn.currentTitle isAutoSelect:NO themeColor:Color_NavigationLightBlue resultBlock:^(id selectValue) {
             [weakSelf.searchAlertView.stateBtn setTitle:selectValue forState:UIControlStateNormal];
             NSInteger index = [STATEArray indexOfObject:selectValue] -1;
-            weakSelf.shStateType = index;
+            shStateType = index;
          }];
     }];
     
     dialogViewController.contentView = self.searchAlertView;
     [dialogViewController addCancelButtonWithText:@"取消" block:^(__kindof QMUIDialogViewController *aDialogViewController) {
-        [modalViewController hideInView:self.view animated:YES completion:nil];
+        [modalViewController hideInView:weakSelf.view animated:YES completion:nil];
     }];
     
     [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
-        [modalViewController hideInView:self.view animated:YES completion:^(BOOL finished) {
+        weakSelf.shStateType = shStateType;
+        weakSelf.searchCode = weakSelf.searchAlertView.codeTF.text;
+        [modalViewController hideInView:weakSelf.view animated:YES completion:^(BOOL finished) {
             [weakSelf.tableView.mj_header beginRefreshing];
         }];
     }];
@@ -150,7 +152,7 @@
 -(void)requestData_BGSH{
     //    NSString *stateString = [stateStr isEqual: @"未审核"]?@"0":([stateStr  isEqual:@"全部"]?@"2":@"1");
     
-    [SJYRequestTool requestBGSHListWithEmployID:[SJYUserManager sharedInstance].sjyloginData.Id SearchStateID:@(self.shStateType).stringValue SearchCode:self.searchCode page:self.page success:^(id responder) {
+    [SJYRequestTool requestBGSHListWithEmployID:[SJYUserManager sharedInstance].sjyloginUC.Id SearchStateID:@(self.shStateType).stringValue SearchCode:self.searchCode page:self.page success:^(id responder) {
         
         NSArray *rowsArr = [responder objectForKey:@"rows"];
         self.totalNum = [[responder objectForKey:@"total"] integerValue];
@@ -223,7 +225,7 @@
     QMUIAlertController *alert = [[QMUIAlertController alloc] initWithTitle:@"提醒" message:@"确认该记录审核通过?" preferredStyle:QMUIAlertControllerStyleAlert];
     [alert addAction:[QMUIAlertAction actionWithTitle:@"确定" style:QMUIAlertActionStyleDefault handler:^(__kindof QMUIAlertController *aAlertController, QMUIAlertAction *action) {
         
-        [SJYRequestTool requestBGSHSubmitWithEmployID:[SJYUserManager sharedInstance].sjyloginData.Id ChangeOrderID:model.Id success:^(id responder) {
+        [SJYRequestTool requestBGSHSubmitWithEmployID:[SJYUserManager sharedInstance].sjyloginUC.Id ChangeOrderID:model.Id success:^(id responder) {
             [QMUITips showSucceed:[responder objectForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
             if ([[responder valueForKey:@"success"] boolValue]== YES) {
                 [self.tableView.mj_header beginRefreshing];
@@ -335,7 +337,7 @@
     self.searchAlertView.sepLine.backgroundColor = Color_NavigationLightBlue;
 }
 -(void)textFieldDidEndEditing:(UITextField *)textField{
-    self.searchCode = textField.text.length ?textField.text:@"";
+    textField.text = textField.text.length ?textField.text:@"";
     self.searchAlertView.sepLine.backgroundColor = Color_SrprateLine;
 }
 

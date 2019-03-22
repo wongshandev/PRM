@@ -227,7 +227,7 @@
 +(void)requestSJSHListWithSearchStateID:(NSString *)searchStateID  SearchCode:(NSString *)searchCode SearchName:(NSString *)searchName page:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
     //竞丰达 增加AEmp字段
     NSDictionary *params = @{
-                             @"AEmp":[[SJYUserManager sharedInstance].sjyloginData   modelToJSONString],
+                             @"AEmp":[[SJYUserManager sharedInstance].sjyloginUC   modelToJSONString],
                              @"rows":@"20",
                              @"page":@(page),
                              @"SearchName":searchName,
@@ -245,7 +245,7 @@
 +(void)requestGCFPWithPage:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
     //竞丰达 增加AEmp字段
     NSDictionary *params = @{
-                             @"AEmp":[[SJYUserManager sharedInstance].sjyloginData   modelToJSONString],
+                             @"AEmp":[[SJYUserManager sharedInstance].sjyloginUC   modelToJSONString],
                              @"rows":@"20",
                              @"page":@(page)
                              };
@@ -261,13 +261,13 @@
 +(void)requestCGSHListWithSearchStateID:(NSInteger)searchStateID  SearchCode:(NSString *)searchCode page:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
 
 //    NSError *jsonError;
-//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[[SJYUserManager sharedInstance].sjyloginData modelToJSONObject] options:NSJSONWritingPrettyPrinted error:&jsonError];
+//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[[SJYUserManager sharedInstance].ucAemp  modelToJSONObject] options:NSJSONWritingPrettyPrinted error:&jsonError];
 //    NSString *jsonStr = [[[[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding] stringByReplacingOccurrencesOfString:@"\n" withString:@""] stringByReplacingOccurrencesOfString:@" " withString:@""] stringByReplacingOccurrencesOfString:@"\\" withString:@""];
     //竞丰达 增加AEmp字段
    NSDictionary *params = @{
                             @"rows":@"20",
                             @"page":@(page),
-                            @"AEmp":[[SJYUserManager sharedInstance].sjyloginData modelToJSONString],
+                            @"AEmp":[[SJYUserManager sharedInstance].ucAemp  modelToJSONString],
                             @"SearchStateID":@(searchStateID),
                             @"SearchCode":searchCode};
 
@@ -343,7 +343,7 @@
     NSDictionary *params = @{
                              @"rows":@"20",
                              @"page":@(page),
-                             @"AEmp":[[SJYUserManager sharedInstance].sjyloginData modelToJSONString],
+                             @"AEmp":[[SJYUserManager sharedInstance].ucAemp  modelToJSONString],
                              @"SearchSpendingTypeID":searchSpendTypeID,
                              @"SearchStateID":@(searchStateID)
                              };
@@ -359,7 +359,7 @@
     NSDictionary *params = @{
                              @"rows":@"20",
                              @"page":@(page),
-                             @"AEmp":[[SJYUserManager sharedInstance].sjyloginData modelToJSONString],
+                             @"AEmp":[[SJYUserManager sharedInstance].ucAemp  modelToJSONString],
                              @"SearchSpendingTypeID":searchSpendTypeID,
                              @"SearchStateID":@(searchStateID)
                              };

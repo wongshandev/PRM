@@ -14,8 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 +(instancetype)shareManager;
 
-
-
 #pragma mark -----------是否第一次启动
 -(BOOL)getFirstRun;
 

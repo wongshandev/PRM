@@ -84,7 +84,10 @@
         self.fujianBtn.hidden =  !(model.Url.lastPathComponent.length && [model.Url.lastPathComponent containsString:@"."]);
         [self.fujianBtn setTitle:model.Url.lastPathComponent forState:UIControlStateNormal];
 
-        self.leftImgeView.image = SJYCommonImage([NSString matchType:model.Url.lastPathComponent]);
+//        self.leftImgeView.image = SJYCommonImage([NSString matchType:model.Url.lastPathComponent]);
+
+        [self.leftImgeView sd_setImageWithURL:[NSURL URLWithString:model.Url] placeholderImage:PYPlaceholderImage options:SDWebImageRefreshCached |SDWebImageRetryFailed ];
+
 
     }
     if (self.cellType == CellType_WJQDList) {
@@ -94,108 +97,6 @@
         self.leftImgeView.image = SJYCommonImage([NSString matchType:model.Url.lastPathComponent]);
     }
 }
-
-
-//
-//// 根据文件名后缀区分 文件类型
-///*
-// * @param: fileName - 文件名称
-// * @param: 数据返回 1) 无后缀匹配 - false
-// * @param: 数据返回 2) 匹配图片 - image
-// * @param: 数据返回 3) 匹配 txt - txt
-// * @param: 数据返回 4) 匹配 excel - excel
-// * @param: 数据返回 5) 匹配 word - word
-// * @param: 数据返回 6) 匹配 pdf - pdf
-// * @param: 数据返回 7) 匹配 ppt - ppt
-// * @param: 数据返回 8) 匹配 视频 - video
-// * @param: 数据返回 9) 匹配 音频 - radio
-// * @param: 数据返回 10) 其他匹配项 - other
-// */
-//
-//-(NSString *)matchType:(NSString *)fileName{
-//     // 后缀获取
-//    NSString *suffix = @"";
-//    // 获取类型结果
-//    NSString * result = @"";
-//    if (fileName.length !=0 && [fileName containsString:@"."] ) {
-//         suffix =  [fileName componentsSeparatedByString:@"."].lastObject;
-//    }else{
-//        suffix = nil;
-//        result = @"nofile";
-//        return result;
-//    }
-//    // 图片格式
-//    NSArray * imglist = @[@"png", @"jpg", @"jpeg", @"bmp", @"gif"];
-//    if ([imglist containsObject:suffix]) {
-//        result = @"image";
-//        return result;
-//     }
-//
-//    // 匹配txt
-//  NSArray * txtlist = @[@"txt"];
-//    if ([txtlist containsObject: suffix]) {
-//        result = @"txt";
-//        return result;
-//    };
-//
-//    // 匹配 excel
-//  NSArray * excelist = @[@"xls",@"xlsx"];
-//
-//    if  ([excelist containsObject: suffix]){
-//        result = @"excel";
-//        return result;
-//    };
-//    // 匹配 word
-//    NSArray * wordlist = @[@"doc", @"docx"];
-//
-//    if ([wordlist containsObject: suffix]) {
-//        result = @"word";
-//        return result;
-//    };
-//    // 匹配 pdf
-//    NSArray * pdflist = @[@"pdf"];
-//
-//    if ([pdflist containsObject: suffix]) {
-//        result = @"pdf";
-//        return result;
-//    };
-//    // 匹配 ppt
-//    NSArray * pptlist = @[@"ppt"];
-//
-//    if ([pptlist containsObject: suffix]) {
-//        result = @"ppt";
-//        return result;
-//    };
-//    // 匹配 视频
-//    NSArray * videolist = @[@"mp4", @"m2v", @"mkv"];
-//
-//    if ([videolist containsObject: suffix]) {
-//        result = @"video";
-//        return result;
-//    };
-//    // 匹配 音频
-//    NSArray * radiolist = @[@"mp3", @"wav", @"wmv"];
-//
-//    if ([radiolist containsObject: suffix]) {
-//        result = @"radio";
-//        return result;
-//    }
-//
-//    NSArray * ziplist = @[@"zip"];
-//
-//    if ([ziplist containsObject: suffix]) {
-//        result = @"zip";
-//        return result;
-//    }
-//    NSArray * rarlist = @[ @"rar"];
-//    if ([rarlist containsObject: suffix]) {
-//        result = @"rar";
-//        return result;
-//    }
-//    // 其他 文件类型
-//    result = @"otherfile";
-//    return result;
-//}
-//
+ 
 
 @end

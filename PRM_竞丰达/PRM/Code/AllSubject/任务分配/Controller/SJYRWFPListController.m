@@ -56,7 +56,7 @@
 }
 
 -(void)requestData_RWFP{
-    [SJYRequestTool requestRWFPList:[SJYUserManager sharedInstance].sjyloginData.Id page:self.page success:^(id responder) {
+    [SJYRequestTool requestRWFPList:[SJYUserManager sharedInstance].sjyloginUC.Id page:self.page success:^(id responder) {
         self.totalNum = [[responder objectForKey:@"total"] integerValue];
         NSArray *rowsArr = [responder objectForKey:@"rows"];
         if (self.tableView.mj_header.isRefreshing) {
@@ -81,7 +81,7 @@
 }
 
 -(void)requestData_RWFP_JFD{
-    [SJYRequestTool requestRWFPList:[SJYUserManager sharedInstance].sjyloginData.PositionID page:self.page success:^(id responder) {
+    [SJYRequestTool requestRWFPList:[SJYUserManager sharedInstance].sjyloginUC.PositionID page:self.page success:^(id responder) {
         self.totalNum = [[responder objectForKey:@"total"] integerValue];
         NSArray *rowsArr = [responder objectForKey:@"rows"];
         if (self.tableView.mj_header.isRefreshing) {

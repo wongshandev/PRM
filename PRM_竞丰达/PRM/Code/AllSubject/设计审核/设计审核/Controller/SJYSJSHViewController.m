@@ -112,24 +112,29 @@
         make.right.mas_equalTo(self.searchAlertView.nameTF.mas_right);
         make.height.mas_equalTo(2);
     }];
+    __block NSInteger shStateType = self.shStateType;
+
     Weak_Self;
     [self.searchAlertView.stateBtn clickWithBlock:^{
         [self.searchAlertView endEditing:YES];
         [BRStringPickerView showStringPickerWithTitle:@"状态" dataSource:STATEArray defaultSelValue:weakSelf.searchAlertView.stateBtn.currentTitle isAutoSelect:NO themeColor:Color_NavigationLightBlue resultBlock:^(id selectValue) {
             [weakSelf.searchAlertView.stateBtn setTitle:selectValue forState:UIControlStateNormal];
             NSInteger index = [STATEArray indexOfObject:selectValue] -1;
-            weakSelf.shStateType = index;
-            //            weakSelf.shStateType = [@([STATEArray indexOfObject:selectValue]) stringValue];
-        }];
+             shStateType = index;
+         }];
     }];
     
     dialogViewController.contentView = self.searchAlertView;
     [dialogViewController addCancelButtonWithText:@"取消" block:^(__kindof QMUIDialogViewController *aDialogViewController) {
-        [modalViewController hideInView:self.view animated:YES completion:nil];
+        [modalViewController hideInView:weakSelf.view animated:YES completion:nil];
     }];
     
     [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
-        [modalViewController hideInView:self.view animated:YES completion:^(BOOL finished) {
+        [weakSelf.searchAlertView endEditing:YES];
+         weakSelf.shStateType = shStateType;
+        weakSelf.searchCode = weakSelf.searchAlertView.codeTF.text;
+        weakSelf.searchName = weakSelf.searchAlertView.nameTF.text;
+        [modalViewController hideInView:weakSelf.view animated:YES completion:^(BOOL finished) {
             [weakSelf.tableView.mj_header beginRefreshing];
         }];
     }];
@@ -144,7 +149,6 @@
     self.tableView.separatorInset = UIEdgeInsetsZero;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.estimatedRowHeight = 90;
-    
 }
 #pragma mark ======================= 数据绑定
 -(void)bindViewModel{
@@ -187,7 +191,7 @@
             SJSHListModel  *model = [SJSHListModel  modelWithDictionary:dic];
             model.titleStr = [model.Name stringByAppendingFormat:@" (%@)",model.Code];
 
-            BOOL isWSH = ((model.State.integerValue == 2 && dpld == [SJYUserManager sharedInstance].sjyloginData.EngineeringDpId.integerValue) || (model.State.integerValue == 5 && dpld == [SJYUserManager sharedInstance].sjyloginData.DesignDpId.integerValue));
+            BOOL isWSH = ((model.State.integerValue == 2 && dpld == [SJYUserManager sharedInstance].sjyloginUC.EngineeringDpId.integerValue) || (model.State.integerValue == 5 && dpld == [SJYUserManager sharedInstance].sjyloginUC.DesignDpId.integerValue));
             model.stateString = isWSH?[STATEArray objectAtIndex:1]:STATEArray.lastObject;
             model.StateColor =  isWSH?[ListSTATEColorArray objectAtIndex:1]:ListSTATEColorArray.lastObject;
             model.isCanSH = isWSH;
@@ -263,11 +267,11 @@
 
 -(void)textFieldDidEndEditing:(UITextField *)textField{
     if (textField == self.searchAlertView.codeTF) {
-        self.searchCode = textField.text.length !=0? textField.text:@"";
+        textField.text = textField.text.length !=0? textField.text:@"";
         self.searchAlertView.sepLineCode.backgroundColor = Color_SrprateLine;
     }
     if (textField == self.searchAlertView.nameTF) {
-        self.searchName = textField.text.length !=0 ? textField.text:@"";
+        textField.text = textField.text.length !=0 ? textField.text:@"";
         self.searchAlertView.sepLine.backgroundColor = Color_SrprateLine;
     }
 }

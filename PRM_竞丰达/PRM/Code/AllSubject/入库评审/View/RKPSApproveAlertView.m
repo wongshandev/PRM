@@ -17,8 +17,6 @@
 @interface RKPSApproveAlertView ()
 @property(nonatomic,strong)NSArray *buttonsArray;
 @property(nonatomic,strong)  QMUILabel *stateLab;
-@property(nonatomic,strong)  QMUILabel *bzMenLab;
-
 @end
 @implementation RKPSApproveAlertView
 

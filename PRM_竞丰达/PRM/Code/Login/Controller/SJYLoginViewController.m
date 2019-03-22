@@ -158,8 +158,12 @@
             [SJYUserManager sharedInstance].loginModel= loginInfo;
             [[SJYUserManager sharedInstance]updateLoginModel];
 
-            [SJYUserManager sharedInstance].sjyloginData= loginInfo.uc;
-            [[SJYUserManager sharedInstance] updateLoginData];
+            //
+            [SJYUserManager sharedInstance].sjyloginUC= loginInfo.uc;
+            [[SJYUserManager sharedInstance] updateLoginUC];
+
+            [SJYUserManager sharedInstance].ucAemp= loginInfo.ucAemp;
+            [[SJYUserManager sharedInstance] updateUcAemp];
 
             [QMUITips showSucceed:@"登录成功" inView:weakSelf.view hideAfterDelay:0.6];
             if ([[SJYDefaultManager shareManager] isRemberPassword]) {

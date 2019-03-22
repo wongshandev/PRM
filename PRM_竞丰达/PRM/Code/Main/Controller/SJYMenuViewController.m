@@ -232,7 +232,8 @@
     }];
 }
 -(void)loginOut{
-    [[SJYUserManager sharedInstance]clearLoginData];
+    [[SJYUserManager sharedInstance] clearLoginUC];
+    [[SJYUserManager sharedInstance] clearUcAemp];
     [[SJYDefaultManager shareManager] saveRemberPassword:NO];
     
     if (![[SJYDefaultManager shareManager] isRemberPassword]) {

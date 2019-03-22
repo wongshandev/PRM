@@ -8,7 +8,7 @@
 
 #import "KZSHApprovelAlertView.h"
 
- #define TopPadding 10
+#define TopPadding 10
 #define LeftPading 15
 
 #define LabHigh 20
@@ -18,7 +18,6 @@
 @interface KZSHApprovelAlertView ()
 @property(nonatomic,strong)NSArray *buttonsArray;
 @property(nonatomic,strong)  QMUILabel *stateLab;
-@property(nonatomic,strong)  QMUILabel *bzMenLab;
 
 @end
 @implementation KZSHApprovelAlertView
@@ -43,13 +42,13 @@
         make.right.equalTo(self).offset(-LeftPading);
         make.height.equalTo(LabHigh);
     }];
-
+    
     [self buttonArray];
-
+    
     self.bzMenLab = [self createLabelWithTextColor:Color_TEXT_HIGH Font:Font_ListTitle numberOfLines:1];
     self.bzMenLab.text = @"审核意见 :";
     [self addSubview:self.bzMenLab];
-
+    
     [self.bzMenLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(LabHigh +BtnHigh +TopPadding*3);
         make.left.equalTo(self.stateLab.mas_left);
@@ -90,9 +89,9 @@
 
 -(NSMutableArray *)buttonArray{
     NSMutableArray* buttons = [NSMutableArray new];
-     NSArray *array =@[@"同意",@"作废",@"驳回"]; // 7 -1  3
+    NSArray *array =@[@"同意",@"作废",@"驳回"]; // 7 -1  3
     CGRect btnRect = CGRectMake(LeftPading, TopPadding*2 + LabHigh, BtnWidth, BtnHigh);
-
+    
     for (NSInteger i =0; i <array.count; i++) {
         NSString *optionTitle = array[i];
         RadioButton* btn = [[RadioButton alloc] initWithFrame:btnRect];

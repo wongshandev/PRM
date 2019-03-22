@@ -76,7 +76,8 @@
         NSString *content =  [self.approvelAlertView.bzTV.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
         if ((self.approvelAlertView.state == RKPSApproveState_FD  ||  self.approvelAlertView.state == RKPSApproveState_QQ ) && content.length == 0) {
 //     if ((self.approvelAlertView.state == 2  ||  self.approvelAlertView.state == 4 ) && content.length == 0) {
-            [QMUITips showWithText:@"请输入备注" inView:[UIApplication sharedApplication].keyWindow hideAfterDelay:1.2];
+            NSString *mention = [[@"请输入"  stringByAppendingString:self.approvelAlertView.bzMenLab.text] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" :"]];
+            [QMUITips showWithText:mention inView:[UIApplication sharedApplication].keyWindow hideAfterDelay:1.2];
             [self.approvelAlertView.bzTV becomeFirstResponder];
             return ;
         }

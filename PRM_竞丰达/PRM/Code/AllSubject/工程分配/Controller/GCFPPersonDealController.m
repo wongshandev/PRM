@@ -75,7 +75,7 @@
                                                                       }];
     self.submitDic = [NSMutableDictionary dictionaryWithDictionary:@{
                                                                      @"ProjectBranchID":@"",
-                                                                     @"EmployeeID":[SJYUserManager sharedInstance].sjyloginData.Id,
+                                                                     @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id,
                                                                      @"InquiryID":@"",//(市场负责人Id)
                                                                      @"DesignID":@"",//(主设计师Id)
                                                                      @"EngineeringID":@"",//(项目经理Id)
@@ -477,7 +477,7 @@
                               @"AidIds":_AidIds,
                               @"EngineeringID":_EngineeringID,
                               @"ProjectBranchID":self.listModel.Id,
-                              @"EmployeeID":[SJYUserManager sharedInstance].sjyloginData.Id
+                              @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id
                               };
     
 
@@ -516,7 +516,7 @@
     NSDictionary *paraDic = @{
                               @"EngineeringID":_EngineeringID,
                               @"ProjectBranchID":self.listModel.Id,
-                              @"EmployeeID":[SJYUserManager sharedInstance].sjyloginData.Id
+                              @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id
                               };
     [SJYRequestTool requestGCFPSubmit:paraDic success:^(id responder) {
         if ([[responder valueForKey:@"success"] boolValue]== YES) {

@@ -115,6 +115,11 @@
     [self.fujianBtn setTitle:detailModel.Url.lastPathComponent forState:UIControlStateNormal];
     self.fjImgView.image = detailModel.isNewAdd?SJYCommonImage(@"addfj") : SJYCommonImage([NSString matchType:detailModel.Url.lastPathComponent]);
 
+
+    detailModel.isNewAdd?
+    ({ [self.fjImgView setImage:SJYCommonImage(@"addfj")];}) :
+    ({ [self.fjImgView sd_setImageWithURL:[NSURL URLWithString:detailModel.Url] placeholderImage:PYPlaceholderImage options:SDWebImageRefreshCached |SDWebImageRetryFailed ];});
+
     self.typeBtn.enabled = detailModel.isNewAdd;
     self.xmbgDescriptTV.editable = detailModel.isNewAdd;
     self.xmbgDescriptTV.textColor = detailModel.isNewAdd?Color_TEXT_HIGH: Color_TEXT_NOMARL;

@@ -124,10 +124,11 @@ UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"ÊèêÈÜ
 #endif
 
 
-#define LOGINDATAKEY @"LOGINDATAKEY"
+#define LOGINUCMODELKEY @"LOGINUCMODELKEY"
 #define LOGINMODELKEY @"LOGINMODELKEY"
 #define SJYCACHEKEY @"DXCACHE"
 
+#define LOGINUCKEY @"LOGINUCKEY"
 
 
 typedef NS_ENUM(NSUInteger, JumpURL) {

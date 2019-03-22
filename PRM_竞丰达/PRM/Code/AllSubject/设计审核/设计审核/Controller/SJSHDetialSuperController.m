@@ -53,7 +53,7 @@
     }];
     [self.rejectBtn makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.navBar.mas_top).offset(NAVNOMARLHEIGHT-44);
-        make.right.equalTo(self.navBar.mas_right);
+        make.right.equalTo(self.navBar.mas_right).offset(-10);
         make.height.equalTo(44);
         make.width.equalTo(45);
     }];
@@ -160,11 +160,11 @@
     [dialogViewController addCancelButtonWithText:@"取消" block:nil];
     [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
         [SJYRequestTool requestSJSHWithAPI:API_SJSH_SH parameters:@{
-                                                                    @"AEmp":[[SJYUserManager sharedInstance].sjyloginData   modelToJSONString],
+                                                                    @"AEmp":[[SJYUserManager sharedInstance].sjyloginUC   modelToJSONString],
                                                                     @"DeepenDesignID":self.sjshListModel.Id,
-                                                                    @"EmployeeID":[SJYUserManager sharedInstance].sjyloginData.Id,
+                                                                    @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id,
                                                                     @"State":@"7",
-                                                                    @"InquiryId":[SJYUserManager sharedInstance].sjyloginData.InquiryId//(驳回时必要回传参数)
+                                                                    @"InquiryId":[SJYUserManager sharedInstance].sjyloginUC.InquiryId//(驳回时必要回传参数)
                                                                     } success:^(id responder) {
                                                                         [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
                                                                         if ([[responder valueForKey:@"success"] boolValue]== YES) {
@@ -258,9 +258,9 @@
             return ;
         }
         [SJYRequestTool requestSJSHWithAPI:API_SJSH_SH parameters:@{
-                                                                    @"AEmp":[[SJYUserManager sharedInstance].sjyloginData   modelToJSONString],
+                                                                    @"AEmp":[[SJYUserManager sharedInstance].sjyloginUC   modelToJSONString],
                                                                     @"DeepenDesignID":self.sjshListModel.Id,
-                                                                    @"EmployeeID":[SJYUserManager sharedInstance].sjyloginData.Id,
+                                                                    @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id,
                                                                     @"State":[typeBtn.currentTitle isEqualToString:@"合同"]?@"0":@"3",
                                                                     @"RejectReason":content//(驳回时必要回传参数)
                                                                     } success:^(id responder) {

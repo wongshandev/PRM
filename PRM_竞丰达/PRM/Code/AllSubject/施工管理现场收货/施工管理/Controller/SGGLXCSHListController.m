@@ -68,7 +68,7 @@
 }
 
 -(void)requestData_SGGL{
-    [SJYRequestTool requestSGGLListWithEmployId:[SJYUserManager sharedInstance].sjyloginData.Id page:self.page  success:^(id responder) {
+    [SJYRequestTool requestSGGLListWithEmployId:[SJYUserManager sharedInstance].sjyloginUC.Id page:self.page  success:^(id responder) {
         NSArray *rowsArr = [responder objectForKey:@"rows"];
         if ([self.tableView.mj_header isRefreshing]) {
             [self.dataArray removeAllObjects];
@@ -90,7 +90,7 @@
     }];
 }
 -(void)requestData_XCSH{
-    [SJYRequestTool requestXCSHList: [SJYUserManager sharedInstance].sjyloginData.Id page:self.page success:^(id responder) {
+    [SJYRequestTool requestXCSHList: [SJYUserManager sharedInstance].sjyloginUC.Id page:self.page success:^(id responder) {
         if ([self.tableView.mj_header isRefreshing]) {
             [self.dataArray removeAllObjects];
         }

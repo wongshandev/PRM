@@ -28,6 +28,7 @@ static YYCache *cache;
     return cache;
 }
 
+#pragma mark ------------------------------------LoginModel---------------------
 
 -(LoginModel *)loginModel{
     if (_loginModel == nil) {
@@ -41,38 +42,63 @@ static YYCache *cache;
     [cache setObject:[SJYUserManager sharedInstance].loginModel forKey:LOGINMODELKEY];
 }
 
-- (SJYLoginInfo *)sjyloginData{
-    if(_sjyloginData == nil) {
+
+#pragma mark ------------------------------------SJYLoginInfo---------------------
+- (SJYLoginInfo *)sjyloginUC{
+    if(_sjyloginUC == nil) {
         YYCache *cache = [SJYUserManager sharedYYCache];
-        _sjyloginData = (SJYLoginInfo *)[cache objectForKey:LOGINDATAKEY];
+        _sjyloginUC = (SJYLoginInfo *)[cache objectForKey:LOGINUCMODELKEY];
     }
-    return _sjyloginData;
+    return _sjyloginUC;
 }
-
-
--(void)updateLoginData{
+-(void)updateLoginUC{
     YYCache *cache = [SJYUserManager sharedYYCache];
-    [cache setObject:[SJYUserManager sharedInstance].sjyloginData forKey:LOGINDATAKEY];
+    [cache setObject:[SJYUserManager sharedInstance].sjyloginUC forKey:LOGINUCMODELKEY];
 }
-
-- (void)clearLoginData{
+- (void)clearLoginUC{
     YYCache *cache = [SJYUserManager sharedYYCache];
-    if ([cache containsObjectForKey:LOGINDATAKEY]) {
-        [cache removeObjectForKey:LOGINDATAKEY];
+    if ([cache containsObjectForKey:LOGINUCMODELKEY]) {
+        [cache removeObjectForKey:LOGINUCMODELKEY];
     }
-    [SJYUserManager sharedInstance].sjyloginData = nil;
+    [SJYUserManager sharedInstance].sjyloginUC = nil;
     //清除 本地存储
  }
 
+#pragma mark ------------------------------------ucAemp---------------------
+-(NSDictionary *)ucAemp{
+    if (!_ucAemp) {
+        YYCache *cache = [SJYUserManager sharedYYCache];
+        _ucAemp = (NSDictionary *)[cache objectForKey:LOGINUCKEY];
+    }
+    return _ucAemp;
+}
+-(void)updateUcAemp{
+    YYCache *cache = [SJYUserManager sharedYYCache];
+    [cache setObject:[SJYUserManager sharedInstance].ucAemp forKey:LOGINUCKEY];
+}
+-(void)clearUcAemp{
+    YYCache *cache = [SJYUserManager sharedYYCache];
+    if ([cache containsObjectForKey:LOGINUCKEY]) {
+        [cache removeObjectForKey:LOGINUCKEY];
+    }
+    [SJYUserManager sharedInstance].ucAemp = nil;
+    //清除 本地存储
+}
+ 
 //userInfo
 - (void)encodeWithCoder:(NSCoder *)aCoder{
-    [aCoder encodeObject:self.loginModel forKey:@"loginModel"];
-    [aCoder encodeObject:self.sjyloginData forKey:@"sjyloginData"];
+    [self modelEncodeWithCoder:aCoder];
+//    [aCoder encodeObject:self.loginModel forKey:@"loginModel"];
+//    [aCoder encodeObject:self.sjyloginUC forKey:@"sjyloginUC"];
+//    [aCoder encodeObject:self.ucAemp forKey:@"ucAemp"];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder{
-    self.loginModel = [aDecoder decodeObjectForKey:@"loginModel"];
-    self.sjyloginData = [aDecoder decodeObjectForKey:@"sjyloginData"];
-    return self;
+//    self.loginModel = [aDecoder decodeObjectForKey:@"loginModel"];
+//    self.sjyloginUC = [aDecoder decodeObjectForKey:@"sjyloginUC"];
+//    self.ucAemp = [aDecoder decodeObjectForKey:@"ucAemp"];
+//    return self;
+    self = [super init];
+    return  [self modelInitWithCoder:aDecoder];
 }
 @end

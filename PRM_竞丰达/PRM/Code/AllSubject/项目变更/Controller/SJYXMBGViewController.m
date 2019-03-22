@@ -54,7 +54,7 @@
 }
 
 -(void)requestData_XMBG {
-    [SJYRequestTool requestXMBGList:[SJYUserManager sharedInstance].sjyloginData.Id page:self.page SearchCode:@"" success:^(id responder) {
+    [SJYRequestTool requestXMBGList:[SJYUserManager sharedInstance].sjyloginUC.Id page:self.page SearchCode:@"" success:^(id responder) {
         NSArray *rowsArr = [responder objectForKey:@"rows"];
         self.totalNum = [[responder objectForKey:@"total"] integerValue];
         if (self.tableView.mj_header.isRefreshing) {

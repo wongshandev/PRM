@@ -47,6 +47,7 @@
     dialogViewController.items = STATEArray;
     dialogViewController.selectedItemIndex = self.shStateType +1;
 
+
     dialogViewController.didSelectItemBlock = ^(__kindof QMUIDialogSelectionViewController *aDialogViewController, NSUInteger itemIndex) {
         aDialogViewController.selectedItemIndex = itemIndex;
         self.shStateType = aDialogViewController.selectedItemIndex -1;

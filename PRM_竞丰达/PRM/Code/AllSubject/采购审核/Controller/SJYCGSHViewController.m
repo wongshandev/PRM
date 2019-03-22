@@ -93,24 +93,28 @@
         make.height.mas_equalTo(2);
     }];
     
-    
+    __block NSInteger shStateType = self.shStateType;
+//    __block NSString *searchCode = self.searchCode;
+
     Weak_Self;
     [self.searchAlertView.stateBtn clickWithBlock:^{
         [self.searchAlertView endEditing:YES];
         [BRStringPickerView showStringPickerWithTitle:@"状态" dataSource:STATEArray defaultSelValue:weakSelf.searchAlertView.stateBtn.currentTitle isAutoSelect:NO themeColor:Color_NavigationLightBlue resultBlock:^(id selectValue) {
             [weakSelf.searchAlertView.stateBtn setTitle:selectValue forState:UIControlStateNormal];
             NSInteger index = [STATEArray indexOfObject:selectValue] -1;
-            weakSelf.shStateType = index;
+            shStateType = index;
         }];
     }];
     
     dialogViewController.contentView = self.searchAlertView;
     [dialogViewController addCancelButtonWithText:@"取消" block:^(__kindof QMUIDialogViewController *aDialogViewController) {
-        [modalViewController hideInView:self.view animated:YES completion:nil];
+        [modalViewController hideInView:weakSelf.view animated:YES completion:nil];
     }];
     
     [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
-        [modalViewController hideInView:self.view animated:YES completion:^(BOOL finished) {
+        weakSelf.shStateType = shStateType;
+        weakSelf.searchCode = weakSelf.searchAlertView.codeTF.text;
+        [modalViewController hideInView:weakSelf.view animated:YES completion:^(BOOL finished) {
             [weakSelf.tableView.mj_header beginRefreshing];
         }];
     }];

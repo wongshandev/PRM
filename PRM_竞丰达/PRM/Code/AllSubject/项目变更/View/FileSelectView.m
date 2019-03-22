@@ -17,7 +17,10 @@
 -(void)setUpNavigationBar{
     self.navBar.titleLabel.text = @"文件选择列表";
      //    self.navBar.backButton.hidden = NO;
-
+    Weak_Self;
+    [self.navBar.backButton clickWithBlock:^{
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }];
 }
 -(void)setupTableView{
     [super setupTableView];

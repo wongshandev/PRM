@@ -121,7 +121,7 @@
 
     NSString *jsonStr = [self.updateArray modelToJSONString];
     [QMUITips showLoading:@"数据传输中" inView:[UIApplication sharedApplication].keyWindow]; 
-    [SJYRequestTool requestJDHBUpdateWithEmployeeID:[SJYUserManager sharedInstance].sjyloginData.Id updated:jsonStr success:^(id responder) {
+    [SJYRequestTool requestJDHBUpdateWithEmployeeID:[SJYUserManager sharedInstance].sjyloginUC.Id updated:jsonStr success:^(id responder) {
         [QMUITips hideAllTips];
         [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
         if ([[responder valueForKey:@"success"] boolValue]== YES) {
@@ -144,7 +144,7 @@
 
     NSString *jsonStr = [self.updateArray modelToJSONString];
     [QMUITips showLoading:@"数据传输中" inView:[UIApplication sharedApplication].keyWindow];
-    [SJYRequestTool requestJDHBUpdateWithEmployeeID:[SJYUserManager sharedInstance].sjyloginData.Id updated:jsonStr success:^(id responder) {
+    [SJYRequestTool requestJDHBUpdateWithEmployeeID:[SJYUserManager sharedInstance].sjyloginUC.Id updated:jsonStr success:^(id responder) {
         [QMUITips hideAllTips];
         [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
         if ([[responder valueForKey:@"success"] boolValue]== YES) {

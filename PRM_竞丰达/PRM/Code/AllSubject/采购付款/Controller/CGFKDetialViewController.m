@@ -60,7 +60,7 @@
     }];
     [self.rejectBtn makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.navBar.mas_top).offset(NAVNOMARLHEIGHT-44);
-        make.right.equalTo(self.navBar.mas_right);
+        make.right.equalTo(self.navBar.mas_right).offset(-10);
         make.height.equalTo(44);
         make.width.equalTo(45);
     }];
@@ -202,12 +202,12 @@
     [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
         NSDictionary  *paradic = self.listModel.isCGFK?@{
                                                          @"PurchaseOrderID":self.listModel.Id,
-                                                         @"EmployeeID":[SJYUserManager sharedInstance].sjyloginData.Id,
+                                                         @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id,
                                                          @"State":@"7", //竞丰达同意为7 其他为5
                                                          @"RejectReason":@""//(驳回时必要回传参数)
                                                          }:@{
                                                              @"PurchaseOrderID":self.listModel.Id, 
-                                                             @"AEmp":[[SJYUserManager sharedInstance].sjyloginData modelToJSONString],
+                                                             @"AEmp":[[SJYUserManager sharedInstance].ucAemp  modelToJSONString],
                                                              @"State":@"6", //竞丰达同意为7 其他为5
                                                              @"RejectReason":@""//(驳回时必要回传参数)
                                                              };
@@ -261,7 +261,7 @@
         }
         [SJYRequestTool requestCGFKAgreeReject:@{
                                                  @"PurchaseOrderID":self.listModel.Id,
-                                                 @"EmployeeID":[SJYUserManager sharedInstance].sjyloginData.Id,
+                                                 @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id,
                                                  @"State":@"3",
                                                  @"RejectReason":content//(驳回时必要回传参数)
                                                  } success:^(id responder) {

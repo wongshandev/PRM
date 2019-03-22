@@ -20,6 +20,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy  ) NSString *dt;
 @property (nonatomic, copy  ) NSString *positionID;
 @property (nonatomic, copy)   NSString *infotype;
+
+@property (nonatomic, strong) NSDictionary *ucAemp;
+
+
 @end
 
 @interface SJYLoginInfo : BaseModel<NSCoding>
@@ -50,6 +54,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy  ) NSString * PoId1;
 @property (nonatomic, copy  ) NSString * PoId2;
 @property (nonatomic, copy  ) NSString * PoId3;
+
+
+@property (nonatomic, copy  ) NSString * EoAmount1;
+@property (nonatomic, copy  ) NSString * EoAmount2;
+@property (nonatomic, copy  ) NSString * EoAmount3;
+@property (nonatomic, copy  ) NSString * EoId1;
+@property (nonatomic, copy  ) NSString * EoId2;
+@property (nonatomic, copy  ) NSString * EoId3;
 
 @end
 NS_ASSUME_NONNULL_END

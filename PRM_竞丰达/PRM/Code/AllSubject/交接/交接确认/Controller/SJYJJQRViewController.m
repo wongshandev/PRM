@@ -54,7 +54,7 @@
         apiStr = API_JJQR_JSB;
     }
 
-    [SJYRequestTool requestJJQRListWithAPIUrl:apiStr EmployID:[SJYUserManager sharedInstance].sjyloginData.Id success:^(id responder) {
+    [SJYRequestTool requestJJQRListWithAPIUrl:apiStr EmployID:[SJYUserManager sharedInstance].sjyloginUC.Id success:^(id responder) {
         NSArray *rowsArr = [responder objectForKey:@"rows"];
         [self.dataArray removeAllObjects];
 
@@ -186,7 +186,7 @@
         NSString *apiUrl;
         NSMutableDictionary *paraDic = [@{
                                           @"ProjectBranchID":listModel.Id,
-                                          @"EmployeeID":[SJYUserManager sharedInstance].sjyloginData.Id
+                                          @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id
                                           } mutableCopy];
         if (KJumpURLToEnum(self.mainModel.url) == FileTransferEngineering) { //工程
             apiUrl = API_JJQRSubmit_GCB;

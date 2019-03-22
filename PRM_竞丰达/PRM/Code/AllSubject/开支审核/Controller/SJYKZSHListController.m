@@ -49,10 +49,10 @@
     //    self.navBar.backButton.hidden = NO;
     self.navBar.titleLabel.text = self.title;
     self.shStateType = 0;
-
+    
     XMKZSpendTypeModel *modelAll = self.spendTypeArray.firstObject;
     self.spendTypeID = modelAll.Id;
-
+    
     [self.navBar.rightButton setTitle:@"查询" forState:UIControlStateNormal];
     self.navBar.rightButton.hidden = NO;
     [self.navBar.rightButton clickWithBlock:^{
@@ -64,13 +64,13 @@
     QMUIModalPresentationViewController *modalViewController = [[QMUIModalPresentationViewController alloc] init];
     QMUIDialogViewController *dialogViewController = [[QMUIDialogViewController alloc] init];
     dialogViewController.title = @"查询";
-
+    
     self.searchAlertView = [[SJYKZSHSearchAlertView alloc] initWithFrame:CGRectMake(0, 0, 300, 100)];
     self.searchAlertView.backgroundColor = UIColorWhite;
     [self.searchAlertView.stateBtn  setTitle:[STATEArray objectAtIndex:self.shStateType + 1] forState:UIControlStateNormal];
     XMKZSpendTypeModel *modelAll = self.spendTypeArray.firstObject;
     [self.searchAlertView.typeBtn  setTitle:modelAll.name forState:UIControlStateNormal];
-
+    
     self.searchAlertView.rightStateImgView.image = SJYCommonImage(@"downBlack");
     self.searchAlertView.rightTypeImgView.image = SJYCommonImage(@"downBlack");
     [self.searchAlertView.stateLab makeConstraints:^(MASConstraintMaker *make) {
@@ -85,68 +85,70 @@
         make.bottom.mas_equalTo(self.searchAlertView.mas_bottom).offset(-10);
         make.height.mas_equalTo(self.searchAlertView.stateLab.mas_height);
     }];
-
+    
     [self.searchAlertView.stateBtn makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.searchAlertView.stateLab.mas_centerY);
         make.left.mas_equalTo(self.searchAlertView.stateLab.mas_right).offset(5);
         make.right.mas_equalTo( self.searchAlertView.mas_right).offset(-10);
         make.height.mas_equalTo(self.searchAlertView.stateLab.mas_height);
     }];
-
+    
     [self.searchAlertView.rightStateImgView makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.searchAlertView.stateLab.mas_centerY);
         make.right.mas_equalTo( self.searchAlertView.stateBtn.mas_right);
         make.height.mas_equalTo(15);
         make.width.mas_equalTo(20);
     }];
-
+    
     [self.searchAlertView.typeBtn makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.searchAlertView.typeLab.mas_centerY);
         make.left.mas_equalTo(self.searchAlertView.typeLab.mas_right).offset(5);
         make.right.mas_equalTo( self.searchAlertView.mas_right).offset(-10);
         make.height.mas_equalTo(self.searchAlertView.typeLab.mas_height);
     }];
-
+    
     [self.searchAlertView.rightTypeImgView makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.searchAlertView.typeLab.mas_centerY);
         make.right.mas_equalTo( self.searchAlertView.typeBtn.mas_right);
         make.height.mas_equalTo(15);
         make.width.mas_equalTo(20);
     }];
-
-
+    
+    __block NSInteger shStateType = self.shStateType;
+    __block NSString * spendTypeID = self.spendTypeID;
     Weak_Self;
     [self.searchAlertView.stateBtn clickWithBlock:^{
-        [self.searchAlertView endEditing:YES];
+        [weakSelf.searchAlertView endEditing:YES];
         [BRStringPickerView showStringPickerWithTitle:@"状态" dataSource:STATEArray defaultSelValue:weakSelf.searchAlertView.stateBtn.currentTitle isAutoSelect:NO themeColor:Color_NavigationLightBlue resultBlock:^(id selectValue) {
             [weakSelf.searchAlertView.stateBtn setTitle:selectValue forState:UIControlStateNormal];
             NSInteger index = [STATEArray indexOfObject:selectValue] -1;
-            weakSelf.shStateType = index;
+            shStateType = index;
         }];
     }];
-
+    
     [self.searchAlertView.typeBtn clickWithBlock:^{
         NSMutableArray *spendingIdArray = [NSMutableArray new];
         NSMutableArray *spendingNameArray = [NSMutableArray new];
-        [self.spendTypeArray enumerateObjectsUsingBlock:^(XMKZSpendTypeModel *_Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [weakSelf.spendTypeArray enumerateObjectsUsingBlock:^(XMKZSpendTypeModel *_Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             [spendingIdArray addObject:obj.Id];
             [spendingNameArray addObject:obj.name];
         }];
         [BRStringPickerView showStringPickerWithTitle:@"类型" dataSource:spendingNameArray defaultSelValue:weakSelf.searchAlertView.typeBtn.currentTitle isAutoSelect:NO themeColor:Color_NavigationLightBlue resultBlock:^(id selectValue) {
             NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name == %@",selectValue];
-            XMKZSpendTypeModel *model = [self.spendTypeArray filteredArrayUsingPredicate:predicate].firstObject;
-            self.spendTypeID = model.Id;
+            XMKZSpendTypeModel *model = [weakSelf.spendTypeArray filteredArrayUsingPredicate:predicate].firstObject;
+            spendTypeID = model.Id;
             [weakSelf.searchAlertView.typeBtn setTitle:selectValue forState:UIControlStateNormal];
         }];
     }];
-
+    
     dialogViewController.contentView = self.searchAlertView;
     [dialogViewController addCancelButtonWithText:@"取消" block:^(__kindof QMUIDialogViewController *aDialogViewController) {
-        [modalViewController hideInView:self.view animated:YES completion:nil];
+        [modalViewController hideInView:weakSelf.view animated:YES completion:nil];
     }];
-
     [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
-        [modalViewController hideInView:self.view animated:YES completion:^(BOOL finished) {
+        weakSelf.spendTypeID = spendTypeID;
+        weakSelf.shStateType = shStateType;
+        [modalViewController hideInView:weakSelf.view animated:YES completion:^(BOOL finished) {
             [weakSelf.tableView.mj_header beginRefreshing];
         }];
     }];
@@ -163,8 +165,8 @@
 }
 #pragma mark ======================= 数据绑定
 -(void)bindViewModel{
-
-
+    
+    
     Weak_Self;
     self.tableView.mj_header =[MJRefreshNormalHeader headerWithRefreshingBlock:^{
         weakSelf.page = 0;
@@ -196,17 +198,17 @@
             model.OccurDateChange = model.OccurDate;
             model.RemarkChange = model.Remark;
             model.AmountChange = model.Amount;
-
+            
             NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Id == %@", model.SpendingTypeID];
             XMKZSpendTypeModel *typeModel =  [spendingTypeArray filteredArrayUsingPredicate:predicate].firstObject;
             model.SpndingTypeName = typeModel.name;
             model.SpndingTypeNameChange = model.SpndingTypeName;
-
+            
             model.titleStr = [model.ApplyName stringByAppendingFormat:@"(%@)",model.SpndingTypeName];
             model.stateString = [ListKZFKStateArray objectAtIndex:model.State];
             StateCode idx = [StateCodeStringArray indexOfObject:model.stateString];
             model.stateColor =   [StateCodeColorHexArray objectAtIndex:idx];
-
+            
             [self.dataArray addObject:model];
         }
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -249,7 +251,7 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     XMKZDetialListCell *cell = [XMKZDetialListCell cellWithTableView:tableView];
     cell.indexPath = indexPath;
-//    cell.cellType = CellType_CGSHList;
+    //    cell.cellType = CellType_CGSHList;
     cell.data = self.dataArray[indexPath.row];
     [cell loadContent];
     return cell;
@@ -261,7 +263,7 @@
     XMKZDetialController *xmkzVC = [[XMKZDetialController alloc]init];
     xmkzVC.detialModel = model;
     xmkzVC.eld = self.eld;
-    xmkzVC.title =  self.title;
+    xmkzVC.title = @"开支审核";
     [self.navigationController pushViewController:xmkzVC animated:YES];
 }
 

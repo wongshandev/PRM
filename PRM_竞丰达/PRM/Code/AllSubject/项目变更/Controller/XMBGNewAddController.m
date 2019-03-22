@@ -18,27 +18,26 @@
 @end
 
 @implementation XMBGNewAddController
-
 -(void)setUpNavigationBar{
     self.navBar.titleLabel.text = self.title;
     [self.navBar.rightButton setTitle:@"提交" forState:UIControlStateNormal];
     self.navBar.rightButton.hidden = !self.detialModel.isNewAdd;
     Weak_Self;
     [self.navBar.rightButton clickWithBlock:^{
-        NSString *content =  [self.alertContentView.xmbgDescriptTV.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        NSString *content =  [weakSelf.alertContentView.xmbgDescriptTV.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
         NSMutableDictionary *paradic = [@{
-                                          @"ChangeOrderID":self.detialModel.Id,
-                                          @"ProjectBranchID":self.projectBranchID,
+                                          @"ChangeOrderID":weakSelf.detialModel.Id,
+                                          @"ProjectBranchID":weakSelf.projectBranchID,
                                           @"EmployeeID":KEmployID,
-                                          @"ChangeType":[self.alertContentView.typeBtn.currentTitle  isEqualToString: @"签证变更"]?@"1":@"2",
+                                          @"ChangeType":[weakSelf.alertContentView.typeBtn.currentTitle  isEqualToString: @"签证变更"]?@"1":@"2",
                                           @"Remark":content,
                                           }mutableCopy];
         if (content.length == 0) {
-            [QMUITips showWithText:@"请输入变更描述" inView:self.view hideAfterDelay:1.2];
+            [QMUITips showWithText:@"请输入变更描述" inView:weakSelf.view hideAfterDelay:1.2];
             return ;
         } 
-        if (self.detialModel.isNewAdd && self.uploadFilePath.length== 0) {
-            [QMUITips showWithText:@"请选择附件" inView:self.view hideAfterDelay:1.2];
+        if (weakSelf.detialModel.isNewAdd && weakSelf.uploadFilePath.length== 0) {
+            [QMUITips showWithText:@"请选择附件" inView:weakSelf.view hideAfterDelay:1.2];
         }else{
             [weakSelf uploadFileAndNewAddAndChangeProject:paradic];
         }
@@ -147,42 +146,23 @@
             [weakSelf.alertContentView.typeBtn setTitle:selectValue forState:UIControlStateNormal];
         }];
     }];
+
+
     [self.alertContentView.fujianBtn clickWithBlock:^{
         if (weakSelf.detialModel.isNewAdd) {
             [weakSelf.alertContentView endEditing:YES];
+#pragma mark ------------新增选择 附件 /相机/相册
             [weakSelf selectFileAction:weakSelf.alertContentView.fujianBtn];
         } else{
+#pragma mark ------------ 详情查看附件 下载
             [weakSelf downLoadOrLookFile:weakSelf.detialModel];
         }
     }];
 }
-#pragma mark ------------ 附件下载
 
--(void)downLoadOrLookFile:(XMBGDetailModel *)model {
-    NSString *fileNameString = model.Url.lastPathComponent;
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSString *document = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString *savefilePath = [document stringByAppendingPathComponent:fileNameString];
-    if ([fileManager fileExistsAtPath:savefilePath]) {
-        //存在  --------弹窗提示直接打开 //重新新下载
-        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"确认" message:@"文件已存在是否重新下载" preferredStyle:UIAlertControllerStyleAlert];
-        [alertVC addAction: [UIAlertAction actionWithTitle:@"直接打开" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            //快速预览
-            [self openFileAtPath:[NSURL fileURLWithPath:savefilePath]];
-        }]];
-        [alertVC addAction: [UIAlertAction actionWithTitle:@"重新下载" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [fileManager removeItemAtPath:savefilePath error:nil];
-            [self downLoadFileWithCellModeUrl:model.Url saveAtPath:savefilePath];
-        }]];
-        [alertVC addAction: [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
-        [self presentViewController:alertVC animated:YES completion:nil];
-    }else {
-        //不存在-------下载保存
-        [self downLoadFileWithCellModeUrl:model.Url saveAtPath:savefilePath];
-    }
-}
-#pragma mark ------------ 附件下载 
+#pragma mark    附件选择
 -(void)selectFileAction:(UIButton *)sender{
+
     NSLog(@"%@",[self getAllFileNames:@"Documents"]);
     UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"文件选择" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     [alertVC addAction:[UIAlertAction actionWithTitle:@"从相册获取" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -192,29 +172,31 @@
     [alertVC addAction:[UIAlertAction actionWithTitle:@"相机拍照" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [self getPhotoFromCamera];
     }]];
-    [alertVC addAction:[UIAlertAction actionWithTitle:@"沙盒获取文件" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        NSMutableArray *nameArr =[[self getAllFileNames:@"Documents"] mutableCopy];
-        NSMutableArray *fileModelArr = [NSMutableArray new];
-        for (NSString *fileName in nameArr) {
-            FileModel *model = [[FileModel alloc]init];
-            model.filePath = [[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] stringByAppendingPathComponent:fileName];
-            model.fileName = fileName;
-            [fileModelArr addObject:model];
-        }
-        FileSelectView *fileSelectVC = [[FileSelectView alloc]init];
-        fileSelectVC.dataArray= fileModelArr;
-        fileSelectVC.selectFileCellBlock = ^(NSString *fileNameStr,NSString *filePath){
-            [self.alertContentView.fujianBtn setTitle:fileNameStr forState:UIControlStateNormal];
-            self.alertContentView.fjImgView.image = SJYCommonImage([NSString matchType:fileNameStr.lastPathComponent]);
-            self.uploadFilePath = filePath;
-        };
-         [self presentViewController:fileSelectVC animated:YES completion:nil];
-
-    }]];
+//    [alertVC addAction:[UIAlertAction actionWithTitle:@"沙盒获取文件" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//        [self getFileFromSandBox];
+//    }]];
     [alertVC addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDestructive handler:nil]];
     [self presentViewController:alertVC animated:YES completion:nil];
 }
+-(void)getFileFromSandBox{
+    NSMutableArray *nameArr =[[self getAllFileNames:@"Documents"] mutableCopy];
+    NSMutableArray *fileModelArr = [NSMutableArray new];
+    for (NSString *fileName in nameArr) {
+        FileModel *model = [[FileModel alloc]init];
+        model.filePath = [[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] stringByAppendingPathComponent:fileName];
+        model.fileName = fileName;
+        [fileModelArr addObject:model];
+    }
+    FileSelectView *fileSelectVC = [[FileSelectView alloc]init];
+    fileSelectVC.dataArray= fileModelArr;
+    fileSelectVC.selectFileCellBlock = ^(NSString *fileNameStr,NSString *filePath){
+        [self.alertContentView.fujianBtn setTitle:fileNameStr forState:UIControlStateNormal];
+        self.alertContentView.fjImgView.image = SJYCommonImage([NSString matchType:fileNameStr.lastPathComponent]);
+        self.uploadFilePath = filePath;
+    };
+    [self presentViewController:fileSelectVC animated:YES completion:nil];
 
+}
 -(void)getPhotoFromCamera{
     if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
         UIImagePickerControllerSourceType sourceType = UIImagePickerControllerSourceTypeCamera;//设置类型为相机
@@ -263,7 +245,8 @@
     }
     [picker dismissViewControllerAnimated:YES completion:^{
         [self .alertContentView.fujianBtn setTitle:fileStr.lastPathComponent forState:UIControlStateNormal];
-        self.alertContentView.fjImgView.image = SJYCommonImage([NSString matchType:fileStr.lastPathComponent]);
+//        self.alertContentView.fjImgView.image = SJYCommonImage([NSString matchType:fileStr.lastPathComponent]);
+        self.alertContentView.fjImgView.image = image;
         self.uploadFilePath = fileStr;
     }]; 
 }
@@ -289,30 +272,37 @@
     NSArray *files = [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:fileDirectory error:nil];
     return files;
 }
+#pragma mark   附件下载查看
 
+-(void)downLoadOrLookFile:(XMBGDetailModel *)model {
+    NSString *fileNameString = model.Url.lastPathComponent;
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSString *document = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *savefilePath = [document stringByAppendingPathComponent:fileNameString];
+    if ([fileManager fileExistsAtPath:savefilePath]) {
+        //存在  --------弹窗提示直接打开 //重新新下载
+        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"确认" message:@"文件已存在是否重新下载" preferredStyle:UIAlertControllerStyleAlert];
+        [alertVC addAction: [UIAlertAction actionWithTitle:@"直接打开" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            //快速预览
+            [self openFileAtPath:[NSURL fileURLWithPath:savefilePath]];
+        }]];
+        [alertVC addAction: [UIAlertAction actionWithTitle:@"重新下载" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [fileManager removeItemAtPath:savefilePath error:nil];
+            [self downLoadFileWithCellModeUrl:model.Url saveAtPath:savefilePath];
+        }]];
+        [alertVC addAction: [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+        [self presentViewController:alertVC animated:YES completion:nil];
+    }else {
+        //不存在-------下载保存
+        [self downLoadFileWithCellModeUrl:model.Url saveAtPath:savefilePath];
+    }
+}
 
-#pragma mark ***************查看文件
-//-(void)openFileAtPath:(NSURL *)filePath{
-//    if (filePath) {
-//        if ([[NSString stringWithFormat:@"%@",filePath] hasSuffix:@"TTF"]) {
-//            [QMUITips showWithText:@"不支持的文件格式" inView:self.view hideAfterDelay:1.5];
-//        }else{
-//            self.documentInteractionController = [UIDocumentInteractionController interactionControllerWithURL:filePath];
-//            //self.documentInteractionController
-//            [self.documentInteractionController setDelegate:self];
-//            [self.documentInteractionController presentPreviewAnimated:YES];
-//        }
-//    } else {
-//        UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"打开失败" message:@"打开文档失败，可能文档损坏，请重试" preferredStyle:UIAlertControllerStyleAlert];
-//        [alert addAction:[UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleCancel handler:nil]];
-//        [self presentViewController:alert animated:YES completion:nil];
-//    }
-//}
+#pragma mark------------   查看文件
 
 -(void)openFileAtPath:(NSURL *)filePath{
     if (filePath) {
-        self.documentInteractionController = [UIDocumentInteractionController interactionControllerWithURL:filePath];
-        [self.documentInteractionController setDelegate:self];
+        self.documentInteractionController.URL = filePath;
         if ([self.documentInteractionController presentPreviewAnimated:YES]){
             NSLog(@"打开成功");
         } else{
@@ -327,12 +317,9 @@
         [self presentViewController:alert animated:YES completion:nil];
     }
 }
-
-
-
 -(void)downLoadFileWithCellModeUrl:(NSString  *)downloadUrl saveAtPath:(NSString *)saveFilePath{
-    NSURL * url = [NSURL URLWithString:[downloadUrl stringByReplacingOccurrencesOfString:@".." withString:API_ImageUrl]];
-
+//    NSURL * url = [NSURL URLWithString:[downloadUrl stringByReplacingOccurrencesOfString:@".." withString:API_ImageUrl]];
+    NSURL * url = [NSURL URLWithString: downloadUrl];
     [HttpClient downLoadFilesWithURLStringr:url progress:^(NSProgress *downloadProgress) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [QMUITips showLoading:[NSString stringWithFormat:@"%.2f%%",(downloadProgress.completedUnitCount / (float)downloadProgress.totalUnitCount*100)] inView:self.view];
@@ -353,19 +340,27 @@
 
         });
         NSLog(@" 附件 : %@",filePath);
-        /*
-         [self.quickLookArray addObject:filePath];
-         NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",name]];
-         NSURL *url = [NSURL fileURLWithPath:path];
-         */
     }];
 }
+#pragma mark ------------ 文件预览代理事件  UIDocumentInteractionControllerdelegate
+-(UIDocumentInteractionController *)documentInteractionController{
+    if (!_documentInteractionController) {
+        _documentInteractionController = [[UIDocumentInteractionController alloc]init];
+        _documentInteractionController.delegate = self;
+    }
+    return _documentInteractionController;
+}
+- (UIViewController *)documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController *)controller {
+    return self;
+}
 
-//-(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
-//    if (([text isEqualToString:@"\n"] || [text isEqualToString:@" "]) && textView.text.length == 0) {
-//        return NO;
-//    }
-//    return YES;
-//}
-
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    NSLog(@"Retain Count = %ld\n",CFGetRetainCount((__bridge CFTypeRef)(self)));
+}
+-(void)dealloc{
+#ifdef DEBUG
+    printf("[⚠️] 已经释放 %s.\n", NSStringFromClass(self.class).UTF8String);
+#endif
+}
 @end

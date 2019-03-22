@@ -54,6 +54,7 @@
 
            for (NSDictionary *dic in rowsArr) {
                XMBGDetailModel *model = [XMBGDetailModel  modelWithDictionary:dic];
+               model.Url =[model.Url stringByReplacingOccurrencesOfString:@".." withString:API_ImageUrl];
                 [self.dataArray addObject:model];
            }
            dispatch_async(dispatch_get_main_queue(), ^{
@@ -94,8 +95,9 @@
     cell.indexPath = indexPath;
     cell.data = model;
     [cell loadContent];
+    Weak_Self;
     [cell.fujianBtn clickWithBlock:^{
-        [self downLoadOrLookFile:model];
+        [weakSelf downLoadOrLookFile:model];
     }];
     return cell;
 }
@@ -104,7 +106,6 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [self downLoadOrLookFile:self.dataArray[indexPath.row]];
 }
-
 
 -(void)downLoadOrLookFile:(XMBGDetailModel *)model {
     NSString *fileNameString = model.Url.lastPathComponent;
@@ -130,14 +131,12 @@
     }
 }
 
-#pragma mark ------------ 附件查看 ------------ UIDocumentInteractionControllerdelegate
-- (UIViewController *)documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController *)controller {
-    return self;
-}
+
 #pragma mark ------------ 附件下载
 
 -(void)downLoadFileWithCellModeUrl:(NSString  *)downloadUrl saveAtPath:(NSString *)saveFilePath{
-    NSURL * url = [NSURL URLWithString:[downloadUrl stringByReplacingOccurrencesOfString:@".." withString:API_ImageUrl]];
+//    NSURL * url = [NSURL URLWithString:[downloadUrl stringByReplacingOccurrencesOfString:@".." withString:API_ImageUrl]];
+    NSURL * url = [NSURL URLWithString: downloadUrl];
     [HttpClient downLoadFilesWithURLStringr:url progress:^(NSProgress *downloadProgress) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [QMUITips showLoading:[NSString stringWithFormat:@"%.2f%%",(downloadProgress.completedUnitCount / (float)downloadProgress.totalUnitCount*100)] inView:self.view];
@@ -161,38 +160,11 @@
     }];
 
 }
-#pragma mark ***************查看文件
-//-(void)openFileAtPath:(NSURL *)filePath{
-//    if (filePath) {
-//        if ([[NSString stringWithFormat:@"%@",filePath] hasSuffix:@"TTF"]) {
-//            [QMUITips showWithText:@"不支持的文件格式" inView:self.view hideAfterDelay:1.5];
-//        }else{
-//            self.documentInteractionController = [UIDocumentInteractionController interactionControllerWithURL:filePath];
-//            //self.documentInteractionController
-//            [self.documentInteractionController setDelegate:self];
-//
-//            if ([self.documentInteractionController presentPreviewAnimated:YES]){
-//                NSLog(@"打开成功");
-//            } else{
-//                CGRect navRect = self.navigationController.navigationBar.frame;
-//                navRect.size =CGSizeMake(SCREEN_W*3,40.0f);
-//                [self.documentInteractionController presentOpenInMenuFromRect:navRect inView:self.view animated:YES];
-//                NSLog(@"打开失败");
-//            }
-//
-//        }
-//    } else {
-//        UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"打开失败" message:@"打开文档失败，可能文档损坏，请重试" preferredStyle:UIAlertControllerStyleAlert];
-//        [alert addAction:[UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleCancel handler:nil]];
-//        [self presentViewController:alert animated:YES completion:nil];
-//    }
-//}
-
+#pragma mark ------------ 查看文件
 -(void)openFileAtPath:(NSURL *)filePath{
     if (filePath) {
-            self.documentInteractionController = [UIDocumentInteractionController interactionControllerWithURL:filePath];
+            self.documentInteractionController.URL= filePath;
              [self.documentInteractionController setDelegate:self];
-
             if ([self.documentInteractionController presentPreviewAnimated:YES]){
                 NSLog(@"打开成功");
             } else{
@@ -208,6 +180,16 @@
     }
 }
 
-
+#pragma mark ------------ 附件查看 UIDocumentInteractionControllerdelegate
+-(UIDocumentInteractionController *)documentInteractionController{
+    if (!_documentInteractionController) {
+        _documentInteractionController = [[UIDocumentInteractionController alloc]init];
+        _documentInteractionController.delegate = self;
+    }
+    return _documentInteractionController;
+}
+- (UIViewController *)documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController *)controller {
+    return self;
+}
 
 @end

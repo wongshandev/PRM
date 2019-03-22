@@ -187,7 +187,7 @@
     CGFloat  submitWidth = self.submitBtn.hidden ? 0: SJYNUM(56);
     [self.submitBtn makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.navBar.mas_top).offset(NAVNOMARLHEIGHT-44);
-        make.right.equalTo(self.navBar.mas_right);
+        make.right.equalTo(self.navBar.mas_right).offset(-10);
         make.height.equalTo(44);
         make.width.equalTo(submitWidth);
     }];
@@ -289,7 +289,7 @@
     NSString *updateString = [updateArr modelToJSONString];
     
     NSDictionary *paraDic = @{
-                              @"EmployeeID":[SJYUserManager sharedInstance].sjyloginData.Id,
+                              @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id,
                               @"ProjectBranchID":self.projectBranchID,
                               @"OrderDate":self.datePickerBtn.currentTitle,
                               @"MarketOrderID":self.marketOrderID,
@@ -316,7 +316,7 @@
 }
 -(void)submit_WLJHData{
     NSDictionary *paraDic = @{
-                              @"EmployeeID":[SJYUserManager sharedInstance].sjyloginData.Id,
+                              @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id,
                               @"State":@"2",
                               @"MarketOrderID":self.marketOrderID
                               };
