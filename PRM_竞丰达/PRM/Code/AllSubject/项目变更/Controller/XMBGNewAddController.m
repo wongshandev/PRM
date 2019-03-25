@@ -243,6 +243,13 @@
     if (picker.sourceType == UIImagePickerControllerSourceTypeSavedPhotosAlbum) {
         fileStr =  [self saveImage:image withName:[NSString stringWithFormat:@"photo%ld.png",(long)i++]];
     }
+//    NSString *dateStr = [NSDate br_getDateString:[NSDate date] format:@"yyyyMMddHHmmss"];
+//    if (picker.sourceType == UIImagePickerControllerSourceTypeCamera ) {
+//        fileStr = [self saveImage:image withName:[NSString stringWithFormat:@"camera%@%ld.png",dateStr,(long)i++]];
+//    }
+//    if (picker.sourceType == UIImagePickerControllerSourceTypeSavedPhotosAlbum) {
+//        fileStr =  [self saveImage:image withName:[NSString stringWithFormat:@"photo%@dateStr%ld.png",dateStr,(long)i++]];
+//    }
     [picker dismissViewControllerAnimated:YES completion:^{
         [self .alertContentView.fujianBtn setTitle:fileStr.lastPathComponent forState:UIControlStateNormal];
 //        self.alertContentView.fjImgView.image = SJYCommonImage([NSString matchType:fileStr.lastPathComponent]);
@@ -312,9 +319,7 @@
             NSLog(@"打开失败");
         }
     } else {
-        UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"打开失败" message:@"打开文档失败，可能文档损坏，请重试" preferredStyle:UIAlertControllerStyleAlert];
-        [alert addAction:[UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleCancel handler:nil]];
-        [self presentViewController:alert animated:YES completion:nil];
+        SJYAlertShow(@"打开文档失败，可能文档损坏，请重试", @"确认");
     }
 }
 -(void)downLoadFileWithCellModeUrl:(NSString  *)downloadUrl saveAtPath:(NSString *)saveFilePath{

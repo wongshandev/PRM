@@ -20,8 +20,8 @@
 
 -(void)setupCell{
     self.selectionStyle = UITableViewCellSelectionStyleNone;
-     UIImageView *leftImgeView = [[UIImageView alloc] init];;
-     [self addSubview:leftImgeView];
+    UIImageView *leftImgeView = [[UIImageView alloc] init];;
+    [self addSubview:leftImgeView];
     self.leftImgeView = leftImgeView;
 
     QMUILabel *titleLab = [self createLabelWithTextColor:Color_TEXT_HIGH Font:Font_ListTitle numberOfLines:0];
@@ -62,19 +62,19 @@
         make.top.equalTo(self.titleLab.mas_bottom).offset(5);
         make.left.equalTo(self.leftImgeView.mas_right).offset(10);
         make.right.equalTo(self).offset(-10);
-     }];
- 
+    }];
+
     [self.fujianLab makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.subTitle.mas_bottom).offset(5);
         make.left.equalTo(self.leftImgeView.mas_right).offset(10);
         make.height.lessThanOrEqualTo(35);
-         make.bottom.equalTo(self).offset(-5);
+        make.bottom.equalTo(self).offset(-5);
     }];
     [self.fujianBtn makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.fujianLab.mas_centerY);
         make.left.equalTo(self.fujianLab.mas_right).offset(10);
-         make.height.mas_equalTo(self.fujianLab.mas_height);
-     }];
+        make.height.mas_equalTo(self.fujianLab.mas_height);
+    }];
 }
 -(void)loadContent{
     XMBGDetailModel *model = self.data;
@@ -83,20 +83,19 @@
         self.titleLab.text = model.titleStr;
         self.fujianBtn.hidden =  !(model.Url.lastPathComponent.length && [model.Url.lastPathComponent containsString:@"."]);
         [self.fujianBtn setTitle:model.Url.lastPathComponent forState:UIControlStateNormal];
-
-//        self.leftImgeView.image = SJYCommonImage([NSString matchType:model.Url.lastPathComponent]);
-
-        [self.leftImgeView sd_setImageWithURL:[NSURL URLWithString:model.Url] placeholderImage:PYPlaceholderImage options:SDWebImageRefreshCached |SDWebImageRetryFailed ];
+        //        self.leftImgeView.image = SJYCommonImage([NSString matchType:model.Url.lastPathComponent]);
+        [self.leftImgeView sd_setImageWithURL:[NSURL URLWithString:model.Url] placeholderImage:SJYCommonImage([NSString matchType:model.Url.lastPathComponent]) options:SDWebImageRefreshCached |SDWebImageRetryFailed ];
 
 
     }
     if (self.cellType == CellType_WJQDList) {
-         self.titleLab.text = model.Name;
+        self.titleLab.text = model.Name;
         self.fujianBtn.hidden =  !(model.Url.lastPathComponent.length && [model.Url.lastPathComponent containsString:@"."]);
         [self.fujianBtn setTitle:model.Url.lastPathComponent forState:UIControlStateNormal];
-        self.leftImgeView.image = SJYCommonImage([NSString matchType:model.Url.lastPathComponent]);
+        //        self.leftImgeView.image = SJYCommonImage([NSString matchType:model.Url.lastPathComponent]);
+        [self.leftImgeView sd_setImageWithURL:[NSURL URLWithString:model.Url] placeholderImage:SJYCommonImage([NSString matchType:model.Url.lastPathComponent]) options:SDWebImageRefreshCached |SDWebImageRetryFailed ];
     }
 }
- 
+
 
 @end

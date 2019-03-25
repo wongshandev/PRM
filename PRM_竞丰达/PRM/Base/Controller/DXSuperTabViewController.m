@@ -72,7 +72,7 @@
         _tableView.estimatedRowHeight = 0;
         _tableView.estimatedSectionHeaderHeight = 0;
         _tableView.estimatedSectionFooterHeight = 0;
-        
+        _tableView.backgroundColor = Color_White;
         _tableView.showNoData = YES;
         _tableView.customImg = SJYCommonImage(@"empty");
         _tableView.customMsg = @"没有数据了,休息下吧";

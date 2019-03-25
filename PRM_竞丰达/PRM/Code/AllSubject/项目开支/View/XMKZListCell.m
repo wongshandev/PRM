@@ -124,7 +124,7 @@
     XMKZListModel *model = self.data;
     self.titleLab.text = model.titleStr;
     self.leftCircleLab.text = model.Code;
-    self.addressLab.text = model.Address;
+//    self.addressLab.text = model.Address;
     self.contractLab.text = [NSString numberMoneyFormattor:model.Budget];
     self.reimburseLab.text = [NSString numberMoneyFormattor:model.SpendingPrice];
 }

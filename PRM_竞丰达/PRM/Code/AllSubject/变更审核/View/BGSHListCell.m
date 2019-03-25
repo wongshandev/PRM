@@ -8,7 +8,7 @@
 
 #import "BGSHListCell.h"
  #import "BGSHListModel.h"
-
+#import "UIButton+WebCache.h"
 @interface BGSHListCell()
 @property (nonatomic, strong) QMUILabel *leftCircleLab;
 
@@ -22,7 +22,7 @@
 @implementation BGSHListCell
 
 -(void)setupCell{
-    self.selectionStyle = UITableViewCellSelectionStyleGray;
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
     QMUILabel *leftCircle = [self createLabelWithTextColor:Color_White Font:Font_ListLeftCircle numberOfLines:0];
     leftCircle.textAlignment = NSTextAlignmentCenter;
     [self addSubview:leftCircle];
@@ -100,16 +100,17 @@
     self.subTitle.text = model.subtitleStr;
 //    self.rightImgeView.image = SJYCommonImage([NSString matchType:model.Url.lastPathComponent]);
     self.fujianBtn.hidden =   !(model.Url.lastPathComponent.length && [model.Url.lastPathComponent containsString:@"."]);
-    [self.fujianBtn setImage: SJYCommonImage([NSString matchType:model.Url.lastPathComponent]) forState:UIControlStateNormal];
-
+//    [self.fujianBtn setImage: SJYCommonImage([NSString matchType:model.Url.lastPathComponent]) forState:UIControlStateNormal];
+    [self.fujianBtn sd_setImageWithURL:[NSURL URLWithString:model.Url] forState:UIControlStateNormal placeholderImage:SJYCommonImage([NSString matchType:model.Url.lastPathComponent]) options:SDWebImageRefreshCached |SDWebImageRetryFailed];
 }
- 
+
 // 处理点击时控件颜色变化
--(void)setSelected:(BOOL)highlighted animated:(BOOL)animated{
-    [super setSelected:highlighted animated:animated];//加上这句哦
+-(void)setSelected:(BOOL)selected animated:(BOOL)animated{
+    [super setSelected:selected animated:animated];//加上这句哦
     BGSHListModel *model = self.data;
     _leftCircleLab.backgroundColor = model.stateColor;
 }
+
 
 -(void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated{
     [super setHighlighted:highlighted animated:animated];//加上这句哦

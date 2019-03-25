@@ -152,8 +152,8 @@ NSData *cookiesData = [NSKeyedArchiver archivedDataWithRootObject:cookies];\
     sharedManager1.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", @"text/plain",nil];
     [sharedManager1 POST:url parameters:paradic constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
          NSData *data = [NSData dataWithContentsOfFile:filepath];
-        NSString *mimeType =[NSString mimeTypeForFileAtPath:filepath];
-        NSString *fileName =  [filepath.lastPathComponent componentsSeparatedByString:@"."].lastObject;
+//        NSString *mimeType =[NSString mimeTypeForFileAtPath:filepath];
+//        NSString *fileName =  [filepath.lastPathComponent componentsSeparatedByString:@"."].lastObject;
         [formData appendPartWithFileData:data
                                     name:[filepath.lastPathComponent componentsSeparatedByString:@"."].firstObject
                                 fileName:filepath.lastPathComponent

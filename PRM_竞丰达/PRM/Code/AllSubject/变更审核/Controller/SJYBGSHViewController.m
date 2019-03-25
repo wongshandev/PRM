@@ -167,6 +167,7 @@
             BOOL isYSH = model.ApprovalID.integerValue>0;
             model.stateStr = isYSH ?STATEArray.lastObject:[STATEArray objectAtIndex:1];
             model.stateColor = isYSH ?ListSTATEColorArray.lastObject:[ListSTATEColorArray objectAtIndex:1];
+            model.Url =[model.Url stringByReplacingOccurrencesOfString:@".." withString:API_ImageUrl];
             [self.dataArray addObject:model];
         }
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -244,22 +245,29 @@
     NSString *document = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *savefilePath = [document stringByAppendingPathComponent:fileNameString];
     if ([fileManager fileExistsAtPath:savefilePath]) {
-        //存在  --------弹窗提示直接打开 //重新新下载
-        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"确认" message:@"文件已存在是否重新下载" preferredStyle:UIAlertControllerStyleAlert];
-        [alertVC addAction: [UIAlertAction actionWithTitle:@"直接打开" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            //快速预览
-            [self openFileAtPath:[NSURL fileURLWithPath:savefilePath]];
-        }]];
-        [alertVC addAction: [UIAlertAction actionWithTitle:@"重新下载" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [fileManager removeItemAtPath:savefilePath error:nil];
-            [self downLoadFileWithCellModeUrl:model.Url saveAtPath:savefilePath];
-        }]];
-        [alertVC addAction: [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
-        [self presentViewController:alertVC animated:YES completion:nil];
+        [self openFileAtPath:[NSURL fileURLWithPath:savefilePath]];
     }else {
         //不存在-------下载保存
         [self downLoadFileWithCellModeUrl:model.Url saveAtPath:savefilePath];
     }
+//    if ([fileManager fileExistsAtPath:savefilePath]) {
+//        //存在  --------弹窗提示直接打开 //重新新下载
+//        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"确认" message:@"文件已存在是否重新下载" preferredStyle:UIAlertControllerStyleAlert];
+//        [alertVC addAction: [UIAlertAction actionWithTitle:@"直接打开" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//            //快速预览
+//            [self openFileAtPath:[NSURL fileURLWithPath:savefilePath]];
+//        }]];
+//        [alertVC addAction: [UIAlertAction actionWithTitle:@"重新下载" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//            [fileManager removeItemAtPath:savefilePath error:nil];
+//            [self downLoadFileWithCellModeUrl:model.Url saveAtPath:savefilePath];
+//        }]];
+//        [alertVC addAction: [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+//        [self presentViewController:alertVC animated:YES completion:nil];
+//    }else {
+//        //不存在-------下载保存
+//        [self downLoadFileWithCellModeUrl:model.Url saveAtPath:savefilePath];
+//    }
+
 }
 
 #pragma mark ------------ 附件查看 ------------ UIDocumentInteractionControllerdelegate
@@ -277,20 +285,21 @@
     } destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
         return [NSURL fileURLWithPath:saveFilePath];
     } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [QMUITips hideAllTips];
-            UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"查看附件?" message:nil preferredStyle:UIAlertControllerStyleAlert];
-            [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-                
-            }]];
-            [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                [self openFileAtPath:filePath];
-            }]];
-            [self presentViewController:alert animated:YES completion:nil];
-            
-        });
-        NSLog(@" 附件 : %@",filePath);
-        
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [QMUITips hideAllTips];
+//            UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"查看附件?" message:nil preferredStyle:UIAlertControllerStyleAlert];
+//            [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+//
+//            }]];
+//            [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//                [self openFileAtPath:filePath];
+//            }]];
+//            [self presentViewController:alert animated:YES completion:nil];
+//
+//        });
+//        NSLog(@" 附件 : %@",filePath);
+         [QMUITips hideAllTips];
+        [self openFileAtPath:filePath];
     }];
     
 }
@@ -325,9 +334,7 @@
             NSLog(@"打开失败");
         }
     } else {
-        UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"打开失败" message:@"打开文档失败，可能文档损坏，请重试" preferredStyle:UIAlertControllerStyleAlert];
-        [alert addAction:[UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleCancel handler:nil]];
-        [self presentViewController:alert animated:YES completion:nil];
+        SJYAlertShow(@"打开文档失败，可能文档损坏，请重试", @"确认"); 
     }
 }
 
