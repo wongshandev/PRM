@@ -10,6 +10,9 @@
 
 
 @interface RequestTool : NSObject
+
++(void)checkUpdateWithAppID:(NSString *)appID success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure;
+
 //登录
 +(void)requestLoginInfoWithUserName:(NSString *)username passworld:(NSString *)password success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure;
 //主界面列表

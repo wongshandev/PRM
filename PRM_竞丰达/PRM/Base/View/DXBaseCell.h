@@ -3,7 +3,7 @@
 //  JiYouGe
 //
 //  Created by lyj on 2017/9/25.
-//  Copyright © 2017年 河南咏赞软件有限公司. All rights reserved.
+//  Copyright © 2017年 Sonjery. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

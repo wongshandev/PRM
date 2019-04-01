@@ -2,8 +2,8 @@
 //  UIButton+CrazyClick.m
 //  YYD
 //
-//  Created by qiaoxuekui on 2017/8/2.
-//  Copyright © 2017年 qiaoxuekui. All rights reserved.
+//  Created by Sonjery on 2017/8/2.
+//  Copyright © 2017年 Sonjery. All rights reserved.
 //
 
 #import "UIButton+CrazyClick.h"

@@ -9,10 +9,35 @@
 #import "SJYRequestTool.h"
 #import "LoginModel.h"
 
-
-
 @implementation SJYRequestTool
-
++(void)checkUpdateWithAppID:(NSString *)appID complete:(void (^)(BOOL isHaveNewVision , NSString *newVisionMessage , NSString * newVersion , NSString *newVisionURL))complete{
+    [RequestTool checkUpdateWithAppID:appID success:^(NSURLSessionDataTask *dataTask, id responseObjcet) {
+        id  respond = [NSJSONSerialization  JSONObjectWithData:responseObjcet options:0 error:nil];
+        NSDictionary *resultDic =  [[respond objectForKey:@"results"]objectAtIndex:0 ];
+        if (resultDic == nil) {
+            complete(NO,nil,nil,nil);
+            return;
+        }
+        //获取AppStore的版本号
+        NSString * versionStr = [resultDic valueForKey:@"version"];
+        NSString *versionStr_int = [versionStr stringByReplacingOccurrencesOfString:@"."withString:@""];
+        int version = [versionStr_int intValue];
+        //获取本地的版本号
+        NSDictionary *infoDic = [[NSBundle mainBundle] infoDictionary];
+        NSString * currentVersion = [infoDic valueForKey:@"CFBundleShortVersionString"];
+        NSString *currentVersion_int = [currentVersion stringByReplacingOccurrencesOfString:@"."withString:@""];
+        int current = [currentVersion_int intValue]; 
+        NSString *visionUrl = resultDic[@"trackViewUrl"];
+        NSString *message = resultDic[@"releaseNotes"]; 
+        if(version>current){
+            complete(YES,message,versionStr,visionUrl);
+        } else {
+            complete(NO,nil,nil,nil);
+        }
+    } failure:^(NSURLSessionDataTask *dataTask, NSError *error) {
+        complete(NO,nil,nil,nil);
+    }];
+}
 //登录
 +(void)loginInfoWithUserName:(NSString *)username passworld:(NSString *)password  complete:(void(^) ( id responder))complete {
     [RequestTool requestLoginInfoWithUserName:username passworld:password success:^(NSURLSessionDataTask *dataTask, id responseObjcet) {

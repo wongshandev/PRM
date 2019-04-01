@@ -9,6 +9,57 @@
 #import "RequestTool.h"
 
 @implementation RequestTool
+
++(void)checkUpdateWithAppID:(NSString *)appID success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
+    NSString *api_update = [NSString stringWithFormat:@"https://itunes.apple.com/cn/lookup?id=%@",appID];
+    [HttpClient get:api_update parameters:nil success:success failure:failure];
+}
+//+(void)checkUpdateWithAppID:(NSString *)appID success:(void (^)(NSDictionary *resultDic , BOOL isNewVersion ,NSString * newVersion , NSString * currentVersion))success failure:(void (^)(NSError *error))failure{
+//    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+//    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"application/json",@"text/plain",@"text/json",@"text/javascript",nil];
+//
+//    [manager.requestSerializer willChangeValueForKey:@"timeoutInterval"];
+//    manager.requestSerializer.timeoutInterval = 15.0;//设置请求超时时间
+//    [manager.requestSerializer didChangeValueForKey:@"timeoutInterval"];
+//    //加上这行代码, https ssl 验证
+//    [manager setSecurityPolicy: [self customSecurityPolicy]];
+//
+//    NSString *encodingUrl = [@"https://itunes.apple.com/cn/lookup?id=" stringByAppendingString:appID];
+//    //@"http://itunes.apple.com/cn/lookup?id=1247751540"
+//    [manager GET:encodingUrl parameters:nil progress:^(NSProgress *_Nonnull downloadProgress) {
+//
+//    } success:^(NSURLSessionDataTask *_Nonnull task, id _Nullable responseObject) {
+//
+//        NSDictionary *resultDic =  responseObject ;
+//
+//        //获取AppStore的版本号
+//        NSString * versionStr = [[[resultDic objectForKey:@"results"]objectAtIndex:0 ] valueForKey:@"version"];
+//
+//        NSString *versionStr_int = [versionStr stringByReplacingOccurrencesOfString:@"."withString:@""];
+//
+//        int version = [versionStr_int intValue];
+//
+//        //获取本地的版本号
+//        NSDictionary *infoDic = [[NSBundle mainBundle] infoDictionary];
+//
+//        NSString * currentVersion = [infoDic valueForKey:@"CFBundleShortVersionString"];
+//
+//        NSString *currentVersion_int = [currentVersion stringByReplacingOccurrencesOfString:@"."withString:@""];
+//
+//        int current = [currentVersion_int intValue];
+//
+//        if(version>current){
+//            success(resultDic,YES, versionStr,currentVersion);
+//        } else {
+//            success(resultDic,NO ,versionStr,currentVersion);
+//        }
+//    } failure:^(NSURLSessionDataTask *_Nullable task, NSError *_Nonnull error) {
+//        failure(error);
+//    }];
+//
+//}
+
+
 //登录接口
 +(void)requestLoginInfoWithUserName:(NSString *)username passworld:(NSString *)password success:(void (^) (NSURLSessionDataTask *dataTask,id responseObjcet))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
     NSDictionary *params = @{@"loginName":username,@"password":password};

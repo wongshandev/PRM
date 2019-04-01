@@ -2,8 +2,8 @@
 //  DXNavBarView.h
 //  DaXueZhang
 //
-//  Created by qiaoxuekui on 2018/7/13.
-//  Copyright © 2018年 qiaoxuekui. All rights reserved.
+//  Created by Sonjery on 2018/7/13.
+//  Copyright © 2018年 Sonjery. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

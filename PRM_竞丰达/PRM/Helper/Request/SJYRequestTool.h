@@ -15,6 +15,8 @@ typedef void (^Failure)(int status,NSString *info);
 
 @interface SJYRequestTool : NSObject
 
++(void)checkUpdateWithAppID:(NSString *)appID complete:(void (^)(BOOL isHaveNewVision , NSString *newVisionMessage , NSString * newVersion , NSString *newVisionURL))complete;
+
 #pragma mark ==============登录
 //登录
 +(void)loginWithUserName:(NSString *)username passworld:(NSString *)password  complete:(void(^) ( id responder))complete;

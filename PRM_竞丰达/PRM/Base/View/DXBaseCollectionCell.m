@@ -2,8 +2,8 @@
 //  CustomCollectionCell.m
 //  TechCode
 //
-//  Created by YouXianMing on 16/5/18.
-//  Copyright © 2016年 YouXianMing. All rights reserved.
+//  Created by Sonjery on 16/5/18.
+//  Copyright © 2016年 Sonjery. All rights reserved.
 //
 
 #import "DXBaseCollectionCell.h"

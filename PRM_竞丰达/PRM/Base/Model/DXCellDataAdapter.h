@@ -2,8 +2,8 @@
 //  DXCellDataAdapter.h
 //  ZiPeiYi
 //
-//  Created by YouXianMing on 15/12/30.
-//  Copyright © 2015年 YouXianMing. All rights reserved.
+//  Created by Sonjery on 15/12/30.
+//  Copyright © 2015年 Sonjery. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
