@@ -359,7 +359,8 @@
                              @"rows":@"20",
                              @"page":@(page),
                              @"EmployeeID":KEmployID,
-                             @"PositionID":KPositionID
+                             @"PositionID":KPositionID,
+                             @"IsInquiryDpt": @([[SJYUserManager sharedInstance].sjyloginUC.InquiryDpId isEqualToString:  [SJYUserManager sharedInstance].sjyloginUC.DepartmentID])
                              };
     NSLog(@"%@",API_XMKZList);
     NSLog(@"%@",params);

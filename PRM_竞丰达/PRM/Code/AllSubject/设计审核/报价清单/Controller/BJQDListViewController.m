@@ -14,7 +14,6 @@
     self.navBar.hidden = YES;
 }
 
-
 -(void)setupTableView{
     [super setupTableView];
     self.tableView.separatorStyle =  UITableViewCellSeparatorStyleSingleLine;
@@ -46,16 +45,17 @@
      @{
        @"DeepenDesignID":self.sjshListModel.Id
        }   success:^(id responder) {
-           if (self.tableView.mj_header.isRefreshing) {
-               [self.dataArray removeAllObjects];
-           }
+           [self.dataArray removeAllObjects];
+//           if (self.tableView.mj_header.isRefreshing) {
+//               [self.dataArray removeAllObjects];
+//           }
            NSArray *rowsArr = [responder objectForKey:@"rows"];
            NSArray *footerArr = [responder objectForKey:@"footer"];
 
            NSMutableArray *rowSectionArr = [NSMutableArray new];
            for (NSDictionary *dic in rowsArr) {
                BJQDListModel *model = [BJQDListModel  modelWithDictionary:dic];
-               model.QuotedPriceStr =  [NSString numberMoneyFormattor:model. QuotedPrice];
+               model.QuotedPriceStr =  [NSString numberMoneyFormattor:model.QuotedPrice];
 
                model.UnitQuotedPriceStr = model.UnitQuotedPrice.length!= 0?[[NSString numberMoneyFormattor:model. UnitQuotedPrice] stringByAppendingString:@" (中标单价)"]:@"";
                model.QuantityStr = model.Quantity.length!= 0?[[NSString numberIntFormattor:model.Quantity] stringByAppendingFormat:@" (%@)",model.Unit]:@"";
@@ -77,6 +77,12 @@
            dispatch_async(dispatch_get_main_queue(), ^{
                [self.tableView reloadData];
                [self endRefreshWithError:NO];
+
+               BJQDListModel *model = [footSectionArr objectOrNilAtIndex:5];
+               BJQDListModel *yhmodel = [footSectionArr objectOrNilAtIndex:4];
+               if (self.myblock && model ) {
+                   self.myblock([model.QuotedPriceStr stringByReplacingOccurrencesOfString:@"," withString:@""],[yhmodel.QuotedPriceStr stringByReplacingOccurrencesOfString:@"," withString:@""]);
+               }
            });
        } failure:^(int status, NSString *info) {
            [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];

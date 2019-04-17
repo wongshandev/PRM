@@ -15,8 +15,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,copy)NSString *Address;
 
 @property(nonatomic,assign)BOOL isCanSH;
+@property(nonatomic,assign)BOOL showYHBtn;
 @property(nonatomic,copy)NSString *stateString;
 @property (nonatomic, strong) UIColor *StateColor;
-@end
+ @end
 
 NS_ASSUME_NONNULL_END

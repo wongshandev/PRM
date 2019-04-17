@@ -98,6 +98,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define API_SJSH_GCJDList                         API_Request(@"AppProjectProcessSubmitList")
 
 #define API_SJSH_SH                                  API_Request(@"AppApprovalDesignAll")
+#define API_SJSH_YH                                 API_Request(@"AppOfferDeepenDesign")
 
 
 // 工程分配

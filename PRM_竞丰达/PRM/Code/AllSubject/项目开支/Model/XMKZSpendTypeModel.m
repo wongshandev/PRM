@@ -11,22 +11,24 @@
 @implementation XMKZSpendTypeModel
 
 + (nullable NSDictionary<NSString *, id> *)modelCustomPropertyMapper{
-
     return @{
              @"name":@"Name"
              };
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
-    if (self = [super init]) {
-        self.Id = [aDecoder decodeObjectForKey:@"Id"];
-        self.name = [aDecoder decodeObjectForKey:@"name"];
-     } 
-    return self;
+    self = [super init];
+    return  [self modelInitWithCoder:aDecoder];
+//    if (self = [super init]) {
+//        self.Id = [aDecoder decodeObjectForKey:@"Id"];
+//        self.name = [aDecoder decodeObjectForKey:@"name"];
+//     } 
+//    return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:self.name forKey:@"name"];
-    [aCoder encodeObject:self.Id forKey:@"Id"];
+    [self modelEncodeWithCoder:aCoder];
+//    [aCoder encodeObject:self.name forKey:@"name"];
+//    [aCoder encodeObject:self.Id forKey:@"Id"];
  }
 @end

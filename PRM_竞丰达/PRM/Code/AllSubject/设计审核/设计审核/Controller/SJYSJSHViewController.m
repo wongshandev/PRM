@@ -183,6 +183,8 @@
         NSArray *rowsArr = [responder objectForKey:@"rows"];
         self.totalNum = [[responder objectForKey:@"total"] integerValue];
         NSInteger dpld = [[responder objectForKey:@"dpId"] integerValue];
+        BOOL finalShow = [[responder objectForKey:@"finalShow"] boolValue];
+
         //        self.dpld = dpld;
         if (self.tableView.mj_header.isRefreshing) {
             [self.dataArray removeAllObjects];
@@ -195,6 +197,7 @@
             model.stateString = isWSH?[STATEArray objectAtIndex:1]:STATEArray.lastObject;
             model.StateColor =  isWSH?[ListSTATEColorArray objectAtIndex:1]:ListSTATEColorArray.lastObject;
             model.isCanSH = isWSH;
+            model.showYHBtn =  finalShow && isWSH ;
             [self.dataArray addObject:model];
         }
         dispatch_async(dispatch_get_main_queue(), ^{

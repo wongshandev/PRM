@@ -12,12 +12,16 @@
 #import "WJQDListViewController.h"
 #import "GCJDListViewController.h"
 
-@interface SJSHDetialSuperController ()<ZJScrollPageViewDelegate,QMUITextViewDelegate>
+@interface SJSHDetialSuperController ()<ZJScrollPageViewDelegate,QMUITextViewDelegate,QMUITextFieldDelegate>
 @property(nonatomic,strong)ZJScrollPageView *pageScrollView;
 @property(nonatomic,strong)NSArray *titles;
 
 @property(nonatomic,strong)QMUIButton *rejectBtn;
-@property(nonatomic,strong)QMUIButton *agreeBtn; 
+@property(nonatomic,strong)QMUIButton *agreeBtn;
+@property(nonatomic,strong)QMUIButton *yhBtn;
+@property(nonatomic,copy)NSString * bjqdZJ;
+@property(nonatomic,copy)NSString * bjqdYHJG;
+
 @end
 
 @implementation SJSHDetialSuperController 
@@ -25,12 +29,15 @@
 -(void)setUpNavigationBar{
     //    self.navBar.backButton.hidden = NO;
     self.navBar.titleLabel.text = self.title;
+    self.bjqdZJ = @"";
+    self.bjqdYHJG = @"";
+
     [self createSaveagreeBtn];
 }
+
 -(void)createSaveagreeBtn{
-    if(!self.sjshListModel.isCanSH ){
-        return;
-    }
+    CGFloat submitWidth =  self.sjshListModel.isCanSH ? 45: 0;
+    CGFloat yhBtnWidth =  self.sjshListModel.showYHBtn ? 45: 0;
     Weak_Self;
     QMUIButton *rejectBt = [[QMUIButton  alloc]init];
     [rejectBt setTitle:@"驳回" forState:UIControlStateNormal];
@@ -51,20 +58,40 @@
     [self.agreeBtn clickWithBlock:^{
         [weakSelf alertAgreeView];
     }];
+    QMUIButton *yhBt = [QMUIButton  buttonWithType:UIButtonTypeCustom];
+    [yhBt setTitle:@"优惠" forState:UIControlStateNormal];
+    [yhBt setTitleColor:Color_White forState:UIControlStateNormal];
+    yhBt.titleLabel.font = Font_System(16);
+    [self.navBar addSubview:yhBt];
+    self.yhBtn = yhBt;
+    [self.yhBtn clickWithBlock:^{
+        [weakSelf alertYouHuiView];
+    }];
+
     [self.rejectBtn makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.navBar.mas_top).offset(NAVNOMARLHEIGHT-44);
         make.right.equalTo(self.navBar.mas_right).offset(-10);
         make.height.equalTo(44);
-        make.width.equalTo(45);
+        make.width.equalTo(submitWidth);
     }];
     [self.agreeBtn makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.navBar.mas_top).offset(NAVNOMARLHEIGHT-44);
         make.right.equalTo(self.rejectBtn.mas_left);
         make.height.equalTo(44);
-        make.width.equalTo(45);
+        make.width.equalTo(submitWidth);
     }];
+
+    [self.yhBtn makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.navBar.mas_top).offset(NAVNOMARLHEIGHT-44);
+        make.right.equalTo(self.agreeBtn.mas_left);
+        make.height.equalTo(44);
+        make.width.equalTo(yhBtnWidth);
+    }];
+
     [self.navBar.titleView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.navBar.rightButton.mas_left).offset(-SJYNUM(56));
+        //        make.right.mas_equalTo(self.navBar.rightButton.mas_left).offset(-SJYNUM(56));
+        make.right.mas_equalTo(self.navBar).offset(- (submitWidth + submitWidth +yhBtnWidth));
+
     }];
 }
 -(void)buildSubviews{
@@ -100,6 +127,12 @@
     UIViewController<ZJScrollPageViewChildVcDelegate> *childVc = reuseViewController;
     if (index == 0) {
         BJQDListViewController*bjqdVC = [[BJQDListViewController alloc] init];
+        if (self.sjshListModel.showYHBtn) {
+            bjqdVC.myblock = ^(NSString * _Nonnull bjqdZJ, NSString * _Nonnull yhJE) {
+                self.bjqdZJ = bjqdZJ;
+                self.bjqdYHJG = yhJE;
+            };
+        }
         bjqdVC.sjshListModel = self.sjshListModel;
         childVc = bjqdVC;
     }else if(index == self.titles.count - 1) {//最右侧
@@ -252,7 +285,7 @@
     [dialogViewController addCancelButtonWithText:@"取消" block:nil];
     [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
         [textView endEditing:YES];
-        NSString *content =  [textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]; 
+        NSString *content =  [textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
         if (content.length == 0) {
             [QMUITips showInfo:@"请输入驳回理由" inView:[UIApplication sharedApplication].keyWindow hideAfterDelay:1.2];
             return ;
@@ -289,4 +322,63 @@
 //    }
 //    return YES;
 //}
+-(void)alertYouHuiView{
+    BJQDListViewController *bjqdVC = [self.childViewControllers objectAtIndex:0];
+
+    QMUIModalPresentationViewController *modalViewController = [[QMUIModalPresentationViewController alloc] init];
+     QMUIDialogTextFieldViewController *dialogViewController = [[QMUIDialogTextFieldViewController alloc] init];
+    dialogViewController.footerSeparatorColor = UIColorClear;
+    dialogViewController.headerSeparatorColor = UIColorClear;
+    dialogViewController.headerViewBackgroundColor = UIColorWhite;
+    dialogViewController.footerViewHeight  = 40;
+    dialogViewController.title = @"请输入优惠价格";//[@"请输入优惠价格" stringByAppendingFormat:@"(不大于合计金额:%@)",self.bjqdZJ];
+    [dialogViewController addTextFieldWithTitle:nil configurationHandler:^(QMUILabel *titleLabel, QMUITextField *textField, CALayer *separatorLayer) {
+        textField.delegate = self;
+        textField.placeholder = @"请输入";
+        textField.text = self.bjqdYHJG.floatValue == 0 ? @"": self.bjqdYHJG;
+        textField.keyboardType = UIKeyboardTypeDecimalPad;
+     }];
+    dialogViewController.enablesSubmitButtonAutomatically = YES;// 自动根据输入框的内容是否为空来控制 submitButton.enabled 状态。这个属性默认就是 YES，这里为写出来只是为了演示
+     [dialogViewController addCancelButtonWithText:@"取消" block:^(__kindof QMUIDialogTextFieldViewController *aDialogViewController) {
+        [modalViewController hideInView:[UIApplication sharedApplication].keyWindow animated:YES completion:nil];
+    }];
+    [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogTextFieldViewController *aDialogViewController)  {
+        [aDialogViewController.view endEditing:YES];
+        [QMUITips showLoading:@"数据传输中" inView:[UIApplication sharedApplication].keyWindow];
+        [SJYRequestTool requestSJSHWithAPI:API_SJSH_YH parameters:@{
+                                                                    @"AEmp":[[SJYUserManager sharedInstance].sjyloginUC   modelToJSONString],
+                                                                    @"DeepenDesignID":self.sjshListModel.Id,
+                                                                    @"FinalAmount":aDialogViewController.textFields.firstObject.text//(驳回时必要回传参数)
+                                                                    } success:^(id responder) {
+                                                                        [QMUITips hideAllTips];
+                                                                        [QMUITips showWithText:[responder valueForKey:@"msg"] inView:[UIApplication sharedApplication].keyWindow hideAfterDelay:1.2];
+                                                                        if ([[responder valueForKey:@"success"] boolValue]== YES) {
+                                                                            [modalViewController hideInView:[UIApplication sharedApplication].keyWindow animated:YES completion:nil];
+                                                                            [bjqdVC requestData_SJSH_BJQD];
+                                                                        }
+                                                                    } failure:^(int status, NSString *info) {
+                                                                        [QMUITips hideAllTips];
+                                                                        [QMUITips showError:info inView:[UIApplication sharedApplication].keyWindow hideAfterDelay:1.2];
+                                                                    }];
+
+
+    }];
+    modalViewController.contentViewController = dialogViewController;
+    [modalViewController showInView:[UIApplication sharedApplication].keyWindow animated:YES completion:nil];
+}
+
+-(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+    NSString *str =[textField.text stringByAppendingString:string];
+//    if (![NSString isAvailableStr:str WithFormat:@"^(0|[1-9][0-9]*)$"]) {//@"^([1-9][0-9]*)$"
+    if (![NSString isAvailableStr:str WithFormat:@"^(([1-9]{1}\\d*)|([0]{1}))(\\.(\\d){0,2})?$"]) {//@"^([1-9][0-9]*)$"
+        return NO;
+    }
+//    当输入内容时，range.length = 0，string.length = 1;
+//    当删除内容时，range.length = 1，string.length = 0;
+    if (str.floatValue>self.bjqdZJ.floatValue && string.length > 0) {
+        [QMUITips showWithText:[@"优惠价格不得大于总价:( )" stringByReplacingOccurrencesOfString:@" " withString:self.bjqdZJ] inView:[UIApplication sharedApplication].keyWindow hideAfterDelay:1.2];
+        return NO;
+    }
+    return YES;
+}
 @end
