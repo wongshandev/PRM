@@ -213,10 +213,6 @@
             [self.tableView reloadData];
             [self endRefreshWithError:NO];
         });
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.tableView reloadData];
-            [self endRefreshWithError:NO];
-        });
     } failure:^(int status, NSString *info) {
         [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
         dispatch_async(dispatch_get_main_queue(), ^{

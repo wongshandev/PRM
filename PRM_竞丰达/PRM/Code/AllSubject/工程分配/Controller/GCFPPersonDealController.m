@@ -122,7 +122,11 @@
 // 工程
 -(void)requestPerson_GCB2{
     [QMUITips showLoadingInView:self.view];
-    NSDictionary *PMParaDic = @{@"DtType":@"3",@"Dt":@"1"};
+    NSDictionary *PMParaDic = @{
+                                @"DtType":@"3",
+                                @"Dt":@"1",
+                                @"DepartmentID":[SJYUserManager sharedInstance].sjyloginUC.DepartmentID
+                                };
     [SJYRequestTool requestRWFPPersonData:PMParaDic success:^(id responder) {
         for (NSDictionary *dic in responder) {
             DistributionPerson *person = [DistributionPerson modelWithDictionary:dic];
@@ -225,7 +229,10 @@
 }
 
 
-
+//处理 cell 隔行换色
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    cell.backgroundColor = [UIColor clearColor];
+}
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     return self.dataArray.count?1:0;
 }
@@ -516,7 +523,8 @@
     NSDictionary *paraDic = @{
                               @"EngineeringID":_EngineeringID,
                               @"ProjectBranchID":self.listModel.Id,
-                              @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id
+                              @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id,
+                              @"AEmp":[[SJYUserManager sharedInstance].sjyloginUC   modelToJSONString]
                               };
     [SJYRequestTool requestGCFPSubmit:paraDic success:^(id responder) {
         if ([[responder valueForKey:@"success"] boolValue]== YES) {

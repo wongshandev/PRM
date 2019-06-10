@@ -13,6 +13,7 @@
 @interface CGFKDetialViewController ()<QMUITextViewDelegate>
 @property(nonatomic,strong)QMUIButton *rejectBtn;
 @property(nonatomic,strong)QMUIButton *agreeBtn;
+@property(nonatomic,strong)QMUIButton *waitPayBtn;
 @end
 
 @implementation CGFKDetialViewController
@@ -20,24 +21,35 @@
     self.navBar.hidden = NO;
     self.navBar.titleLabel.text = self.listModel.Name;
     
-    Weak_Self;
-    if (self.listModel.isCGFK) {
-        [self.navBar.rightButton setTitle:@"同意" forState:UIControlStateNormal];
-        self.navBar.rightButton.hidden = NO;
-        [self.navBar.rightButton clickWithBlock:^{
-            // 同意处理
-            [weakSelf alertAgreeView];
-        }];
-    }else{
-        if (((self.listModel.State == 2) && (self.listModel.ApprovalID == 0 || self.listModel.ApprovalID == self.eld))
-            || ((self.listModel.State == 4) && (self.listModel.ManagerID == 0 || self.listModel.ManagerID == self.eld) && (self.eld != self.listModel.ApprovalID && self.eld != self.listModel.BossID))
-            || ((self.listModel.State == 5) && (self.listModel.BossID == 0 || self.listModel.BossID == self.eld) && (self.eld != self.listModel.ApprovalID && self.eld != self.listModel.ManagerID))
-            ){
-            [self createSaveagreeBtn];
-        }
-    }
+//    Weak_Self;
+//    if (self.listModel.isCGFK) {
+//        [self.navBar.rightButton setTitle:@"同意" forState:UIControlStateNormal];
+//        self.navBar.rightButton.hidden = NO;
+//        [self.navBar.rightButton clickWithBlock:^{
+//            // 同意处理
+//            [weakSelf alertAgreeView];
+//        }];
+//    }else{
+//        if (((self.listModel.State == 2) && (self.listModel.ApprovalID == 0 || self.listModel.ApprovalID == self.eld))
+//            || ((self.listModel.State == 4) && (self.listModel.ManagerID == 0 || self.listModel.ManagerID == self.eld) && (self.eld != self.listModel.ApprovalID && self.eld != self.listModel.BossID))
+//            || ((self.listModel.State == 5) && (self.listModel.BossID == 0 || self.listModel.BossID == self.eld) && (self.eld != self.listModel.ApprovalID && self.eld != self.listModel.ManagerID))
+//            ){
+//            [self createSaveagreeBtn];
+//        }
+//    }
+    [self createSaveagreeBtn];
 }
 -(void)createSaveagreeBtn{
+
+    CGFloat agreeBtnWidth =  self.listModel.isCGFK ? 45:
+    (((self.listModel.State == 2) && (self.listModel.ApprovalID == 0 || self.listModel.ApprovalID == self.eld))
+     || ((self.listModel.State == 4) && (self.listModel.ManagerID == 0 || self.listModel.ManagerID == self.eld) && (self.eld != self.listModel.ApprovalID && self.eld != self.listModel.BossID))
+     || ((self.listModel.State == 5) && (self.listModel.BossID == 0 || self.listModel.BossID == self.eld) && (self.eld != self.listModel.ApprovalID && self.eld != self.listModel.ManagerID))
+     )?45:0;
+
+    CGFloat rejectWidth =  self.listModel.isCGFK ? 0: 45;
+    CGFloat waitPayWidth =  self.listModel.isCGFK ? 45: 0;
+
     Weak_Self;
     QMUIButton *rejectBt = [QMUIButton  buttonWithType:UIButtonTypeCustom];
     [rejectBt setTitle:@"驳回" forState:UIControlStateNormal];
@@ -58,20 +70,39 @@
     [self.agreeBtn clickWithBlock:^{
         [weakSelf alertAgreeView];
     }];
+    QMUIButton *waitPayBtn = [QMUIButton  buttonWithType:UIButtonTypeCustom];
+    [waitPayBtn setTitle:@"待付款" forState:UIControlStateNormal];
+    [waitPayBtn setTitleColor:Color_White forState:UIControlStateNormal];
+    waitPayBtn.titleLabel.font = Font_System(16);
+    [self.navBar addSubview:waitPayBtn];
+    self.waitPayBtn = waitPayBtn;
+    [self.waitPayBtn clickWithBlock:^{
+//        [weakSelf alertAgreeView];
+//        SJYAlertShow(@"确认待付款状态吗", @"确认");
+        [weakSelf  alertWaitPayStateView];
+    }];
+
     [self.rejectBtn makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.navBar.mas_top).offset(NAVNOMARLHEIGHT-44);
         make.right.equalTo(self.navBar.mas_right).offset(-10);
         make.height.equalTo(44);
-        make.width.equalTo(45);
+        make.width.equalTo(rejectWidth);
     }];
     [self.agreeBtn makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.navBar.mas_top).offset(NAVNOMARLHEIGHT-44);
         make.right.equalTo(self.rejectBtn.mas_left);
         make.height.equalTo(44);
-        make.width.equalTo(45);
+        make.width.equalTo(agreeBtnWidth);
+    }];
+    [self.waitPayBtn makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.navBar.mas_top).offset(NAVNOMARLHEIGHT-44);
+        make.right.equalTo(self.agreeBtn.mas_left);
+        make.height.equalTo(44);
+        make.width.equalTo(waitPayWidth);
     }];
     [self.navBar.titleView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.navBar.rightButton.mas_left).offset(-SJYNUM(56));
+//        make.right.mas_equalTo(self.waitPayBtn.mas_left).offset(-SJYNUM(56));
+        make.right.mas_equalTo(self.navBar).offset(- (agreeBtnWidth + rejectWidth +waitPayWidth));
     }];
 }
 
@@ -179,7 +210,51 @@
     }
 }
 
+-(void)alertWaitPayStateView{
+    QMUIDialogViewController *dialogViewController = [[QMUIDialogViewController alloc] init];
+    dialogViewController.title = @"提醒";
 
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 45)];
+    contentView.backgroundColor = UIColorWhite;
+    QMUILabel *label = [[QMUILabel alloc] init];
+    label.contentEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 10);
+    label.font = Font_ListTitle;
+    label.textColor = Color_TEXT_NOMARL;
+    label.text = @"确定进行待付款处理吗?";
+    label.textAlignment = NSTextAlignmentLeft;
+    [contentView addSubview:label];
+    [label makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(contentView).offset(UIEdgeInsetsMake(5, 10, 5, 10));
+    }];
+    dialogViewController.contentView = contentView;
+    [dialogViewController addCancelButtonWithText:@"取消" block:nil];
+    [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
+        NSDictionary  *paradic =  @{
+                                                         @"PurchaseOrderID":self.listModel.Id,
+                                                         @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id,
+                                                         @"State":@"-1", //竞丰达同意为7 其他为5
+                                                         @"RejectReason":@""//(驳回时必要回传参数)
+                                                         };
+        [SJYRequestTool requestCGFKAgreeReject:paradic  success:^(id responder) {
+            [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
+            if ([[responder valueForKey:@"success"] boolValue]== YES) {
+                if (self.listModel.isCGFK) {
+                    [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshCGFKListView" object:nil];
+                }
+//                else{
+//                    [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshCGSHListView" object:nil];
+//                }
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self.navigationController popViewControllerAnimated:YES];
+                });
+            }
+        } failure:^(int status, NSString *info) {
+            [QMUITips showError:info inView:self.view hideAfterDelay:1.2];
+        }];
+        [aDialogViewController hide];
+    }];
+    [dialogViewController show];
+}
 
 -(void)alertAgreeView{
     QMUIDialogViewController *dialogViewController = [[QMUIDialogViewController alloc] init];

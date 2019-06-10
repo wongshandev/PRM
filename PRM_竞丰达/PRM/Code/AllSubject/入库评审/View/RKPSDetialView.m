@@ -41,7 +41,7 @@
      tagsView.itemMargins = UIEdgeInsetsMake(0, 0, 10, 10);
      tagsView.minimumItemSize = CGSizeMake(10, 25);// 以2个字的按钮作为最小宽度
     [self addSubview:tagsView];
-    self.tagsView = tagsView;;
+    self.tagsView = tagsView;
 
     self.sepLab1 = [[QMUILabel alloc]init];
     self.sepLab1.backgroundColor = Color_TEXT_WEAK;

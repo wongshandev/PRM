@@ -90,7 +90,7 @@
 
     [self.navBar.titleView mas_updateConstraints:^(MASConstraintMaker *make) {
         //        make.right.mas_equalTo(self.navBar.rightButton.mas_left).offset(-SJYNUM(56));
-        make.right.mas_equalTo(self.navBar).offset(- (submitWidth + submitWidth +yhBtnWidth));
+        make.right.mas_equalTo(self.navBar).offset(- (submitWidth + submitWidth +yhBtnWidth +15));
 
     }];
 }

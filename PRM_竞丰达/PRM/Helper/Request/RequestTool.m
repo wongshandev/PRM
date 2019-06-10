@@ -159,7 +159,12 @@
 
 #pragma mark ============== 项目请购
 +(void)requestXMQGList:(NSString *)employID  page:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
-    NSDictionary *params = @{@"rows":@"20",@"page":@(page),@"EmployeeID":employID};
+    NSDictionary *params = @{
+                             @"rows":@"20",
+                             @"page":@(page),
+                             @"EmployeeID":employID,
+                             @"AEmp":[[SJYUserManager sharedInstance].sjyloginUC   modelToJSONString],
+                             };
     NSLog(@"%@",API_XMQGList);
     NSLog(@"%@",params);
     [HttpClient post:API_XMQGList parameters:params success:success failure:failure];
@@ -355,12 +360,13 @@
     [HttpClient get:API_XMKZSpendingType parameters:@{} success:success failure:failure];
 }
 +(void)requestXMKZListWithPage:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
+    BOOL isEqual = [[SJYUserManager sharedInstance].sjyloginUC.InquiryDpId isEqualToString:  [SJYUserManager sharedInstance].sjyloginUC.DepartmentID];
     NSDictionary *params = @{
                              @"rows":@"20",
                              @"page":@(page),
                              @"EmployeeID":KEmployID,
                              @"PositionID":KPositionID,
-                             @"IsInquiryDpt": @([[SJYUserManager sharedInstance].sjyloginUC.InquiryDpId isEqualToString:  [SJYUserManager sharedInstance].sjyloginUC.DepartmentID])
+                             @"IsInquiryDpt": isEqual ? @"true":@"false"
                              };
     NSLog(@"%@",API_XMKZList);
     NSLog(@"%@",params);

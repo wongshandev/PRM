@@ -421,7 +421,7 @@ QMUITextFieldDelegate,QMUITextViewDelegate>{
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     _group = dispatch_group_create();
     NSArray *fjArr= [self.detialModel.Url componentsSeparatedByString:@","];
-    if (fjArr.count != 0) {
+    if (fjArr.count != 0 && self.detialModel.Url.length) {
         for (NSString *urlStr in fjArr) {
             NSString *url = @"";
             if([urlStr  hasPrefix:@"../"]){

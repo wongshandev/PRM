@@ -12,8 +12,6 @@
 #import "MainViewHeadView.h"
 #import "MainModel.h"
 
-#define kMargain 5
-#define kItemWdith 100
 @interface SJYMainViewController()<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
 @property(nonatomic,strong)UICollectionView *collectionView;
 @property(nonatomic,strong)NSMutableArray  *dateSource;
