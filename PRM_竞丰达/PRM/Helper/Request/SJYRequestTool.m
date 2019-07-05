@@ -29,7 +29,12 @@
         int current = [currentVersion_int intValue]; 
         NSString *visionUrl = resultDic[@"trackViewUrl"];
         NSString *message = resultDic[@"releaseNotes"]; 
-        if(version>current){
+//        if(version>current){
+//            complete(YES,message,versionStr,visionUrl);
+//        } else {
+//            complete(NO,nil,nil,nil);
+//        } 
+        if ([versionStr compare:currentVersion] == NSOrderedDescending) {
             complete(YES,message,versionStr,visionUrl);
         } else {
             complete(NO,nil,nil,nil);

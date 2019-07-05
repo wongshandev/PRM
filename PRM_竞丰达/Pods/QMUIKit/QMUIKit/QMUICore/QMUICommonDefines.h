@@ -1,6 +1,6 @@
 /*****
  * Tencent is pleased to support the open source community by making QMUI_iOS available.
- * Copyright (C) 2016-2018 THL A29 Limited, a Tencent company. All rights reserved.
+ * Copyright (C) 2016-2019 THL A29 Limited, a Tencent company. All rights reserved.
  * Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
  * http://opensource.org/licenses/MIT
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
@@ -66,7 +66,6 @@
 #define BeginIgnoreDeprecatedWarning BeginIgnoreClangWarning(-Wdeprecated-declarations)
 #define EndIgnoreDeprecatedWarning EndIgnoreClangWarning
 
-
 #pragma mark - 变量-设备相关
 
 /// 设备类型
@@ -121,8 +120,8 @@
 /// 是否Retina
 #define IS_RETINASCREEN ([[UIScreen mainScreen] scale] >= 2.0)
 
-/// 是否放大模式（iPhone 6及以上的设备支持放大模式）
-#define IS_ZOOMEDMODE ([[UIScreen mainScreen] respondsToSelector:@selector(nativeScale)] ? (ScreenNativeScale > ScreenScale) : NO)
+/// 是否放大模式（iPhone 6及以上的设备支持放大模式，iPhone X 除外）
+#define IS_ZOOMEDMODE [QMUIHelper isZoomedMode]
 
 #pragma mark - 变量-布局相关
 
@@ -227,7 +226,7 @@ AddAccessibilityHint(NSObject *obj, NSString *hint) {
 
 /**
  *  某些地方可能会将 CGFLOAT_MIN 作为一个数值参与计算（但其实 CGFLOAT_MIN 更应该被视为一个标志位而不是数值），可能导致一些精度问题，所以提供这个方法快速将 CGFLOAT_MIN 转换为 0
- *  issue: https://github.com/QMUI/QMUI_iOS/issues/203
+ *  issue: https://github.com/Tencent/QMUI_iOS/issues/203
  */
 CG_INLINE CGFloat
 removeFloatMin(CGFloat floatValue) {

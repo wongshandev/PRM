@@ -19,13 +19,10 @@
 */
 
 - (instancetype)initWithReuseIdentifier:(NSString *)reuseIdentifier {
-    
     if (self = [super initWithReuseIdentifier:reuseIdentifier]) {
-        
         [self setupHeaderFooterView];
         [self buildSubview];
     }
-    
     return self;
 }
 

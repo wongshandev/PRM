@@ -1,6 +1,6 @@
 /*****
  * Tencent is pleased to support the open source community by making QMUI_iOS available.
- * Copyright (C) 2016-2018 THL A29 Limited, a Tencent company. All rights reserved.
+ * Copyright (C) 2016-2019 THL A29 Limited, a Tencent company. All rights reserved.
  * Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
  * http://opensource.org/licenses/MIT
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
@@ -56,40 +56,47 @@
 - (id)qmui_performSelectorToSuperclass:(SEL)aSelector withObject:(id)object;
 
 /**
- *  系统的 performSelector 不支持参数或返回值为非对象的 selector 的调用，所以在 QMUI 增加了对应的方法，支持对象和非对象的 selector。
- *  这个方法用于无参数无返回值的 selector 调用。
+ *  调用一个无参数、返回值类型为非对象的 selector。如果返回值类型为对象，请直接使用系统的 performSelector: 方法。
  *  @param selector 要被调用的方法名
+ *  @param returnValue selector 的返回值的指针地址，请先定义一个变量再将其指针地址传进来，例如 &result
+ *
+ *  @code
+ *  CGFloat alpha;
+ *  [view qmui_performSelector:@selector(alpha) withPrimitiveReturnValue:&alpha];
+ *  @endcode
  */
-- (void)qmui_performSelector:(SEL)selector;
+- (void)qmui_performSelector:(SEL)selector withPrimitiveReturnValue:(void *)returnValue;
 
 /**
- *  系统的 performSelector 不支持参数或返回值为非对象的 selector 的调用，所以在 QMUI 增加了对应的方法，支持对象和非对象的 selector。
+ *  调用一个带参数的 selector，参数类型支持对象和非对象，也没有数量限制。返回值为对象或者 void。
+ *  @param selector 要被调用的方法名
+ *  @param firstArgument 参数列表，请传参数的指针地址，支持多个参数
+ *  @return 方法的返回值，如果该方法返回类型为 void，则会返回 nil，如果返回类型为对象，则返回该对象。
+ *
+ *  @code
+ *  id target = xxx;
+ *  SEL action = xxx;
+ *  UIControlEvents events = xxx;
+ *  [control qmui_performSelector:@selector(addTarget:action:forControlEvents:) withArguments:&target, &action, &events, nil];
+ *  @endcode
+ */
+- (id)qmui_performSelector:(SEL)selector withArguments:(void *)firstArgument, ...;
+
+/**
+ *  调用一个返回值类型为非对象且带参数的 selector，参数类型支持对象和非对象，也没有数量限制。
+ *
  *  @param selector 要被调用的方法名
  *  @param returnValue selector 的返回值的指针地址
- */
-- (void)qmui_performSelector:(SEL)selector withReturnValue:(void *)returnValue;
-
-/**
- *  系统的 performSelector 不支持参数或返回值为非对象的 selector 的调用，所以在 QMUI 增加了对应的方法，支持对象和非对象的 selector。
- *  @param selector 要被调用的方法名
- *  @param firstArgument 调用 selector 时要传的第一个参数的指针地址
- */
-- (void)qmui_performSelector:(SEL)selector withArguments:(void *)firstArgument, ...;
-
-/**
- *  系统的 performSelector 不支持参数或返回值为非对象的 selector 的调用，所以在 QMUI 增加了对应的方法，支持对象和非对象的 selector。
+ *  @param firstArgument 参数列表，请传参数的指针地址，支持多个参数
  *
- *  使用示例：
- *  CGFloat result;
- *  CGFloat arg1, arg2;
- *  [self qmui_performSelector:xxx withReturnValue:&result arguments:&arg1, &arg2, nil];
- *  // 到这里 result 已经被赋值为 selector 的 return 值
- *
- *  @param selector 要被调用的方法名
- *  @param returnValue selector 的返回值的指针地址
- *  @param firstArgument 调用 selector 时要传的第一个参数的指针地址
+ *  @code
+ *  CGPoint point = xxx;
+ *  UIEvent *event = xxx;
+ *  BOOL isInside;
+ *  [view qmui_performSelector:@selector(pointInside:withEvent:) withPrimitiveReturnValue:&isInside arguments:&point, &event, nil];
+ *  @endcode
  */
-- (void)qmui_performSelector:(SEL)selector withReturnValue:(void *)returnValue arguments:(void *)firstArgument, ...;
+- (void)qmui_performSelector:(SEL)selector withPrimitiveReturnValue:(void *)returnValue arguments:(void *)firstArgument, ...;
 
 
 /**
@@ -160,12 +167,12 @@
  @code
  - (UITableViewCell *)cellForIndexPath:(NSIndexPath *)indexPath {
  // 1）在这里给 button 绑定上 indexPath 对象
- [cell strongBind:indexPath forKey:@"indexPath"];
+ [cell qmui_bindObject:indexPath forKey:@"indexPath"];
  }
  
  - (void)didTapButton:(UIButton *)button {
  // 2）在这里取出被点击的 button 的 indexPath 对象
- NSIndexPath *indexPathTapped = [button getBindForKey:@"indexPath"];
+ NSIndexPath *indexPathTapped = [button qmui_getBoundObjectForKey:@"indexPath"];
  }
  @endcode
  */
@@ -179,7 +186,7 @@
 /**
  取出之前使用 bind 方法绑定的对象
  */
-- (id)qmui_getBindObjectForKey:(NSString *)key;
+- (id)qmui_getBoundObjectForKey:(NSString *)key;
 
 /**
  给对象绑定上一个 double 值以供后续取出使用
@@ -189,7 +196,7 @@
 /**
  取出之前用 bindDouble:forKey: 绑定的值
  */
-- (double)qmui_getBindDoubleForKey:(NSString *)key;
+- (double)qmui_getBoundDoubleForKey:(NSString *)key;
 
 /**
  给对象绑定上一个 BOOL 值以供后续取出使用
@@ -199,7 +206,7 @@
 /**
  取出之前用 bindBOOL:forKey: 绑定的值
  */
-- (BOOL)qmui_getBindBOOLForKey:(NSString *)key;
+- (BOOL)qmui_getBoundBOOLForKey:(NSString *)key;
 
 /**
  给对象绑定上一个 long 值以供后续取出使用
@@ -209,22 +216,27 @@
 /**
  取出之前用 bindLong:forKey: 绑定的值
  */
-- (long)qmui_getBindLongForKey:(NSString *)key;
+- (long)qmui_getBoundLongForKey:(NSString *)key;
 
 /**
  移除之前使用 bind 方法绑定的对象
  */
-- (void)qmui_clearBindForKey:(NSString *)key;
+- (void)qmui_clearBindingForKey:(NSString *)key;
 
 /**
  移除之前使用 bind 方法绑定的所有对象
  */
-- (void)qmui_clearAllBind;
+- (void)qmui_clearAllBinding;
 
 /**
  返回当前有绑定对象存在的所有的 key 的数组，如果不存在任何 key，则返回一个空数组
  @note 数组中元素的顺序是随机的
  */
-- (NSArray<NSString *> *)qmui_allBindKeys;
+- (NSArray<NSString *> *)qmui_allBindingKeys;
+
+/**
+ 返回是否设置了某个 key
+ */
+- (BOOL)qmui_hasBindingKey:(NSString *)key;
 
 @end

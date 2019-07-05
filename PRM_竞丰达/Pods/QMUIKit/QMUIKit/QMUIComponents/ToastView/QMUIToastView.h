@@ -1,6 +1,6 @@
 /*****
  * Tencent is pleased to support the open source community by making QMUI_iOS available.
- * Copyright (C) 2016-2018 THL A29 Limited, a Tencent company. All rights reserved.
+ * Copyright (C) 2016-2019 THL A29 Limited, a Tencent company. All rights reserved.
  * Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
  * http://opensource.org/licenses/MIT
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
@@ -14,6 +14,8 @@
 //
 
 #import <UIKit/UIKit.h>
+
+NS_ASSUME_NONNULL_BEGIN
 
 @class QMUIToastAnimator;
 
@@ -80,15 +82,15 @@ typedef NS_ENUM(NSInteger, QMUIToastViewPosition) {
 - (void)hideAnimated:(BOOL)animated afterDelay:(NSTimeInterval)delay;
 
 /// @warning 如果使用 [QMUITips showXxx] 系列快捷方法来显示 tips，willShowBlock 将会在 show 之后才被设置，最终并不会被调用。这种场景建议自己在调用 [QMUITips showXxx] 之前执行一段代码，或者不要使用 [QMUITips showXxx] 的方式显示 tips
-@property(nonatomic, copy) void (^willShowBlock)(UIView *showInView, BOOL animated);
-@property(nonatomic, copy) void (^didShowBlock)(UIView *showInView, BOOL animated);
-@property(nonatomic, copy) void (^willHideBlock)(UIView *hideInView, BOOL animated);
-@property(nonatomic, copy) void (^didHideBlock)(UIView *hideInView, BOOL animated);
+@property(nullable, nonatomic, copy) void (^willShowBlock)(UIView *showInView, BOOL animated);
+@property(nullable, nonatomic, copy) void (^didShowBlock)(UIView *showInView, BOOL animated);
+@property(nullable, nonatomic, copy) void (^willHideBlock)(UIView *hideInView, BOOL animated);
+@property(nullable, nonatomic, copy) void (^didHideBlock)(UIView *hideInView, BOOL animated);
 
 /**
  * `QMUIToastAnimator`可以让你通过实现一些协议来自定义ToastView显示和隐藏的动画。你可以继承`QMUIToastAnimator`，然后实现`QMUIToastAnimatorDelegate`中的方法，即可实现自定义的动画。如果不赋值，则会使用`QMUIToastAnimator`中的默认动画。
  */
-@property(nonatomic, strong) QMUIToastAnimator *toastAnimator;
+@property(nullable, nonatomic, strong) QMUIToastAnimator *toastAnimator;
 
 /**
  * 决定QMUIToastView的位置，目前有上中下三个位置，默认值是center。
@@ -150,7 +152,7 @@ typedef NS_ENUM(NSInteger, QMUIToastViewPosition) {
  *
  * @return 如果成功隐藏一个 ToastView 则返回 YES，失败则 NO
  */
-+ (BOOL)hideAllToastInView:(UIView *)view animated:(BOOL)animated;
++ (BOOL)hideAllToastInView:(UIView * _Nullable)view animated:(BOOL)animated;
 
 /**
  * 工具方法。返回`view`里面最顶部的 ToastView
@@ -169,3 +171,5 @@ typedef NS_ENUM(NSInteger, QMUIToastViewPosition) {
 + (nullable NSArray <QMUIToastView *> *)allToastInView:(UIView *)view;
 
 @end
+
+NS_ASSUME_NONNULL_END

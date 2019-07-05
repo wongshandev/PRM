@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0930"
+   LastUpgradeVersion = "1020"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,10 +14,10 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "4728A457D0190A7246ECDB1F1AB48888"
+               BlueprintIdentifier = "67BC027837591540F14A48316638AE65"
+               BuildableName = "libPYPhotoBrowser.a"
                BlueprintName = "PYPhotoBrowser"
-               ReferencedContainer = "container:Pods.xcodeproj"
-               BuildableName = "libPYPhotoBrowser.a">
+               ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

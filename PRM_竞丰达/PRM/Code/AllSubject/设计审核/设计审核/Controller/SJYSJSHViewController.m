@@ -193,9 +193,11 @@
             SJSHListModel  *model = [SJSHListModel  modelWithDictionary:dic];
             model.titleStr = [model.Name stringByAppendingFormat:@" (%@)",model.Code];
 
-            BOOL isWSH = ((model.State.integerValue == 2 && dpld == [SJYUserManager sharedInstance].sjyloginUC.EngineeringDpId.integerValue) || (model.State.integerValue == 5 && dpld == [SJYUserManager sharedInstance].sjyloginUC.DesignDpId.integerValue));
-            model.stateString = isWSH?[STATEArray objectAtIndex:1]:STATEArray.lastObject;
-            model.StateColor =  isWSH?[ListSTATEColorArray objectAtIndex:1]:ListSTATEColorArray.lastObject;
+//            BOOL isWSH = ((model.State.integerValue == 2 && dpld == [SJYUserManager sharedInstance].sjyloginUC.EngineeringDpId.integerValue) || (model.State.integerValue == 5 && dpld == [SJYUserManager sharedInstance].sjyloginUC.DesignDpId.integerValue));
+            BOOL isWSH = ((model.State.integerValue == 2 && dpld == [SJYUserManager sharedInstance].sjyloginUC.EngineeringDpId.integerValue) || (( model.State.integerValue == 5 || model.State.integerValue == 6 ) && dpld == [SJYUserManager sharedInstance].sjyloginUC.DesignDpId.integerValue));
+
+            model.stateString = isWSH ? [STATEArray objectAtIndex:1] : STATEArray.lastObject;
+            model.StateColor =  isWSH ? [ListSTATEColorArray objectAtIndex:1] : ListSTATEColorArray.lastObject;
             model.isCanSH = isWSH;
             model.showYHBtn =  finalShow && isWSH ;
             [self.dataArray addObject:model];
@@ -238,7 +240,7 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     SJYJJQRListCell *cell = [SJYJJQRListCell cellWithTableView:tableView];
     cell.indexPath = indexPath;
-    cell.cellType =CellType_SJSHList;
+    cell.cellType = CellType_SJSHList;
     cell.data = self.dataArray[indexPath.row];
     [cell loadContent];
     return cell;

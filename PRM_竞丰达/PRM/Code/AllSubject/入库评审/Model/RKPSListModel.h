@@ -10,6 +10,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef enum : NSUInteger {
+    TabCanEditDefault,
+    TabCanEditSelect,
+    TabCanEditDeselect,
+} TabCanEdit;
+
+
 @interface RKPSListModel : BaseModel
 
 @property(nonatomic,copy)NSString *BrandName;
@@ -39,7 +46,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *titleNameDetial;
 @property (nonatomic, copy) NSString *stockChildNameStr;
 
-
+@property (nonatomic, assign) BOOL isSelect;
+@property (nonatomic, assign)  TabCanEdit canEdit;
 @end
 
 NS_ASSUME_NONNULL_END

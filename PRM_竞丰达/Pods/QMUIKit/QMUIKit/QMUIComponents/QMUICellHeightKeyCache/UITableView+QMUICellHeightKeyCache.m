@@ -1,6 +1,6 @@
 /*****
  * Tencent is pleased to support the open source community by making QMUI_iOS available.
- * Copyright (C) 2016-2018 THL A29 Limited, a Tencent company. All rights reserved.
+ * Copyright (C) 2016-2019 THL A29 Limited, a Tencent company. All rights reserved.
  * Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
  * http://opensource.org/licenses/MIT
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
@@ -31,14 +31,20 @@
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        SEL selectors[] = {
-            @selector(setDelegate:)
-        };
-        for (NSUInteger index = 0; index < sizeof(selectors) / sizeof(SEL); index++) {
-            SEL originalSelector = selectors[index];
-            SEL swizzledSelector = NSSelectorFromString([@"qmui_" stringByAppendingString:NSStringFromSelector(originalSelector)]);
-            ExchangeImplementations([self class], originalSelector, swizzledSelector);
-        }
+        OverrideImplementation([UITableView class], @selector(setDelegate:), ^id(__unsafe_unretained Class originClass, SEL originCMD, IMP (^originalIMPProvider)(void)) {
+            return ^(UITableView *selfObject, id<QMUITableViewDelegate> firstArgv) {
+                
+                // avoid superclass
+                if ([selfObject isKindOfClass:originClass]) {
+                    [selfObject replaceMethodForDelegateIfNeeded:firstArgv];
+                }
+                
+                // call super
+                void (*originSelectorIMP)(id, SEL, id<QMUITableViewDelegate>);
+                originSelectorIMP = (void (*)(id, SEL, id<QMUITableViewDelegate>))originalIMPProvider();
+                originSelectorIMP(selfObject, originCMD, firstArgv);
+            };
+        });
     });
 }
 
@@ -49,7 +55,7 @@ static char kAssociatedObjectKey_qmuiCacheCellHeightByKeyAutomatically;
     if (qmui_cacheCellHeightByKeyAutomatically) {
         
         NSAssert(!self.delegate || [self.delegate respondsToSelector:@selector(qmui_tableView:cacheKeyForRowAtIndexPath:)], @"%@ 需要实现 %@ 方法才能自动缓存 cell 高度", self.delegate, NSStringFromSelector(@selector(qmui_tableView:cacheKeyForRowAtIndexPath:)));
-        NSAssert(self.estimatedRowHeight != 0, @"estimatedRowHeight 不能为 0，否则无法开启 self-sizing cells 功能");
+        NSAssert(self.estimatedRowHeight != 0 || [self.delegate respondsToSelector:@selector(tableView:estimatedHeightForRowAtIndexPath:)], @"必须为 estimatedRowHeight 赋一个不为0的值，或者实现 tableView:estimatedHeightForRowAtIndexPath: 方法，否则无法开启 self-sizing cells 功能");
         
         [self replaceMethodForDelegateIfNeeded:(id<QMUITableViewDelegate>)self.delegate];
         
@@ -114,9 +120,14 @@ static char kAssociatedObjectKey_qmuiAllKeyCaches;
     }
 }
 
-- (void)qmui_setDelegate:(id<QMUITableViewDelegate>)delegate {
-    [self replaceMethodForDelegateIfNeeded:delegate];
-    [self qmui_setDelegate:delegate];
+- (CGFloat)qmui_tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (tableView.qmui_cacheCellHeightByKeyAutomatically) {
+        id<NSCopying> cachedKey = [((id<QMUITableViewDelegate>)tableView.delegate) qmui_tableView:tableView cacheKeyForRowAtIndexPath:indexPath];
+        if ([tableView.qmui_currentCellHeightKeyCache existsHeightForKey:cachedKey]) {
+            return [tableView.qmui_currentCellHeightKeyCache heightForKey:cachedKey];
+        }
+    }
+    return UITableViewAutomaticDimension;// 表示 QMUICellHeightKeyCache 无法决定一个合适的高度，交给业务，或者交给系统默认值决定。
 }
 
 static NSMutableSet<NSString *> *qmui_methodsReplacedClasses;
@@ -134,6 +145,7 @@ static NSMutableSet<NSString *> *qmui_methodsReplacedClasses;
             
             [self handleWillDisplayCellMethodForDelegate:aDelegate];
             [self handleHeightForRowMethodForDelegate:aDelegate];
+            [self handleEstimatedHeightForRowMethodForDelegate:aDelegate];
         };
         
         if ([delegate isKindOfClass:[QMUIMultipleDelegates class]]) {
@@ -160,12 +172,12 @@ static NSMutableSet<NSString *> *qmui_methodsReplacedClasses;
     
     BOOL addedSuccessfully = class_addMethod(delegate.class, willDisplayCellSelector, willDisplayCellIMP, method_getTypeEncoding(willDisplayCellMethod));
     if (!addedSuccessfully) {
-        OverrideImplementation([delegate class], willDisplayCellSelector, ^id(__unsafe_unretained Class originClass, SEL originCMD, IMP originIMP) {
+        OverrideImplementation([delegate class], willDisplayCellSelector, ^id(__unsafe_unretained Class originClass, SEL originCMD, IMP (^originalIMPProvider)(void)) {
             return ^(id<QMUITableViewDelegate> delegateSelf, UITableView *tableView, UITableViewCell *cell, NSIndexPath *indexPath) {
                 
                 // call super
                 void (*originSelectorIMP)(id<QMUITableViewDelegate>, SEL, UITableView *, UITableViewCell *, NSIndexPath *);
-                originSelectorIMP = (void (*)(id<QMUITableViewDelegate>, SEL, UITableView *, UITableViewCell *, NSIndexPath *))originIMP;
+                originSelectorIMP = (void (*)(id<QMUITableViewDelegate>, SEL, UITableView *, UITableViewCell *, NSIndexPath *))originalIMPProvider();
                 originSelectorIMP(delegateSelf, originCMD, tableView, cell, indexPath);
                 
                 // avoid superclass
@@ -189,12 +201,12 @@ static NSMutableSet<NSString *> *qmui_methodsReplacedClasses;
     
     BOOL addedSuccessfully = class_addMethod([delegate class], heightForRowSelector, heightForRowIMP, method_getTypeEncoding(heightForRowMethod));
     if (!addedSuccessfully) {
-        OverrideImplementation([delegate class], heightForRowSelector, ^id(__unsafe_unretained Class originClass, SEL originCMD, IMP originIMP) {
+        OverrideImplementation([delegate class], heightForRowSelector, ^id(__unsafe_unretained Class originClass, SEL originCMD, IMP (^originalIMPProvider)(void)) {
             return ^CGFloat(id<QMUITableViewDelegate> delegateSelf, UITableView *tableView, NSIndexPath *indexPath) {
                 
                 // call super
                 CGFloat (*originSelectorIMP)(id<QMUITableViewDelegate>, SEL, UITableView *, NSIndexPath *);
-                originSelectorIMP = (CGFloat (*)(id<QMUITableViewDelegate>, SEL, UITableView *, NSIndexPath *))originIMP;
+                originSelectorIMP = (CGFloat (*)(id<QMUITableViewDelegate>, SEL, UITableView *, NSIndexPath *))originalIMPProvider();
                 CGFloat result = originSelectorIMP(delegateSelf, originCMD, tableView, indexPath);
                 
                 // avoid superclass
@@ -209,6 +221,44 @@ static NSMutableSet<NSString *> *qmui_methodsReplacedClasses;
             };
         });
     }
+}
+
+- (void)handleEstimatedHeightForRowMethodForDelegate:(id<QMUITableViewDelegate>)delegate {
+    // 如果 delegate 本身没有实现 tableView:estimatedHeightForRowAtIndexPath:，则为它添加一个。
+    // 如果 delegate 已经有实现，会优先拿 QMUICellHeightKeyCache 的结果，如果 QMUICellHeightKeyCache 在 cache 里找不到值，才会返回业务在 tableView:estimatedHeightForRowAtIndexPath: 里的返回值
+    SEL heightForRowSelector = @selector(tableView:estimatedHeightForRowAtIndexPath:);
+    Method heightForRowMethod = class_getInstanceMethod([self class], @selector(qmui_tableView:estimatedHeightForRowAtIndexPath:));
+    IMP heightForRowIMP = method_getImplementation(heightForRowMethod);
+    CGFloat (*heightForRowFunction)(id<QMUITableViewDelegate>, SEL, UITableView *, NSIndexPath *);
+    heightForRowFunction = (CGFloat (*)(id<QMUITableViewDelegate>, SEL, UITableView *, NSIndexPath *))heightForRowIMP;
+    
+    BOOL addedSuccessfully = class_addMethod([delegate class], heightForRowSelector, heightForRowIMP, method_getTypeEncoding(heightForRowMethod));
+    if (!addedSuccessfully) {
+        OverrideImplementation([delegate class], heightForRowSelector, ^id(__unsafe_unretained Class originClass, SEL originCMD, IMP (^originalIMPProvider)(void)) {
+            return ^CGFloat(id<QMUITableViewDelegate> delegateSelf, UITableView *tableView, NSIndexPath *indexPath) {
+                
+                CGFloat result = 0;
+                if ([delegateSelf isKindOfClass:originClass]) {
+                    result = heightForRowFunction(delegateSelf, heightForRowSelector, tableView, indexPath);
+                    if (result != UITableViewAutomaticDimension) {
+                        return result;
+                    }
+                }
+                
+                // call super
+                CGFloat (*originSelectorIMP)(id<QMUITableViewDelegate>, SEL, UITableView *, NSIndexPath *);
+                originSelectorIMP = (CGFloat (*)(id<QMUITableViewDelegate>, SEL, UITableView *, NSIndexPath *))originalIMPProvider();
+                result = originSelectorIMP(delegateSelf, originCMD, tableView, indexPath);
+                return result;
+            };
+        });
+    }
+}
+
+- (void)qmui_invalidateCellHeightCachedForKey:(id<NSCopying>)key {
+    [self.qmui_allKeyCaches enumerateKeysAndObjectsUsingBlock:^(NSNumber * _Nonnull widthKey, QMUICellHeightKeyCache * _Nonnull obj, BOOL * _Nonnull stop) {
+        [obj invalidateHeightForKey:key];
+    }];
 }
 
 - (void)qmui_invalidateAllCellHeightKeyCache {

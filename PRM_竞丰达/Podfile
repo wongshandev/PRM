@@ -9,7 +9,7 @@ target 'PRM' do
 pod 'AFNetworking', '~> 3.2.1'
 pod 'SDWebImage', '~> 4.2.1'
 pod 'Masonry', '~> 1.1.0'
-pod 'QMUIKit', '~> 3.0.0'
+pod 'QMUIKit'
 pod 'MJRefresh', '~> 3.1.15.7'
 pod 'BRPickerView', '~> 2.2.1'
 pod 'YYKit'

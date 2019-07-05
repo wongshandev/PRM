@@ -1,6 +1,6 @@
 /*****
  * Tencent is pleased to support the open source community by making QMUI_iOS available.
- * Copyright (C) 2016-2018 THL A29 Limited, a Tencent company. All rights reserved.
+ * Copyright (C) 2016-2019 THL A29 Limited, a Tencent company. All rights reserved.
  * Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
  * http://opensource.org/licenses/MIT
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
@@ -37,23 +37,6 @@
  */
 - (void)didShowViewController:(nonnull UIViewController *)viewController animated:(BOOL)animated NS_REQUIRES_SUPER;
 
-@end
-
-
-@interface UIViewController (QMUINavigationController)
-
-/// 判断当前 viewController 是否处于手势返回中，仅对当前手势返回涉及到的前后两个 viewController 有效
-@property(nonatomic, assign, readonly) BOOL qmui_navigationControllerPoppingInteracted;
-
-/// 基本与上一个属性 qmui_navigationControllerPoppingInteracted 相同，只不过 qmui_navigationControllerPoppingInteracted 是在 began 时就为 YES，而这个属性仅在 changed 时才为 YES。
-/// @note viewController 会在走完 viewWillAppear: 之后才将这个值置为 YES。
-@property(nonatomic, assign, readonly) BOOL qmui_navigationControllerPopGestureRecognizerChanging;
-
-/// 当前 viewController 是否正在被手势返回 pop
-@property(nonatomic, assign, readonly) BOOL qmui_poppingByInteractivePopGestureRecognizer;
-
-/// 当前 viewController 是否是手势返回中，背后的那个界面
-@property(nonatomic, assign, readonly) BOOL qmui_willAppearByInteractivePopGestureRecognizer;
 @end
 
 

@@ -15,6 +15,7 @@
 @property (nonatomic, strong) QMUILabel *priceLab;
 @property (nonatomic, strong) QMUILabel *applyMenLab;
 @property (nonatomic, strong) QMUILabel *applyPersonLab;
+@property(nonatomic,strong)UIImageView *selecImgView;
 
 @end
 @implementation RKPSListCell
@@ -46,6 +47,10 @@
     QMUILabel *priceLab = [self createLabelWithTextColor:Color_Red Font:Font_ListOtherTxt numberOfLines:1];
     [self addSubview:priceLab];
     self.priceLab = priceLab;
+
+    UIImageView *imgView = [UIImageView new];
+    [self addSubview:imgView];
+    self.selecImgView = imgView;
 
 }
 -(void)buildSubview{
@@ -87,6 +92,11 @@
         make.left.equalTo(self.priceMenLab.mas_right);
         make.right.equalTo(self.titleLab.mas_right);
     }];
+    [self.selecImgView makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(self).offset(-15);
+        make.centerY.equalTo(self.mas_centerY);
+        make.width.height.mas_equalTo(20);
+    }];
 }
 -(void)loadContent{
     RKPSListModelFrame *frameModel = self.data;
@@ -95,16 +105,17 @@
     self.titleLab.text = model.titleName;
     self.applyPersonLab.text = model.EmployeeName;
     self.priceLab.text =  model.PriceListStr;
-}
+    self.selecImgView.image = model.canEdit == TabCanEditDefault ? nil :  (model.canEdit == TabCanEditSelect ?   SJYCommonImage(@"CellButtonSelected") : SJYCommonImage(@"CellButton"));
+
+ }
 
 
 // 处理点击时控件颜色变化
--(void)setSelected:(BOOL)highlighted animated:(BOOL)animated{
-    [super setSelected:highlighted animated:animated];//加上这句哦
+-(void)setSelected:(BOOL)selected animated:(BOOL)animated{
+    [super setSelected:selected animated:animated];//加上这句哦
     RKPSListModelFrame *frameModel = self.data;
     RKPSListModel *model = frameModel.model;
     _leftCircleLab.backgroundColor = model.stateColor;
-
 }
 
 -(void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated{

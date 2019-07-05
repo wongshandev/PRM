@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0930"
+   LastUpgradeVersion = "1020"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,10 +14,10 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "90CA13940B888218BAE1F64BE940B704"
+               BlueprintIdentifier = "B7E5CEC062E04B7CD1C9A94589868513"
+               BuildableName = "libEBBannerView.a"
                BlueprintName = "EBBannerView"
-               ReferencedContainer = "container:Pods.xcodeproj"
-               BuildableName = "libEBBannerView.a">
+               ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

@@ -1,6 +1,6 @@
 /*****
  * Tencent is pleased to support the open source community by making QMUI_iOS available.
- * Copyright (C) 2016-2018 THL A29 Limited, a Tencent company. All rights reserved.
+ * Copyright (C) 2016-2019 THL A29 Limited, a Tencent company. All rights reserved.
  * Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
  * http://opensource.org/licenses/MIT
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
@@ -29,35 +29,70 @@ NSString *const QMUITabBarStyleChangedNotification = @"QMUITabBarStyleChangedNot
 
 @interface UIViewController ()
 
-@property(nonatomic, strong) UINavigationBar *transitionNavigationBar;// by molice 对应 UIViewController (NavigationBarTransition) 里的 transitionNavigationBar，为了让这个属性在这里可以被访问到，有点 hack，具体请查看 https://github.com/QMUI/QMUI_iOS/issues/268
+@property(nonatomic, strong) UINavigationBar *transitionNavigationBar;// by molice 对应 UIViewController (NavigationBarTransition) 里的 transitionNavigationBar，为了让这个属性在这里可以被访问到，有点 hack，具体请查看 https://github.com/Tencent/QMUI_iOS/issues/268
 @end
 
 @implementation UIViewController (QMUI)
 
+QMUISynthesizeIdCopyProperty(qmui_visibleStateDidChangeBlock, setQmui_visibleStateDidChangeBlock)
+
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        SEL selectors[] = {
-            @selector(description),
-            
-            @selector(viewDidLoad),
-            @selector(viewWillAppear:),
-            @selector(viewDidAppear:),
-            @selector(viewWillDisappear:),
-            @selector(viewDidDisappear:),
-            
-            @selector(viewWillTransitionToSize:withTransitionCoordinator:)
-        };
-        for (NSUInteger index = 0; index < sizeof(selectors) / sizeof(SEL); index++) {
-            SEL originalSelector = selectors[index];
-            SEL swizzledSelector = NSSelectorFromString([@"qmuivc_" stringByAppendingString:NSStringFromSelector(originalSelector)]);
-            ExchangeImplementations([self class], originalSelector, swizzledSelector);
-        }
+        
+        ExchangeImplementations([UIViewController class], @selector(description), @selector(qmuivc_description));
+        
+        ExtendImplementationOfVoidMethodWithoutArguments([UIViewController class], @selector(viewDidLoad), ^(UIViewController *selfObject) {
+            selfObject.qmui_visibleState = QMUIViewControllerViewDidLoad;
+        });
+        
+        ExtendImplementationOfVoidMethodWithSingleArgument([UIViewController class], @selector(viewWillAppear:), BOOL, ^(UIViewController *selfObject, BOOL animated) {
+            selfObject.qmui_visibleState = QMUIViewControllerWillAppear;
+        });
+        
+        ExtendImplementationOfVoidMethodWithSingleArgument([UIViewController class], @selector(viewDidAppear:), BOOL, ^(UIViewController *selfObject, BOOL animated) {
+            selfObject.qmui_visibleState = QMUIViewControllerDidAppear;
+        });
+        
+        ExtendImplementationOfVoidMethodWithSingleArgument([UIViewController class], @selector(viewWillDisappear:), BOOL, ^(UIViewController *selfObject, BOOL animated) {
+            selfObject.qmui_visibleState = QMUIViewControllerWillDisappear;
+        });
+        
+        ExtendImplementationOfVoidMethodWithSingleArgument([UIViewController class], @selector(viewDidDisappear:), BOOL, ^(UIViewController *selfObject, BOOL animated) {
+            selfObject.qmui_visibleState = QMUIViewControllerDidDisappear;
+        });
+        
+        OverrideImplementation([UIViewController class], @selector(viewWillTransitionToSize:withTransitionCoordinator:), ^id(__unsafe_unretained Class originClass, SEL originCMD, IMP (^originalIMPProvider)(void)) {
+            return ^(UIViewController *selfObject, CGSize size, id<UIViewControllerTransitionCoordinator> coordinator) {
+                
+                // avoid superclass
+                if ([selfObject isKindOfClass:originClass]) {
+                    if (selfObject == UIApplication.sharedApplication.delegate.window.rootViewController) {
+                        CGSize originalSize = selfObject.view.frame.size;
+                        BOOL sizeChanged = !CGSizeEqualToSize(originalSize, size);
+                        if (sizeChanged) {
+                            [[NSNotificationCenter defaultCenter] postNotificationName:QMUIAppSizeWillChangeNotification object:nil userInfo:@{QMUIPrecedingAppSizeUserInfoKey: @(originalSize), QMUIFollowingAppSizeUserInfoKey: @(size)}];
+                        }
+                    }
+                }
+                
+                // call super
+                void (*originSelectorIMP)(id, SEL, CGSize, id<UIViewControllerTransitionCoordinator>);
+                originSelectorIMP = (void (*)(id, SEL, CGSize, id<UIViewControllerTransitionCoordinator>))originalIMPProvider();
+                originSelectorIMP(selfObject, originCMD, size, coordinator);
+            };
+        });
         
         // 修复 iOS 11 scrollView 无法自动适配不透明的 tabBar，导致底部 inset 错误的问题
-        // https://github.com/QMUI/QMUI_iOS/issues/218
+        // https://github.com/Tencent/QMUI_iOS/issues/218
         if (@available(iOS 11, *)) {
-            ExchangeImplementations([UIViewController class], @selector(initWithNibName:bundle:), @selector(qmuivc_initWithNibName:bundle:));
+            ExtendImplementationOfNonVoidMethodWithTwoArguments([UIViewController class], @selector(initWithNibName:bundle:), NSString *, NSBundle *, UIViewController *, ^UIViewController *(UIViewController *selfObject, NSString *nibNameOrNil, NSBundle *nibBundleOrNil, UIViewController *originReturnValue) {
+                BOOL isContainerViewController = [selfObject isKindOfClass:[UINavigationController class]] || [selfObject isKindOfClass:[UITabBarController class]] || [selfObject isKindOfClass:[UISplitViewController class]];
+                if (!isContainerViewController) {
+                    [[NSNotificationCenter defaultCenter] addObserver:selfObject selector:@selector(adjustsAdditionalSafeAreaInsetsForOpaqueTabBarWithNotification:) name:QMUITabBarStyleChangedNotification object:nil];
+                }
+                return originReturnValue;
+            });
         }
     });
 }
@@ -104,60 +139,6 @@ static char kAssociatedObjectKey_visibleState;
     return [((NSNumber *)objc_getAssociatedObject(self, &kAssociatedObjectKey_visibleState)) unsignedIntegerValue];
 }
 
-static char kAssociatedObjectKey_visibleStateDidChangeBlock;
-- (void)setQmui_visibleStateDidChangeBlock:(void (^)(__kindof UIViewController *, QMUIViewControllerVisibleState))qmui_visibleStateDidChangeBlock {
-    objc_setAssociatedObject(self, &kAssociatedObjectKey_visibleStateDidChangeBlock, qmui_visibleStateDidChangeBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
-}
-
-- (void (^)(__kindof UIViewController *, QMUIViewControllerVisibleState))qmui_visibleStateDidChangeBlock {
-    return (void (^)(__kindof UIViewController *, QMUIViewControllerVisibleState))objc_getAssociatedObject(self, &kAssociatedObjectKey_visibleStateDidChangeBlock);
-}
-
-- (void)qmuivc_viewDidLoad {
-    [self qmuivc_viewDidLoad];
-    self.qmui_visibleState = QMUIViewControllerViewDidLoad;
-}
-
-- (void)qmuivc_viewWillAppear:(BOOL)animated {
-    [self qmuivc_viewWillAppear:animated];
-    self.qmui_visibleState = QMUIViewControllerWillAppear;
-}
-
-- (void)qmuivc_viewDidAppear:(BOOL)animated {
-    [self qmuivc_viewDidAppear:animated];
-    self.qmui_visibleState = QMUIViewControllerDidAppear;
-}
-
-- (void)qmuivc_viewWillDisappear:(BOOL)animated {
-    [self qmuivc_viewWillDisappear:animated];
-    self.qmui_visibleState = QMUIViewControllerWillDisappear;
-}
-
-- (void)qmuivc_viewDidDisappear:(BOOL)animated {
-    [self qmuivc_viewDidDisappear:animated];
-    self.qmui_visibleState = QMUIViewControllerDidDisappear;
-}
-
-- (void)qmuivc_viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
-    if (self == UIApplication.sharedApplication.delegate.window.rootViewController) {
-        CGSize originalSize = self.view.frame.size;
-        BOOL sizeChanged = !CGSizeEqualToSize(originalSize, size);
-        if (sizeChanged) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:QMUIAppSizeWillChangeNotification object:nil userInfo:@{QMUIPrecedingAppSizeUserInfoKey: @(originalSize), QMUIFollowingAppSizeUserInfoKey: @(size)}];
-        }
-    }
-    [self qmuivc_viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
-}
-
-- (instancetype)qmuivc_initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    [self qmuivc_initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    BOOL isContainerViewController = [self isKindOfClass:[UINavigationController class]] || [self isKindOfClass:[UITabBarController class]] || [self isKindOfClass:[UISplitViewController class]];
-    if (!isContainerViewController) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adjustsAdditionalSafeAreaInsetsForOpaqueTabBarWithNotification:) name:QMUITabBarStyleChangedNotification object:nil];
-    }
-    return self;
-}
-
 - (void)adjustsAdditionalSafeAreaInsetsForOpaqueTabBarWithNotification:(NSNotification *)notification {
     if (@available(iOS 11, *)) {
         
@@ -168,7 +149,7 @@ static char kAssociatedObjectKey_visibleStateDidChangeBlock;
         
         UITabBar *tabBar = self.tabBarController.tabBar;
         
-        // 这串判断条件来源于这个 issue：https://github.com/QMUI/QMUI_iOS/issues/218
+        // 这串判断条件来源于这个 issue：https://github.com/Tencent/QMUI_iOS/issues/218
         BOOL isOpaqueBarAndCanExtendedLayout = !tabBar.translucent && self.extendedLayoutIncludesOpaqueBars;
         if (!isOpaqueBarAndCanExtendedLayout) {
             return;
@@ -176,7 +157,7 @@ static char kAssociatedObjectKey_visibleStateDidChangeBlock;
         
         BOOL tabBarHidden = tabBar.hidden;
         
-        // 这里直接用 CGRectGetHeight(tabBar.frame) 来计算理论上不准确，但因为系统有这个 bug（https://github.com/QMUI/QMUI_iOS/issues/217），所以暂时用 CGRectGetHeight(tabBar.frame) 来代替
+        // 这里直接用 CGRectGetHeight(tabBar.frame) 来计算理论上不准确，但因为系统有这个 bug（https://github.com/Tencent/QMUI_iOS/issues/217），所以暂时用 CGRectGetHeight(tabBar.frame) 来代替
         CGFloat correctSafeAreaInsetsBottom = tabBarHidden ? tabBar.safeAreaInsets.bottom : CGRectGetHeight(tabBar.frame);
         CGFloat additionalSafeAreaInsetsBottom = correctSafeAreaInsetsBottom - tabBar.safeAreaInsets.bottom;
         self.additionalSafeAreaInsets = UIEdgeInsetsSetBottom(self.additionalSafeAreaInsets, additionalSafeAreaInsetsBottom);
@@ -242,11 +223,72 @@ static char kAssociatedObjectKey_visibleStateDidChangeBlock;
         return 0;
     }
     
-    // 这里为什么要把 transitionNavigationBar 考虑进去，请参考 https://github.com/QMUI/QMUI_iOS/issues/268
-    UINavigationBar *navigationBar = !self.navigationController.navigationBarHidden && self.navigationController.navigationBar ? self.navigationController.navigationBar : ([self respondsToSelector:@selector(transitionNavigationBar)] && self.transitionNavigationBar ? self.transitionNavigationBar : nil);
+    // 手势返回过程中 self.navigationController 已经不存在了，所以暂时通过遍历 view 层级的方式去获取到 navigationController 的引用
+    UINavigationController *navigationController = self.navigationController;
+    if (!navigationController) {
+        navigationController = self.view.superview.superview.qmui_viewController;
+        if (![navigationController isKindOfClass:[UINavigationController class]]) {
+            navigationController = nil;
+        }
+    }
     
-    if (!navigationBar) {
+    if (!navigationController) {
         return 0;
+    }
+    
+    UINavigationBar *navigationBar = navigationController.navigationBar;
+    CGFloat barMinX = CGRectGetMinX(navigationBar.frame);
+    CGFloat barPresentationMinX = CGRectGetMinX(navigationBar.layer.presentationLayer.frame);
+    CGFloat superviewX = CGRectGetMinX(self.view.superview.frame);
+    CGFloat superviewX2 = CGRectGetMinX(self.view.superview.superview.frame);
+    
+    if (self.qmui_navigationControllerPoppingInteracted) {
+        if (barMinX != 0 && barMinX == barPresentationMinX) {
+            // 返回到无 bar 的界面
+            return 0;
+        } else if (barMinX > 0) {
+            if (self.qmui_willAppearByInteractivePopGestureRecognizer) {
+                // 要手势返回去的那个界面隐藏了 bar
+                return 0;
+            }
+        } else if (barMinX < 0) {
+            // 正在手势返回的这个界面隐藏了 bar
+            if (!self.qmui_willAppearByInteractivePopGestureRecognizer) {
+                return 0;
+            }
+        } else {
+            // 正在手势返回的这个界面隐藏了 bar
+            if (barPresentationMinX != 0 && !self.qmui_willAppearByInteractivePopGestureRecognizer) {
+                return 0;
+            }
+        }
+    } else {
+        if (barMinX > 0) {
+            // 正在 pop 回无 bar 的界面
+            if (superviewX2 <= 0) {
+                // 即将回到的那个无 bar 的界面
+                return 0;
+            }
+        } else if (barMinX < 0) {
+            if (barPresentationMinX < 0) {
+                // 从无 bar push 进无 bar 的界面
+                return 0;
+            }
+            // 正在从有 bar 的界面 push 到无 bar 的界面（bar 被推到左边屏幕外，所以是负数）
+            if (superviewX >= 0) {
+                // 即将进入的那个无 bar 的界面
+                return 0;
+            }
+        } else {
+            if (superviewX < 0 && barPresentationMinX != 0) {
+                // 无 bar push 进有 bar 的界面时，背后的那个无 bar 的界面
+                return 0;
+            }
+            if (superviewX2 > 0 && barPresentationMinX < 0) {
+                // 无 bar pop 回有 bar 的界面时，被 pop 掉的那个无 bar 的界面
+                return 0;
+            }
+        }
     }
     
     CGRect navigationBarFrameInView = [self.view convertRect:navigationBar.frame fromView:navigationBar.superview];
@@ -315,28 +357,18 @@ static char kAssociatedObjectKey_visibleStateDidChangeBlock;
 
 @implementation UIViewController (Data)
 
+QMUISynthesizeIdCopyProperty(qmui_didAppearAndLoadDataBlock, setQmui_didAppearAndLoadDataBlock)
+
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        ExchangeImplementations(self.class, @selector(viewDidAppear:), @selector(qmuivcdata_viewDidAppear:));
+        ExtendImplementationOfVoidMethodWithSingleArgument([UIViewController class], @selector(viewDidAppear:), BOOL, ^(UIViewController *selfObject, BOOL animated) {
+            if (selfObject.qmui_didAppearAndLoadDataBlock && selfObject.qmui_dataLoaded) {
+                selfObject.qmui_didAppearAndLoadDataBlock();
+                selfObject.qmui_didAppearAndLoadDataBlock = nil;
+            }
+        });
     });
-}
-
-- (void)qmuivcdata_viewDidAppear:(BOOL)animated {
-    [self qmuivcdata_viewDidAppear:animated];
-    if (self.qmui_didAppearAndLoadDataBlock && self.qmui_dataLoaded) {
-        self.qmui_didAppearAndLoadDataBlock();
-        self.qmui_didAppearAndLoadDataBlock = nil;
-    }
-}
-
-static char kAssociatedObjectKey_didAppearAndLoadDataBlock;
-- (void)setQmui_didAppearAndLoadDataBlock:(void (^)(void))qmui_didAppearAndLoadDataBlock {
-    objc_setAssociatedObject(self, &kAssociatedObjectKey_didAppearAndLoadDataBlock, qmui_didAppearAndLoadDataBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
-}
-
-- (void (^)(void))qmui_didAppearAndLoadDataBlock {
-    return (void (^)(void))objc_getAssociatedObject(self, &kAssociatedObjectKey_didAppearAndLoadDataBlock);
 }
 
 static char kAssociatedObjectKey_dataLoaded;
@@ -392,55 +424,64 @@ static char kAssociatedObjectKey_dataLoaded;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         // 实现 AutomaticallyRotateDeviceOrientation 开关的功能
-        ExchangeImplementations([UIViewController class], @selector(viewWillAppear:), @selector(rotate_viewWillAppear:));
+        ExtendImplementationOfVoidMethodWithSingleArgument([UIViewController class], @selector(viewWillAppear:), BOOL, ^(UIViewController *selfObject, BOOL animated) {
+            if (!AutomaticallyRotateDeviceOrientation) {
+                return;
+            }
+            
+            // 某些情况下的 UIViewController 不具备决定设备方向的权利，具体请看 https://github.com/Tencent/QMUI_iOS/issues/291
+            if (![selfObject qmui_shouldForceRotateDeviceOrientation]) {
+                BOOL isRootViewController = [selfObject isViewLoaded] && selfObject.view.window.rootViewController == selfObject;
+                BOOL isChildViewController = [selfObject.tabBarController.viewControllers containsObject:selfObject] || [selfObject.navigationController.viewControllers containsObject:selfObject] || [selfObject.splitViewController.viewControllers containsObject:selfObject];
+                BOOL hasRightsOfRotateDeviceOrientaion = isRootViewController || isChildViewController;
+                if (!hasRightsOfRotateDeviceOrientaion) {
+                    return;
+                }
+            }
+            
+            
+            UIInterfaceOrientation statusBarOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+            UIDeviceOrientation deviceOrientationBeforeChangingByHelper = [QMUIHelper sharedInstance].orientationBeforeChangingByHelper;
+            BOOL shouldConsiderBeforeChanging = deviceOrientationBeforeChangingByHelper != UIDeviceOrientationUnknown;
+            UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
+            
+            // 虽然这两者的 unknow 值是相同的，但在启动 App 时可能只有其中一个是 unknown
+            if (statusBarOrientation == UIInterfaceOrientationUnknown || deviceOrientation == UIDeviceOrientationUnknown) return;
+            
+            // 如果当前设备方向和界面支持的方向不一致，则主动进行旋转
+            UIDeviceOrientation deviceOrientationToRotate = [QMUIHelper interfaceOrientationMask:selfObject.supportedInterfaceOrientations containsDeviceOrientation:deviceOrientation] ? deviceOrientation : [QMUIHelper deviceOrientationWithInterfaceOrientationMask:selfObject.supportedInterfaceOrientations];
+            
+            // 之前没用私有接口修改过，那就按最标准的方式去旋转
+            if (!shouldConsiderBeforeChanging) {
+                if ([QMUIHelper rotateToDeviceOrientation:deviceOrientationToRotate]) {
+                    [QMUIHelper sharedInstance].orientationBeforeChangingByHelper = deviceOrientation;
+                } else {
+                    [QMUIHelper sharedInstance].orientationBeforeChangingByHelper = UIDeviceOrientationUnknown;
+                }
+                return;
+            }
+            
+            // 用私有接口修改过方向，但下一个界面和当前界面方向不相同，则要把修改前记录下来的那个设备方向考虑进来
+            deviceOrientationToRotate = [QMUIHelper interfaceOrientationMask:selfObject.supportedInterfaceOrientations containsDeviceOrientation:deviceOrientationBeforeChangingByHelper] ? deviceOrientationBeforeChangingByHelper : [QMUIHelper deviceOrientationWithInterfaceOrientationMask:selfObject.supportedInterfaceOrientations];
+            [QMUIHelper rotateToDeviceOrientation:deviceOrientationToRotate];
+        });
     });
-}
-
-- (void)rotate_viewWillAppear:(BOOL)animated {
-    [self rotate_viewWillAppear:animated];
-    if (!AutomaticallyRotateDeviceOrientation) {
-        return;
-    }
-    
-    // 某些情况下的 UIViewController 不具备决定设备方向的权利，具体请看 https://github.com/QMUI/QMUI_iOS/issues/291
-    if (![self qmui_shouldForceRotateDeviceOrientation]) {
-        BOOL isRootViewController = [self isViewLoaded] && self.view.window.rootViewController == self;
-        BOOL isChildViewController = [self.tabBarController.viewControllers containsObject:self] || [self.navigationController.viewControllers containsObject:self] || [self.splitViewController.viewControllers containsObject:self];
-        BOOL hasRightsOfRotateDeviceOrientaion = isRootViewController || isChildViewController;
-        if (!hasRightsOfRotateDeviceOrientaion) {
-            return;
-        }
-    }
-    
-    
-    UIInterfaceOrientation statusBarOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-    UIDeviceOrientation deviceOrientationBeforeChangingByHelper = [QMUIHelper sharedInstance].orientationBeforeChangingByHelper;
-    BOOL shouldConsiderBeforeChanging = deviceOrientationBeforeChangingByHelper != UIDeviceOrientationUnknown;
-    UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
-    
-    // 虽然这两者的 unknow 值是相同的，但在启动 App 时可能只有其中一个是 unknown
-    if (statusBarOrientation == UIInterfaceOrientationUnknown || deviceOrientation == UIDeviceOrientationUnknown) return;
-    
-    // 如果当前设备方向和界面支持的方向不一致，则主动进行旋转
-    UIDeviceOrientation deviceOrientationToRotate = [QMUIHelper interfaceOrientationMask:self.supportedInterfaceOrientations containsDeviceOrientation:deviceOrientation] ? deviceOrientation : [QMUIHelper deviceOrientationWithInterfaceOrientationMask:self.supportedInterfaceOrientations];
-    
-    // 之前没用私有接口修改过，那就按最标准的方式去旋转
-    if (!shouldConsiderBeforeChanging) {
-        if ([QMUIHelper rotateToDeviceOrientation:deviceOrientationToRotate]) {
-            [QMUIHelper sharedInstance].orientationBeforeChangingByHelper = deviceOrientation;
-        } else {
-            [QMUIHelper sharedInstance].orientationBeforeChangingByHelper = UIDeviceOrientationUnknown;
-        }
-        return;
-    }
-    
-    // 用私有接口修改过方向，但下一个界面和当前界面方向不相同，则要把修改前记录下来的那个设备方向考虑进来
-    deviceOrientationToRotate = [QMUIHelper interfaceOrientationMask:self.supportedInterfaceOrientations containsDeviceOrientation:deviceOrientationBeforeChangingByHelper] ? deviceOrientationBeforeChangingByHelper : [QMUIHelper deviceOrientationWithInterfaceOrientationMask:self.supportedInterfaceOrientations];
-    [QMUIHelper rotateToDeviceOrientation:deviceOrientationToRotate];
 }
 
 - (BOOL)qmui_shouldForceRotateDeviceOrientation {
     return NO;
+}
+
+@end
+
+@implementation UIViewController (QMUINavigationController)
+
+QMUISynthesizeBOOLProperty(qmui_navigationControllerPopGestureRecognizerChanging, setQmui_navigationControllerPopGestureRecognizerChanging)
+QMUISynthesizeBOOLProperty(qmui_poppingByInteractivePopGestureRecognizer, setQmui_poppingByInteractivePopGestureRecognizer)
+QMUISynthesizeBOOLProperty(qmui_willAppearByInteractivePopGestureRecognizer, setQmui_willAppearByInteractivePopGestureRecognizer)
+
+- (BOOL)qmui_navigationControllerPoppingInteracted {
+    return self.qmui_poppingByInteractivePopGestureRecognizer || self.qmui_willAppearByInteractivePopGestureRecognizer;
 }
 
 @end
@@ -456,7 +497,7 @@ static char kAssociatedObjectKey_dataLoaded;
 @end
 
 // 为了 UIViewController 适配 iOS 11 下出现不透明的 tabBar 时底部 inset 错误的问题而创建的 Category
-// https://github.com/QMUI/QMUI_iOS/issues/218
+// https://github.com/Tencent/QMUI_iOS/issues/218
 @interface UITabBar (NavigationController)
 
 @end
@@ -467,44 +508,100 @@ static char kAssociatedObjectKey_dataLoaded;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         if (@available(iOS 11, *)) {
-            ExchangeImplementations([self class], @selector(setHidden:), @selector(nav_setHidden:));
-            ExchangeImplementations([self class], @selector(setBackgroundImage:), @selector(nav_setBackgroundImage:));
-            ExchangeImplementations([self class], @selector(setTranslucent:), @selector(nav_setTranslucent:));
-            ExchangeImplementations([self class], @selector(setFrame:), @selector(nav_setFrame:));
+            
+            OverrideImplementation([UITabBar class], @selector(setHidden:), ^id(__unsafe_unretained Class originClass, SEL originCMD, IMP (^originalIMPProvider)(void)) {
+                return ^(UITabBar *selfObject, BOOL hidden) {
+                    
+                    // call super
+                    void (^callSuperBlock)(BOOL) = ^void(BOOL aHidden) {
+                        void (*originSelectorIMP)(id, SEL, BOOL);
+                        originSelectorIMP = (void (*)(id, SEL, BOOL))originalIMPProvider();
+                        originSelectorIMP(selfObject, originCMD, aHidden);
+                    };
+                    
+                    // avoid superclass
+                    if ([selfObject isKindOfClass:originClass]) {
+                        BOOL shouldNotify = selfObject.hidden != hidden;
+                        callSuperBlock(hidden);
+                        if (shouldNotify) {
+                            [[NSNotificationCenter defaultCenter] postNotificationName:QMUITabBarStyleChangedNotification object:selfObject];
+                        }
+                    } else {
+                        callSuperBlock(hidden);
+                    }
+                };
+            });
+            
+            OverrideImplementation([UITabBar class], @selector(setBackgroundImage:), ^id(__unsafe_unretained Class originClass, SEL originCMD, IMP (^originalIMPProvider)(void)) {
+                return ^(UITabBar *selfObject, UIImage *backgroundImage) {
+                    
+                    // call super
+                    void (^callSuperBlock)(UIImage *) = ^void(UIImage *aBackgroundImage) {
+                        void (*originSelectorIMP)(id, SEL, UIImage *);
+                        originSelectorIMP = (void (*)(id, SEL, UIImage *))originalIMPProvider();
+                        originSelectorIMP(selfObject, originCMD, aBackgroundImage);
+                    };
+                    
+                    // avoid superclass
+                    if ([selfObject isKindOfClass:originClass]) {
+                        BOOL shouldNotify = ![selfObject.backgroundImage isEqual:backgroundImage];
+                        callSuperBlock(backgroundImage);
+                        if (shouldNotify) {
+                            [[NSNotificationCenter defaultCenter] postNotificationName:QMUITabBarStyleChangedNotification object:selfObject];
+                        }
+                    } else {
+                        callSuperBlock(backgroundImage);
+                    }
+                };
+            });
+            
+            OverrideImplementation([UITabBar class], @selector(setTranslucent:), ^id(__unsafe_unretained Class originClass, SEL originCMD, IMP (^originalIMPProvider)(void)) {
+                return ^(UITabBar *selfObject, BOOL translucent) {
+                    
+                    // call super
+                    void (^callSuperBlock)(BOOL) = ^void(BOOL aTranslucent) {
+                        void (*originSelectorIMP)(id, SEL, BOOL);
+                        originSelectorIMP = (void (*)(id, SEL, BOOL))originalIMPProvider();
+                        originSelectorIMP(selfObject, originCMD, aTranslucent);
+                    };
+                    
+                    // avoid superclass
+                    if ([selfObject isKindOfClass:originClass]) {
+                        BOOL shouldNotify = selfObject.translucent != translucent;
+                        callSuperBlock(translucent);
+                        if (shouldNotify) {
+                            [[NSNotificationCenter defaultCenter] postNotificationName:QMUITabBarStyleChangedNotification object:selfObject];
+                        }
+                    } else {
+                        callSuperBlock(translucent);
+                    }
+                };
+            });
+            
+            OverrideImplementation([UITabBar class], @selector(setFrame:), ^id(__unsafe_unretained Class originClass, SEL originCMD, IMP (^originalIMPProvider)(void)) {
+                return ^(UITabBar *selfObject, CGRect frame) {
+                    
+                    // call super
+                    void (^callSuperBlock)(CGRect) = ^void(CGRect aFrame) {
+                        void (*originSelectorIMP)(id, SEL, CGRect);
+                        originSelectorIMP = (void (*)(id, SEL, CGRect))originalIMPProvider();
+                        originSelectorIMP(selfObject, originCMD, aFrame);
+                    };
+                    
+                    // avoid superclass
+                    if ([selfObject isKindOfClass:originClass]) {
+                        BOOL shouldNotify = CGRectGetMinY(selfObject.frame) != CGRectGetMinY(frame);
+                        callSuperBlock(frame);
+                        if (shouldNotify) {
+                            [[NSNotificationCenter defaultCenter] postNotificationName:QMUITabBarStyleChangedNotification object:selfObject];
+                        }
+                    } else {
+                        callSuperBlock(frame);
+                    }
+                };
+            });
         }
     });
-}
-
-- (void)nav_setHidden:(BOOL)hidden {
-    BOOL shouldNotify = self.hidden != hidden;
-    [self nav_setHidden:hidden];
-    if (shouldNotify) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:QMUITabBarStyleChangedNotification object:self];
-    }
-}
-
-- (void)nav_setBackgroundImage:(UIImage *)backgroundImage {
-    BOOL shouldNotify = ![self.backgroundImage isEqual:backgroundImage];
-    [self nav_setBackgroundImage:backgroundImage];
-    if (shouldNotify) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:QMUITabBarStyleChangedNotification object:self];
-    }
-}
-
-- (void)nav_setTranslucent:(BOOL)translucent {
-    BOOL shouldNotify = self.translucent != translucent;
-    [self nav_setTranslucent:translucent];
-    if (shouldNotify) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:QMUITabBarStyleChangedNotification object:self];
-    }
-}
-
-- (void)nav_setFrame:(CGRect)frame {
-    BOOL shouldNotify = CGRectGetMinY(self.frame) != CGRectGetMinY(frame);
-    [self nav_setFrame:frame];
-    if (shouldNotify) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:QMUITabBarStyleChangedNotification object:self];
-    }
 }
 
 @end

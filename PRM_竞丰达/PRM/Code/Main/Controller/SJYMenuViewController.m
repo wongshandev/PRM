@@ -163,9 +163,10 @@
     return tableView.qmui_staticCellDataSource.cellDataSections[section].count;
 }
 -(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
+
     UIView *foot =[UIView new];
     foot.backgroundColor = UIColorGrayLighten;
-    return foot;
+    return section == 0?  foot : nil;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {

@@ -1,6 +1,6 @@
 /*****
  * Tencent is pleased to support the open source community by making QMUI_iOS available.
- * Copyright (C) 2016-2018 THL A29 Limited, a Tencent company. All rights reserved.
+ * Copyright (C) 2016-2019 THL A29 Limited, a Tencent company. All rights reserved.
  * Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
  * http://opensource.org/licenses/MIT
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
@@ -131,7 +131,7 @@ extern NSString *const _Nonnull QMUIResourcesMainBundleName;
 
 @interface QMUIHelper (Device)
 
-+ (NSString *)deviceModel;
++ (nonnull NSString *)deviceModel;
 
 + (BOOL)isIPad;
 + (BOOL)isIPod;
@@ -180,6 +180,9 @@ extern NSString *const _Nonnull QMUIResourcesMainBundleName;
 
 /// 判断当前设备是否高性能设备，只会判断一次，以后都直接读取结果，所以没有性能问题
 + (BOOL)isHighPerformanceDevice;
+
+/// 系统设置里是否开启了“放大显示-试图-放大”，支持放大模式的 iPhone 设备可在官方文档中查询 https://support.apple.com/zh-cn/guide/iphone/iphd6804774e/ios
++ (BOOL)isZoomedMode;
 
 @end
 
