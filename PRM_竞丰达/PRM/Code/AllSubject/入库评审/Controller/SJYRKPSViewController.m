@@ -26,6 +26,8 @@
 @property(nonatomic,strong)RKPSApproveAlertView *approvelAlertView;
 
 @property(nonatomic,assign)BOOL canEdit;
+@property(nonatomic,assign)NSInteger originalType;
+
 @end
 
 @implementation SJYRKPSViewController
@@ -56,12 +58,14 @@
             [weakSelf.headSelectView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo(0);
             }];
-            [weakSelf.dataArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                RKPSListModelFrame *frameModel  = obj;
-                frameModel.model.isSelect = NO;
-                 frameModel.model.canEdit = TabCanEditDefault;
-            }];
-            [weakSelf.tableView reloadData];
+//            [weakSelf.dataArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//                RKPSListModelFrame *frameModel  = obj;
+//                frameModel.model.isSelect = NO;
+//                 frameModel.model.canEdit = TabCanEditDefault;
+//            }];
+//            [weakSelf.tableView reloadData];
+            weakSelf.shStateType = weakSelf.originalType;
+            [weakSelf refreshRKPSListView];
         }
     }];
     //FIXME: 多选/审核按钮
@@ -77,6 +81,7 @@
         if([weakSelf.selectBtn.currentTitle isEqualToString:@"多选"]){
             [weakSelf.searchBtn setTitle:@"取消" forState:UIControlStateNormal];
             [weakSelf.selectBtn setTitle:@"审核" forState:UIControlStateNormal];
+            weakSelf.originalType = weakSelf.shStateType;
              weakSelf.shStateType = 0;
             weakSelf.mutableSelectBtn.selected = NO;
             [weakSelf refreshRKPSListView];
