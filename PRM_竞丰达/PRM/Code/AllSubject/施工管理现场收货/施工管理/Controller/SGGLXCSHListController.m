@@ -45,7 +45,7 @@
             [weakSelf  requestData_SGGL];
         }
         if (KJumpURLToEnum(weakSelf.mainModel.url) == Procurement) { //现场收货
-            weakSelf.page = 0;
+            weakSelf.page = 1;
             [weakSelf  requestData_XCSH];
         }
     }];

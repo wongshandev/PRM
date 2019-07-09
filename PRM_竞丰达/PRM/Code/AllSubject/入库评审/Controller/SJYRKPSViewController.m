@@ -232,7 +232,7 @@
 -(void)bindViewModel{
     Weak_Self;
     self.tableView.mj_header =[MJRefreshNormalHeader headerWithRefreshingBlock:^{
-        weakSelf.page = 0;
+        weakSelf.page = 1;
         [weakSelf  requestData_RKPS];
     }];
     self.tableView.mj_footer =[MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
@@ -254,10 +254,7 @@
         self.totalNum = [[responder objectForKey:@"total"] integerValue];
          if (self.tableView.mj_header.isRefreshing) {
             [self.dataArray removeAllObjects];
-        }
-        if (self.canEdit) {
-            self.mutableSelectBtn.selected = NO;
-        }
+        } 
         for (NSDictionary *dic in rowsArr) {
             RKPSListModel *model = [RKPSListModel  modelWithDictionary:dic];
 
@@ -286,6 +283,13 @@
             frame.model = model;
 
             [self.dataArray addObject:frame];
+        }
+        if (self.canEdit) {
+            if (self.tableView.mj_footer.isRefreshing && self.totalNum == self.dataArray.count) {
+                self.mutableSelectBtn.selected = YES;
+            }else{
+                self.mutableSelectBtn.selected = NO;
+            }
         }
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView reloadData];
@@ -352,11 +356,10 @@
                 selectCount ++;
               }
         }];
-        if (selectCount == 0) {
-            self.mutableSelectBtn.selected = NO;
-        }
         if (selectCount == self.dataArray.count) {
             self.mutableSelectBtn.selected = YES;
+        }else{
+            self.mutableSelectBtn.selected = NO;
         }
       }else{
          RKPSDetialViewController*sjshSupVC = [[RKPSDetialViewController alloc]init];

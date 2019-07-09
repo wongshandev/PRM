@@ -10,7 +10,8 @@
 #define SJYMacro_h
 
 #define  DisplayName  [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleDisplayName"]
-
+//列表分页加载个数
+#define PageOfRows  @(20)
 //屏幕尺寸
 #define SCREEN_BOUNDS [UIScreen mainScreen].bounds //获取屏幕尺寸
 #define SCREEN_H SCREEN_BOUNDS.size.height//获取屏幕高度

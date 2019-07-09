@@ -135,7 +135,7 @@
 -(void)bindViewModel{
     Weak_Self;
     self.tableView.mj_header =[MJRefreshNormalHeader headerWithRefreshingBlock:^{
-        weakSelf.page = 0;
+        weakSelf.page = 1;
         [weakSelf requestData_BGSH];
     }];
     self.tableView.mj_footer =[MJRefreshBackNormalFooter footerWithRefreshingBlock:^{

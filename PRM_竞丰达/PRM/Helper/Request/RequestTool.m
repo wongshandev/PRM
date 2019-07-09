@@ -130,7 +130,7 @@
 
 //现场收货
 +(void)requestXCSHList:(NSString *)employID  page:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
-    NSDictionary *params = @{@"rows":@"20",@"page":@(page),@"EmployeeID":employID};
+    NSDictionary *params = @{@"rows":PageOfRows,@"page":@(page),@"EmployeeID":employID};
     NSLog(@"%@",API_XCSHList);
     NSLog(@"%@",params);
     [HttpClient post:API_XCSHList parameters:params success:success failure:failure];
@@ -160,7 +160,7 @@
 #pragma mark ============== 项目请购
 +(void)requestXMQGList:(NSString *)employID  page:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
     NSDictionary *params = @{
-                             @"rows":@"20",
+                             @"rows":PageOfRows,
                              @"page":@(page),
                              @"EmployeeID":employID,
                              @"AEmp":[[SJYUserManager sharedInstance].sjyloginUC   modelToJSONString],
@@ -184,7 +184,7 @@
 }
 #pragma mark ============== 项目变更
 +(void)requestXMBGList:(NSString *)employID  page:(NSInteger)page SearchCode:(NSString *)searchCode success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
-    NSDictionary *params = @{@"rows":@"20",@"page":@(page),@"EmployeeID":employID,@"SearchCode":searchCode};
+    NSDictionary *params = @{@"rows":PageOfRows,@"page":@(page),@"EmployeeID":employID,@"SearchCode":searchCode};
     NSLog(@"%@",API_XMQGList);
     NSLog(@"%@",params);
     [HttpClient post:API_XMBGList parameters:params success:success failure:failure];
@@ -199,7 +199,7 @@
 
 #pragma mark ============== 变更审核
 +(void)requestBGSHListWithEmployID:(NSString *)employID SearchStateID:(NSString *)searchStateID  SearchCode:(NSString *)searchCode page:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
-    NSDictionary *params = @{@"rows":@"20",@"page":@(page),@"EmployeeID":employID,@"SearchStateID":searchStateID,@"SearchCode":searchCode};
+    NSDictionary *params = @{@"rows":PageOfRows,@"page":@(page),@"EmployeeID":employID,@"SearchStateID":searchStateID,@"SearchCode":searchCode};
     NSLog(@"%@",API_BGSHList);
     NSLog(@"%@",params);
     [HttpClient post:API_BGSHList parameters:params success:success failure:failure];
@@ -214,7 +214,7 @@
 #pragma mark =============   项目进度
 
 +(void)requestXMJDListWithPage:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
-    NSDictionary *params = @{@"rows":@"20",@"page":@(page)};
+    NSDictionary *params = @{@"rows":PageOfRows,@"page":@(page)};
     NSLog(@"%@",API_XMJDList);
     NSLog(@"%@",params);
     [HttpClient post:API_XMJDList parameters:params success:success failure:failure];
@@ -249,7 +249,7 @@
 
 #pragma mark =============   任务分配
 +(void)requestRWFPList:(NSString *)employID  page:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
-    NSDictionary *params = @{@"rows":@"20",@"page":@(page),@"PositionID":employID};
+    NSDictionary *params = @{@"rows":PageOfRows,@"page":@(page),@"PositionID":employID};
     NSLog(@"%@",API_RWFPList);
     NSLog(@"%@",params);
     [HttpClient post:API_RWFPList parameters:params success:success failure:failure];
@@ -264,7 +264,7 @@
 
 #pragma mark ============= 采购付款
 +(void)requestCGFKListWithPage:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
-    NSDictionary *params = @{@"rows":@"20",@"page":@(page)};
+    NSDictionary *params = @{@"rows":PageOfRows,@"page":@(page)};
     NSLog(@"%@",API_CGFKList);
     NSLog(@"%@",params);
     [HttpClient post:API_CGFKList parameters:params success:success failure:failure];
@@ -284,7 +284,7 @@
     //竞丰达 增加AEmp字段
     NSDictionary *params = @{
                              @"AEmp":[[SJYUserManager sharedInstance].sjyloginUC   modelToJSONString],
-                             @"rows":@"20",
+                             @"rows":PageOfRows,
                              @"page":@(page),
                              @"SearchName":searchName,
                              @"SearchStateID":searchStateID,
@@ -302,7 +302,7 @@
     //竞丰达 增加AEmp字段
     NSDictionary *params = @{
                              @"AEmp":[[SJYUserManager sharedInstance].sjyloginUC   modelToJSONString],
-                             @"rows":@"20",
+                             @"rows":PageOfRows,
                              @"page":@(page)
                              };
     NSLog(@"%@",API_GCFPList);
@@ -321,7 +321,7 @@
 //    NSString *jsonStr = [[[[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding] stringByReplacingOccurrencesOfString:@"\n" withString:@""] stringByReplacingOccurrencesOfString:@" " withString:@""] stringByReplacingOccurrencesOfString:@"\\" withString:@""];
     //竞丰达 增加AEmp字段
    NSDictionary *params = @{
-                            @"rows":@"20",
+                            @"rows":PageOfRows,
                             @"page":@(page),
                             @"AEmp":[[SJYUserManager sharedInstance].ucAemp  modelToJSONString],
                             @"SearchStateID":@(searchStateID),
@@ -338,7 +338,7 @@
 +(void)requestRKPSListWithSearchStateID:(NSInteger)searchStateID page:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
 
     NSDictionary *params = @{
-                            @"rows":@"20",
+                            @"rows":PageOfRows,
                              @"page":@(page),
                              @"SearchStateID":@(searchStateID),
                              @"EmployeeID":KEmployID
@@ -362,7 +362,7 @@
 +(void)requestXMKZListWithPage:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
     BOOL isEqual = [[SJYUserManager sharedInstance].sjyloginUC.InquiryDpId isEqualToString:  [SJYUserManager sharedInstance].sjyloginUC.DepartmentID];
     NSDictionary *params = @{
-                             @"rows":@"20",
+                             @"rows":PageOfRows,
                              @"page":@(page),
                              @"EmployeeID":KEmployID,
                              @"PositionID":KPositionID,
@@ -374,7 +374,7 @@
 }
 +(void)requestXMKZDetialListWithProjectBranchID:(NSString *)projectBranchID Page:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
     NSDictionary *params = @{
-                             @"rows":@"20",
+                             @"rows":PageOfRows,
                              @"page":@(page),
                             @"ProjectBranchID":projectBranchID,
                              @"EmployeeID":KEmployID
@@ -399,7 +399,7 @@
 #pragma mark ==============  开支审核
 +(void)requestKZSHListWithSearchStateID:(NSInteger)searchStateID SearchSpendTypeID:(NSString *)searchSpendTypeID Page:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
     NSDictionary *params = @{
-                             @"rows":@"20",
+                             @"rows":PageOfRows,
                              @"page":@(page),
                              @"AEmp":[[SJYUserManager sharedInstance].ucAemp  modelToJSONString],
                              @"SearchSpendingTypeID":searchSpendTypeID,
@@ -415,7 +415,7 @@
 #pragma mark ==============  开支付款
 +(void)requestKZFKListWithSearchStateID:(NSInteger)searchStateID  SearchSpendTypeID:(NSString *)searchSpendTypeID  Page:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
     NSDictionary *params = @{
-                             @"rows":@"20",
+                             @"rows":PageOfRows,
                              @"page":@(page),
                              @"AEmp":[[SJYUserManager sharedInstance].ucAemp  modelToJSONString],
                              @"SearchSpendingTypeID":searchSpendTypeID,
