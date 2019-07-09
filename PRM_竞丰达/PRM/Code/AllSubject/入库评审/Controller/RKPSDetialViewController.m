@@ -84,7 +84,7 @@
         [self.approvelAlertView.bzTV endEditing:YES];
         [QMUITips showLoading:@"数据传输中" inView:[UIApplication sharedApplication].keyWindow];
         [SJYRequestTool requestRKPSApprovelSubmitWithParaDic: @{
-                                                                @"Id":self.modelFrame.model.Id,
+                                                                @"stIds":self.modelFrame.model.Id,
                                                                 @"State":@(self.approvelAlertView.state),
                                                                 @"Remark":content
                                                                 } success:^(id responder) {

@@ -44,7 +44,7 @@
     [self addSubview:priceMenLab];
     self.priceMenLab = priceMenLab;
 
-    QMUILabel *priceLab = [self createLabelWithTextColor:Color_Red Font:Font_ListOtherTxt numberOfLines:1];
+    QMUILabel *priceLab = [self createLabelWithTextColor:Color_Red Font:Font_ListOtherTxt numberOfLines:0];
     [self addSubview:priceLab];
     self.priceLab = priceLab;
 
@@ -62,11 +62,17 @@
     }];
     [self.leftCircleLab rounded:25];
 
+    [self.selecImgView makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(self).offset(-10);
+        make.centerY.equalTo(self.mas_centerY);
+        make.width.height.mas_equalTo(20);
+    }];
 
     [self.titleLab makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self).offset(5);
         make.left.equalTo(self.leftCircleLab.mas_right).offset(10);
-        make.right.equalTo(self).offset(-10);
+        //        make.right.equalTo(self).offset(-10);
+                make.right.equalTo(self.selecImgView.mas_left).offset(0);
     }];
  CGSize titleSize = [self.applyMenLab.text sizeWithFont:Font_ListOtherTxt constrainedToSize:CGSizeMake(MAXFLOAT, 25)];
     [self.applyMenLab makeConstraints:^(MASConstraintMaker *make) {
@@ -84,19 +90,16 @@
         make.top.equalTo(self.applyMenLab.mas_bottom).offset(5);
         make.left.equalTo(self.titleLab.mas_left);
         make.width.equalTo(self.applyMenLab.mas_width);
-        make.bottom.equalTo(self.mas_bottom).offset(-5);
     }];
     
     [self.priceLab makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.priceMenLab.mas_top);
         make.left.equalTo(self.priceMenLab.mas_right);
         make.right.equalTo(self.titleLab.mas_right);
+        make.height.greaterThanOrEqualTo(self.priceMenLab.mas_height);
+        make.bottom.equalTo(self.mas_bottom).offset(-5);
     }];
-    [self.selecImgView makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self).offset(-15);
-        make.centerY.equalTo(self.mas_centerY);
-        make.width.height.mas_equalTo(20);
-    }];
+
 }
 -(void)loadContent{
     RKPSListModelFrame *frameModel = self.data;
@@ -106,7 +109,10 @@
     self.applyPersonLab.text = model.EmployeeName;
     self.priceLab.text =  model.PriceListStr;
     self.selecImgView.image = model.canEdit == TabCanEditDefault ? nil :  (model.canEdit == TabCanEditSelect ?   SJYCommonImage(@"CellButtonSelected") : SJYCommonImage(@"CellButton"));
-
+    CGFloat width =  model.canEdit == TabCanEditDefault ? 0 : 20;
+    [self.selecImgView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(width);
+    }];
  }
 
 

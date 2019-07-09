@@ -255,6 +255,9 @@
          if (self.tableView.mj_header.isRefreshing) {
             [self.dataArray removeAllObjects];
         }
+        if (self.canEdit) {
+            self.mutableSelectBtn.selected = NO;
+        }
         for (NSDictionary *dic in rowsArr) {
             RKPSListModel *model = [RKPSListModel  modelWithDictionary:dic];
 
@@ -291,6 +294,9 @@
     } failure:^(int status, NSString *info) {
         [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
         dispatch_async(dispatch_get_main_queue(), ^{
+            if (self.canEdit) {
+                self.mutableSelectBtn.selected = NO;
+            }
             [self.tableView reloadData];
             [self endRefreshWithError:YES];
         });
@@ -391,7 +397,7 @@
 
         [self.mutableSelectBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.mas_equalTo(headView);
-            make.right.mas_equalTo(headView).mas_offset(-15);
+            make.right.mas_equalTo(headView).mas_offset(-10);
             make.width.height.mas_equalTo(20);
             make.left.mas_equalTo(titlab.mas_right).mas_offset(5);
         }];

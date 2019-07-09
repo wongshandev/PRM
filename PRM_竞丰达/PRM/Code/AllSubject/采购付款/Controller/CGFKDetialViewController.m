@@ -47,9 +47,8 @@
      || ((self.listModel.State == 5) && (self.listModel.BossID == 0 || self.listModel.BossID == self.eld) && (self.eld != self.listModel.ApprovalID && self.eld != self.listModel.ManagerID))
      )?45:0;
 
-    CGFloat rejectWidth =  self.listModel.isCGFK ? 0: 45;
-    CGFloat waitPayWidth =  self.listModel.isCGFK ? 45: 0;
-
+    CGFloat rejectWidth =  self.listModel.isCGFK ? 0 : 45;
+    CGFloat waitPayWidth =  self.listModel.isCGFK ? 55 : 0;
     Weak_Self;
     QMUIButton *rejectBt = [QMUIButton  buttonWithType:UIButtonTypeCustom];
     [rejectBt setTitle:@"驳回" forState:UIControlStateNormal];
