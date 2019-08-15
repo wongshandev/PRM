@@ -113,7 +113,8 @@
     XMKZListModel *model =  self.dataArray[indexPath.row];
     SJYXMKZDetialListController *detialVC = [[SJYXMKZDetialListController alloc]init];
     detialVC.listModel = model;
-    detialVC.title = @"开支详情";
+//    detialVC.title = @"开支详情";
+        detialVC.title =  model.Name;
     [self.navigationController pushViewController:detialVC animated:YES];
 }
 

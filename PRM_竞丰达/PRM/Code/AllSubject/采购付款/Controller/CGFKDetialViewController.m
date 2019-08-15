@@ -219,7 +219,7 @@
     label.contentEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 10);
     label.font = Font_ListTitle;
     label.textColor = Color_TEXT_NOMARL;
-    label.text = @"确定进行待付款处理吗?";
+    label.text = @"采购付款状态更新为(待付款)吗?";//@"确定进行待付款处理吗?";
     label.textAlignment = NSTextAlignmentLeft;
     [contentView addSubview:label];
     [label makeConstraints:^(MASConstraintMaker *make) {
@@ -292,7 +292,6 @@
                     [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshCGFKListView" object:nil];
                 }else{
                     [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshCGSHListView" object:nil];
-                    
                 }
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     [self.navigationController popViewControllerAnimated:YES];

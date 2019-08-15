@@ -29,16 +29,16 @@
         int current = [currentVersion_int intValue]; 
         NSString *visionUrl = resultDic[@"trackViewUrl"];
         NSString *message = resultDic[@"releaseNotes"]; 
-//        if(version>current){
-//            complete(YES,message,versionStr,visionUrl);
-//        } else {
-//            complete(NO,nil,nil,nil);
-//        } 
-        if ([versionStr compare:currentVersion] == NSOrderedDescending) {
+        if(version>current){
             complete(YES,message,versionStr,visionUrl);
         } else {
             complete(NO,nil,nil,nil);
         }
+//        if ([versionStr compare:currentVersion] == NSOrderedDescending) {
+//            complete(YES,message,versionStr,visionUrl);
+//        } else {
+//            complete(NO,nil,nil,nil);
+//        }
     } failure:^(NSURLSessionDataTask *dataTask, NSError *error) {
         complete(NO,nil,nil,nil);
     }];
@@ -77,9 +77,11 @@
         
     } failure:^(NSURLSessionDataTask *dataTask, NSError *error) {
         if ([AFNetworkReachabilityManager sharedManager].reachable) {
-            failure(-1,@"请求失败");
+//            failure(-1,@"请求失败");
+            failure(-1,@"服务器链接超时,请检查网络是否正常或服务器设置(IP地址和端口)是否正确");
         } else{
-            failure(-1,@"网络异常,请检查您的网络状况");
+//            failure(-1,@"网络异常,请检查您的网络状况");
+            failure(-1,@"服务器链接超时,请检查网络是否正常或服务器设置(IP地址和端口)是否正确");
         }
     }];
 }

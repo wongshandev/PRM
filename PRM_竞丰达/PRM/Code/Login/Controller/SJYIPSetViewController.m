@@ -33,7 +33,7 @@
 
 - (void)setUpNavigationBar{
     self.navBar.backButton.hidden = NO;
-    self.navBar.titleLabel.text = @"服务器 IP 设置";
+    self.navBar.titleLabel.text = @"服务器IP地址和端口设置";
 }
 
 
@@ -47,6 +47,14 @@
     ipAddressLab.textColor =Color_TEXT_HIGH;
     ipAddressLab.text = @"IP地址:";
     [self.view addSubview:ipAddressLab];
+    //IP 格式提示
+    UILabel *ipMenLab = [[UILabel alloc] init];
+    ipMenLab.numberOfLines = 0;
+    ipMenLab.font = SJYFont(14);
+    ipMenLab.textColor =Color_Gray;
+    ipMenLab.text = @"(格式：222.222.222.222，每个数字在0-255，第一个数字不能是0，最后一个数字不能是0或255)";
+    [self.view addSubview:ipMenLab];
+
     // IP 地址
     UIView *addressView = [[UIView alloc]init];
     addressView.backgroundColor = UIColorClear;
@@ -56,7 +64,7 @@
     addressTF.font = SJYFont(16);
     addressTF.keyboardType = UIKeyboardTypeDecimalPad;
     addressTF.borderStyle = UITextBorderStyleNone;
-    addressTF.placeholder = @"58.216.202.186";
+    addressTF.placeholder = IP_Default_Address;
     addressTF.placeholderColor =Color_TEXT_WEAK;
     [addressView addSubview: addressTF];
     self.ipAddressTF = addressTF;
@@ -64,12 +72,21 @@
     QMUILabel *ipSepLine = [[QMUILabel alloc]init];
     ipSepLine.backgroundColor = Color_Gray;
     [addressView addSubview: ipSepLine];
+
+
     //端口提示
     UILabel *ippotLab = [[UILabel alloc] init];
-    ippotLab.text = @"端口:";
+    ippotLab.text = @"端   口:";
     ippotLab.font = SJYFont(16);
     ippotLab.textColor =Color_TEXT_HIGH;
     [self.view addSubview:ippotLab];
+    //端口 格式提示
+    UILabel *ippotMenLab = [[UILabel alloc] init];
+    ippotMenLab.font = SJYFont(14);
+    ippotMenLab.numberOfLines = 0;
+    ippotMenLab.textColor =Color_Gray;
+    ippotMenLab.text = @"(格式：1-65535)";
+    [self.view addSubview:ippotMenLab];
     //  IP端口
     UIView *ippotView = [[UIView alloc]init];
     ippotView.backgroundColor = UIColorClear;
@@ -79,7 +96,7 @@
      ipportTF.font = SJYFont(16);
     ipportTF.keyboardType = UIKeyboardTypeNumberPad;
     ipportTF.borderStyle = UITextBorderStyleNone;
-    ipportTF.placeholder = @"8817";
+    ipportTF.placeholder = IP_Default_Port;
     ipportTF.placeholderColor = Color_TEXT_WEAK;
     [ippotView addSubview: ipportTF];
     self.ipPortTF = ipportTF;
@@ -90,25 +107,26 @@
     // 登录
     QMUIFillButton *saveBtn = [[QMUIFillButton alloc] init];
     saveBtn.fillColor =Color_NavigationLightBlue; //Color_RGB_HEX(0x22cc65, 1);
-    [saveBtn setTitle:@"保存" forState:UIControlStateNormal];
+    [saveBtn setTitle:@"保        存" forState:UIControlStateNormal];
     [saveBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [saveBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     saveBtn.titleLabel.font = [UIFont  boldSystemFontOfSize:SJYNUM(18)];
     [self.view addSubview:saveBtn];
     [saveBtn clickWithBlock:^{
         [weakSelf.view endEditing:YES];
-        if (weakSelf.ipPortTF.text.length == 0 ||  weakSelf.ipAddressTF.text.length == 0) {
-            [QMUITips showWithText:@"服务器信息配置不完善" inView:weakSelf.view  hideAfterDelay:1.3];
+        if (weakSelf.ipAddressTF.text.length == 0) {
+            [QMUITips showWithText:@"请输入IP地址" inView:weakSelf.view  hideAfterDelay:1.3];
             return ;
         }
-        if (![weakSelf isValidatIPaddress:weakSelf.ipAddressTF.text]) {
-            [QMUITips showError:@"无效的IP地址" inView:weakSelf.view  hideAfterDelay:1.3];
+        if ( weakSelf.ipPortTF.text.length == 0) {
+            [QMUITips showWithText:@"请输入端口" inView:weakSelf.view  hideAfterDelay:1.3];
+            return ;
+        }
+        if (![weakSelf isValidatIPaddress:weakSelf.ipAddressTF.text] || ![weakSelf isValidatIPport:weakSelf.ipPortTF.text]) {
+            [QMUITips showError:@"IP地址格式或端口格式不正确,请重新输入" inView:weakSelf.view  hideAfterDelay:3];
             return;
         }
-        if (![weakSelf isValidatIPport:weakSelf.ipPortTF.text]) {
-            [QMUITips showError:@"无效的端口" inView:weakSelf.view  hideAfterDelay:1.3];
-            return;
-        }
+
 
         [QMUITips showSucceed:@"保存成功" inView:weakSelf.view  hideAfterDelay:1.0];
         [[SJYDefaultManager shareManager] saveIPAddress:weakSelf.ipAddressTF.text IPPort:weakSelf.ipPortTF.text];
@@ -124,8 +142,13 @@
         make.height.equalTo(20);
         make.width.equalTo(SJYNUM(310));
     }];
+    [ipMenLab makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(ipAddressLab.mas_bottom).offset(SJYNUM(5));
+        make.centerX.equalTo(self.view.mas_centerX);
+        make.width.equalTo(SJYNUM(310));
+    }];
     [addressView makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(ipAddressLab.mas_bottom).offset(SJYNUM(10));
+        make.top.equalTo(ipMenLab.mas_bottom).offset(SJYNUM(10));
         make.centerX.equalTo(self.view.mas_centerX);
         make.height.equalTo(SJYNUM(BackView_H));
         make.width.equalTo(SJYNUM(310));
@@ -149,8 +172,13 @@
         make.height.equalTo(SJYNUM(20));
         make.width.equalTo(addressView.mas_width);
     }];
+    [ippotMenLab makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(ippotLab.mas_bottom).offset(SJYNUM(5));
+        make.centerX.equalTo(addressView.mas_centerX);
+        make.width.equalTo(addressView.mas_width);
+    }];
     [ippotView makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(ippotLab.mas_bottom).offset(SJYNUM(10));
+        make.top.equalTo(ippotMenLab.mas_bottom).offset(SJYNUM(10));
         make.centerX.equalTo(addressView.mas_centerX);
         make.height.equalTo(addressView.mas_height);
         make.width.equalTo(addressView.mas_width);
@@ -178,17 +206,16 @@
 }
 
 - (BOOL)isValidatIPaddress:(NSString *)ipAddress{
-    NSString *urlRegEx =
-    @"^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
-    "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
-    "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
-    "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
-    NSPredicate *urlTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", urlRegEx];
-    return [urlTest evaluateWithObject:ipAddress];
+//    return [NSString isAvailableStr:ipAddress WithFormat:
+//            @"^([1-9]|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])\\."
+//            "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+//            "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+//            "([1-9]|[1-9]\\d|1\\d1\\d|2[0-4]\\d|25[0-4])$"];
+    return [NSString isAvailableStr:ipAddress WithFormat: IPFormattor];
 }
 
 - (BOOL)isValidatIPport:(NSString *)ipport {
-   return ipport.intValue >= 0 && ipport.intValue <= 0xFFFF;
+    return ipport.intValue >= 1 && ipport.intValue <= 0xFFFF && ipport.length > 0 && ![ipport hasPrefix:@"0"];
 }
 
 -(void)viewWillDisappear:(BOOL)animated{

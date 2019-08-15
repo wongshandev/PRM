@@ -23,6 +23,7 @@
 - (void)setUpNavigationBar{
     Weak_Self;
     self.navBar.hidden = NO;
+    self.navBar.backView.backgroundColor = Color_Clear;
     self.navBar.titleLabel.text = DisplayName;
     self.navBar.rightButton.hidden = NO;
 
@@ -112,7 +113,8 @@
     imgView.image = SJYCommonImage(@"zxlogo");
     [topView addSubview:imgView];
 
-    // 手机号码
+    //FIXME: 手机号码
+
     UIView *nameView = [[UIView alloc]init];
     nameView.backgroundColor = UIColorClear;
     [self.view addSubview:nameView];
@@ -135,7 +137,7 @@
     [nameView addSubview: nameSepLine];
 
 
-    // 密码
+    //FIXME:密码
     UIView *passwordView = [[UIView alloc]init];
     passwordView.backgroundColor = UIColorClear;
     [self.view addSubview:passwordView];
@@ -157,22 +159,32 @@
     passSepLine.backgroundColor = Color_SrprateLine;
     [passwordView addSubview: passSepLine];
 
-    // 登录
+   //FIXME: 登录
     QMUIFillButton *loginBtn = [[QMUIFillButton alloc] init];
     loginBtn.fillColor =Color_NavigationLightBlue; //Color_RGB_HEX(0x22cc65, 1);
-    [loginBtn setTitle:@"登录" forState:UIControlStateNormal];
+    [loginBtn setTitle:@"登        录" forState:UIControlStateNormal];
     [loginBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [loginBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     loginBtn.titleLabel.font = [UIFont  boldSystemFontOfSize:SJYNUM(18)];
     [self.view addSubview:loginBtn];
     [loginBtn clickWithBlock:^{
         [weakSelf.view endEditing:YES];
-        if (weakSelf.nameTF.text.length == 0 ||  weakSelf.passwordTF.text.length == 0) {
-            [QMUITips showWithText:@"请输入用户名或密码" inView:weakSelf.view
+        if (IP_Address.length==0 || IP_Port.length==0) {
+//            [QMUITips showError:nil detailText:[DisplayName stringByAppendingString: @"  :请点击右上角,设置服务器IP地址及端口"] inView:weakSelf.viewhideAfterDelay:1.3];
+            [QMUITips showWithText:DisplayName detailText:@"请点击右上角 , 设置服务器IP地址及端口" inView:weakSelf.view hideAfterDelay:3];
+            return;
+        }
+        if (weakSelf.nameTF.text.length == 0) {
+            [QMUITips showWithText:@"请输入用户名" inView:weakSelf.view
                     hideAfterDelay:1.3];
             return ;
         }
-        [QMUITips showLoading:@"加载中..." inView:weakSelf.view];
+        if (weakSelf.passwordTF.text.length == 0) {
+            [QMUITips showWithText:@"请输入密码" inView:weakSelf.view
+                    hideAfterDelay:1.3];
+            return ;
+        }
+        [QMUITips showLoading:@"正在登录,请稍后..." inView:weakSelf.view];
         [SJYRequestTool loginInfoWithUserName:weakSelf.nameTF.text passworld:weakSelf.passwordTF.text success:^(LoginModel *loginInfo) {
             [QMUITips hideAllTipsInView: weakSelf.view];
             [SJYUserManager sharedInstance].loginModel= loginInfo;
@@ -205,13 +217,13 @@
         }];
     }];
 
-    // 记住密码
+    //FIXME: 记住密码
     QMUIButton *remeberPasswordBtn = [[QMUIButton alloc] init];
     remeberPasswordBtn.spacingBetweenImageAndTitle = 15;
     [remeberPasswordBtn setTitle:@"记住密码" forState:UIControlStateNormal];
     [remeberPasswordBtn setTitleColor:Color_TEXT_HIGH forState:UIControlStateNormal];
-    [remeberPasswordBtn setImage:SJYCommonImage(@"deselect") forState:UIControlStateNormal];
-    [remeberPasswordBtn setImage:SJYCommonImage(@"select") forState:UIControlStateSelected];
+    [remeberPasswordBtn setImage:[SJYCommonImage(@"deselect_login") imageByTintColor:Color_TEXT_NOMARL] forState:UIControlStateNormal];
+    [remeberPasswordBtn setImage:[SJYCommonImage(@"select_login") imageByTintColor:Color_NavigationLightBlue] forState:UIControlStateSelected];
     remeberPasswordBtn.titleLabel.font = [UIFont  boldSystemFontOfSize:SJYNUM(14)];
     //    remeberPasswordBtn.selected = [[SJYDefaultManager shareManager]isRemberPassword];
     [self.view addSubview:remeberPasswordBtn];
@@ -223,13 +235,22 @@
 
     }];
 
-    // 版权所有
+    //FIXME: 版权所有
     QMUILabel *visionBelongLab = [[QMUILabel alloc]init];
     visionBelongLab.textAlignment = NSTextAlignmentCenter;
+    visionBelongLab.hidden = YES;
     visionBelongLab.numberOfLines = 0;
     visionBelongLab.font = [UIFont  systemFontOfSize:SJYNUM(14)];
     visionBelongLab.textColor = Color_TEXT_NOMARL;
-    visionBelongLab.text =  @"版权所有: 常州正选软件科技有限公司";
+    NSString *belong = [SJYDefaultManager.shareManager getSoftwareBelong];
+    if (belong == nil || belong.length == 0) {
+        belong = @"常州正选软件科技有限公司";
+        [SJYDefaultManager.shareManager saveSoftwareBelong:belong];
+    }
+    NSString *belongstr = [NSString stringWithFormat:@"Copyright © %ld ",(long)[NSDate date].year];
+//    visionBelongLab.text =  [@"版权所有: " stringByAppendingString:belong];
+    visionBelongLab.text =  [belongstr stringByAppendingString:belong];
+
     [self.view addSubview:visionBelongLab];
 
     [backImgView makeConstraints:^(MASConstraintMaker *make) {

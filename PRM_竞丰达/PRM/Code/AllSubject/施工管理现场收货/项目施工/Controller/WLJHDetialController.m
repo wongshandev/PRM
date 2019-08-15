@@ -225,6 +225,9 @@
             for (NSInteger j = 0; j < cellsArr.count; j++) {
                 WLJHDetialModel *cellModel = cellsArr[j];
                 if (sectionModel.Id.integerValue == cellModel._parentId.integerValue) {
+                    if(cellModel.QuantityPurchased.integerValue<0){
+                        cellModel.QuantityPurchased = @"0";
+                    }
                     [sectionArr addObject:cellModel];
                 }
             }
@@ -486,12 +489,6 @@
 - (void)alert_TextFieldDidChange:(QMUITextField *)textField{
     QMUIDialogViewController *adialogVC = (QMUIDialogViewController *)self.alertView.viewController;
     QMUIButton *okAction = adialogVC.submitButton;
-//    if([textField.text hasPrefix:@"0"] || [textField.text hasPrefix:@"00"]){
-//        textField.text = @"0";
-//    }
-//    if (textField.text.integerValue > self.maxNumThis) {
-//        textField.text = [textField.text substringToIndex:@(self.maxNumThis).stringValue.length];
-//    }
     okAction.enabled = textField.text.length;
 }
 -(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
@@ -504,86 +501,6 @@
     }
     return YES;
 }
-#pragma mark ---------------- 系统 UIAlertController处理
-//-(void)clickWLJHDetialCell:(WLJHDetialCell *)cell withModel:(WLJHDetialModel *)model{
-//    if (!self.datePickerBtn.enabled) {
-//        return;
-//    }
-//    NSInteger maxNumThis = model.Quantity.integerValue - model.QuantityPurchased.integerValue;
-//    //    NSString *maxNum = [NSString stringWithFormat:@"%d",(model.Quantity.integerValue - model.QuantityPurchased.integerValue)];
-//    NSString *maxNum = @(maxNumThis).stringValue;
-//    NSString *messageStr = [NSString stringWithFormat:@" 本次申请的范围:0 ~ %@",maxNum];
-//    if (maxNumThis == 0) {
-//        return;
-//    }
-//    self.maxNumThis = maxNumThis;
-//    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:model.Name message:messageStr preferredStyle:UIAlertControllerStyleAlert];
-//    [alertVC addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-//        textField.placeholder = @"请输入申请数量";
-//        textField.keyboardType = UIKeyboardTypeNumberPad;
-//        textField.font=   Font_ListTitle;
-//        textField.text = model.canChangeQuantityThis.integerValue == 0 ?@"0" : model.canChangeQuantityThis;
-//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertTextFieldDidChange:) name:UITextFieldTextDidChangeNotification object:textField];
-//    }];
-//    [alertVC.textFields[0] makeConstraints:^(MASConstraintMaker *make) {
-//        make.height.equalTo(35);
-//    }];
-//    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//        [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];
-//        [alertVC.textFields[0] endEditing:YES];
-//        if ([alertVC.textFields[0].text integerValue] > maxNum.integerValue ) {
-//            model.canChangeQuantityThis = maxNum;
-//            [QMUITips showInfo:@"超出范围上限" inView:self.view hideAfterDelay:1.2];
-//        }else if([alertVC.textFields[0].text integerValue] < 0){
-//            model.canChangeQuantityThis = @"0";
-//            [QMUITips showInfo:@"超出范围下限" inView:self.view hideAfterDelay:1.2];
-//        }else{
-//            model.canChangeQuantityThis = alertVC.textFields.firstObject.text.length==0?@"0":alertVC.textFields.firstObject.text;
-//        }
-//        if (![model.canChangeQuantityThis isEqualToString:model.QuantityThis]){
-//            [cell loadContent];
-//            //数据处理 添加进入数组
-//            NSMutableDictionary *currentDic= [NSMutableDictionary dictionary];
-//            [currentDic setValue:model.canChangeQuantityThis forKey:@"QuantityThis"];
-//            [currentDic setValue:model.BOMID forKey:@"BOMID"];
-//            [currentDic setValue:model.ModId forKey:@"ModId"];
-//            [currentDic setValue:model.Id forKey:@"Id"];
-//
-//            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Id == %@", model.Id];
-//            NSMutableDictionary *havDic = [self.savedArray filteredArrayUsingPredicate:predicate].firstObject;
-//            if (havDic) {
-//                if (![[havDic valueForKey:@"QuantityThis"] isEqualToString:[currentDic valueForKey:@"QuantityThis"]]) {
-//                    [havDic setValue:model.canChangeQuantityThis forKey:@"QuantityThis"];
-//                }
-//            }else{
-//                [self.savedArray addObject:currentDic];
-//            }
-//            NSLog(@"%@", self.savedArray);
-//        }
-//    }];
-//    [alertVC addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-//        [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];
-//    }]];
-//    [alertVC addAction: confirmAction];
-//    confirmAction.enabled = alertVC.textFields.firstObject.text.length;
-//    [self presentViewController:alertVC animated:YES completion:nil];
-//}
-//- (void)alertTextFieldDidChange:(NSNotification *)notification{
-//    UIAlertController *alertController = (UIAlertController *)self.presentedViewController;
-//    if (alertController) {
-//        UITextField *textField = alertController.textFields.firstObject;
-//        UIAlertAction *okAction = alertController.actions.lastObject;
-//        if([textField.text hasPrefix:@"0"] || [textField.text hasPrefix:@"00"]){
-//            textField.text = @"0";
-//        }
-//        if (textField.text.integerValue > self.maxNumThis) {
-//            textField.text = [textField.text substringToIndex:@(self.maxNumThis).stringValue.length];
-//        }
-//        okAction.enabled = textField.text.length;
-//    }
-//}
-
-
 
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];

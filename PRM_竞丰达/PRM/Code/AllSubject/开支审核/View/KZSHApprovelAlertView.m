@@ -100,7 +100,7 @@
         [btn setTitle:optionTitle forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
         btn.titleLabel.font = [UIFont systemFontOfSize:15];
-        [btn setImage:[UIImage imageNamed:@"deselect_1"] forState:UIControlStateNormal];
+        [btn setImage:[UIImage imageNamed:@"deselect"] forState:UIControlStateNormal];
         [btn setImage:[UIImage imageNamed:@"select"] forState:UIControlStateSelected];
         btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
         btn.titleEdgeInsets = UIEdgeInsetsMake(0, 5, 0, 0);

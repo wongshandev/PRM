@@ -63,6 +63,7 @@
 		182C501821EDC07D0002B312 /* SJYSGGLDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 182C501721EDC07D0002B312 /* SJYSGGLDetailController.m */; };
 		182C501B21EDC0F90002B312 /* SJYXCSHRecordController.m in Sources */ = {isa = PBXBuildFile; fileRef = 182C501A21EDC0F90002B312 /* SJYXCSHRecordController.m */; };
 		182C502121EDE8E60002B312 /* JDHBListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 182C502021EDE8E60002B312 /* JDHBListModel.m */; };
+		182E6C4A22FBBDE0001675E1 /* XMBGAlertContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 182E6C4922FBBDE0001675E1 /* XMBGAlertContentView.m */; };
 		1843788A21EF234500AA14DC /* WLJHDetialController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1843788921EF234500AA14DC /* WLJHDetialController.m */; };
 		1843789521EF32E400AA14DC /* WLJHDetialModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1843789421EF32E400AA14DC /* WLJHDetialModel.m */; };
 		1843789B21EF3AB500AA14DC /* WLJHDetialCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1843789A21EF3AB500AA14DC /* WLJHDetialCell.m */; };
@@ -126,7 +127,6 @@
 		18A0B7A6222698EA0074BBC8 /* FileCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A0B79C222698EA0074BBC8 /* FileCell.m */; };
 		18A0B7A8222698EA0074BBC8 /* XMBGListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A0B7A3222698EA0074BBC8 /* XMBGListCell.m */; };
 		18A0B7A9222698EA0074BBC8 /* FileSelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A0B7A4222698EA0074BBC8 /* FileSelectView.m */; };
-		18A0B7AC222699220074BBC8 /* XMBGAlertContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A0B7AA222699210074BBC8 /* XMBGAlertContentView.m */; };
 		18A7CC0A21E587B700EDB754 /* SJYDefaultManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A7CC0921E587B700EDB754 /* SJYDefaultManager.m */; };
 		18A7CC0D21E58EE100EDB754 /* HttpClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A7CC0B21E58EDF00EDB754 /* HttpClient.m */; };
 		18A7CC1021E59AE600EDB754 /* SJYPublicTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A7CC0F21E59AE600EDB754 /* SJYPublicTool.m */; };
@@ -283,6 +283,8 @@
 		182C501A21EDC0F90002B312 /* SJYXCSHRecordController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SJYXCSHRecordController.m; sourceTree = "<group>"; };
 		182C501F21EDE8E60002B312 /* JDHBListModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JDHBListModel.h; sourceTree = "<group>"; };
 		182C502021EDE8E60002B312 /* JDHBListModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JDHBListModel.m; sourceTree = "<group>"; };
+		182E6C4822FBBDE0001675E1 /* XMBGAlertContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMBGAlertContentView.h; sourceTree = "<group>"; };
+		182E6C4922FBBDE0001675E1 /* XMBGAlertContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMBGAlertContentView.m; sourceTree = "<group>"; };
 		1843788821EF234500AA14DC /* WLJHDetialController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WLJHDetialController.h; sourceTree = "<group>"; };
 		1843788921EF234500AA14DC /* WLJHDetialController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WLJHDetialController.m; sourceTree = "<group>"; };
 		1843789321EF32E400AA14DC /* WLJHDetialModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WLJHDetialModel.h; sourceTree = "<group>"; };
@@ -405,8 +407,6 @@
 		18A0B7A1222698EA0074BBC8 /* XMBGDetailCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMBGDetailCell.h; sourceTree = "<group>"; };
 		18A0B7A3222698EA0074BBC8 /* XMBGListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMBGListCell.m; sourceTree = "<group>"; };
 		18A0B7A4222698EA0074BBC8 /* FileSelectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileSelectView.m; sourceTree = "<group>"; };
-		18A0B7AA222699210074BBC8 /* XMBGAlertContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMBGAlertContentView.m; path = "../../../../../../PRM_重构/PRM/Code/AllSubject/项目变更/View/XMBGAlertContentView.m"; sourceTree = "<group>"; };
-		18A0B7AB222699220074BBC8 /* XMBGAlertContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMBGAlertContentView.h; path = "../../../../../../PRM_重构/PRM/Code/AllSubject/项目变更/View/XMBGAlertContentView.h"; sourceTree = "<group>"; };
 		18A7CC0821E587B600EDB754 /* SJYDefaultManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SJYDefaultManager.h; sourceTree = "<group>"; };
 		18A7CC0921E587B700EDB754 /* SJYDefaultManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SJYDefaultManager.m; sourceTree = "<group>"; };
 		18A7CC0B21E58EDF00EDB754 /* HttpClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HttpClient.m; sourceTree = "<group>"; };
@@ -1092,6 +1092,8 @@
 		18A0B79A222698EA0074BBC8 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				182E6C4822FBBDE0001675E1 /* XMBGAlertContentView.h */,
+				182E6C4922FBBDE0001675E1 /* XMBGAlertContentView.m */,
 				18A0B79D222698EA0074BBC8 /* XMBGListCell.h */,
 				18A0B7A3222698EA0074BBC8 /* XMBGListCell.m */,
 				18A0B7A1222698EA0074BBC8 /* XMBGDetailCell.h */,
@@ -1100,8 +1102,6 @@
 				18A0B79C222698EA0074BBC8 /* FileCell.m */,
 				18A0B79F222698EA0074BBC8 /* FileSelectView.h */,
 				18A0B7A4222698EA0074BBC8 /* FileSelectView.m */,
-				18A0B7AB222699220074BBC8 /* XMBGAlertContentView.h */,
-				18A0B7AA222699210074BBC8 /* XMBGAlertContentView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -2054,6 +2054,7 @@
 				18838A6621F09949004033CB /* XCSHRecordDetialModel.m in Sources */,
 				1823E01722322AA300C63B5D /* XMKZListModel.m in Sources */,
 				1809E3B321F6FBFB00DBFCFF /* StasticGanttView.m in Sources */,
+				182E6C4A22FBBDE0001675E1 /* XMBGAlertContentView.m in Sources */,
 				181B924521F99EFE00E85E4B /* CGFKListCell.m in Sources */,
 				182C502121EDE8E60002B312 /* JDHBListModel.m in Sources */,
 				18838A6C21F17F0F004033CB /* SJYXMQGViewController.m in Sources */,
@@ -2092,7 +2093,6 @@
 				18725538221AA3DE002C7FE7 /* SJYGCFPListController.m in Sources */,
 				186DB39122360DD7000F28E4 /* XMKZLabTFCell.m in Sources */,
 				180D699521ED7A6600684414 /* SGGLXCSHListController.m in Sources */,
-				18A0B7AC222699220074BBC8 /* XMBGAlertContentView.m in Sources */,
 				18255E1521E72C6E00095143 /* UICollectionView+NoData.m in Sources */,
 				182C4FFB21EDB8D90002B312 /* WLJHListController.m in Sources */,
 				188C27CD21DF43DB0022C989 /* main.m in Sources */,

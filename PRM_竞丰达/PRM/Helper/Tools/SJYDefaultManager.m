@@ -122,6 +122,15 @@ static SJYDefaultManager *sharedUser;
 }
 
 
+#pragma mark -----------存取 版权所有
+//存储版权所有
+-(void)saveSoftwareBelong:(NSString *)belong {
+    [[NSUserDefaults  standardUserDefaults] setValue:belong forKey:@"SoftwareBelong"];
+     [[NSUserDefaults standardUserDefaults] synchronize];
+}
+-(NSString *)getSoftwareBelong{
+    return [[NSUserDefaults standardUserDefaults] objectForKey:@"SoftwareBelong"];
+}
 
 
 

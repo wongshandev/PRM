@@ -43,6 +43,7 @@
     circleProgress.progressLabel.font = Font_ListLeftCircle;
     circleProgress.progressLabel.textColor = Color_TEXT_HIGH;
     circleProgress.showPoint = NO;
+//    circleProgress.increaseFromLast = YES;
     circleProgress.startAngle= -90;
     [self addSubview: circleProgress];
     self.circleProgress = circleProgress;
@@ -151,7 +152,7 @@
     WLJHDetialModel *model = self.data;
     self.titleLab.text = model.titleStr;
     CGFloat planNum =  model.QuantityPurchased.floatValue;
-    self.circleProgress.progress = (model.canChangeQuantityThis.floatValue + planNum )  / model.Quantity.integerValue;
+    self.circleProgress.progress = floor((model.canChangeQuantityThis.floatValue + planNum )  / model.Quantity.integerValue*100)/100.0;
     self.totalLab.text = model.Quantity;
     self.planLab.text = model.QuantityPurchased;
      self.thisLab.text = model.canChangeQuantityThis;

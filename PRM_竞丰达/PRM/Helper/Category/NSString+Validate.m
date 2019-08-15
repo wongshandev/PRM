@@ -10,6 +10,19 @@
 
 @implementation NSString (Validate)
 
+/* IP校验*/       // 0-255.0-255.0-255.0-255
++ (BOOL)isAvailableIP:(NSString *)str{
+    if(str.length == 0) return NO;
+    NSString *pattern =
+        @"^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+        "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+        "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+        "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
+    NSPredicate *pred = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", pattern];
+    BOOL isMatch = [pred evaluateWithObject:str];
+    return isMatch;
+}
+
 /* 手机号校验*/
 + (BOOL)isAvailablePhoneNumber:(NSString *)str{
     if(str.length == 0) return NO;

@@ -48,7 +48,12 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -----------存取项目开支状态信息
 -(void)saveXMKZSpendTypeArray:(NSArray *)array;
 -(NSArray *)getXMKZSpendTypeArray;
- 
+
+//常州正选软件科技有限公司
+#pragma mark -----------存取 版权所有
+//存储版权所有
+-(void)saveSoftwareBelong:(NSString *)belong;
+-(NSString *)getSoftwareBelong;
 
 @end
 

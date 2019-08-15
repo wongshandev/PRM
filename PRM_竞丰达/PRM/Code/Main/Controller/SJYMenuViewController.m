@@ -22,8 +22,9 @@
 }
 
 -(void)buildSubviews{
-    self.tableView = [[QMUITableView alloc] initWithFrame:CGRectMake(0, 0, MainDrawerWidth, self.view.frame.size.height) style:UITableViewStyleGrouped];
-    self.tableView.backgroundColor = [UIColor whiteColor];
+    //CGRectMake(0, 0, MainDrawerWidth, self.view.frame.size.height)
+    self.tableView = [[QMUITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+     self.tableView.backgroundColor = [UIColor whiteColor];
     self.tableView.separatorInset = UIEdgeInsetsZero;
     self.tableView.sectionHeaderHeight = 0;
     self.tableView.sectionFooterHeight = 10;
@@ -31,6 +32,13 @@
     self.tableView.dataSource = self;
     self.tableView.bounces = NO;
     [self.view addSubview:self.tableView];
+    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.left.mas_equalTo(self.view);
+//        make.width.mas_equalTo(MainDrawerWidth);
+//        make.height.mas_equalTo(self.view.frame.size.height);
+//        make.edges.mas_equalTo(self.view);
+        make.edges.mas_equalTo(self.view).offset(UIEdgeInsetsMake(0, 0, CellHigh, 0));
+    }];
 
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.width, 250)];
     headerView.backgroundColor = Color_NavigationLightBlue;
@@ -47,7 +55,6 @@
     welcomeLab.text = [@"您好，" stringByAppendingString:[SJYDefaultManager shareManager].getEmployeeName];
     [headerView addSubview:welcomeLab];
 
-
     [imgView makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(headerView.mas_left).offset(MainDrawerWidth/2);
         make.centerY.equalTo(headerView.mas_centerY);
@@ -61,97 +68,64 @@
         make.centerX.equalTo(headerView.mas_left).offset(MainDrawerWidth/2);
         make.width.equalTo(MainDrawerWidth/2-15);
     }];
-
     self.tableView.tableHeaderView = headerView;
-    self.tableView.qmui_staticCellDataSource = [[QMUIStaticTableViewCellDataSource alloc]
-                                                initWithCellDataSections:@[
-                                                                           @[
-                                                                               ({
+    UIView *footView = [[UIView alloc] initWithFrame:CGRectZero];
+    [self.view addSubview:footView];
+
+    [footView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.mas_equalTo(self.view);
+        make.height.mas_equalTo(CellHigh);
+    }];
+
+    QMUILabel *belongLab = [[QMUILabel alloc]init];
+    belongLab.textAlignment = NSTextAlignmentCenter;
+    belongLab.numberOfLines = 0;
+    belongLab.font = Font_ListOtherTxt;
+    belongLab.textColor = Color_TEXT_NOMARL;
+    NSString *belongstr = [NSString stringWithFormat:@"Copyright © %ld\n",(long)[NSDate date].year];
+    belongLab.text = [belongstr stringByAppendingString:[SJYDefaultManager shareManager].getSoftwareBelong];
+     [footView addSubview:belongLab];
+
+    [belongLab makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(footView.mas_left).offset(MainDrawerWidth/2);
+        make.centerY.equalTo(footView.mas_centerY);
+        make.width.equalTo(MainDrawerWidth -15);
+        make.height.equalTo(CellHigh);
+    }];
+//    self.tableView.tableFooterView = footView;
+
+    self.tableView.qmui_staticCellDataSource = [[QMUIStaticTableViewCellDataSource alloc] initWithCellDataSections:@[ @[
+                                                                                                                          ({
         QMUIStaticTableViewCellData *cellData = [[QMUIStaticTableViewCellData alloc] init];
         cellData.identifier = 0;
         cellData.style = UITableViewCellStyleValue1;
         cellData.text = @"当前版本";
         cellData.detailText = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleShortVersionString"];
         cellData.height = CellHigh;
-        //            cellData.accessoryType = QMUIStaticTableViewCellAccessoryTypeDisclosureIndicator;
-        cellData.cellForRowBlock = ^(UITableView *tableView, __kindof QMUITableViewCell *cell, QMUIStaticTableViewCellData *cellData) {
+         cellData.cellForRowBlock = ^(UITableView *tableView, __kindof QMUITableViewCell *cell, QMUIStaticTableViewCellData *cellData) {
             cell.textLabel.font = Font_ListTitle;
             cell.textLabel.textColor = Color_TEXT_HIGH;
             cell.detailTextLabel.font = Font_ListTitle;
             cell.detailTextLabel.textColor = Color_TEXT_NOMARL;
         };
-        cellData; })
-                                                                               //                                                                            ,({
-                                                                               //            QMUIStaticTableViewCellData *cellData = [[QMUIStaticTableViewCellData alloc] init];
-                                                                               //            cellData.identifier = 1;
-                                                                               //            cellData.style = UITableViewCellStyleValue1;
-                                                                               //            cellData.text = @"服务器";
-                                                                               //            cellData.detailText = [[SJYDefaultManager shareManager].getIPAddress stringByAppendingFormat:@":%@",[SJYDefaultManager shareManager].getIPPort] ;
-                                                                               //            cellData.height = CellHigh;
-                                                                               //            cellData.cellForRowBlock = ^(UITableView *tableView, __kindof QMUITableViewCell *cell, QMUIStaticTableViewCellData *cellData) {
-                                                                               //                cell.textLabel.font = Font_ListTitle;
-                                                                               //                cell.detailTextLabel.font = Font_ListTitle;
-                                                                               //                cell.textLabel.textColor = Color_TEXT_HIGH;
-                                                                               //                cell.detailTextLabel.textColor = Color_TEXT_NOMARL;
-                                                                               //            };
-                                                                               //            cellData; })
-                                                                               ],
-                                                                           @[
-                                                                               //                                                                                ({
-                                                                               //                QMUIStaticTableViewCellData *cellData = [[QMUIStaticTableViewCellData alloc] init];
-                                                                               //                cellData.identifier = 2;
-                                                                               //                cellData.style = UITableViewCellStyleSubtitle;
-                                                                               //                //                cellData.image = SJYCommonImage(@"zx");
-                                                                               //                cellData.text = @"注销";
-                                                                               //                cellData.detailText = @"注销将清除缓存的用户信息";
-                                                                               //                cellData.height = CellHigh;
-                                                                               //                cellData.didSelectTarget = self;
-                                                                               //                cellData.didSelectAction = @selector(selectCellAction:);
-                                                                               //                cellData.accessoryType = QMUIStaticTableViewCellAccessoryTypeDisclosureIndicator;
-                                                                               //                cellData.cellForRowBlock = ^(UITableView *tableView, __kindof QMUITableViewCell *cell, QMUIStaticTableViewCellData *cellData) {
-                                                                               //                    cell.textLabel.font = Font_ListTitle;
-                                                                               //                    cell.detailTextLabel.font = Font_ListOtherTxt;
-                                                                               //                    cell.textLabel.textColor = Color_TEXT_HIGH;
-                                                                               //                    cell.detailTextLabel.textColor = Color_TEXT_NOMARL;
-                                                                               //                };
-                                                                               //                cellData; }),
-                                                                               //                                                                                ({
-                                                                               //        QMUIStaticTableViewCellData *cellData = [[QMUIStaticTableViewCellData alloc] init];
-                                                                               //        cellData.identifier = 4;
-                                                                               //        cellData.style = UITableViewCellStyleSubtitle;
-                                                                               //        //                cellData.image = SJYCommonImage(@"zx");
-                                                                               //        cellData.text = @"修改密码";
-                                                                               ////        cellData.detailText = @"注销将清除缓存的用户信息";
-                                                                               //        cellData.height = CellHigh;
-                                                                               //        cellData.didSelectTarget = self;
-                                                                               //        cellData.didSelectAction = @selector(selectCellAction:);
-                                                                               //        cellData.accessoryType = QMUIStaticTableViewCellAccessoryTypeDisclosureIndicator;
-                                                                               //        cellData.cellForRowBlock = ^(UITableView *tableView, __kindof QMUITableViewCell *cell, QMUIStaticTableViewCellData *cellData) {
-                                                                               //            cell.textLabel.font = Font_ListTitle;
-                                                                               //            cell.detailTextLabel.font = Font_ListOtherTxt;
-                                                                               //            cell.textLabel.textColor = Color_TEXT_HIGH;
-                                                                               //            cell.detailTextLabel.textColor = Color_TEXT_NOMARL;
-                                                                               //        };
-                                                                               //        cellData; }),
+        cellData; }) ], @[ ({
+            QMUIStaticTableViewCellData *cellData = [[QMUIStaticTableViewCellData alloc] init];
+            cellData.identifier = 3;
+            cellData.style = UITableViewCellStyleSubtitle;
+            cellData.text = @"退出";
+            // cellData.detailText = @"退出不清除缓存";
+            cellData.height = CellHigh;
+            cellData.didSelectTarget = self;
+            cellData.didSelectAction = @selector(selectCellAction:);
+            cellData.accessoryType = QMUIStaticTableViewCellAccessoryTypeDisclosureIndicator;
+            cellData.cellForRowBlock = ^(UITableView *tableView, __kindof QMUITableViewCell *cell, QMUIStaticTableViewCellData *cellData) {
+                cell.textLabel.font = Font_ListTitle;
+                cell.detailTextLabel.font = Font_ListOtherTxt;
+                cell.textLabel.textColor = Color_TEXT_HIGH;
+                cell.detailTextLabel.textColor = Color_TEXT_NOMARL;
 
-                                                                               ({
-        QMUIStaticTableViewCellData *cellData = [[QMUIStaticTableViewCellData alloc] init];
-        cellData.identifier = 3;
-        cellData.style = UITableViewCellStyleSubtitle;
-        cellData.text = @"退出";
-        // cellData.detailText = @"退出不清除缓存";
-        cellData.height = CellHigh;
-        cellData.didSelectTarget = self;
-        cellData.didSelectAction = @selector(selectCellAction:);
-        cellData.accessoryType = QMUIStaticTableViewCellAccessoryTypeDisclosureIndicator;
-        cellData.cellForRowBlock = ^(UITableView *tableView, __kindof QMUITableViewCell *cell, QMUIStaticTableViewCellData *cellData) {
-            cell.textLabel.font = Font_ListTitle;
-            cell.detailTextLabel.font = Font_ListOtherTxt;
-            cell.textLabel.textColor = Color_TEXT_HIGH;
-            cell.detailTextLabel.textColor = Color_TEXT_NOMARL;
-
-        };
-        cellData; }) ] ]];
+            };
+            cellData; }) ] ]];
 }
 
 

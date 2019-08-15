@@ -10,6 +10,9 @@
 
 @interface NSString (Validate)
 
+/* IP校验*/
++ (BOOL)isAvailableIP:(NSString *)str;
+
 /* 手机号校验*/
 + (BOOL)isAvailablePhoneNumber:(NSString *)str;
 
@@ -25,10 +28,10 @@
 /* 正则校验*/
 + (BOOL)isAvailableStr:(NSString *)str WithFormat:(NSString *)format;
 
+
+
 +(NSString *)matchType:(NSString *)fileName;
-
 +(NSString *)mimeTypeForFileAtPath:(NSString *)path;
-
 +(NSString *)numberMoneyFormattor:(NSString *)number;
  +(NSString *)numberIntFormattor:(NSString *)number;
 

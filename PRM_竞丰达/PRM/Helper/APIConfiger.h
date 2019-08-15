@@ -9,10 +9,16 @@
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
+//IP格式：222.222.222.222，每个数字在0-255，第一个数字不能是0，最后一个数字不能是0或255
+#define IPFormattor @"^([1-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([1-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4])$"
 
 #define IP_Address           [[SJYDefaultManager shareManager] getIPAddress]
 #define IP_Port                  [[SJYDefaultManager shareManager] getIPPort]
 #define kEmployeeID        [[SJYDefaultManager shareManager] getEmployeeID]
+
+#define IP_Default_Address            @"58.216.202.186"
+#define IP_Default_Port                  @"8817"
+
 
 #define KEmployID            [SJYUserManager sharedInstance].sjyloginUC.Id
 #define KPositionID            [SJYUserManager sharedInstance].sjyloginUC.PositionID

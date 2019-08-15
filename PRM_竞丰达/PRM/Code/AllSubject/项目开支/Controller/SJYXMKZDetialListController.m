@@ -161,7 +161,8 @@
     XMKZDetialController *xmkzVC = [[XMKZDetialController alloc]init];
     xmkzVC.detialModel = model;
     xmkzVC.listModel = self.listModel;
-    xmkzVC.title =  self.title;
+//    xmkzVC.title =  self.title;
+    xmkzVC.title = @"开支详情";
     [self.navigationController pushViewController:xmkzVC animated:YES];
 }
 
