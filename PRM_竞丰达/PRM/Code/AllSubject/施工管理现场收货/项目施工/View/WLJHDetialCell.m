@@ -51,7 +51,7 @@
 // 总数
     QMUILabel *menTotalLab = [self createLabelWithTextColor:Color_TEXT_NOMARL Font:Font_ListOtherTxt numberOfLines:1];
     [self addSubview:menTotalLab];
-    menTotalLab.text = @"总数:";
+    menTotalLab.text = @"设计数量:";
     self.mentionTotalLab = menTotalLab;
 
     QMUILabel *totalLab = [self createLabelWithTextColor:Color_White Font:Font_EqualWidth(13) numberOfLines:1];
@@ -63,8 +63,9 @@
 
 //计划
     QMUILabel *menPlanLab = [self createLabelWithTextColor:Color_TEXT_NOMARL Font:Font_ListOtherTxt numberOfLines:1];
+    menPlanLab.textAlignment = NSTextAlignmentRight;
     [self addSubview:menPlanLab];
-    menPlanLab.text = @"计划:";
+    menPlanLab.text = @"已计划:";
     self.mentionPlanLab = menPlanLab;
 
     QMUILabel *planLab = [self createLabelWithTextColor:Color_White Font:Font_EqualWidth(13) numberOfLines:1];
@@ -77,7 +78,7 @@
 // 本次
     QMUILabel * menThisLab = [self createLabelWithTextColor:Color_TEXT_NOMARL Font:Font_ListOtherTxt numberOfLines:1];
     [self addSubview:menThisLab];
-    menThisLab.text = @"本次:";
+    menThisLab.text = @"本次计划:";
     self.mentionThisLab = menThisLab;
 
     QMUILabel *thisLab = [self createLabelWithTextColor:Color_White Font:Font_EqualWidth(13) numberOfLines:1];
@@ -88,7 +89,12 @@
 
 
 }
--(void)buildSubview{ 
+-(void)buildSubview{
+    CGRect rect = [self.mentionTotalLab.text boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, 20)
+                                                         options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
+                                                      attributes:@{ NSFontAttributeName:self.mentionTotalLab.font }
+                                                         context:nil];
+    CGFloat menWidth = ceilf(rect.size.width);
     //标题
     [self.titleLab makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self).offset(TopMargin);
@@ -103,34 +109,34 @@
         make.height.equalTo(50);
         make.bottom.equalTo(self).offset(-TopMargin);
     }];
-    //总数提示
+    //设计数量提示
     [self.mentionTotalLab makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.circleProgress.mas_top);
         make.left.equalTo(self.circleProgress.mas_right).offset(5);
-        make.width.equalTo(40);
+        make.width.equalTo(menWidth);
      }];
-// 本次提示
+// 本次计划提示
     [self.mentionThisLab makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.mentionTotalLab.mas_bottom).offset(TopMargin);
         make.left.equalTo(self.circleProgress.mas_right).offset(5);
-        make.width.equalTo(40);
+        make.width.equalTo(menWidth);
         make.height.equalTo(self.mentionTotalLab.mas_height);
         make.bottom.equalTo(self.circleProgress.mas_bottom);
     }];
-//总数
+//设计总数
     [self.totalLab makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.mentionTotalLab.mas_centerY);
         make.left.equalTo(self.mentionTotalLab.mas_right);
         make.height.equalTo(self.mentionTotalLab.mas_height);
      }];
-//计划提示
+//已计划提示
     [self.mentionPlanLab makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.mentionTotalLab.mas_centerY);
         make.left.equalTo(self.totalLab.mas_right).offset(10);
-        make.width.equalTo(40);
+        make.width.equalTo(menWidth);
         make.height.equalTo(self.mentionTotalLab.mas_height);
     }];
-    //计划
+    //已计划
     [self.planLab makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.mentionPlanLab.mas_centerY);
         make.left.equalTo(self.mentionPlanLab.mas_right);
@@ -138,11 +144,12 @@
         make.width.mas_equalTo(self.totalLab.mas_width);
         make.height.equalTo(self.mentionTotalLab.mas_height);
     }];
-//本次
+//本次计划
     [self.thisLab makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.mentionThisLab.mas_centerY);
         make.left.equalTo(self.mentionThisLab.mas_right);
         make.height.equalTo(self.mentionThisLab.mas_height);
+        make.right.mas_equalTo(self.totalLab.mas_right);
     }];
     [self.totalLab rounded:2];
     [self.planLab rounded:2];
