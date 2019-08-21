@@ -101,10 +101,6 @@
     self.ksjsDateLab.text = [@[model.BeginDate, model.EndDate] componentsJoinedByString:@"~"];
     self.lastDateLab.text = model.LastModifyDate;
     self.bzLab.text = model.canChangeRemark;
-    if ( model.isModelChange) {
-        [self.tableView beginUpdates];
-        [self.tableView endUpdates];
-    }
 }
 
 

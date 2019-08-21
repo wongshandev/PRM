@@ -454,10 +454,11 @@
         }else{
             model.canChangeQuantityThis =self.alertView.numTF.text.length==0?@"0":self.alertView.numTF.text;
         }
+//        [cell loadContent];
+        [self.tableView reloadRow:cell.indexPath.row inSection:cell.indexPath.section withRowAnimation:UITableViewRowAnimationNone];
 
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Id == %@", model.Id];
         NSMutableDictionary *havDic = [self.savedArray filteredArrayUsingPredicate:predicate].firstObject;
-        [cell loadContent];
 
         if (![model.canChangeQuantityThis isEqualToString:model.QuantityThis]){
             //数据处理 添加进入数组

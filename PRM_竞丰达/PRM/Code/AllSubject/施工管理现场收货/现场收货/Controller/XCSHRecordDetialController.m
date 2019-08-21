@@ -19,9 +19,17 @@
 @property(nonatomic,strong)NSMutableArray *sectionArray;
 @property(nonatomic,strong)NSMutableArray<NSMutableDictionary *> *updateArray;
 @property(nonatomic,assign)NSInteger maxNumThis;
+@property(nonatomic,strong)NSMutableDictionary <NSString *, NSMutableDictionary *>*insertDic;
 
 @end
 @implementation XCSHRecordDetialController
+-(NSMutableDictionary<NSString *,NSMutableDictionary *> *)insertDic{
+    if (!_insertDic) {
+        _insertDic = [NSMutableDictionary new];
+    }
+    return _insertDic;
+}
+
 -(NSMutableArray<NSMutableDictionary *> *)updateArray{
     if (!_updateArray) {
         self.updateArray = [NSMutableArray new];
@@ -154,14 +162,12 @@
         NSArray *rowsArr = [responder objectForKey:@"rows"];
         if ([self.tableView.mj_header isRefreshing]) {
             [self.dataArray removeAllObjects];
+            [self.insertDic removeAllObjects];
             [self.updateArray removeAllObjects];
         }
         for (NSDictionary *dic in rowsArr) {
             XCSHRecordDetialModel *model = [XCSHRecordDetialModel  modelWithDictionary:dic];
-            model.changeRemark = model.Remark;
-            model.changeQuantityCheck = model.QuantityCheck;
-            model.isModelChange = NO;
-            NSString *titStr = model.Model.length!=0?[model.Name stringByAppendingFormat:@"(%@)",model.Model]:model.Name;
+             NSString *titStr = model.Model.length!=0?[model.Name stringByAppendingFormat:@"(%@)",model.Model]:model.Name;
             model.titleStr =  model.Unit.length!=0?[titStr stringByAppendingFormat:@"(%@)",model.Unit]:titStr;
             [self.dataArray addObject:model];
         }
@@ -195,8 +201,23 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     XCSHRecordDetialCell *cell = [XCSHRecordDetialCell cellWithTableView:tableView];
     cell.indexPath = indexPath;
-    cell.data = self.dataArray[indexPath.row];
-    [cell loadContent];
+XCSHRecordDetialModel *model  = self.dataArray[indexPath.row];
+    Weak_Self;
+    cell.savDataBlock = ^(NSMutableDictionary * cellDic) {
+         if (
+             //![cellDic[@"QuantityReceive"]  isEqualToString:model.QuantityReceive]
+            ![cellDic[@"QuantityCheck"] isEqualToString:model.QuantityCheck]
+            || ![cellDic[@"Remark"] isEqualToString:model.Remark]) {
+            [weakSelf.insertDic setValue:cellDic forKey:@(indexPath.row).stringValue];
+        }
+    };
+    NSArray *indexArr = self.insertDic.allKeys;
+     if ([indexArr containsObject:@(indexPath.row).stringValue]) {
+        cell.cellDic =  self.insertDic[@(indexPath.row).stringValue] ;
+    }else{
+        cell.data = model;
+        [cell loadContent];
+    }
     return cell;
 }
 
@@ -205,8 +226,7 @@
     XCSHRecordDetialCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     XCSHRecordDetialModel *model  = self.dataArray[indexPath.row];
     [self  click_ReceiveGoodsDetialCell:cell alertViewWithModel:model];
-//    [self  clickReceiveGoodsDetialCell:cell alertViewWithModel:model];
-}
+ }
 #pragma mark ---------------- QMUIDialogViewController 处理
 -(void)click_ReceiveGoodsDetialCell:( XCSHRecordDetialCell *)cell alertViewWithModel:(XCSHRecordDetialModel*)model{
     NSInteger maxNumThis =  model.Quantity.integerValue - model.QuantityReceive.integerValue;
@@ -219,7 +239,6 @@
         return;
     }
     self.maxNumThis = maxNumThis;
-
 
     QMUIDialogViewController *dialogViewController = [[QMUIDialogViewController alloc] init];
     dialogViewController.title = model.Name;
@@ -235,12 +254,11 @@
     //TextField 配置
     self.alertView.numTF.delegate = self;
     self.alertView.numTF.placeholder = @"请输入数量";
-    self.alertView.numTF.text = model.changeQuantityCheck.integerValue == 0 ?@"" : model.changeQuantityCheck;
-    [self.alertView.numTF addTarget:self action:@selector(alert_TextFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
+    self.alertView.numTF.text = [cell.cellDic[@"QuantityCheck"] integerValue] == 0 ?@"" :cell.cellDic[@"QuantityCheck"];
+     [self.alertView.numTF addTarget:self action:@selector(alert_TextFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
     //textView 配置
     self.alertView.BZTV.delegate = self;
-    self.alertView.BZTV.text = model.changeRemark;;
-
+     self.alertView.BZTV.text = cell.cellDic[@"Remark"];
     //内容页子控件  布局处理
     [self.alertView.numMentionLab makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.alertView.mas_top).mas_offset(NumTFPading);
@@ -272,45 +290,40 @@
         make.right.mas_equalTo(self.alertView.numTF.mas_right);
         make.bottom.mas_equalTo(self.alertView.mas_bottom).offset(-NumTFPading);
     }];
-
-    Weak_Self;
-    dialogViewController.contentView = self.alertView;
-
+     dialogViewController.contentView = self.alertView;
     [dialogViewController addCancelButtonWithText:@"取消" block:^(__kindof QMUIDialogViewController *aDialogViewController) {
     }];
     [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
         [self.alertView.BZTV endEditing:YES];
-        //  cell 界面 数据 的调整
+        //FIXME:  cell  界面 数据cellDic 的调整
         if ([self.alertView.numTF.text integerValue] > maxNum.integerValue ) {
-            model.changeQuantityCheck = maxNum;
+             cell.cellDic[@"QuantityCheck"] = @(maxNumThis).stringValue;
             [QMUITips showInfo:@"超出范围上限" inView:self.view hideAfterDelay:1.2];
         }else if([self.alertView.numTF.text integerValue] <0){
-            model.changeQuantityCheck = @"0";
+             cell.cellDic[@"QuantityCheck"] = @"0";
             [QMUITips showInfo:@"超出范围下限" inView:self.view hideAfterDelay:1.2];
         }else{
-            model.changeQuantityCheck = self.alertView.numTF.text.length==0?@"0":self.alertView.numTF.text;
+             cell.cellDic[@"QuantityCheck"] = self.alertView.numTF.text.length==0?@"0":self.alertView.numTF.text;;
         }
-        model.changeRemark = self.alertView.BZTV.text;
-        model.isModelChange = YES;
-        [cell loadContent];
-
+         cell.cellDic[@"Remark"] = self.alertView.BZTV.text;
+        cell.cellDic = cell.cellDic;
+        //FIXME: 新建并存储 修改后的内容到更新数组
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Id == %@", model.Id];
         NSMutableDictionary *havDic = [self.updateArray filteredArrayUsingPredicate:predicate].firstObject;
-        if (![model.changeRemark isEqualToString:model.Remark] || ![model.changeQuantityCheck isEqualToString:model.QuantityCheck]){
-            //数据处理 添加进入数组
+        if (![cell.cellDic[@"Remark"] isEqualToString:model.Remark] || ![cell.cellDic[@"QuantityCheck"] isEqualToString:model.QuantityCheck]){
             //数据处理 添加进入数组
             NSMutableDictionary *currentDic= [NSMutableDictionary dictionary];
-            [currentDic setValue:model.changeRemark forKey:@"Remark"];
-            [currentDic setValue:model.changeQuantityCheck forKey:@"QuantityCheck"];
-            [currentDic setValue:model.ModId forKey:@"ModId"];
-            [currentDic setValue:model.Id forKey:@"Id"];
+            [currentDic setValue:cell.cellDic[@"Remark"] forKey:@"Remark"];
+            [currentDic setValue:cell.cellDic[@"QuantityCheck"] forKey:@"QuantityCheck"];
+            [currentDic setValue:cell.cellDic[@"ModId"] forKey:@"ModId"];
+            [currentDic setValue:cell.cellDic[@"Id"] forKey:@"Id"];
 
             if (havDic) {
                 if (![[havDic valueForKey:@"Remark"] isEqualToString:[currentDic valueForKey:@"Remark"]] || ![[havDic valueForKey:@"QuantityCheck"] isEqualToString:[currentDic valueForKey:@"QuantityCheck"]]) {
-                    [havDic setValue:model.changeRemark forKey:@"Remark"];
-                    [havDic setValue:model.changeQuantityCheck forKey:@"QuantityCheck"];
-                    //                    [havDic setValue:model.ModId forKey:@"ModId"];
-                    //                    [havDic setValue:model.Id forKey:@"Id"];
+                    [havDic setValue:[havDic valueForKey:@"Remark"] forKey:@"Remark"];
+                    [havDic setValue:[havDic valueForKey:@"QuantityCheck"] forKey:@"QuantityCheck"];
+                    // [havDic setValue:model.ModId forKey:@"ModId"];
+                    // [havDic setValue:model.Id forKey:@"Id"];
                 }
             }else{
                 [self.updateArray addObject:currentDic];
@@ -320,6 +333,12 @@
             if (havDic) {
                 [self.updateArray removeObject:havDic];
             }
+        }
+
+        //FIXME: 存储更改后的数据到 字典内 便于滑动时进行加载修改后的数据
+        if (cell.savDataBlock) {
+            cell.savDataBlock(cell.cellDic);
+            [self.tableView reloadRow:cell.indexPath.row inSection:cell.indexPath.section withRowAnimation:UITableViewRowAnimationNone];
         }
         [aDialogViewController hide];
     }];
@@ -344,12 +363,6 @@
 - (void)alert_TextFieldDidChange:(QMUITextField *)textField{
     QMUIDialogViewController *adialogVC = (QMUIDialogViewController *)self.alertView.viewController;
     QMUIButton *okAction = adialogVC.submitButton;
-//    if([textField.text hasPrefix:@"0"] || [textField.text hasPrefix:@"00"]){
-//        textField.text = @"0";
-//    }
-//    if (textField.text.integerValue > self.maxNumThis) {
-//        textField.text = [textField.text substringToIndex:@(self.maxNumThis).stringValue.length];
-//    }
     okAction.enabled = textField.text.length || self.alertView.BZTV.text.length;
 }
 
@@ -365,108 +378,7 @@
 }
 
 #pragma mark ---------------- 系统 UIAlertController处理
-//-(void)clickReceiveGoodsDetialCell:( XCSHRecordDetialCell *)cell alertViewWithModel:(XCSHRecordDetialModel*)model{
-//    NSInteger maxNumThis =  model.Quantity.integerValue - model.QuantityReceive.integerValue;
-//    NSString *maxNum = @(maxNumThis).stringValue;
-//    NSString *messageStr = [NSString stringWithFormat:@"本次输入值的范围在0 ~ %@ 之间",maxNum];
-//    if (maxNumThis == 0) {
-//        return;
-//    }
-//    if (self.navBar.rightButton.hidden) {
-//        return;
-//    }
-//    self.maxNumThis = maxNumThis;
-//    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:model.Name message:messageStr preferredStyle:UIAlertControllerStyleAlert];
-//    //进度输入框
-//    [alertVC addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-//        textField.placeholder =@"请输入数量";
-//        textField.keyboardType = UIKeyboardTypeNumberPad;
-//        textField.text = model.changeQuantityCheck.integerValue == 0 ?@"0" : model.changeQuantityCheck;
-//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertTextFieldDidChange:) name:UITextFieldTextDidChangeNotification object:textField];
-//    }];
-//    //备注信息输入框
-//    [alertVC addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-//        textField.placeholder =@"请输入备注信息";
-//        textField.text = model.changeRemark;
-//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertTextFieldDidChange:) name:UITextFieldTextDidChangeNotification object:textField];
-//    }];
-//    [alertVC.textFields[0] makeConstraints:^(MASConstraintMaker *make) {
-//        make.height.equalTo(35);
-//    }];
-//    [alertVC.textFields[1] makeConstraints:^(MASConstraintMaker *make) {
-//        make.height.equalTo(35);
-//    }];
-//    for (UITextField *textField in alertVC.textFields) {
-//        textField.font= [UIFont systemFontOfSize:15];
-//    }
-//    //确定按钮
-//    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//        [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];
-//        NSLog(@"%d",[alertVC.textFields[0].text integerValue]);
-//        //  cell 界面 数据 的调整
-//        if ([alertVC.textFields[0].text integerValue] > maxNum.integerValue ) {
-//            model.changeQuantityCheck = maxNum;
-//            [QMUITips showInfo:@"超出范围上限" inView:self.view hideAfterDelay:1.2];
-//        }else if([alertVC.textFields[0].text integerValue] <0){
-//            model.changeQuantityCheck = @"0";
-//            [QMUITips showInfo:@"超出范围下限" inView:self.view hideAfterDelay:1.2];
-//        }else{
-//            model.changeQuantityCheck = alertVC.textFields.firstObject.text.length==0?@"0":alertVC.textFields.firstObject.text;
-//        }
-//        model.changeRemark = alertVC.textFields.lastObject.text;
-//
-//        if (![model.changeRemark isEqualToString:model.Remark] || ![model.changeQuantityCheck isEqualToString:model.QuantityCheck]){
-//            [cell loadContent];
-//            //数据处理 添加进入数组
-//            //数据处理 添加进入数组
-//            NSMutableDictionary *currentDic= [NSMutableDictionary dictionary];
-//            [currentDic setValue:model.changeRemark forKey:@"Remark"];
-//            [currentDic setValue:model.changeQuantityCheck forKey:@"QuantityCheck"];
-//            [currentDic setValue:model.ModId forKey:@"ModId"];
-//            [currentDic setValue:model.Id forKey:@"Id"];
-//
-//            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Id == %@", model.Id];
-//            NSMutableDictionary *havDic = [self.updateArray filteredArrayUsingPredicate:predicate].firstObject;
-//            if (havDic) {
-//                if (![[havDic valueForKey:@"Remark"] isEqualToString:[currentDic valueForKey:@"Remark"]] || ![[havDic valueForKey:@"QuantityCheck"] isEqualToString:[currentDic valueForKey:@"QuantityCheck"]]) {
-//                    [havDic setValue:model.changeRemark forKey:@"Remark"];
-//                    [havDic setValue:model.changeQuantityCheck forKey:@"QuantityCheck"];
-////                    [havDic setValue:model.ModId forKey:@"ModId"];
-////                    [havDic setValue:model.Id forKey:@"Id"];
-//                }
-//            }else{
-//                [self.updateArray addObject:currentDic];
-//            }
-//            NSLog(@"%@", self.updateArray);
-//        }
-//    }];
-//    //取消按钮
-//    [alertVC addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-//        [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];
-//    }]];
-//    confirmAction.enabled = (alertVC.textFields.firstObject.text.length || alertVC.textFields.lastObject.text.length);;
-//    [alertVC addAction:confirmAction];
-//    [self presentViewController:alertVC animated:YES completion:nil];
-//}
-//
-//- (void)alertTextFieldDidChange:(NSNotification *)notification{
-//    UITextField *TF = (UITextField *)notification.object;
-//    UIAlertController *alertController = (UIAlertController *)self.presentedViewController;
-//    if (alertController) {
-//        UITextField *textField = alertController.textFields.firstObject;
-//        UITextField *bzTF = alertController.textFields.lastObject;
-//        UIAlertAction *okAction = alertController.actions.lastObject;
-//        if (TF == textField) {
-//            if([textField.text hasPrefix:@"0"] || [textField.text hasPrefix:@"00"]){
-//                textField.text = @"0";
-//            }
-//            if (textField.text.integerValue > self.maxNumThis) {
-//                textField.text = [textField.text substringToIndex:@(self.maxNumThis).stringValue.length];
-//            }
-//        }
-//        okAction.enabled = textField.text.length || bzTF.text.length;
-//    }
-//}
+
 
 
 -(void)viewWillDisappear:(BOOL)animated{

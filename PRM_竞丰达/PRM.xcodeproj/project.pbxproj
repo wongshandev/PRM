@@ -1056,8 +1056,8 @@
 			isa = PBXGroup;
 			children = (
 				189EEAF421FAA4770027E1A3 /* Controller */,
-				189EEAF521FAA4850027E1A3 /* View */,
 				189EEAF621FAA4900027E1A3 /* Model */,
+				189EEAF521FAA4850027E1A3 /* View */,
 			);
 			path = "施工管理";
 			sourceTree = "<group>";

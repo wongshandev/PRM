@@ -91,8 +91,7 @@
         
         for (NSDictionary *dic in rowsArr) {
             JDHBListModel *model = [JDHBListModel  modelWithDictionary:dic];
-            model.isModelChange = NO;
-            model.canChangeRate = model.CompletionRate;
+             model.canChangeRate = model.CompletionRate;
             model.canChangeRemark = model.Remark;
             model.titleStr =  model.ChildName.length==0?model.Name:[model.Name stringByAppendingFormat:@" (%@)",model.ChildName];
             [self.dataArray addObject:model];
@@ -194,10 +193,7 @@
     if (model.CompletionRate.integerValue >=100) {
         return;
     }
-//    self.minNumThis = model.CompletionRate;
-    
     //创建弹窗 对话框
-//    QMUIModalPresentationViewController *modalViewController = [[QMUIModalPresentationViewController alloc] init];
     QMUIDialogViewController *dialogViewController = [[QMUIDialogViewController alloc] init];
     dialogViewController.title = model.Name;
     dialogViewController.headerViewHeight = 40;
@@ -269,8 +265,7 @@
             model.canChangeRate = self.alertView.numTF.text.length==0?model.CompletionRate:self.alertView.numTF.text;
         }
         model.canChangeRemark = self.alertView.BZTV.text;
-        model.isModelChange = YES;
-        [cell loadContent];
+         [self.tableView reloadRow:cell.indexPath.row inSection:cell.indexPath.section withRowAnimation:UITableViewRowAnimationNone];
 
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Id == %@", model.Id];
         NSMutableDictionary *havDic = [self.updateArray filteredArrayUsingPredicate:predicate].firstObject;

@@ -23,7 +23,7 @@
 @property (nonatomic, copy) NSString *canChangeRemark;
 @property (nonatomic, copy) NSString *titleStr;
 
-@property (nonatomic, assign) BOOL isModelChange;
+//@property (nonatomic, assign) BOOL isModelChange;
 
 @end
 

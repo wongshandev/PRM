@@ -165,17 +165,21 @@
 }
 -(void)loadContent{
     XCSHRecordDetialModel *model = self.data;
-    self.circleProgress.progress = (model.QuantityReceive.floatValue + model.changeQuantityCheck.floatValue)  / model.Quantity.integerValue;
+    self.cellDic = [NSMutableDictionary dictionaryWithDictionary:[model modelToJSONObject]];
+    self.circleProgress.progress = (model.QuantityReceive.floatValue + model.QuantityCheck.floatValue)  / model.Quantity.integerValue;
     self.titleLab.text = model.titleStr;
     self.totalLab.text = model.Quantity;
     self.receiveLab.text = model.QuantityReceive;
-    self.thisLab.text = model.changeQuantityCheck;
-    self.bzLab.text = model.changeRemark;
-    if (model.isModelChange) {
-        [self.tableView beginUpdates];
-        [self.tableView endUpdates];
-    }
-//    [self.tableView reloadRowAtIndexPath:self.indexPath withRowAnimation:UITableViewRowAnimationAutomatic];
-}
-
+    self.thisLab.text = model.QuantityCheck;
+    self.bzLab.text = model.Remark;
+ }
+-(void)setCellDic:(NSMutableDictionary *)cellDic{
+    _cellDic = cellDic;
+    self.circleProgress.progress = ([cellDic[@"QuantityReceive"] floatValue] + [cellDic[@"QuantityCheck"] floatValue] )  / [cellDic[@"Quantity"] floatValue];
+    self.titleLab.text = cellDic[@"titleStr"];
+    self.totalLab.text = cellDic[@"Quantity"];
+    self.receiveLab.text =  cellDic[@"QuantityReceive"];;
+    self.thisLab.text =  cellDic[@"QuantityCheck"];
+    self.bzLab.text =  cellDic[@"Remark"];
+ }
 @end
