@@ -20,7 +20,7 @@
 @property(nonatomic,assign)NSInteger DState;
 @property(nonatomic,assign)NSInteger WaitChange;
 @property (nonatomic, strong) XMBGAlertContentView * alertContentView;
-//@property (nonatomic, strong) PYPhotoBrowseView *browserView;;
+//@property (nonatomic, strong) PYPhotoBrowseView *browserView;
 
 @end
 

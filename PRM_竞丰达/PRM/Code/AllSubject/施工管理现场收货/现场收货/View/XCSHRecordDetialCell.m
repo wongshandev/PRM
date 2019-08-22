@@ -178,7 +178,7 @@
     self.circleProgress.progress = ([cellDic[@"QuantityReceive"] floatValue] + [cellDic[@"QuantityCheck"] floatValue] )  / [cellDic[@"Quantity"] floatValue];
     self.titleLab.text = cellDic[@"titleStr"];
     self.totalLab.text = cellDic[@"Quantity"];
-    self.receiveLab.text =  cellDic[@"QuantityReceive"];;
+    self.receiveLab.text =  cellDic[@"QuantityReceive"];
     self.thisLab.text =  cellDic[@"QuantityCheck"];
     self.bzLab.text =  cellDic[@"Remark"];
  }

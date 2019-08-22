@@ -20,7 +20,7 @@
 
 -(void)setupCell{
     self.selectionStyle = UITableViewCellSelectionStyleNone;
-    UIImageView *leftImgeView = [[UIImageView alloc] init];;
+    UIImageView *leftImgeView = [[UIImageView alloc] init];
     [self addSubview:leftImgeView];
     self.leftImgeView = leftImgeView;
 

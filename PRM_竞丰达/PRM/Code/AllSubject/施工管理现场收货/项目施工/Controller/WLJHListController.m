@@ -52,7 +52,7 @@
         //        [weakSelf update_JDHBData];
         WLJHDetialController *detialVC =  [[WLJHDetialController alloc] init];
 
-        WLJHListModel *newModel = [[WLJHListModel alloc] init];;
+        WLJHListModel *newModel = [[WLJHListModel alloc] init];
         newModel.State = @"-888";
         
         detialVC.wlListModel = newModel;
