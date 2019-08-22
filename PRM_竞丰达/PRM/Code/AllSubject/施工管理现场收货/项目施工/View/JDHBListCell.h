@@ -9,9 +9,11 @@
 #import "DXBaseCell.h"
 
 NS_ASSUME_NONNULL_BEGIN
+typedef void(^CellSaveData)(NSMutableDictionary *cellDic);
 
 @interface JDHBListCell : DXBaseCell
-//+(instancetype)cellWithTableView:(UITableView *)tableView;
+@property (nonatomic, copy)CellSaveData savDataBlock;
+@property(nonatomic,strong)NSMutableDictionary *cellDic;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -19,11 +19,7 @@
 @property (nonatomic, copy) NSString *BeginDate;
 @property (nonatomic, copy) NSString *ChildName;
 
-@property (nonatomic, copy) NSString *canChangeRate;
-@property (nonatomic, copy) NSString *canChangeRemark;
 @property (nonatomic, copy) NSString *titleStr;
-
-//@property (nonatomic, assign) BOOL isModelChange;
 
 @end
 

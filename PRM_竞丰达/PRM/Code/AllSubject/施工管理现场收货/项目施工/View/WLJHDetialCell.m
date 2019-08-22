@@ -157,12 +157,27 @@
 }
 -(void)loadContent{
     WLJHDetialModel *model = self.data;
+    self.cellDic = [NSMutableDictionary dictionaryWithDictionary:[model modelToJSONObject]];
+
     self.titleLab.text = model.titleStr;
     CGFloat planNum =  model.QuantityPurchased.floatValue;
-    self.circleProgress.progress = floor((model.canChangeQuantityThis.floatValue + planNum )  / model.Quantity.integerValue*100)/100.0;
+    self.circleProgress.progress = floor((model.QuantityThis.floatValue + planNum )  / model.Quantity.integerValue*100)/100.0;
     self.totalLab.text = model.Quantity;
     self.planLab.text = model.QuantityPurchased;
-     self.thisLab.text = model.canChangeQuantityThis;
+     self.thisLab.text = model.QuantityThis;
  }
+
+
+-(void)setCellDic:(NSMutableDictionary *)cellDic{
+    _cellDic = cellDic;
+    
+    self.titleLab.text =cellDic[@"titleStr"];
+     CGFloat planNum =   [cellDic[@"QuantityPurchased"] floatValue];
+    self.circleProgress.progress = floor(([cellDic[@"QuantityThis"] floatValue] + planNum )  / [cellDic[@"Quantity"] integerValue]*100)/100.0;
+    self.totalLab.text = cellDic[@"Quantity"];
+    self.planLab.text =cellDic[@"QuantityPurchased"];
+    self.thisLab.text =  cellDic[@"QuantityThis"];
+}
+
 
 @end

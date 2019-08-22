@@ -303,7 +303,7 @@ XCSHRecordDetialModel *model  = self.dataArray[indexPath.row];
              cell.cellDic[@"QuantityCheck"] = @"0";
             [QMUITips showInfo:@"超出范围下限" inView:self.view hideAfterDelay:1.2];
         }else{
-             cell.cellDic[@"QuantityCheck"] = self.alertView.numTF.text.length==0?@"0":self.alertView.numTF.text;;
+             cell.cellDic[@"QuantityCheck"] = self.alertView.numTF.text.length==0?@"0":self.alertView.numTF.text;
         }
          cell.cellDic[@"Remark"] = self.alertView.BZTV.text;
         cell.cellDic = cell.cellDic;

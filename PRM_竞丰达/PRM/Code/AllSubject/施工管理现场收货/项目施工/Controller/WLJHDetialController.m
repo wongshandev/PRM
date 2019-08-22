@@ -24,9 +24,17 @@
 @property(nonatomic,strong)NSMutableArray *sectionArray;
 @property(nonatomic,strong)NSMutableArray<NSMutableDictionary *> *savedArray;
 @property(nonatomic,assign)NSInteger maxNumThis;
+@property(nonatomic,strong)NSMutableDictionary <NSString *, NSMutableDictionary *>*insertDic;
+
 @end
 
 @implementation WLJHDetialController
+-(NSMutableDictionary<NSString *,NSMutableDictionary *> *)insertDic{
+    if (!_insertDic) {
+        _insertDic = [NSMutableDictionary new];
+    }
+    return _insertDic;
+}
 -(NSMutableArray <NSMutableDictionary *>*)savedArray{
     if (!_savedArray) {
         self.savedArray = [NSMutableArray new];
@@ -127,10 +135,11 @@
         make.bottom.equalTo(self.topView.mas_bottom);
     }];
     QMUIButton *dateBtn = [QMUIButton buttonWithType:UIButtonTypeCustom];
-    [dateBtn setTitleColor:Color_TEXT_NOMARL forState:UIControlStateDisabled];
     [dateBtn setTitleColor:Color_TEXT_HIGH forState:UIControlStateNormal];
-    [dateBtn setImage:SJYCommonImage(@"enterRight") forState:UIControlStateNormal];
-    
+    [dateBtn setTitleColor:Color_TEXT_NOMARL forState:UIControlStateDisabled];
+    [dateBtn setImage:[SJYCommonImage(@"enterRight") imageByTintColor:Color_TEXT_HIGH] forState:UIControlStateNormal];
+    [dateBtn setImage:[SJYCommonImage(@"enterRight") imageByTintColor:Color_TEXT_NOMARL] forState:UIControlStateDisabled];
+
     [dateBtn setTitle:self.wlListModel.OrderDate forState:UIControlStateNormal];
     dateBtn.spacingBetweenImageAndTitle =  10;
     dateBtn.contentHorizontalAlignment =  UIControlContentHorizontalAlignmentRight;
@@ -203,6 +212,7 @@
     [SJYRequestTool requestWLJHDetialListWithProjectBranchID:self.projectBranchID MarketOrderID:self.marketOrderID success:^(id responder) {
         NSArray *rowsArr = [responder valueForKey:@"rows"];
         if ([self.tableView.mj_header isRefreshing]) {
+            [self.insertDic removeAllObjects];
             [self.dataArray removeAllObjects];
             [self.sectionArray removeAllObjects];
             [self.savedArray removeAllObjects];
@@ -210,8 +220,7 @@
         NSMutableArray *cellsArr = [NSMutableArray new];
         for (NSDictionary *dic in rowsArr) {
             WLJHDetialModel *model = [ WLJHDetialModel  modelWithDictionary:dic];
-            model.canChangeQuantityThis = model.QuantityThis;
-            NSString *titStr = model.Model.length!=0?[model.Name stringByAppendingFormat:@"(%@)",model.Model]:model.Name;
+             NSString *titStr = model.Model.length!=0?[model.Name stringByAppendingFormat:@"(%@)",model.Model]:model.Name;
             model.titleStr =  model.Unit.length!=0?[titStr stringByAppendingFormat:@"(%@)",model.Unit]:titStr;
             if ([[dic valueForKey:@"_parentId"]integerValue] == 0) {
                 [self.sectionArray addObject:model];
@@ -247,7 +256,6 @@
     }];
 }
 
-
 -(void)endRefreshWithError:(BOOL)havError{
     [self.tableView.mj_header endRefreshing];
     [self.tableView.mj_footer endRefreshing];
@@ -258,7 +266,6 @@
         self.tableView.isShowBtn =  havError;
     }
 }
-
 
 -(BOOL)checkCanSave{
     if (self.datePickerBtn.currentTitle.length == 0) {
@@ -372,9 +379,45 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     WLJHDetialCell *cell = [WLJHDetialCell cellWithTableView:tableView];
-    cell.data = self.dataArray[indexPath.section][indexPath.row];
+    WLJHDetialModel *model = self.dataArray[indexPath.section][indexPath.row];
     cell.indexPath = indexPath;
-    [cell loadContent];
+//    [cell loadContent];
+   __block NSMutableDictionary *sectionDic = self.insertDic[@(indexPath.section).stringValue];
+    Weak_Self;
+    cell.savDataBlock = ^(NSMutableDictionary * cellDic) {
+        if (![cellDic[@"QuantityThis"] isEqualToString:model.QuantityThis]) {
+            if (sectionDic != nil) {
+                [sectionDic setValue:cellDic forKey:@(indexPath.row).stringValue];
+            }else{
+                sectionDic = [NSMutableDictionary new];
+                [sectionDic setValue:cellDic forKey:@(indexPath.row).stringValue];
+                [weakSelf.insertDic setValue:sectionDic forKey:@(indexPath.section).stringValue];
+            }
+        }
+    };
+//    NSArray *indexArr = self.insertDic.allKeys;
+//    if ([indexArr containsObject:@(indexPath.row).stringValue]) {
+//        cell.cellDic =  self.insertDic[@(indexPath.row).stringValue] ;
+//    }else{
+//        cell.data = model;
+//        [cell loadContent];
+//    }
+
+    NSArray *sectionIndexArr = self.insertDic.allKeys;
+    if ([sectionIndexArr containsObject:@(indexPath.section).stringValue]) {
+        NSMutableDictionary *sectionDic = self.insertDic[@(indexPath.section).stringValue];
+        NSArray *rowIndexArr = sectionDic.allKeys;
+        if ([rowIndexArr containsObject:@(indexPath.row).stringValue]) {
+            cell.cellDic =  sectionDic[@(indexPath.row).stringValue] ;
+        }else{
+            cell.data = model;
+            [cell loadContent];
+        }
+    }else{
+        cell.data = model;
+        [cell loadContent];
+    }
+
     return cell;
 }
 
@@ -416,8 +459,8 @@
     //TextField 配置
     self.alertView.numTF.delegate = self;
     self.alertView.numTF.placeholder =@"请输入申请数量";
-    self.alertView.numTF.text = model.canChangeQuantityThis.integerValue == 0 ?@"" : model.canChangeQuantityThis;
-     [self.alertView.numTF addTarget:self action:@selector(alert_TextFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
+    self.alertView.numTF.text = [cell.cellDic[@"QuantityThis"] integerValue] == 0?@"": cell.cellDic[@"QuantityThis"];
+      [self.alertView.numTF addTarget:self action:@selector(alert_TextFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
 
     //内容页子控件  布局处理
     [self.alertView.numMentionLab makeConstraints:^(MASConstraintMaker *make) {
@@ -446,31 +489,30 @@
     [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
         [self.alertView.numTF endEditing:YES];
         if ([self.alertView.numTF.text integerValue] > maxNum.integerValue ) {
-            model.canChangeQuantityThis = maxNum;
+             cell.cellDic[@"QuantityThis"] = maxNum;
             [QMUITips showInfo:@"超出范围上限" inView:self.view hideAfterDelay:1.2];
         }else if([self.alertView.numTF.text integerValue] < 0){
-            model.canChangeQuantityThis = @"0";
+             cell.cellDic[@"QuantityThis"] = @"0";
             [QMUITips showInfo:@"超出范围下限" inView:self.view hideAfterDelay:1.2];
         }else{
-            model.canChangeQuantityThis =self.alertView.numTF.text.length==0?@"0":self.alertView.numTF.text;
-        }
-//        [cell loadContent];
-        [self.tableView reloadRow:cell.indexPath.row inSection:cell.indexPath.section withRowAnimation:UITableViewRowAnimationNone];
+             cell.cellDic[@"QuantityThis"] = self.alertView.numTF.text.length==0?@"0":self.alertView.numTF.text;
 
+        }
+         cell.cellDic = cell.cellDic;
+        //FIXME: 新建并存储 修改后的内容到更新数组
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Id == %@", model.Id];
         NSMutableDictionary *havDic = [self.savedArray filteredArrayUsingPredicate:predicate].firstObject;
-
-        if (![model.canChangeQuantityThis isEqualToString:model.QuantityThis]){
+        if (![cell.cellDic[@"QuantityThis"] isEqualToString:model.QuantityThis]){
             //数据处理 添加进入数组
             NSMutableDictionary *currentDic= [NSMutableDictionary dictionary];
-            [currentDic setValue:model.canChangeQuantityThis forKey:@"QuantityThis"];
-            [currentDic setValue:model.BOMID forKey:@"BOMID"];
-            [currentDic setValue:model.ModId forKey:@"ModId"];
-            [currentDic setValue:model.Id forKey:@"Id"];
+            [currentDic setValue:cell.cellDic[@"QuantityThis"] forKey:@"QuantityThis"];
+            [currentDic setValue:cell.cellDic[@"BOMID"] forKey:@"BOMID"];
+            [currentDic setValue:cell.cellDic[@"ModId"] forKey:@"ModId"];
+            [currentDic setValue:cell.cellDic[@"Id"] forKey:@"Id"];
 
             if (havDic) {
                 if (![[havDic valueForKey:@"QuantityThis"] isEqualToString:[currentDic valueForKey:@"QuantityThis"]]) {
-                    [havDic setValue:model.canChangeQuantityThis forKey:@"QuantityThis"];
+                    [havDic setValue:cell.cellDic[@"QuantityThis"] forKey:@"QuantityThis"];
                 }
             }else{
                 [self.savedArray addObject:currentDic];
@@ -480,6 +522,11 @@
             if (havDic) {
                 [self.savedArray removeObject:havDic];
             }
+        }
+        //FIXME: 存储更改后的数据到 字典内 便于滑动时进行加载修改后的数据
+        if (cell.savDataBlock) {
+            cell.savDataBlock(cell.cellDic);
+            [self.tableView reloadRow:cell.indexPath.row inSection:cell.indexPath.section withRowAnimation:UITableViewRowAnimationNone];
         }
         [aDialogViewController hide];
     }];

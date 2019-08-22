@@ -15,11 +15,17 @@
 
 @property(nonatomic,strong)QMUIFillButton *updateBtn;
 @property(nonatomic,strong)NumTFBZTVAlertView *alertView;
+@property(nonatomic,strong)NSMutableDictionary <NSString *, NSMutableDictionary *>*insertDic;
 
-//@property(nonatomic,copy)NSString *minNumThis;
 @end
 
 @implementation JDHBListController
+-(NSMutableDictionary<NSString *,NSMutableDictionary *> *)insertDic{
+    if (!_insertDic) {
+        _insertDic = [NSMutableDictionary new];
+    }
+    return _insertDic;
+}
 -(NSMutableArray *)updateArray{
     if (!_updateArray) {
         _updateArray= [NSMutableArray new];
@@ -29,14 +35,14 @@
 
 -(void)setUpNavigationBar{
     self.navBar.hidden = YES;
-//    Weak_Self; 
-//    [self.navBar.backButton clickWithBlock:^{
-//        if (weakSelf.updateArray.count != 0) {
-//            [weakSelf alertWithSaveMention:@"您修改了进度 , 需要保存吗?" withAction:@selector(update_JDHBData)];
-//            return;
-//        }
-//        [weakSelf.navigationController popViewControllerAnimated:YES];
-//    }];
+    //    Weak_Self;
+    //    [self.navBar.backButton clickWithBlock:^{
+    //        if (weakSelf.updateArray.count != 0) {
+    //            [weakSelf alertWithSaveMention:@"您修改了进度 , 需要保存吗?" withAction:@selector(update_JDHBData)];
+    //            return;
+    //        }
+    //        [weakSelf.navigationController popViewControllerAnimated:YES];
+    //    }];
 }
 -(void)buildSubviews{
     Weak_Self;
@@ -56,7 +62,7 @@
     [self.updateBtn clickWithBlock:^{
         [weakSelf update_JDHBData];
     }];
- }
+}
 -(void)setupTableView{
     [super setupTableView];
     self.tableView.separatorStyle =  UITableViewCellSeparatorStyleSingleLine;
@@ -86,13 +92,12 @@
         NSArray *rowsArr = [responder objectForKey:@"rows"];
         if ([self.tableView.mj_header isRefreshing]) {
             [self.dataArray removeAllObjects];
+            [self.insertDic removeAllObjects];
             [self.updateArray removeAllObjects];
         }
         
         for (NSDictionary *dic in rowsArr) {
             JDHBListModel *model = [JDHBListModel  modelWithDictionary:dic];
-             model.canChangeRate = model.CompletionRate;
-            model.canChangeRemark = model.Remark;
             model.titleStr =  model.ChildName.length==0?model.Name:[model.Name stringByAppendingFormat:@" (%@)",model.ChildName];
             [self.dataArray addObject:model];
         }
@@ -114,12 +119,9 @@
         [QMUITips showInfo:@"无数据需要提交" inView:self.view hideAfterDelay:1.2];
         return ;
     }
-//    NSError *jsonError;
-//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self.updateArray options:NSJSONWritingPrettyPrinted error:&jsonError];
-//    NSString *jsonStr = [[[[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding] stringByReplacingOccurrencesOfString:@"\n" withString:@""] stringByReplacingOccurrencesOfString:@" " withString:@""] stringByReplacingOccurrencesOfString:@"\\" withString:@""];
 
     NSString *jsonStr = [self.updateArray modelToJSONString];
-    [QMUITips showLoading:@"数据传输中" inView:[UIApplication sharedApplication].keyWindow]; 
+    [QMUITips showLoading:@"数据传输中" inView:[UIApplication sharedApplication].keyWindow];
     [SJYRequestTool requestJDHBUpdateWithEmployeeID:[SJYUserManager sharedInstance].sjyloginUC.Id updated:jsonStr success:^(id responder) {
         [QMUITips hideAllTips];
         [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
@@ -137,9 +139,6 @@
         [QMUITips showInfo:@"无数据需要提交" inView:self.view hideAfterDelay:1.2];
         return ;
     }
-    //    NSError *jsonError;
-    //    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self.updateArray options:NSJSONWritingPrettyPrinted error:&jsonError];
-    //    NSString *jsonStr = [[[[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding] stringByReplacingOccurrencesOfString:@"\n" withString:@""] stringByReplacingOccurrencesOfString:@" " withString:@""] stringByReplacingOccurrencesOfString:@"\\" withString:@""];
 
     NSString *jsonStr = [self.updateArray modelToJSONString];
     [QMUITips showLoading:@"数据传输中" inView:[UIApplication sharedApplication].keyWindow];
@@ -176,8 +175,22 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     JDHBListCell *cell = [JDHBListCell cellWithTableView:tableView];
     cell.indexPath = indexPath;
-    cell.data = self.dataArray[indexPath.row];
-    [cell loadContent];
+    JDHBListModel *model = self.dataArray[indexPath.row];
+    //    [cell loadContent];
+    Weak_Self;
+    cell.savDataBlock = ^(NSMutableDictionary * cellDic) {
+        if (![cellDic[@"CompletionRate"] isEqualToString:model.CompletionRate]
+            || ![cellDic[@"Remark"] isEqualToString:model.Remark]) {
+            [weakSelf.insertDic setValue:cellDic forKey:@(indexPath.row).stringValue];
+        }
+    };
+    NSArray *indexArr = self.insertDic.allKeys;
+    if ([indexArr containsObject:@(indexPath.row).stringValue]) {
+        cell.cellDic =  self.insertDic[@(indexPath.row).stringValue] ;
+    }else{
+        cell.data = model;
+        [cell loadContent];
+    }
     return cell;
 }
 
@@ -200,20 +213,20 @@
     dialogViewController.headerSeparatorColor = UIColorWhite;
     dialogViewController.headerViewBackgroundColor = UIColorWhite;
 
- //对话框的view 即 自定义内容页
+    //对话框的view 即 自定义内容页
     self.alertView = [[NumTFBZTVAlertView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_W -20 *2, 180)];
     self.alertView.backgroundColor = UIColorWhite;
 
     self.alertView.numMentionLab.text = [NSString stringWithFormat:@"可输入范围: %@ ~ 100",model.CompletionRate];
-//TextField 配置
+    //TextField 配置
     self.alertView.numTF.delegate = self;
     self.alertView.numTF.placeholder =@"请输入进度";
-     self.alertView.numTF.text = model.canChangeRate.integerValue == 0 ?@"": model.canChangeRate;
- 
-     [self.alertView.numTF addTarget:self action:@selector(alert_TextFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
-//textView 配置
+    self.alertView.numTF.text = [cell.cellDic[@"CompletionRate"] integerValue] == 0 ?@"": cell.cellDic[@"CompletionRate"];
+
+    [self.alertView.numTF addTarget:self action:@selector(alert_TextFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
+    //textView 配置
     self.alertView.BZTV.delegate = self;
-    self.alertView.BZTV.text = model.canChangeRemark;
+    self.alertView.BZTV.text = cell.cellDic[@"Remark"];
 
     //内容页子控件  布局处理
     [self.alertView.numMentionLab makeConstraints:^(MASConstraintMaker *make) {
@@ -221,13 +234,13 @@
         make.left.mas_equalTo(self.alertView.mas_left).mas_offset(NumTFMargin);
         make.right.mas_equalTo(self.alertView.mas_right).mas_offset(-NumTFMargin);
         make.height.mas_equalTo(MentionHeight);
-     }];
-     [self.alertView.numTF makeConstraints:^(MASConstraintMaker *make) {
-         make.top.mas_equalTo(self.alertView.numMentionLab.mas_bottom).mas_offset(NumTFPading);
-         make.left.mas_equalTo(self.alertView.mas_left).mas_offset(NumTFMargin);
-         make.right.mas_equalTo(self.alertView.mas_right).mas_offset(-NumTFMargin);
+    }];
+    [self.alertView.numTF makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.alertView.numMentionLab.mas_bottom).mas_offset(NumTFPading);
+        make.left.mas_equalTo(self.alertView.mas_left).mas_offset(NumTFMargin);
+        make.right.mas_equalTo(self.alertView.mas_right).mas_offset(-NumTFMargin);
         make.height.mas_equalTo(NumTFHeight);
-     }];
+    }];
     [self.alertView.sepLine makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.alertView.numTF.mas_bottom);
         make.left.mas_equalTo(self.alertView.numTF.mas_left);
@@ -247,40 +260,40 @@
         make.bottom.mas_equalTo(self.alertView.mas_bottom).offset(-NumTFPading);
     }];
 
-//    Weak_Self;
+    //    Weak_Self;
     dialogViewController.contentView = self.alertView;
 
     [dialogViewController addCancelButtonWithText:@"取消" block:^(__kindof QMUIDialogViewController *aDialogViewController) {
-     }];
+    }];
     [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
         [self.alertView.BZTV endEditing:YES];
-         //  cell 界面 数据 的调整
+        //  cell 界面 数据 的调整
         if ([self.alertView.numTF.text integerValue] > 100 ) {
-            model.canChangeRate = @"100";
+            cell.cellDic[@"CompletionRate"] = @"100";
             [QMUITips showInfo:@"超出默认范围上限" inView:self.view hideAfterDelay:1.2];
         }else if([self.alertView.numTF.text integerValue] < model.CompletionRate.integerValue){
-            model.canChangeRate = model.CompletionRate;
+            cell.cellDic[@"CompletionRate"] = model.CompletionRate;
             [QMUITips showInfo:@"超出默认范围下限" inView:self.view hideAfterDelay:1.2];
         }else{
-            model.canChangeRate = self.alertView.numTF.text.length==0?model.CompletionRate:self.alertView.numTF.text;
+            cell.cellDic[@"CompletionRate"] = self.alertView.numTF.text.length==0?model.CompletionRate:self.alertView.numTF.text;
         }
-        model.canChangeRemark = self.alertView.BZTV.text;
-         [self.tableView reloadRow:cell.indexPath.row inSection:cell.indexPath.section withRowAnimation:UITableViewRowAnimationNone];
-
+        cell.cellDic[@"Remark"] = self.alertView.BZTV.text;
+        cell.cellDic = cell.cellDic;
+        
+        //FIXME: 新建并存储 修改后的内容到更新数组
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Id == %@", model.Id];
-        NSMutableDictionary *havDic = [self.updateArray filteredArrayUsingPredicate:predicate].firstObject;
-
-        if (![model.canChangeRate isEqualToString:model.CompletionRate] || ![model.Remark isEqualToString:model.canChangeRemark]) {
+        NSMutableDictionary *havDic = [self.updateArray filteredArrayUsingPredicate:predicate].firstObject; 
+        if (![cell.cellDic[@"CompletionRate"] isEqualToString:model.CompletionRate] || ![cell.cellDic[@"Remark"] isEqualToString:model.Remark]) {
             //数据处理 添加进入数组
             NSMutableDictionary *currentDic= [NSMutableDictionary dictionary];
-            [currentDic setValue:model.canChangeRemark forKey:@"Remark"];
-            [currentDic setValue:model.canChangeRate forKey:@"CompletionRate"];
+            [currentDic setValue:cell.cellDic[@"CompletionRate"] forKey:@"CompletionRate"];
+            [currentDic setValue:cell.cellDic[@"Remark"] forKey:@"Remark"];
             [currentDic setValue:model.Id forKey:@"Id"];
 
             if (havDic) {
                 if (![[havDic valueForKey:@"Remark"] isEqualToString:[currentDic valueForKey:@"Remark"]] || ![[havDic valueForKey:@"CompletionRate"] isEqualToString:[currentDic valueForKey:@"CompletionRate"]]) {
-                    [havDic setValue:model.canChangeRate forKey:@"CompletionRate"];
-                    [havDic setValue:model.canChangeRemark forKey:@"Remark"];
+                    [havDic setValue:cell.cellDic[@"CompletionRate"] forKey:@"CompletionRate"];
+                    [havDic setValue:cell.cellDic[@"Remark"] forKey:@"Remark"];
                 }
             }else{
                 [self.updateArray addObject:currentDic];
@@ -290,6 +303,11 @@
             if (havDic) {
                 [self.updateArray removeObject:havDic];
             }
+        }
+        //FIXME: 存储更改后的数据到 字典内 便于滑动时进行加载修改后的数据
+        if (cell.savDataBlock) {
+            cell.savDataBlock(cell.cellDic);
+            [self.tableView reloadRow:cell.indexPath.row inSection:cell.indexPath.section withRowAnimation:UITableViewRowAnimationNone];
         }
         [aDialogViewController hide];
     }];
@@ -314,16 +332,6 @@
 - (void)alert_TextFieldDidChange:(QMUITextField *)textField{
     QMUIDialogViewController *adialogVC = (QMUIDialogViewController *)self.alertView.viewController;
     QMUIButton *okAction = adialogVC.submitButton;
-//    if([textField.text hasPrefix:@"00"] || [textField.text hasPrefix:@"0"]){
-//        textField.text = @"0";
-//    }
-//    if (textField.text.integerValue >= 100) {
-//        if ([textField.text hasPrefix:@"1"] && textField.text.length >= @(100).stringValue.length) {
-//            textField.text = @"100";
-//        }else{
-//            textField.text = [textField.text substringToIndex:@(100).stringValue.length-1];
-//        }
-//    }
     okAction.enabled = textField.text.length || self.alertView.BZTV.text.length;
 }
 
@@ -338,123 +346,10 @@
     return YES;
 }
 
-#pragma mark ---------------- 系统 UIAlertController处理
-//-(void)clickProgressReportCell:(JDHBListCell *)cell alertViewWithModel:(JDHBListModel *)model{
-//    if (model.CompletionRate.integerValue >=100) {
-//        return;
-//    }
-//    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:model.Name message:[NSString stringWithFormat:@"进度及备注信息设置, 输入的进度范围在%@ ~ 100 之间",model.CompletionRate] preferredStyle:UIAlertControllerStyleAlert];
-//    //进度输入框
-//    [alertVC addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-//        textField.placeholder =@"请输入进度";
-//        textField.keyboardType = UIKeyboardTypeNumberPad;
-//        //        textField.text = model.canChangeRate;
-//        textField.text = model.canChangeRate.integerValue == 0 ?model.CompletionRate : model.canChangeRate;
-//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertTextFieldDidChange:) name:UITextFieldTextDidChangeNotification object:textField];
-//    }];
-//    //备注信息输入框
-//    [alertVC addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-//        textField.placeholder =@"请输入备注信息";
-//        textField.text = model.canChangeRemark;
-//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertTextFieldDidChange:) name:UITextFieldTextDidChangeNotification object:textField];
-//    }];
-//    [alertVC.textFields[0] makeConstraints:^(MASConstraintMaker *make) {
-//        make.height.equalTo(35);
-//    }];
-//    [alertVC.textFields[1] makeConstraints:^(MASConstraintMaker *make) {
-//        make.height.equalTo(35);
-//    }];
-//    for (UITextField *textField in alertVC.textFields) {
-//        textField.font= Font_ListTitle;
-//    }
-//    //确定按钮
-//    UIAlertAction *confirmAction =  [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//        [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];
-//        //  cell 界面 数据 的调整
-//        if ([alertVC.textFields[0].text integerValue] > 100 ) {
-//            model.canChangeRate = @"100";
-//            [QMUITips showInfo:@"超出默认范围上限" inView:self.view hideAfterDelay:1.2];
-//        }else if([alertVC.textFields[0].text integerValue] < model.CompletionRate.integerValue){
-//            model.canChangeRate = model.CompletionRate;
-//            [QMUITips showInfo:@"超出默认范围下限" inView:self.view hideAfterDelay:1.2];
-//        }else{
-//            model.canChangeRate = alertVC.textFields.firstObject.text.length==0?model.CompletionRate:alertVC.textFields.firstObject.text;
-//        }
-//        model.canChangeRemark = alertVC.textFields.lastObject.text;
-//        if (![model.canChangeRate isEqualToString:model.CompletionRate] || ![model.Remark isEqualToString:model.canChangeRemark]) {
-//            [cell loadContent];
-//            //数据处理 添加进入数组
-//            NSMutableDictionary *currentDic= [NSMutableDictionary dictionary];
-//            [currentDic setValue:model.canChangeRemark forKey:@"Remark"];
-//            [currentDic setValue:model.canChangeRate forKey:@"CompletionRate"];
-//            [currentDic setValue:model.Id forKey:@"Id"];
-//
-//            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Id == %@", model.Id];
-//            NSMutableDictionary *havDic = [self.updateArray filteredArrayUsingPredicate:predicate].firstObject;
-//            if (havDic) {
-//                if (![[havDic valueForKey:@"Remark"] isEqualToString:[currentDic valueForKey:@"Remark"]] || ![[havDic valueForKey:@"CompletionRate"] isEqualToString:[currentDic valueForKey:@"CompletionRate"]]) {
-//                    [havDic setValue:model.canChangeRate forKey:@"CompletionRate"];
-//                    [havDic setValue:model.canChangeRemark forKey:@"Remark"];
-//                }
-//            }else{
-//                [self.updateArray addObject:currentDic];
-//            }
-//            NSLog(@"%@", self.updateArray);
-//        }
-//    }];
-//    //取消按钮
-//    [alertVC addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-//        [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];
-//    }]];
-//    confirmAction.enabled = (alertVC.textFields.firstObject.text.length || alertVC.textFields.lastObject.text.length);
-//    [alertVC addAction:confirmAction];
-//    [self presentViewController:alertVC animated:YES completion:nil];
-//}
-//- (void)alertTextFieldDidChange:(NSNotification *)notification{
-//    UITextField *TF = (UITextField *)notification.object;
-//
-//    UIAlertController *alertController = (UIAlertController *)self.presentedViewController;
-//    if (alertController) {
-//        UITextField *textField = alertController.textFields.firstObject;
-//        UITextField *bzTF = alertController.textFields.lastObject;
-//
-//        UIAlertAction *okAction = alertController.actions.lastObject;
-//        if (TF == textField) {
-//            if([textField.text hasPrefix:@"00"] || [textField.text hasPrefix:@"0"]){
-//                textField.text = @"0";
-//            }
-//            if (textField.text.integerValue >= 100) {
-//                if ([textField.text hasPrefix:@"1"] && textField.text.length >= @(100).stringValue.length) {
-//                    textField.text = @"100";
-//                }else{
-//                    textField.text = [textField.text substringToIndex:@(100).stringValue.length-1];
-//                }
-//            }
-//        }
-//        okAction.enabled = textField.text.length || bzTF.text.length;
-//    }
-//}
-
-
-//-(BOOL)textViewShouldReturn:(QMUITextView *)textView{
-//    //返回 YES 表示程序认为当前的点击是为了进行类似“发送”之类的操作，所以最终“\n”并不会被输入到文本框里
-//    //返回 NO 表示程序认为当前的点击只是普通的输入，所以会继续询问 textView:shouldChangeTextInRange:replacementText: 方法，根据该方法的返回结果来决定是否要输入这个“\n”
-//    return NO;
-//}
-//-(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
-////    if (textView.text.length == 0  && ([text isEqualToString:@"\n"] || [text isEqualToString:@" "])) {
-////    if ([text isEqualToString:@"\n"] || [text isEqualToString:@" "]) {
-////        if ((textView.text.length == 0 || range.location == 0 ) &&   [text isEqualToString:@" "]) {
-////        return NO;
-////    }
-//    return YES;
-//}
-
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     NSLog(@"Retain Count = %ld\n",CFGetRetainCount((__bridge CFTypeRef)(self)));
 }
-
 -(void)dealloc{
 #ifdef DEBUG
     printf("[⚠️] 已经释放 %s.\n", NSStringFromClass(self.class).UTF8String);

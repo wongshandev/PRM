@@ -71,14 +71,15 @@
     [self.titleLab makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self).offset(5);
         make.left.equalTo(self.leftCircleLab.mas_right).offset(10);
-        //        make.right.equalTo(self).offset(-10);
-                make.right.equalTo(self.selecImgView.mas_left).offset(0);
+        // make.right.equalTo(self).offset(-10);
+        make.right.equalTo(self.selecImgView.mas_left).offset(0);
     }];
- CGSize titleSize = [self.applyMenLab.text sizeWithFont:Font_ListOtherTxt constrainedToSize:CGSizeMake(MAXFLOAT, 25)];
+    CGRect titleRect = [self.applyMenLab.text boundingRectWithSize:CGSizeMake(MAXFLOAT, 25) options:NSStringDrawingUsesFontLeading|NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:Font_ListOtherTxt} context:nil];
+    CGFloat titleWidth = ceilf(titleRect.size.width);
     [self.applyMenLab makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.titleLab.mas_bottom).offset(5);
         make.left.equalTo(self.titleLab.mas_left);
-        make.width.equalTo(titleSize.width);
+        make.width.equalTo(titleWidth);
     }];
     [self.applyPersonLab makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.applyMenLab.mas_top);
@@ -113,7 +114,7 @@
     [self.selecImgView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(width);
     }];
- }
+}
 
 
 // 处理点击时控件颜色变化
