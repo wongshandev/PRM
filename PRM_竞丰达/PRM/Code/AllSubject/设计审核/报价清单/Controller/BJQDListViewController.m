@@ -67,10 +67,11 @@
 
            NSMutableArray *footSectionArr = [NSMutableArray new];
            for (NSDictionary *dic in footerArr) {
+               NSLog(@"%@",dic[@"QuotedPrice"]);
                BJQDListModel *model = [BJQDListModel  modelWithDictionary:dic];
-               model.QuotedPriceStr = [NSString numberMoneyFormattor:model.QuotedPrice];
+               model.QuotedPriceStr = [NSString numberMoneyFormattor:([model.QuotedPrice hasPrefix:@"-"]?@"0.00" : model.QuotedPrice)];
                  // [model.Name isEqualToString:@"甲供合计"]?@"": [NSString numberMoneyFormattor:model.QuotedPrice];
-               [footSectionArr addObject:model];
+                [footSectionArr addObject:model];
            }
            [self.dataArray addObject:footSectionArr];
 

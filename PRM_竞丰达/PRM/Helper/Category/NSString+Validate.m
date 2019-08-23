@@ -85,59 +85,50 @@
         result = @"image";
         return result;
     }
-
     // 匹配txt
     NSArray * txtlist = @[@"txt"];
     if ([txtlist containsObject: suffix]) {
         result = @"txt";
         return result;
     };
-
     // 匹配 excel
     NSArray * excelist = @[@"xls",@"xlsx"];
-
     if  ([excelist containsObject: suffix]){
         result = @"excel";
         return result;
     };
     // 匹配 word
     NSArray * wordlist = @[@"doc", @"docx"];
-
     if ([wordlist containsObject: suffix]) {
         result = @"word";
         return result;
     };
     // 匹配 pdf
     NSArray * pdflist = @[@"pdf"];
-
     if ([pdflist containsObject: suffix]) {
         result = @"pdf";
         return result;
     };
     // 匹配 ppt
     NSArray * pptlist = @[@"ppt"];
-
     if ([pptlist containsObject: suffix]) {
         result = @"ppt";
         return result;
     };
     // 匹配 视频
     NSArray * videolist = @[@"mp4", @"m2v", @"mkv"];
-
     if ([videolist containsObject: suffix]) {
         result = @"video";
         return result;
     };
     // 匹配 音频
     NSArray * radiolist = @[@"mp3", @"wav", @"wmv"];
-
     if ([radiolist containsObject: suffix]) {
         result = @"radio";
         return result;
     }
 
     NSArray * ziplist = @[@"zip"];
-
     if ([ziplist containsObject: suffix]) {
         result = @"zip";
         return result;
@@ -172,13 +163,16 @@
     if (number.length==0) {
          return @"";
     }
+//    if (number.doubleValue < 0) {
+//        number = @"0";
+//    }
     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
 //    formatter.numberStyle = kCFNumberFormatterCurrencyStyle;
     
     formatter.numberStyle = kCFNumberFormatterDecimalStyle;
     formatter.maximumFractionDigits = 2;    //设置最大小数点后的位数
     formatter.minimumFractionDigits = 2;
-
+  
      NSNumber *result111 = [NSNumber numberWithDouble:number.doubleValue];
     NSString *string = [formatter stringFromNumber:result111];
     if ([string hasSuffix:@"."]) {

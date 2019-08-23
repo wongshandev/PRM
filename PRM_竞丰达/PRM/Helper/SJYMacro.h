@@ -18,6 +18,7 @@
 #define SCREEN_W SCREEN_BOUNDS.size.width//获取屏幕宽度
 
 #define IOS11 @available(iOS 11.0, *)
+#define kWeakSelf(type)  __weak typeof(type) weak##type = type
 #define Weak_Self __weak typeof(self) weakSelf = self
 #define NAVHEIGHT [SJYPublicTool getNomarlNavHeight]//获取导航条高度 //（+5高度阴影）不再增加
 #define NAVNOMARLHEIGHT [SJYPublicTool getNomarlNavHeight]//获取正常导航条高度 不算阴影

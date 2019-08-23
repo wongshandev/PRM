@@ -1,0 +1,8 @@
+${PODS_ROOT}/Target Support Files/Pods-PRM/Pods-PRM-resources.sh
+${PODS_ROOT}/BRPickerView/BRPickerView/AddressPickerView/BRPickerView.bundle
+${PODS_ROOT}/EBBannerView/EBBannerView/Classes/EBBannerView.xib
+${PODS_ROOT}/EBBannerView/EBBannerView/Classes/EBBannerViewController.xib
+${PODS_ROOT}/EBBannerView/EBBannerView/Classes/EBMuteDetector.mp3
+${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle
+${PODS_ROOT}/PYPhotoBrowser/PYPhotoBrowser/PYPhotosView.bundle
+${PODS_ROOT}/QMUIKit/QMUIKit/QMUIResources/QMUIResources.bundle

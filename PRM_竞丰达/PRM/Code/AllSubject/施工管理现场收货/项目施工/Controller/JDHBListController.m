@@ -176,13 +176,14 @@
     JDHBListCell *cell = [JDHBListCell cellWithTableView:tableView];
     cell.indexPath = indexPath;
     JDHBListModel *model = self.dataArray[indexPath.row];
-    //    [cell loadContent];
     Weak_Self;
+    kWeakSelf(cell);
     cell.savDataBlock = ^(NSMutableDictionary * cellDic) {
         if (![cellDic[@"CompletionRate"] isEqualToString:model.CompletionRate]
             || ![cellDic[@"Remark"] isEqualToString:model.Remark]) {
             [weakSelf.insertDic setValue:cellDic forKey:@(indexPath.row).stringValue];
         }
+        [weakSelf.tableView reloadRow:weakcell.indexPath.row inSection:weakcell.indexPath.section withRowAnimation:UITableViewRowAnimationNone];
     };
     NSArray *indexArr = self.insertDic.allKeys;
     if ([indexArr containsObject:@(indexPath.row).stringValue]) {
@@ -307,7 +308,6 @@
         //FIXME: 存储更改后的数据到 字典内 便于滑动时进行加载修改后的数据
         if (cell.savDataBlock) {
             cell.savDataBlock(cell.cellDic);
-            [self.tableView reloadRow:cell.indexPath.row inSection:cell.indexPath.section withRowAnimation:UITableViewRowAnimationNone];
         }
         [aDialogViewController hide];
     }];

@@ -38,8 +38,7 @@
 }
 #pragma mark ======================= 数据绑定
 -(void)bindViewModel{
-    Weak_Self;
-    
+    Weak_Self; 
     self.tableView.mj_header =[MJRefreshNormalHeader headerWithRefreshingBlock:^{
         if (KJumpURLToEnum(weakSelf.mainModel.url) == Engineering) {  //施工管理
             [weakSelf  requestData_SGGL];

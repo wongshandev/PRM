@@ -76,13 +76,21 @@
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.estimatedRowHeight = 90;
     self.sectionArray = [NSMutableArray new];
+    
+    
+
     Weak_Self;
-    self.tableView.mj_header =[MJRefreshNormalHeader headerWithRefreshingBlock:^{
-        [weakSelf  request_WLJHDetialData];
-    }];
-    [self.tableView.mj_header beginRefreshing];
+//    self.tableView.mj_header =[MJRefreshNormalHeader headerWithRefreshingBlock:^{
+//        [weakSelf  request_WLJHDetialData];
+//    }];
+//    [self.tableView.mj_header beginRefreshing];
+//    self.tableView.refreshBlock = ^{
+//        [weakSelf.tableView.mj_header beginRefreshing];
+//    };
+    
+    [self  request_WLJHDetialData];
     self.tableView.refreshBlock = ^{
-        [weakSelf.tableView.mj_header beginRefreshing];
+        [weakSelf  request_WLJHDetialData];
     };
 }
 
@@ -257,8 +265,8 @@
 }
 
 -(void)endRefreshWithError:(BOOL)havError{
-    [self.tableView.mj_header endRefreshing];
-    [self.tableView.mj_footer endRefreshing];
+//    [self.tableView.mj_header endRefreshing];
+//    [self.tableView.mj_footer endRefreshing];
     if (self.dataArray.count == 0) {
         self.tableView.customImg = !havError ? [UIImage imageNamed:@"empty"]:SJYCommonImage(@"daoda");
         self.tableView.customMsg = !havError? @"没有数据了,休息下吧":@"网络错误,请检查网络后重试";
@@ -381,10 +389,11 @@
     WLJHDetialCell *cell = [WLJHDetialCell cellWithTableView:tableView];
     WLJHDetialModel *model = self.dataArray[indexPath.section][indexPath.row];
     cell.indexPath = indexPath;
-//    [cell loadContent];
-   __block NSMutableDictionary *sectionDic = self.insertDic[@(indexPath.section).stringValue];
+    //FIXME:----------------- 存储修改后的数据并刷新
     Weak_Self;
-    cell.savDataBlock = ^(NSMutableDictionary * cellDic) {
+    kWeakSelf(cell);
+     cell.savDataBlock = ^(NSMutableDictionary * cellDic) {
+         NSMutableDictionary *sectionDic = weakSelf.insertDic[@(indexPath.section).stringValue];
         if (![cellDic[@"QuantityThis"] isEqualToString:model.QuantityThis]) {
             if (sectionDic != nil) {
                 [sectionDic setValue:cellDic forKey:@(indexPath.row).stringValue];
@@ -394,30 +403,18 @@
                 [weakSelf.insertDic setValue:sectionDic forKey:@(indexPath.section).stringValue];
             }
         }
-    };
-//    NSArray *indexArr = self.insertDic.allKeys;
-//    if ([indexArr containsObject:@(indexPath.row).stringValue]) {
-//        cell.cellDic =  self.insertDic[@(indexPath.row).stringValue] ;
-//    }else{
-//        cell.data = model;
-//        [cell loadContent];
-//    }
-
+        [weakSelf.tableView reloadRow:weakcell.indexPath.row inSection:weakcell.indexPath.section withRowAnimation:UITableViewRowAnimationNone];
+    }; 
+    //FIXME:----------------- cell 加载数据
     NSArray *sectionIndexArr = self.insertDic.allKeys;
-    if ([sectionIndexArr containsObject:@(indexPath.section).stringValue]) {
-        NSMutableDictionary *sectionDic = self.insertDic[@(indexPath.section).stringValue];
-        NSArray *rowIndexArr = sectionDic.allKeys;
-        if ([rowIndexArr containsObject:@(indexPath.row).stringValue]) {
-            cell.cellDic =  sectionDic[@(indexPath.row).stringValue] ;
-        }else{
-            cell.data = model;
-            [cell loadContent];
-        }
-    }else{
+    NSMutableDictionary *sectionDic = self.insertDic[@(indexPath.section).stringValue];
+    NSArray *rowIndexArr = sectionDic.allKeys;
+    if ([sectionIndexArr containsObject:@(indexPath.section).stringValue] && [rowIndexArr containsObject:@(indexPath.row).stringValue] ) {
+        cell.cellDic =  sectionDic[@(indexPath.row).stringValue] ;
+      }else{
         cell.data = model;
         [cell loadContent];
     }
-
     return cell;
 }
 
@@ -441,7 +438,7 @@
         return;
     }
     self.maxNumThis = maxNumThis;
-
+    
     //创建弹窗 对话框
     //    QMUIModalPresentationViewController *modalViewController = [[QMUIModalPresentationViewController alloc] init];
     QMUIDialogViewController *dialogViewController = [[QMUIDialogViewController alloc] init];
@@ -496,7 +493,6 @@
             [QMUITips showInfo:@"超出范围下限" inView:self.view hideAfterDelay:1.2];
         }else{
              cell.cellDic[@"QuantityThis"] = self.alertView.numTF.text.length==0?@"0":self.alertView.numTF.text;
-
         }
          cell.cellDic = cell.cellDic;
         //FIXME: 新建并存储 修改后的内容到更新数组
@@ -526,7 +522,6 @@
         //FIXME: 存储更改后的数据到 字典内 便于滑动时进行加载修改后的数据
         if (cell.savDataBlock) {
             cell.savDataBlock(cell.cellDic);
-            [self.tableView reloadRow:cell.indexPath.row inSection:cell.indexPath.section withRowAnimation:UITableViewRowAnimationNone];
         }
         [aDialogViewController hide];
     }];
