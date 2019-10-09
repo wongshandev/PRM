@@ -21,34 +21,33 @@
     self.navBar.hidden = NO;
     self.navBar.titleLabel.text = self.listModel.Name;
     
-//    Weak_Self;
-//    if (self.listModel.isCGFK) {
-//        [self.navBar.rightButton setTitle:@"同意" forState:UIControlStateNormal];
-//        self.navBar.rightButton.hidden = NO;
-//        [self.navBar.rightButton clickWithBlock:^{
-//            // 同意处理
-//            [weakSelf alertAgreeView];
-//        }];
-//    }else{
-//        if (((self.listModel.State == 2) && (self.listModel.ApprovalID == 0 || self.listModel.ApprovalID == self.eld))
-//            || ((self.listModel.State == 4) && (self.listModel.ManagerID == 0 || self.listModel.ManagerID == self.eld) && (self.eld != self.listModel.ApprovalID && self.eld != self.listModel.BossID))
-//            || ((self.listModel.State == 5) && (self.listModel.BossID == 0 || self.listModel.BossID == self.eld) && (self.eld != self.listModel.ApprovalID && self.eld != self.listModel.ManagerID))
-//            ){
-//            [self createSaveagreeBtn];
-//        }
-//    }
+    //    Weak_Self;
+    //    if (self.listModel.isCGFK) {
+    //        [self.navBar.rightButton setTitle:@"同意" forState:UIControlStateNormal];
+    //        self.navBar.rightButton.hidden = NO;
+    //        [self.navBar.rightButton clickWithBlock:^{
+    //            // 同意处理
+    //            [weakSelf alertAgreeView];
+    //        }];
+    //    }else{
+    //        if (((self.listModel.State == 2) && (self.listModel.ApprovalID == 0 || self.listModel.ApprovalID == self.eld))
+    //            || ((self.listModel.State == 4) && (self.listModel.ManagerID == 0 || self.listModel.ManagerID == self.eld) && (self.eld != self.listModel.ApprovalID && self.eld != self.listModel.BossID))
+    //            || ((self.listModel.State == 5) && (self.listModel.BossID == 0 || self.listModel.BossID == self.eld) && (self.eld != self.listModel.ApprovalID && self.eld != self.listModel.ManagerID))
+    //            ){
+    //            [self createSaveagreeBtn];
+    //        }
+    //    }
     [self createSaveagreeBtn];
 }
 -(void)createSaveagreeBtn{
-
-    CGFloat agreeBtnWidth =  self.listModel.isCGFK ? 45:
-    (((self.listModel.State == 2) && (self.listModel.ApprovalID == 0 || self.listModel.ApprovalID == self.eld))
-     || ((self.listModel.State == 4) && (self.listModel.ManagerID == 0 || self.listModel.ManagerID == self.eld) && (self.eld != self.listModel.ApprovalID && self.eld != self.listModel.BossID))
-     || ((self.listModel.State == 5) && (self.listModel.BossID == 0 || self.listModel.BossID == self.eld) && (self.eld != self.listModel.ApprovalID && self.eld != self.listModel.ManagerID))
-     )?45:0;
-
-    CGFloat rejectWidth =  self.listModel.isCGFK ? 0 : 45;
+    BOOL canEdit = (
+                        ((self.listModel.State == 2) && (self.listModel.ApprovalID == 0 || self.listModel.ApprovalID == self.eld))
+                      || ((self.listModel.State == 4) && (self.listModel.ManagerID == 0 || self.listModel.ManagerID == self.eld) && (self.eld != self.listModel.ApprovalID && self.eld != self.listModel.BossID))
+                      || ((self.listModel.State == 5) && (self.listModel.BossID == 0 || self.listModel.BossID == self.eld) && (self.eld != self.listModel.ApprovalID && self.eld != self.listModel.ManagerID))
+                      );
+    CGFloat agreeBtnWidth =  self.listModel.isCGFK ? 45:  canEdit ? 45:0;
     CGFloat waitPayWidth =  self.listModel.isCGFK ? 55 : 0;
+    CGFloat rejectWidth =  self.listModel.isCGFK ? 0 : canEdit ? 45:0;
     Weak_Self;
     QMUIButton *rejectBt = [QMUIButton  buttonWithType:UIButtonTypeCustom];
     [rejectBt setTitle:@"驳回" forState:UIControlStateNormal];
@@ -76,11 +75,11 @@
     [self.navBar addSubview:waitPayBtn];
     self.waitPayBtn = waitPayBtn;
     [self.waitPayBtn clickWithBlock:^{
-//        [weakSelf alertAgreeView];
-//        SJYAlertShow(@"确认待付款状态吗", @"确认");
+        //        [weakSelf alertAgreeView];
+        //        SJYAlertShow(@"确认待付款状态吗", @"确认");
         [weakSelf  alertWaitPayStateView];
     }];
-
+    
     [self.rejectBtn makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.navBar.mas_top).offset(NAVNOMARLHEIGHT-44);
         make.right.equalTo(self.navBar.mas_right).offset(-10);
@@ -100,7 +99,7 @@
         make.width.equalTo(waitPayWidth);
     }];
     [self.navBar.titleView mas_updateConstraints:^(MASConstraintMaker *make) {
-//        make.right.mas_equalTo(self.waitPayBtn.mas_left).offset(-SJYNUM(56));
+        //        make.right.mas_equalTo(self.waitPayBtn.mas_left).offset(-SJYNUM(56));
         make.right.mas_equalTo(self.navBar).offset(- (agreeBtnWidth + rejectWidth +waitPayWidth));
     }];
 }
@@ -199,7 +198,7 @@
         cell.indexPath = indexPath;
         cell.data = self.dataArray[indexPath.section][indexPath.row];
         [cell loadContent];
-        return cell; 
+        return cell;
     }else{
         CGFKDetialFootCell *cell = [CGFKDetialFootCell cellWithTableView:tableView];
         cell.indexPath = indexPath;
@@ -212,7 +211,7 @@
 -(void)alertWaitPayStateView{
     QMUIDialogViewController *dialogViewController = [[QMUIDialogViewController alloc] init];
     dialogViewController.title = @"提醒";
-
+    
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 45)];
     contentView.backgroundColor = UIColorWhite;
     QMUILabel *label = [[QMUILabel alloc] init];
@@ -229,20 +228,21 @@
     [dialogViewController addCancelButtonWithText:@"取消" block:nil];
     [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
         NSDictionary  *paradic =  @{
-                                                         @"PurchaseOrderID":self.listModel.Id,
-                                                         @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id,
-                                                         @"State":@"-1", //竞丰达同意为7 其他为5
-                                                         @"RejectReason":@""//(驳回时必要回传参数)
-                                                         };
+                                    @"PurchaseOrderID":self.listModel.Id,
+                                    @"Version":self.listModel.Version, 
+                                    @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id,
+                                    @"State":@"-1", //竞丰达同意为7 其他为5
+                                    @"RejectReason":@""//(驳回时必要回传参数)
+                                    };
         [SJYRequestTool requestCGFKAgreeReject:paradic  success:^(id responder) {
             [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
             if ([[responder valueForKey:@"success"] boolValue]== YES) {
                 if (self.listModel.isCGFK) {
                     [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshCGFKListView" object:nil];
                 }
-//                else{
-//                    [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshCGSHListView" object:nil];
-//                }
+                //                else{
+                //                    [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshCGSHListView" object:nil];
+                //                }
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     [self.navigationController popViewControllerAnimated:YES];
                 });
@@ -278,11 +278,13 @@
                                                          @"PurchaseOrderID":self.listModel.Id,
                                                          @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id,
                                                          @"State":@"7", //竞丰达同意为7 其他为5
+                                                         @"Version":self.listModel.Version,
                                                          @"RejectReason":@""//(驳回时必要回传参数)
                                                          }:@{
-                                                             @"PurchaseOrderID":self.listModel.Id, 
+                                                             @"PurchaseOrderID":self.listModel.Id,
                                                              @"AEmp":[[SJYUserManager sharedInstance].ucAemp  modelToJSONString],
                                                              @"State":@"6", //竞丰达同意为7 其他为5
+                                                             @"Version":self.listModel.Version,
                                                              @"RejectReason":@""//(驳回时必要回传参数)
                                                              };
         [SJYRequestTool requestCGFKAgreeReject:paradic  success:^(id responder) {
@@ -327,24 +329,26 @@
     [dialogViewController addCancelButtonWithText:@"取消" block:nil];
     [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
         [textView endEditing:YES];
-        NSString *content =  [textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]; 
+        NSString *content =  [textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
         if (content.length == 0) {
             [QMUITips showInfo:@"请输入驳回原因" inView:[UIApplication sharedApplication].keyWindow hideAfterDelay:1.2];
             return ;
         }
-        [SJYRequestTool requestCGFKAgreeReject:@{
-                                                 @"PurchaseOrderID":self.listModel.Id,
-                                                 @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id,
-                                                 @"State":@"3",
-                                                 @"RejectReason":content//(驳回时必要回传参数)
-                                                 } success:^(id responder) {
+        NSDictionary *paradic = @{
+                              @"PurchaseOrderID":self.listModel.Id,
+                              @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id,
+                              @"State":@"3",
+                              @"Version":self.listModel.Version,
+                              @"RejectReason":content//(驳回时必要回传参数)
+                              };
+        [SJYRequestTool requestCGFKAgreeReject:paradic success:^(id responder) {
                                                      [aDialogViewController hide];
                                                      [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
                                                      if ([[responder valueForKey:@"success"] boolValue]== YES) {
                                                          if (self.listModel.isCGFK) {
                                                              [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshCGFKListView" object:nil];
                                                          }else{
-                                                             [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshCGSHListView" object:nil]; 
+                                                             [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshCGSHListView" object:nil];
                                                          }
                                                          dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                                                              [self.navigationController popViewControllerAnimated:YES];

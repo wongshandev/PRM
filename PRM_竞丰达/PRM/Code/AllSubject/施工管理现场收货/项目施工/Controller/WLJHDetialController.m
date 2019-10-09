@@ -25,7 +25,7 @@
 @property(nonatomic,strong)NSMutableArray<NSMutableDictionary *> *savedArray;
 @property(nonatomic,assign)NSInteger maxNumThis;
 @property(nonatomic,strong)NSMutableDictionary <NSString *, NSMutableDictionary *>*insertDic;
-
+@property(nonatomic,copy)NSString *Version;
 @end
 
 @implementation WLJHDetialController
@@ -219,6 +219,7 @@
 -(void)request_WLJHDetialData{
     [SJYRequestTool requestWLJHDetialListWithProjectBranchID:self.projectBranchID MarketOrderID:self.marketOrderID success:^(id responder) {
         NSArray *rowsArr = [responder valueForKey:@"rows"];
+        self.Version = [responder valueForKey:@"Version"];
         if ([self.tableView.mj_header isRefreshing]) {
             [self.insertDic removeAllObjects];
             [self.dataArray removeAllObjects];
@@ -311,6 +312,7 @@
                               @"ProjectBranchID":self.projectBranchID,
                               @"OrderDate":self.datePickerBtn.currentTitle,
                               @"MarketOrderID":self.marketOrderID,
+                              @"Version":self.Version,
                               @"inserted":insertString,
                               @"updated":updateString
                               };
@@ -336,6 +338,7 @@
     NSDictionary *paraDic = @{
                               @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id,
                               @"State":@"2",
+                              @"Version":self.Version,
                               @"MarketOrderID":self.marketOrderID
                               };
     [QMUITips showLoading:@"数据传输中" inView:[UIApplication sharedApplication].keyWindow];

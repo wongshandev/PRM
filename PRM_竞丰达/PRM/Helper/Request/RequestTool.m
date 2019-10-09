@@ -163,7 +163,7 @@
                              @"rows":PageOfRows,
                              @"page":@(page),
                              @"EmployeeID":employID,
-                             @"AEmp":[[SJYUserManager sharedInstance].sjyloginUC   modelToJSONString],
+                             @"AEmp":[[SJYUserManager sharedInstance].ucAemp   modelToJSONString],
                              };
     NSLog(@"%@",API_XMQGList);
     NSLog(@"%@",params);
@@ -283,7 +283,7 @@
 +(void)requestSJSHListWithSearchStateID:(NSString *)searchStateID  SearchCode:(NSString *)searchCode SearchName:(NSString *)searchName page:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
     //竞丰达 增加AEmp字段
     NSDictionary *params = @{
-                             @"AEmp":[[SJYUserManager sharedInstance].sjyloginUC   modelToJSONString],
+                             @"AEmp":[[SJYUserManager sharedInstance].ucAemp   modelToJSONString],
                              @"rows":PageOfRows,
                              @"page":@(page),
                              @"SearchName":searchName,
@@ -301,7 +301,7 @@
 +(void)requestGCFPWithPage:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
     //竞丰达 增加AEmp字段
     NSDictionary *params = @{
-                             @"AEmp":[[SJYUserManager sharedInstance].sjyloginUC   modelToJSONString],
+                             @"AEmp": [[SJYUserManager sharedInstance].ucAemp modelToJSONString],
                              @"rows":PageOfRows,
                              @"page":@(page)
                              };

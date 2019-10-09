@@ -63,6 +63,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy  ) NSString * EoId2;
 @property (nonatomic, copy  ) NSString * EoId3;
 
+@property (nonatomic, copy  ) NSString * MaintId;
+@property (nonatomic, copy  ) NSString * MaintDpId;
+
 @end
 NS_ASSUME_NONNULL_END
 

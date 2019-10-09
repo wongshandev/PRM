@@ -524,7 +524,7 @@
                               @"EngineeringID":_EngineeringID,
                               @"ProjectBranchID":self.listModel.Id,
                               @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id,
-                              @"AEmp":[[SJYUserManager sharedInstance].sjyloginUC   modelToJSONString]
+                              @"AEmp":[[SJYUserManager sharedInstance].ucAemp   modelToJSONString]
                               };
     [SJYRequestTool requestGCFPSubmit:paraDic success:^(id responder) {
         if ([[responder valueForKey:@"success"] boolValue]== YES) {

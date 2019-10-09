@@ -192,13 +192,15 @@
     dialogViewController.contentView = contentView;
     [dialogViewController addCancelButtonWithText:@"取消" block:nil];
     [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
-        [SJYRequestTool requestSJSHWithAPI:API_SJSH_SH parameters:@{
-                                                                    @"AEmp":[[SJYUserManager sharedInstance].sjyloginUC   modelToJSONString],
-                                                                    @"DeepenDesignID":self.sjshListModel.Id,
-                                                                    @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id,
-                                                                    @"State":@"7",
-                                                                    @"InquiryId":[SJYUserManager sharedInstance].sjyloginUC.InquiryId//(驳回时必要回传参数)
-                                                                    } success:^(id responder) {
+        NSDictionary *paradic =@{
+                                 @"AEmp":[[SJYUserManager sharedInstance].ucAemp   modelToJSONString],
+                                 @"DeepenDesignID":self.sjshListModel.Id,
+                                 @"Version":self.sjshListModel.Version,
+                                 @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id,
+                                 @"State":@"7",
+                                 @"InquiryId":[SJYUserManager sharedInstance].sjyloginUC.InquiryId//(驳回时必要回传参数)
+                                 };
+        [SJYRequestTool requestSJSHWithAPI:API_SJSH_SH parameters:paradic success:^(id responder) {
                                                                         [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
                                                                         if ([[responder valueForKey:@"success"] boolValue]== YES) {
                                                                             [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshSJSHListView" object:nil];
@@ -290,13 +292,15 @@
             [QMUITips showInfo:@"请输入驳回理由" inView:[UIApplication sharedApplication].keyWindow hideAfterDelay:1.2];
             return ;
         }
-        [SJYRequestTool requestSJSHWithAPI:API_SJSH_SH parameters:@{
-                                                                    @"AEmp":[[SJYUserManager sharedInstance].sjyloginUC   modelToJSONString],
-                                                                    @"DeepenDesignID":self.sjshListModel.Id,
-                                                                    @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id,
-                                                                    @"State":[typeBtn.currentTitle isEqualToString:@"合同"]?@"0":@"3",
-                                                                    @"RejectReason":content//(驳回时必要回传参数)
-                                                                    } success:^(id responder) {
+        NSDictionary *paradic =@{
+                                 @"AEmp":[[SJYUserManager sharedInstance].ucAemp   modelToJSONString],
+                                 @"DeepenDesignID":self.sjshListModel.Id,
+                                 @"Version":self.sjshListModel.Version,
+                                 @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id,
+                                 @"State":[typeBtn.currentTitle isEqualToString:@"合同"]?@"0":@"3",
+                                 @"RejectReason":content//(驳回时必要回传参数)
+                                 };
+        [SJYRequestTool requestSJSHWithAPI:API_SJSH_SH parameters:paradic success:^(id responder) {
                                                                         [aDialogViewController hide];
                                                                         [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
                                                                         if ([[responder valueForKey:@"success"] boolValue]== YES) {
@@ -346,7 +350,7 @@
         [aDialogViewController.view endEditing:YES];
         [QMUITips showLoading:@"数据传输中" inView:[UIApplication sharedApplication].keyWindow];
         [SJYRequestTool requestSJSHWithAPI:API_SJSH_YH parameters:@{
-                                                                    @"AEmp":[[SJYUserManager sharedInstance].sjyloginUC   modelToJSONString],
+                                                                    @"AEmp":[[SJYUserManager sharedInstance].ucAemp   modelToJSONString],
                                                                     @"DeepenDesignID":self.sjshListModel.Id,
                                                                     @"FinalAmount":aDialogViewController.textFields.firstObject.text//(驳回时必要回传参数)
                                                                     } success:^(id responder) {

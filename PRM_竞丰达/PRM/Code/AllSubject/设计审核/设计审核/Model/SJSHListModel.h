@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface SJSHListModel : EngineeringModel
 @property(nonatomic,copy)NSString *State;
 @property(nonatomic,copy)NSString *Address;
+@property(nonatomic,copy)NSString *Version;
 
 @property(nonatomic,assign)BOOL isCanSH;
 @property(nonatomic,assign)BOOL showYHBtn;

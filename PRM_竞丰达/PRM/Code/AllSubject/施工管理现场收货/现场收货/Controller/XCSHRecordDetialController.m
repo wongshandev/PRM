@@ -134,6 +134,7 @@
         NSString *updateString = [self.updateArray modelToJSONString];
         NSDictionary *  paraDic = @{
                                     @"EmployeeID":KEmployID,
+                                    @"Version":self.recordModel.Version,
                                     @"SiteState":self.recordModel.SiteState,
                                     @"RealID":self.recordModel.RealID,
                                     @"updated":updateString

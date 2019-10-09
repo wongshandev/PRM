@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *SupplierName;
 @property (nonatomic, copy) NSString *AgreementPrice;
 @property (nonatomic, copy) NSString *PlaceReceipt;
+@property (nonatomic, copy) NSString *Version;
 
 
 @property (nonatomic, assign) NSInteger ApprovalID;

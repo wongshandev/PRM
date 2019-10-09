@@ -19,6 +19,7 @@
 @property (nonatomic, copy) NSString *StateName;
 @property (nonatomic, copy) NSString *Employee;
 @property (nonatomic, copy) NSString *SiteState;
+@property (nonatomic, copy) NSString *Version;
 
 
 @property (nonatomic, copy) NSString *titleName;

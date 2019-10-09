@@ -135,9 +135,9 @@
     WLJHListModel *model = [self.dataArray objectAtIndex:indexPath.row];
     WLJHDetialController *detialVC =  [[WLJHDetialController alloc] init];
     detialVC.title= @"物料详情";
-    if (self.dState.integerValue >= 7 && (model.State.integerValue == 3 || model.State.integerValue ==1)) {
-        detialVC.title = @"修改物料详情";
-    }
+//    if (self.dState.integerValue >= 7 && (model.State.integerValue == 3 || model.State.integerValue ==1)) {
+//        detialVC.title = @"修改物料详情";
+//    }
     detialVC.dState = self.dState;
     detialVC.marketOrderID = model.Id;
     detialVC.projectBranchID = self.engineerModel.Id;
