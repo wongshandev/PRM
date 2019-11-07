@@ -89,25 +89,25 @@
 #pragma mark -----------------------------进度汇报列表
 -(void)requestData_JDHB{
     [SJYRequestTool requestJDHBListWithProjectBranchID: self.engineerModel.Id success:^(id responder) {
-        NSArray *rowsArr = [responder objectForKey:@"rows"];
-        if ([self.tableView.mj_header isRefreshing]) {
-            [self.dataArray removeAllObjects];
-            [self.insertDic removeAllObjects];
-            [self.updateArray removeAllObjects];
-        }
-        
-        for (NSDictionary *dic in rowsArr) {
-            JDHBListModel *model = [JDHBListModel  modelWithDictionary:dic];
-            model.titleStr =  model.ChildName.length==0?model.Name:[model.Name stringByAppendingFormat:@" (%@)",model.ChildName];
-            [self.dataArray addObject:model];
-        }
         dispatch_async(dispatch_get_main_queue(), ^{
+            NSArray *rowsArr = [responder objectForKey:@"rows"];
+            if ([self.tableView.mj_header isRefreshing]) {
+                [self.dataArray removeAllObjects];
+                [self.insertDic removeAllObjects];
+                [self.updateArray removeAllObjects];
+            }
+            
+            for (NSDictionary *dic in rowsArr) {
+                JDHBListModel *model = [JDHBListModel  modelWithDictionary:dic];
+                model.titleStr =  model.ChildName.length==0?model.Name:[model.Name stringByAppendingFormat:@" (%@)",model.ChildName];
+                [self.dataArray addObject:model];
+            }
             [self.tableView reloadData];
             [self endRefreshWithError:NO];
         });
     } failure:^(int status, NSString *info) {
-        [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
         dispatch_async(dispatch_get_main_queue(), ^{
+            [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
             [self.tableView reloadData];
             [self endRefreshWithError:YES];
         });
@@ -119,19 +119,23 @@
         [QMUITips showInfo:@"无数据需要提交" inView:self.view hideAfterDelay:1.2];
         return ;
     }
-
+    
     NSString *jsonStr = [self.updateArray modelToJSONString];
     [QMUITips showLoading:@"数据传输中" inView:[UIApplication sharedApplication].keyWindow];
     [SJYRequestTool requestJDHBUpdateWithEmployeeID:[SJYUserManager sharedInstance].sjyloginUC.Id updated:jsonStr success:^(id responder) {
-        [QMUITips hideAllTips];
-        [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
-        if ([[responder valueForKey:@"success"] boolValue]== YES) {
-            [self.updateArray removeAllObjects];
-            [self.tableView.mj_header beginRefreshing];
-        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [QMUITips hideAllTips];
+            [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
+            if ([[responder valueForKey:@"success"] boolValue]== YES) {
+                [self.updateArray removeAllObjects];
+                [self.tableView.mj_header beginRefreshing];
+            }
+        });
     } failure:^(int status, NSString *info) {
-        [QMUITips hideAllTips];
-        [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [QMUITips hideAllTips];
+            [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
+        });
     }];
 }
 -(void)update_JDHBDataForParentVC{
@@ -139,21 +143,25 @@
         [QMUITips showInfo:@"无数据需要提交" inView:self.view hideAfterDelay:1.2];
         return ;
     }
-
+    
     NSString *jsonStr = [self.updateArray modelToJSONString];
     [QMUITips showLoading:@"数据传输中" inView:[UIApplication sharedApplication].keyWindow];
     [SJYRequestTool requestJDHBUpdateWithEmployeeID:[SJYUserManager sharedInstance].sjyloginUC.Id updated:jsonStr success:^(id responder) {
-        [QMUITips hideAllTips];
-        [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
-        if ([[responder valueForKey:@"success"] boolValue]== YES) {
-            [self.updateArray removeAllObjects];
-            dispatch_after(1.2, dispatch_get_main_queue(), ^{
-                [self.parentViewController.navigationController popViewControllerAnimated:YES];
-            });
-        }
-    } failure:^(int status, NSString *info) {
-        [QMUITips hideAllTips];
-        [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [QMUITips hideAllTips];
+            [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
+            if ([[responder valueForKey:@"success"] boolValue]== YES) {
+                [self.updateArray removeAllObjects];
+                dispatch_after(1.2, dispatch_get_main_queue(), ^{
+                    [self.parentViewController.navigationController popViewControllerAnimated:YES];
+                });
+            }
+        });
+    } failure:^(int status, NSString *info) { 
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [QMUITips hideAllTips];
+            [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
+        });
     }];
 }
 -(void)endRefreshWithError:(BOOL)havError{
@@ -213,22 +221,22 @@
     dialogViewController.headerViewHeight = 40;
     dialogViewController.headerSeparatorColor = UIColorWhite;
     dialogViewController.headerViewBackgroundColor = UIColorWhite;
-
+    
     //对话框的view 即 自定义内容页
     self.alertView = [[NumTFBZTVAlertView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_W -20 *2, 180)];
     self.alertView.backgroundColor = UIColorWhite;
-
+    
     self.alertView.numMentionLab.text = [NSString stringWithFormat:@"可输入范围: %@ ~ 100",model.CompletionRate];
     //TextField 配置
     self.alertView.numTF.delegate = self;
     self.alertView.numTF.placeholder =@"请输入进度";
     self.alertView.numTF.text = [cell.cellDic[@"CompletionRate"] integerValue] == 0 ?@"": cell.cellDic[@"CompletionRate"];
-
+    
     [self.alertView.numTF addTarget:self action:@selector(alert_TextFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
     //textView 配置
     self.alertView.BZTV.delegate = self;
     self.alertView.BZTV.text = cell.cellDic[@"Remark"];
-
+    
     //内容页子控件  布局处理
     [self.alertView.numMentionLab makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.alertView.mas_top).mas_offset(NumTFPading);
@@ -260,10 +268,10 @@
         make.right.mas_equalTo(self.alertView.numTF.mas_right);
         make.bottom.mas_equalTo(self.alertView.mas_bottom).offset(-NumTFPading);
     }];
-
+    
     //    Weak_Self;
     dialogViewController.contentView = self.alertView;
-
+    
     [dialogViewController addCancelButtonWithText:@"取消" block:^(__kindof QMUIDialogViewController *aDialogViewController) {
     }];
     [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
@@ -283,14 +291,14 @@
         
         //FIXME: 新建并存储 修改后的内容到更新数组
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Id == %@", model.Id];
-        NSMutableDictionary *havDic = [self.updateArray filteredArrayUsingPredicate:predicate].firstObject; 
+        NSMutableDictionary *havDic = [self.updateArray filteredArrayUsingPredicate:predicate].firstObject;
         if (![cell.cellDic[@"CompletionRate"] isEqualToString:model.CompletionRate] || ![cell.cellDic[@"Remark"] isEqualToString:model.Remark]) {
             //数据处理 添加进入数组
             NSMutableDictionary *currentDic= [NSMutableDictionary dictionary];
             [currentDic setValue:cell.cellDic[@"CompletionRate"] forKey:@"CompletionRate"];
             [currentDic setValue:cell.cellDic[@"Remark"] forKey:@"Remark"];
             [currentDic setValue:model.Id forKey:@"Id"];
-
+            
             if (havDic) {
                 if (![[havDic valueForKey:@"Remark"] isEqualToString:[currentDic valueForKey:@"Remark"]] || ![[havDic valueForKey:@"CompletionRate"] isEqualToString:[currentDic valueForKey:@"CompletionRate"]]) {
                     [havDic setValue:cell.cellDic[@"CompletionRate"] forKey:@"CompletionRate"];

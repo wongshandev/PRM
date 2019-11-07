@@ -7,7 +7,7 @@
 //
 
 #import "DXBaseCell.h"
-#import "XMQGDetialModel.h"
+#import "XMQGDetialFrame.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

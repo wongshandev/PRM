@@ -43,7 +43,7 @@
 }
 
 -(void)setUpNavigationBar{
-//    self.navBar.backButton.hidden = NO;
+    //    self.navBar.backButton.hidden = NO;
     self.navBar.titleLabel.text = self.title;
     Weak_Self;
     [self.navBar.backButton clickWithBlock:^{
@@ -78,15 +78,15 @@
     self.sectionArray = [NSMutableArray new];
     
     
-
+    
     Weak_Self;
-//    self.tableView.mj_header =[MJRefreshNormalHeader headerWithRefreshingBlock:^{
-//        [weakSelf  request_WLJHDetialData];
-//    }];
-//    [self.tableView.mj_header beginRefreshing];
-//    self.tableView.refreshBlock = ^{
-//        [weakSelf.tableView.mj_header beginRefreshing];
-//    };
+    //    self.tableView.mj_header =[MJRefreshNormalHeader headerWithRefreshingBlock:^{
+    //        [weakSelf  request_WLJHDetialData];
+    //    }];
+    //    [self.tableView.mj_header beginRefreshing];
+    //    self.tableView.refreshBlock = ^{
+    //        [weakSelf.tableView.mj_header beginRefreshing];
+    //    };
     
     [self  request_WLJHDetialData];
     self.tableView.refreshBlock = ^{
@@ -147,7 +147,7 @@
     [dateBtn setTitleColor:Color_TEXT_NOMARL forState:UIControlStateDisabled];
     [dateBtn setImage:[SJYCommonImage(@"enterRight") imageByTintColor:Color_TEXT_HIGH] forState:UIControlStateNormal];
     [dateBtn setImage:[SJYCommonImage(@"enterRight") imageByTintColor:Color_TEXT_NOMARL] forState:UIControlStateDisabled];
-
+    
     [dateBtn setTitle:self.wlListModel.OrderDate forState:UIControlStateNormal];
     dateBtn.spacingBetweenImageAndTitle =  10;
     dateBtn.contentHorizontalAlignment =  UIControlContentHorizontalAlignmentRight;
@@ -218,47 +218,47 @@
 #pragma mark ======================= 数据绑定 
 -(void)request_WLJHDetialData{
     [SJYRequestTool requestWLJHDetialListWithProjectBranchID:self.projectBranchID MarketOrderID:self.marketOrderID success:^(id responder) {
-        NSArray *rowsArr = [responder valueForKey:@"rows"];
-        self.Version = [responder valueForKey:@"Version"];
-        if ([self.tableView.mj_header isRefreshing]) {
-            [self.insertDic removeAllObjects];
-            [self.dataArray removeAllObjects];
-            [self.sectionArray removeAllObjects];
-            [self.savedArray removeAllObjects];
-        }
-        NSMutableArray *cellsArr = [NSMutableArray new];
-        for (NSDictionary *dic in rowsArr) {
-            WLJHDetialModel *model = [ WLJHDetialModel  modelWithDictionary:dic];
-             NSString *titStr = model.Model.length!=0?[model.Name stringByAppendingFormat:@"(%@)",model.Model]:model.Name;
-            model.titleStr =  model.Unit.length!=0?[titStr stringByAppendingFormat:@"(%@)",model.Unit]:titStr;
-            if ([[dic valueForKey:@"_parentId"]integerValue] == 0) {
-                [self.sectionArray addObject:model];
-            }else{
-                [cellsArr addObject:model];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSArray *rowsArr = [responder valueForKey:@"rows"];
+            self.Version = [responder valueForKey:@"Version"];
+            if ([self.tableView.mj_header isRefreshing]) {
+                [self.insertDic removeAllObjects];
+                [self.dataArray removeAllObjects];
+                [self.sectionArray removeAllObjects];
+                [self.savedArray removeAllObjects];
             }
-        }
-        for (NSInteger i = 0; i < self.sectionArray.count; i ++ ) {
-            WLJHDetialModel *sectionModel = self.sectionArray[i];
-            NSMutableArray *sectionArr = [NSMutableArray new];
-            for (NSInteger j = 0; j < cellsArr.count; j++) {
-                WLJHDetialModel *cellModel = cellsArr[j];
-                if (sectionModel.Id.integerValue == cellModel._parentId.integerValue) {
-                    if(cellModel.QuantityPurchased.integerValue<0){
-                        cellModel.QuantityPurchased = @"0";
-                    }
-                    [sectionArr addObject:cellModel];
+            NSMutableArray *cellsArr = [NSMutableArray new];
+            for (NSDictionary *dic in rowsArr) {
+                WLJHDetialModel *model = [ WLJHDetialModel  modelWithDictionary:dic];
+                NSString *titStr = model.Model.length!=0?[model.Name stringByAppendingFormat:@"(%@)",model.Model]:model.Name;
+                model.titleStr =  model.Unit.length!=0?[titStr stringByAppendingFormat:@"(%@)",model.Unit]:titStr;
+                if ([[dic valueForKey:@"_parentId"]integerValue] == 0) {
+                    [self.sectionArray addObject:model];
+                }else{
+                    [cellsArr addObject:model];
                 }
             }
-            [self.dataArray addObject:sectionArr];
-        }
-        dispatch_async(dispatch_get_main_queue(), ^{
+            for (NSInteger i = 0; i < self.sectionArray.count; i ++ ) {
+                WLJHDetialModel *sectionModel = self.sectionArray[i];
+                NSMutableArray *sectionArr = [NSMutableArray new];
+                for (NSInteger j = 0; j < cellsArr.count; j++) {
+                    WLJHDetialModel *cellModel = cellsArr[j];
+                    if (sectionModel.Id.integerValue == cellModel._parentId.integerValue) {
+                        if(cellModel.QuantityPurchased.integerValue<0){
+                            cellModel.QuantityPurchased = @"0";
+                        }
+                        [sectionArr addObject:cellModel];
+                    }
+                }
+                [self.dataArray addObject:sectionArr];
+            }
             [self.tableView reloadData];
             [self endRefreshWithError:NO];
         });
         
     } failure:^(int status, NSString *info) {
-        [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
         dispatch_async(dispatch_get_main_queue(), ^{
+            [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
             [self.tableView reloadData];
             [self endRefreshWithError:YES];
         });
@@ -266,8 +266,8 @@
 }
 
 -(void)endRefreshWithError:(BOOL)havError{
-//    [self.tableView.mj_header endRefreshing];
-//    [self.tableView.mj_footer endRefreshing];
+    //    [self.tableView.mj_header endRefreshing];
+    //    [self.tableView.mj_footer endRefreshing];
     if (self.dataArray.count == 0) {
         self.tableView.customImg = !havError ? [UIImage imageNamed:@"empty"]:SJYCommonImage(@"daoda");
         self.tableView.customMsg = !havError? @"没有数据了,休息下吧":@"网络错误,请检查网络后重试";
@@ -308,55 +308,63 @@
     NSString *updateString = [updateArr modelToJSONString];
     
     NSDictionary *paraDic = @{
-                              @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id,
-                              @"ProjectBranchID":self.projectBranchID,
-                              @"OrderDate":self.datePickerBtn.currentTitle,
-                              @"MarketOrderID":self.marketOrderID,
-                              @"Version":self.Version,
-                              @"inserted":insertString,
-                              @"updated":updateString
-                              };
+        @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id,
+        @"ProjectBranchID":self.projectBranchID,
+        @"OrderDate":self.datePickerBtn.currentTitle,
+        @"MarketOrderID":self.marketOrderID,
+        @"Version":self.Version,
+        @"inserted":insertString,
+        @"updated":updateString
+    };
     [QMUITips showLoading:@"数据传输中" inView:[UIApplication sharedApplication].keyWindow];
     [SJYRequestTool requestWLJHDetialSaveWithParam:paraDic success:^(id responder) {
-        [QMUITips hideAllTips];
-        if ([[responder valueForKey:@"success"] boolValue]== YES) {
-            [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshListView" object:nil];
-            [self.savedArray removeAllObjects];
-            [QMUITips showSucceed:@"保存成功" inView:self.view hideAfterDelay:1.2];
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self.navigationController popViewControllerAnimated:YES];
-            });
-        }else{
-            [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
-        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [QMUITips hideAllTips];
+            if ([[responder valueForKey:@"success"] boolValue]== YES) {
+                [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshListView" object:nil];
+                [self.savedArray removeAllObjects];
+                [QMUITips showSucceed:@"保存成功" inView:self.view hideAfterDelay:1.2];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self.navigationController popViewControllerAnimated:YES];
+                });
+            }else{
+                [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
+            }
+        });
     } failure:^(int status, NSString *info) {
-        [QMUITips hideAllTips];
-        [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [QMUITips hideAllTips];
+            [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
+        });
     }];
 }
 -(void)submit_WLJHData{
     NSDictionary *paraDic = @{
-                              @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id,
-                              @"State":@"2",
-                              @"Version":self.Version,
-                              @"MarketOrderID":self.marketOrderID
-                              };
+        @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id,
+        @"State":@"2",
+        @"Version":self.Version,
+        @"MarketOrderID":self.marketOrderID
+    };
     [QMUITips showLoading:@"数据传输中" inView:[UIApplication sharedApplication].keyWindow];
     [SJYRequestTool requestWLJHDetialSubmitWithParam:paraDic success:^(id responder) {
-        [QMUITips hideAllTips];
-        if ([[responder valueForKey:@"success"] boolValue]== YES) {
-            [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshListView" object:nil];
-            [self.savedArray removeAllObjects];
-            [QMUITips showSucceed:@"提交成功" inView:self.view hideAfterDelay:1.2];
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self.navigationController popViewControllerAnimated:YES];
-            });
-        }else{
-            [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
-        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [QMUITips hideAllTips];
+            if ([[responder valueForKey:@"success"] boolValue]== YES) {
+                [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshListView" object:nil];
+                [self.savedArray removeAllObjects];
+                [QMUITips showSucceed:@"提交成功" inView:self.view hideAfterDelay:1.2];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self.navigationController popViewControllerAnimated:YES];
+                });
+            }else{
+                [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
+            }
+        });
     } failure:^(int status, NSString *info) {
-        [QMUITips hideAllTips];
-        [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [QMUITips hideAllTips];
+            [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
+        });
     }];
 }
 
@@ -395,8 +403,8 @@
     //FIXME:----------------- 存储修改后的数据并刷新
     Weak_Self;
     kWeakSelf(cell);
-     cell.savDataBlock = ^(NSMutableDictionary * cellDic) {
-         NSMutableDictionary *sectionDic = weakSelf.insertDic[@(indexPath.section).stringValue];
+    cell.savDataBlock = ^(NSMutableDictionary * cellDic) {
+        NSMutableDictionary *sectionDic = weakSelf.insertDic[@(indexPath.section).stringValue];
         if (![cellDic[@"QuantityThis"] isEqualToString:model.QuantityThis]) {
             if (sectionDic != nil) {
                 [sectionDic setValue:cellDic forKey:@(indexPath.row).stringValue];
@@ -414,7 +422,7 @@
     NSArray *rowIndexArr = sectionDic.allKeys;
     if ([sectionIndexArr containsObject:@(indexPath.section).stringValue] && [rowIndexArr containsObject:@(indexPath.row).stringValue] ) {
         cell.cellDic =  sectionDic[@(indexPath.row).stringValue] ;
-      }else{
+    }else{
         cell.data = model;
         [cell loadContent];
     }
@@ -449,25 +457,25 @@
     dialogViewController.headerViewHeight = 40;
     dialogViewController.headerSeparatorColor = UIColorWhite;
     dialogViewController.headerViewBackgroundColor = UIColorWhite;
-
+    
     //对话框的view 即 自定义内容页
     self.alertView = [[NumTFBZTVAlertView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_W -20 *2, 90)];
     self.alertView.backgroundColor = UIColorWhite;
     self.alertView.sepLine.backgroundColor = Color_NavigationLightBlue;
-
+    
     self.alertView.numMentionLab.text = messageStr;
     //TextField 配置
     self.alertView.numTF.delegate = self;
     self.alertView.numTF.placeholder =@"请输入申请数量";
     self.alertView.numTF.text = [cell.cellDic[@"QuantityThis"] integerValue] == 0?@"": cell.cellDic[@"QuantityThis"];
-      [self.alertView.numTF addTarget:self action:@selector(alert_TextFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
-
+    [self.alertView.numTF addTarget:self action:@selector(alert_TextFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
+    
     //内容页子控件  布局处理
     [self.alertView.numMentionLab makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.alertView.mas_top).mas_offset(NumTFPading);
         make.left.mas_equalTo(self.alertView.mas_left).mas_offset(NumTFMargin);
         make.right.mas_equalTo(self.alertView.mas_right).mas_offset(-NumTFMargin);
-     }];
+    }];
     [self.alertView.numTF makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.alertView.numMentionLab.mas_bottom).mas_offset(NumTFPading);
         make.left.mas_equalTo(self.alertView.mas_left).mas_offset(NumTFMargin);
@@ -481,23 +489,23 @@
         make.height.mas_equalTo(2);
         make.bottom.mas_equalTo(self.alertView.mas_bottom).offset(-NumTFPading);
     }]; 
-//    Weak_Self;
+    //    Weak_Self;
     dialogViewController.contentView = self.alertView;
-
+    
     [dialogViewController addCancelButtonWithText:@"取消" block:^(__kindof QMUIDialogViewController *aDialogViewController) {
     }];
     [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
         [self.alertView.numTF endEditing:YES];
         if ([self.alertView.numTF.text integerValue] > maxNum.integerValue ) {
-             cell.cellDic[@"QuantityThis"] = maxNum;
+            cell.cellDic[@"QuantityThis"] = maxNum;
             [QMUITips showInfo:@"超出范围上限" inView:self.view hideAfterDelay:1.2];
         }else if([self.alertView.numTF.text integerValue] < 0){
-             cell.cellDic[@"QuantityThis"] = @"0";
+            cell.cellDic[@"QuantityThis"] = @"0";
             [QMUITips showInfo:@"超出范围下限" inView:self.view hideAfterDelay:1.2];
         }else{
-             cell.cellDic[@"QuantityThis"] = self.alertView.numTF.text.length==0?@"0":self.alertView.numTF.text;
+            cell.cellDic[@"QuantityThis"] = self.alertView.numTF.text.length==0?@"0":self.alertView.numTF.text;
         }
-         cell.cellDic = cell.cellDic;
+        cell.cellDic = cell.cellDic;
         //FIXME: 新建并存储 修改后的内容到更新数组
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Id == %@", model.Id];
         NSMutableDictionary *havDic = [self.savedArray filteredArrayUsingPredicate:predicate].firstObject;
@@ -508,7 +516,7 @@
             [currentDic setValue:cell.cellDic[@"BOMID"] forKey:@"BOMID"];
             [currentDic setValue:cell.cellDic[@"ModId"] forKey:@"ModId"];
             [currentDic setValue:cell.cellDic[@"Id"] forKey:@"Id"];
-
+            
             if (havDic) {
                 if (![[havDic valueForKey:@"QuantityThis"] isEqualToString:[currentDic valueForKey:@"QuantityThis"]]) {
                     [havDic setValue:cell.cellDic[@"QuantityThis"] forKey:@"QuantityThis"];

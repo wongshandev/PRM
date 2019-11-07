@@ -17,14 +17,14 @@
 
     self.textField = [[QMUITextField alloc]init];
     self.textField.maximumTextLength = 16;
-    self.textField.placeholder = @"0.00";
-      self.textField.textAlignment = NSTextAlignmentRight;
+//    self.textField.placeholder = @"请输入";
+    self.textField.textAlignment = NSTextAlignmentRight;
     self.textField.keyboardType = UIKeyboardTypeDecimalPad;
     self.textField.returnKeyType = UIReturnKeyDone;
     [self.contentView addSubview:self.textField];
     [self.textField mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.textLabel);
-        make.right.equalTo(self.contentView).offset(-15);
+        make.right.equalTo(self.contentView).offset(-10);
         make.left.equalTo(self.textLabel.mas_right);
     }];
     self.textLabel.font = Font_ListTitle;

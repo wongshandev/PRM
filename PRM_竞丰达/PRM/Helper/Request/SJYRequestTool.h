@@ -61,6 +61,7 @@ typedef void (^Failure)(int status,NSString *info);
 
 #pragma mark ============== 项目请购
 +(void)requestXMQGList:(NSString *)employID  page:(NSInteger)page success:(Success)success failure:(Failure)failure;
++(void)requestXMQGWithMarketOrderID:(NSString *)marketOrderID projectBranchCode:(NSString *)projectBranchCode success:(Success)success failure:(Failure)failure;
 +(void)requestXMQGWithMarketOrderID:(NSString *)marketOrderID success:(Success)success failure:(Failure)failure;
 +(void)requestXMQGApprovelWithParam:(NSDictionary *)paramDic success:(Success)success failure:(Failure)failure;
 #pragma mark ============== 项目变更

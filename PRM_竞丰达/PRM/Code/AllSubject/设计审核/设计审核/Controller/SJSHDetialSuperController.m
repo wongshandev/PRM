@@ -31,7 +31,7 @@
     self.navBar.titleLabel.text = self.title;
     self.bjqdZJ = @"";
     self.bjqdYHJG = @"";
-
+    
     [self createSaveagreeBtn];
 }
 
@@ -67,7 +67,7 @@
     [self.yhBtn clickWithBlock:^{
         [weakSelf alertYouHuiView];
     }];
-
+    
     [self.rejectBtn makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.navBar.mas_top).offset(NAVNOMARLHEIGHT-44);
         make.right.equalTo(self.navBar.mas_right).offset(-10);
@@ -80,18 +80,18 @@
         make.height.equalTo(44);
         make.width.equalTo(submitWidth);
     }];
-
+    
     [self.yhBtn makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.navBar.mas_top).offset(NAVNOMARLHEIGHT-44);
         make.right.equalTo(self.agreeBtn.mas_left);
         make.height.equalTo(44);
         make.width.equalTo(yhBtnWidth);
     }];
-
+    
     [self.navBar.titleView mas_updateConstraints:^(MASConstraintMaker *make) {
         //        make.right.mas_equalTo(self.navBar.rightButton.mas_left).offset(-SJYNUM(56));
         make.right.mas_equalTo(self.navBar).offset(- (submitWidth + submitWidth +yhBtnWidth +15));
-
+        
     }];
 }
 -(void)buildSubviews{
@@ -193,24 +193,29 @@
     [dialogViewController addCancelButtonWithText:@"取消" block:nil];
     [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
         NSDictionary *paradic =@{
-                                 @"AEmp":[[SJYUserManager sharedInstance].ucAemp   modelToJSONString],
-                                 @"DeepenDesignID":self.sjshListModel.Id,
-                                 @"Version":self.sjshListModel.Version,
-                                 @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id,
-                                 @"State":@"7",
-                                 @"InquiryId":[SJYUserManager sharedInstance].sjyloginUC.InquiryId//(驳回时必要回传参数)
-                                 };
+            @"AEmp":[[SJYUserManager sharedInstance].ucAemp   modelToJSONString],
+            @"DeepenDesignID":self.sjshListModel.Id,
+            @"Version":self.sjshListModel.Version,
+            @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id,
+            @"State":@"7",
+            @"InquiryId":[SJYUserManager sharedInstance].sjyloginUC.InquiryId//(驳回时必要回传参数)
+        };
         [SJYRequestTool requestSJSHWithAPI:API_SJSH_SH parameters:paradic success:^(id responder) {
-                                                                        [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
-                                                                        if ([[responder valueForKey:@"success"] boolValue]== YES) {
-                                                                            [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshSJSHListView" object:nil];
-                                                                            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                                                                [self.navigationController popViewControllerAnimated:YES];
-                                                                            });
-                                                                        }
-                                                                    } failure:^(int status, NSString *info) {
-                                                                        [QMUITips showError:info inView:self.view hideAfterDelay:1.2];
-                                                                    }];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
+                if ([[responder valueForKey:@"success"] boolValue]== YES) {
+                    [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshSJSHListView" object:nil];
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [self.navigationController popViewControllerAnimated:YES];
+                    });
+                }
+            });
+        } failure:^(int status, NSString *info) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [QMUITips showError:info inView:self.view hideAfterDelay:1.2];
+            });
+        }];
         
         [aDialogViewController hide];
     }];
@@ -251,7 +256,7 @@
     textView.maximumTextLength = 64;
     textView.maximumHeight = 90;
     textView.placeholder = @"请输入(限32字)";
-
+    
     [typeBtn clickWithBlock:^{
         [textView endEditing:YES];
         [BRStringPickerView showStringPickerWithTitle:@"驳回至" dataSource:@[@"合同",@"深化设计"] defaultSelValue:typeBtn.currentTitle isAutoSelect:NO themeColor:Color_NavigationLightBlue resultBlock:^(id selectValue) {
@@ -293,28 +298,31 @@
             return ;
         }
         NSDictionary *paradic =@{
-                                 @"AEmp":[[SJYUserManager sharedInstance].ucAemp   modelToJSONString],
-                                 @"DeepenDesignID":self.sjshListModel.Id,
-                                 @"Version":self.sjshListModel.Version,
-                                 @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id,
-                                 @"State":[typeBtn.currentTitle isEqualToString:@"合同"]?@"0":@"3",
-                                 @"RejectReason":content//(驳回时必要回传参数)
-                                 };
+            @"AEmp":[[SJYUserManager sharedInstance].ucAemp   modelToJSONString],
+            @"DeepenDesignID":self.sjshListModel.Id,
+            @"Version":self.sjshListModel.Version,
+            @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id,
+            @"State":[typeBtn.currentTitle isEqualToString:@"合同"]?@"0":@"3",
+            @"RejectReason":content//(驳回时必要回传参数)
+        };
         [SJYRequestTool requestSJSHWithAPI:API_SJSH_SH parameters:paradic success:^(id responder) {
-                                                                        [aDialogViewController hide];
-                                                                        [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
-                                                                        if ([[responder valueForKey:@"success"] boolValue]== YES) {
-                                                                            [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshSJSHListView" object:nil];
-                                                                            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                                                                [self.navigationController popViewControllerAnimated:YES];
-                                                                            });
-                                                                        }
-                                                                        
-                                                                    } failure:^(int status, NSString *info) {
-                                                                        [QMUITips showError:info inView:self.view hideAfterDelay:1.2];
-                                                                        [aDialogViewController hide];
-                                                                        
-                                                                    }];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [aDialogViewController hide];
+                [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
+                if ([[responder valueForKey:@"success"] boolValue]== YES) {
+                    [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshSJSHListView" object:nil];
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [self.navigationController popViewControllerAnimated:YES];
+                    });
+                }
+            });
+        } failure:^(int status, NSString *info) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [QMUITips showError:info inView:self.view hideAfterDelay:1.2];
+                [aDialogViewController hide];
+            });
+            
+        }];
         
     }];
     [dialogViewController show];
@@ -328,9 +336,9 @@
 //}
 -(void)alertYouHuiView{
     BJQDListViewController *bjqdVC = [self.childViewControllers objectAtIndex:0];
-
+    
     QMUIModalPresentationViewController *modalViewController = [[QMUIModalPresentationViewController alloc] init];
-     QMUIDialogTextFieldViewController *dialogViewController = [[QMUIDialogTextFieldViewController alloc] init];
+    QMUIDialogTextFieldViewController *dialogViewController = [[QMUIDialogTextFieldViewController alloc] init];
     dialogViewController.footerSeparatorColor = UIColorClear;
     dialogViewController.headerSeparatorColor = UIColorClear;
     dialogViewController.headerViewBackgroundColor = UIColorWhite;
@@ -341,31 +349,35 @@
         textField.placeholder = @"请输入";
         textField.text = self.bjqdYHJG.floatValue == 0 ? @"": self.bjqdYHJG;
         textField.keyboardType = UIKeyboardTypeDecimalPad;
-     }];
+    }];
     dialogViewController.enablesSubmitButtonAutomatically = YES;// 自动根据输入框的内容是否为空来控制 submitButton.enabled 状态。这个属性默认就是 YES，这里为写出来只是为了演示
-     [dialogViewController addCancelButtonWithText:@"取消" block:^(__kindof QMUIDialogTextFieldViewController *aDialogViewController) {
+    [dialogViewController addCancelButtonWithText:@"取消" block:^(__kindof QMUIDialogTextFieldViewController *aDialogViewController) {
         [modalViewController hideInView:[UIApplication sharedApplication].keyWindow animated:YES completion:nil];
     }];
     [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogTextFieldViewController *aDialogViewController)  {
         [aDialogViewController.view endEditing:YES];
         [QMUITips showLoading:@"数据传输中" inView:[UIApplication sharedApplication].keyWindow];
         [SJYRequestTool requestSJSHWithAPI:API_SJSH_YH parameters:@{
-                                                                    @"AEmp":[[SJYUserManager sharedInstance].ucAemp   modelToJSONString],
-                                                                    @"DeepenDesignID":self.sjshListModel.Id,
-                                                                    @"FinalAmount":aDialogViewController.textFields.firstObject.text//(驳回时必要回传参数)
-                                                                    } success:^(id responder) {
-                                                                        [QMUITips hideAllTips];
-                                                                        [QMUITips showWithText:[responder valueForKey:@"msg"] inView:[UIApplication sharedApplication].keyWindow hideAfterDelay:1.2];
-                                                                        if ([[responder valueForKey:@"success"] boolValue]== YES) {
-                                                                            [modalViewController hideInView:[UIApplication sharedApplication].keyWindow animated:YES completion:nil];
-                                                                            [bjqdVC requestData_SJSH_BJQD];
-                                                                        }
-                                                                    } failure:^(int status, NSString *info) {
-                                                                        [QMUITips hideAllTips];
-                                                                        [QMUITips showError:info inView:[UIApplication sharedApplication].keyWindow hideAfterDelay:1.2];
-                                                                    }];
-
-
+            @"AEmp":[[SJYUserManager sharedInstance].ucAemp   modelToJSONString],
+            @"DeepenDesignID":self.sjshListModel.Id,
+            @"FinalAmount":aDialogViewController.textFields.firstObject.text//(驳回时必要回传参数)
+        } success:^(id responder) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [QMUITips hideAllTips];
+                [QMUITips showWithText:[responder valueForKey:@"msg"] inView:[UIApplication sharedApplication].keyWindow hideAfterDelay:1.2];
+                if ([[responder valueForKey:@"success"] boolValue]== YES) {
+                    [modalViewController hideInView:[UIApplication sharedApplication].keyWindow animated:YES completion:nil];
+                    [bjqdVC requestData_SJSH_BJQD];
+                }
+            });
+        } failure:^(int status, NSString *info) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [QMUITips hideAllTips];
+                [QMUITips showError:info inView:[UIApplication sharedApplication].keyWindow hideAfterDelay:1.2];
+            });
+        }];
+        
+        
     }];
     modalViewController.contentViewController = dialogViewController;
     [modalViewController showInView:[UIApplication sharedApplication].keyWindow animated:YES completion:nil];
@@ -373,12 +385,12 @@
 
 -(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
     NSString *str =[textField.text stringByAppendingString:string];
-//    if (![NSString isAvailableStr:str WithFormat:@"^(0|[1-9][0-9]*)$"]) {//@"^([1-9][0-9]*)$"
+    //    if (![NSString isAvailableStr:str WithFormat:@"^(0|[1-9][0-9]*)$"]) {//@"^([1-9][0-9]*)$"
     if (![NSString isAvailableStr:str WithFormat:@"^(([1-9]{1}\\d*)|([0]{1}))(\\.(\\d){0,2})?$"]) {//@"^([1-9][0-9]*)$"
         return NO;
     }
-//    当输入内容时，range.length = 0，string.length = 1;
-//    当删除内容时，range.length = 1，string.length = 0;
+    //    当输入内容时，range.length = 0，string.length = 1;
+    //    当删除内容时，range.length = 1，string.length = 0;
     if (str.floatValue>self.bjqdZJ.floatValue && string.length > 0) {
         [QMUITips showWithText:[@"优惠价格不得大于总价:( )" stringByReplacingOccurrencesOfString:@" " withString:self.bjqdZJ] inView:[UIApplication sharedApplication].keyWindow hideAfterDelay:1.2];
         return NO;

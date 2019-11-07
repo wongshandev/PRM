@@ -17,7 +17,7 @@
 
 #define Height_World     20
 
-#define LeftPadding       20.0
+#define EdgeLeftPadding       20.0
 #define WordPadding     10.0
 
 @interface GanttStageClickedView ()<QMUITextViewDelegate>
@@ -113,24 +113,24 @@
     [self.topTitleLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.topView.mas_centerY);
         make.top.mas_equalTo(self.topView.mas_top).mas_offset(5);
-        make.left.mas_equalTo(self.topView.mas_left).mas_offset(LeftPadding);
-        make.right.mas_equalTo(self.topView.mas_right).mas_offset(-LeftPadding);
+        make.left.mas_equalTo(self.topView.mas_left).mas_offset(EdgeLeftPadding);
+        make.right.mas_equalTo(self.topView.mas_right).mas_offset(-EdgeLeftPadding);
     }];
     [self.guiHuaLeftLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.topView.mas_bottom).mas_offset(WordPadding);
-        make.left.mas_equalTo(self.mas_left).mas_offset(LeftPadding);
+        make.left.mas_equalTo(self.mas_left).mas_offset(EdgeLeftPadding);
         make.width.height.mas_equalTo(Height_World);
     }];
     [self.guiHuaLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.guiHuaLeftLab.mas_top);
         make.left.mas_equalTo(self.guiHuaLeftLab.mas_right).mas_offset(WordPadding);
-        make.right. mas_equalTo(self.mas_right).mas_offset(-LeftPadding);
+        make.right. mas_equalTo(self.mas_right).mas_offset(-EdgeLeftPadding);
         make.bottom. mas_equalTo(self.guiHuaLeftLab.mas_bottom);
     }];
     [self.guiHuaTimeLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.guiHuaLeftLab.mas_bottom).mas_offset(WordPadding);
         make.left.mas_equalTo(self.guiHuaLeftLab.mas_left);
-        make.right.mas_equalTo(self.mas_right).mas_offset(-LeftPadding);
+        make.right.mas_equalTo(self.mas_right).mas_offset(-EdgeLeftPadding);
         make.height.mas_equalTo(Height_World);
     }];
     [self.sepLab mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -141,32 +141,32 @@
     }];
     [self.shiJiLeftLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.sepLab.mas_bottom).mas_offset(WordPadding);
-        make.left.mas_equalTo(self.mas_left).mas_offset(LeftPadding);
+        make.left.mas_equalTo(self.mas_left).mas_offset(EdgeLeftPadding);
         make.width.height.mas_equalTo(Height_World);
     }];
     [self.shiJiLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.shiJiLeftLab.mas_top);
         make.left.mas_equalTo(self.shiJiLeftLab.mas_right).mas_offset(WordPadding);
-        make.right. mas_equalTo(self.mas_right).mas_offset(-LeftPadding);
+        make.right. mas_equalTo(self.mas_right).mas_offset(-EdgeLeftPadding);
         make.bottom. mas_equalTo(self.shiJiLeftLab.mas_bottom);
     }];
     [self.shiJiTimeLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.shiJiLeftLab.mas_bottom).mas_offset(WordPadding);
         make.left.mas_equalTo(self.shiJiLeftLab.mas_left);
-        make.right.mas_equalTo(self.mas_right).mas_offset(-LeftPadding);
+        make.right.mas_equalTo(self.mas_right).mas_offset(-EdgeLeftPadding);
         make.height.mas_equalTo(Height_World);
     }];
     [self.progressLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.shiJiTimeLab.mas_bottom).mas_offset(WordPadding);
         make.left.mas_equalTo(self.shiJiTimeLab.mas_left);
-        make.right.mas_equalTo(self.mas_right).mas_offset(-LeftPadding);
+        make.right.mas_equalTo(self.mas_right).mas_offset(-EdgeLeftPadding);
         make.height.mas_equalTo(Height_World);
     }];
  
     [self.bzTV mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.progressLab.mas_bottom).mas_offset(WordPadding);
         make.left.mas_equalTo(self.progressLab.mas_left);
-        make.right.mas_equalTo(self.mas_right).mas_offset(-LeftPadding);
+        make.right.mas_equalTo(self.mas_right).mas_offset(-EdgeLeftPadding);
         make.height.mas_greaterThanOrEqualTo(1);
     }];
 
@@ -264,9 +264,9 @@
  //
  //#pragma mark  *****************************************************蓝色区域绘制文字
  //    [self.ganttModel.JDName drawInRect:CGRectMake(
- //                                                  LeftPadding,
+ //                                                  EdgeLeftPadding,
  //                                                  WordPadding ,
- //                                                  RECT_Width - LeftPadding*2,
+ //                                                  RECT_Width - EdgeLeftPadding*2,
  //                                                  Hight_TopBlue -WordPadding*2)
  //                        withAttributes: @{
  //                                          NSFontAttributeName:H15,
@@ -276,13 +276,13 @@
  //
  //#pragma mark  *****************************************************绘制规划文字
  //    [self drawRectangleWithRect:CGRectMake(0, Hight_TopBlue, RECT_Width, Hight_GuiHua) WithColor:Color_White];
- //    [self drawRectangleWithRect:CGRectMake(LeftPadding, Hight_TopBlue + WordPadding, Height_World , Height_World) WithColor:RGB_HEX(0xC6D9F1, 1)];
+ //    [self drawRectangleWithRect:CGRectMake(EdgeLeftPadding, Hight_TopBlue + WordPadding, Height_World , Height_World) WithColor:RGB_HEX(0xC6D9F1, 1)];
  //
  //    paraSty.alignment = NSTextAlignmentLeft;
  //    [@"规划" drawInRect:CGRectMake(
- //                                 LeftPadding+Height_World + WordPadding ,
+ //                                 EdgeLeftPadding+Height_World + WordPadding ,
  //                                 Hight_TopBlue + WordPadding,
- //                                 RECT_Width - 2*LeftPadding - WordPadding,
+ //                                 RECT_Width - 2*EdgeLeftPadding - WordPadding,
  //                                 Height_World)
  //       withAttributes:@{
  //                        NSFontAttributeName:H15,
@@ -293,9 +293,9 @@
  //    if  (self.ganttModel.KSRQ.length!= 0 && self.ganttModel.JSRQ.length!= 0){
  //        NSString * guihuaStr =[@[ self.ganttModel.KSRQ,self.ganttModel.JSRQ] componentsJoinedByString:@"-"];
  //        [guihuaStr  drawInRect:CGRectMake(
- //                                          LeftPadding,
+ //                                          EdgeLeftPadding,
  //                                          Hight_TopBlue + WordPadding *2 + Height_World,
- //                                          RECT_Width - 2*LeftPadding,
+ //                                          RECT_Width - 2*EdgeLeftPadding,
  //                                          Height_World)
  //                withAttributes:@{ NSFontAttributeName:H15,
  //                                  NSForegroundColorAttributeName:Color_DarkGray,
@@ -305,18 +305,18 @@
  //
  //
  //#pragma mark  *****************************************************绘制割线
- //    [self drawSeparateLineFromPoint:CGPointMake(LeftPadding, Hight_TopBlue +Hight_GuiHua -1) ToPoint:CGPointMake(RECT_Width - LeftPadding, Hight_TopBlue +Hight_GuiHua -1)];
+ //    [self drawSeparateLineFromPoint:CGPointMake(EdgeLeftPadding, Hight_TopBlue +Hight_GuiHua -1) ToPoint:CGPointMake(RECT_Width - EdgeLeftPadding, Hight_TopBlue +Hight_GuiHua -1)];
  //
  //
  //#pragma mark  *****************************************************绘制实际文字
  //    [self drawRectangleWithRect:CGRectMake(0, (Hight_TopBlue +Hight_GuiHua ), RECT_Width, RECT_Hight - (Hight_TopBlue +Hight_GuiHua ) ) WithColor:Color_White];
- //    [self drawRectangleWithRect:CGRectMake(LeftPadding, (Hight_TopBlue +Hight_GuiHua ) + WordPadding, Height_World, Height_World) WithColor:RGB_HEX(0xFFC000, 1)];
+ //    [self drawRectangleWithRect:CGRectMake(EdgeLeftPadding, (Hight_TopBlue +Hight_GuiHua ) + WordPadding, Height_World, Height_World) WithColor:RGB_HEX(0xFFC000, 1)];
  //
  //    paraSty.alignment = NSTextAlignmentLeft;
  //    [@"实际" drawInRect:CGRectMake(
- //                                 LeftPadding +Height_World + WordPadding ,
+ //                                 EdgeLeftPadding +Height_World + WordPadding ,
  //                                 (Hight_TopBlue +Hight_GuiHua ) + WordPadding,
- //                                 RECT_Width - 2*LeftPadding - WordPadding  ,
+ //                                 RECT_Width - 2*EdgeLeftPadding - WordPadding  ,
  //                                 Height_World)
  //       withAttributes:@{
  //                        NSFontAttributeName:H15,
@@ -327,9 +327,9 @@
  //    if  (self.ganttModel.QSRQ.length!= 0 && self.ganttModel.DQRQ.length!= 0){
  //        NSString * shijiStr =[@[ self.ganttModel.QSRQ,self.ganttModel.DQRQ] componentsJoinedByString:@"~"];
  //        [shijiStr  drawInRect:CGRectMake(
- //                                          LeftPadding,
+ //                                          EdgeLeftPadding,
  //                                          (Hight_TopBlue +Hight_GuiHua ) + WordPadding *2 + Height_World,
- //                                          RECT_Width - 2*LeftPadding,
+ //                                          RECT_Width - 2*EdgeLeftPadding,
  //                                          Height_World)
  //                withAttributes:@{ NSFontAttributeName:H15,
  //                                  NSForegroundColorAttributeName:Color_DarkGray,
@@ -339,9 +339,9 @@
  //    if  (self.ganttModel.JDNum.length != 0){
  //        NSString * shijiNumStr =[@[ @"当前进度:  ",self.ganttModel.JDNum,@"%"] componentsJoinedByString:@""];
  //        [shijiNumStr  drawInRect:CGRectMake(
- //                                            LeftPadding,
+ //                                            EdgeLeftPadding,
  //                                            (Hight_TopBlue +Hight_GuiHua ) + WordPadding *3 + Height_World *2 ,
- //                                            RECT_Width - 2*LeftPadding,
+ //                                            RECT_Width - 2*EdgeLeftPadding,
  //                                            Height_World)
  //                withAttributes:@{ NSFontAttributeName:H15,
  //                                  NSForegroundColorAttributeName:Color_DarkYellor,
@@ -350,7 +350,7 @@
  //    }
  //
  //#pragma mark  *****************************************************绘制割线
- //    [self drawSeparateLineFromPoint:CGPointMake(LeftPadding,  RECT_Hight - 5) ToPoint:CGPointMake(RECT_Width -  LeftPadding, RECT_Hight - 5)];
+ //    [self drawSeparateLineFromPoint:CGPointMake(EdgeLeftPadding,  RECT_Hight - 5) ToPoint:CGPointMake(RECT_Width -  EdgeLeftPadding, RECT_Hight - 5)];
  //
  //
  //}

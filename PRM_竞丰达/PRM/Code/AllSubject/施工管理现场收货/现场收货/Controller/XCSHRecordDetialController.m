@@ -124,61 +124,65 @@
     };
 }
 -(void)submit_RecordChangeData{
-//    NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"ModId != %@", @"0"];
-//    NSArray *updateArr = [self.updateArray filteredArrayUsingPredicate:predicate1];
-//    NSString *updateString = [updateArr modelToJSONString];
-
+    //    NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"ModId != %@", @"0"];
+    //    NSArray *updateArr = [self.updateArray filteredArrayUsingPredicate:predicate1];
+    //    NSString *updateString = [updateArr modelToJSONString];
+    
     if (self.updateArray.count == 0) {
         [QMUITips showWithText:@"无数据修改,无须提交" inView:self.view hideAfterDelay:1.5];
     }else{
         NSString *updateString = [self.updateArray modelToJSONString];
         NSDictionary *  paraDic = @{
-                                    @"EmployeeID":KEmployID,
-                                    @"Version":self.recordModel.Version,
-                                    @"SiteState":self.recordModel.SiteState,
-                                    @"RealID":self.recordModel.RealID,
-                                    @"updated":updateString
-                                    };
+            @"EmployeeID":KEmployID,
+            @"Version":self.recordModel.Version,
+            @"SiteState":self.recordModel.SiteState,
+            @"RealID":self.recordModel.RealID,
+            @"updated":updateString
+        };
         [QMUITips showLoading:@"数据传输中" inView:[UIApplication sharedApplication].keyWindow];
         [SJYRequestTool requestXCSHRecordChangeWithParam:paraDic success:^(id responder) {
-            [QMUITips hideAllTips];
-            [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
-            if ([[responder valueForKey:@"success"] boolValue]== YES) {
-                [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshXCSHRecordListView" object:nil];
-                [self.updateArray removeAllObjects];
-//                [self.tableView.mj_header beginRefreshing];
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [self.navigationController popViewControllerAnimated:YES];
-                });
-            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [QMUITips hideAllTips];
+                [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
+                if ([[responder valueForKey:@"success"] boolValue]== YES) {
+                    [[NSNotificationCenter defaultCenter]postNotificationName:@"refreshXCSHRecordListView" object:nil];
+                    [self.updateArray removeAllObjects];
+                    //                [self.tableView.mj_header beginRefreshing];
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [self.navigationController popViewControllerAnimated:YES];
+                    });
+                }
+            });
         } failure:^(int status, NSString *info) {
-            [QMUITips hideAllTips];
-            [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [QMUITips hideAllTips];
+                [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
+            });
         }];
     }
 }
 
 -(void)requestData_RecordDetial{
     [SJYRequestTool requestXCSHRecordDetialListWithRealID:self.recordModel.RealID SiteState:self.recordModel.SiteState success:^(id responder) {
-        NSArray *rowsArr = [responder objectForKey:@"rows"];
-        if ([self.tableView.mj_header isRefreshing]) {
-            [self.dataArray removeAllObjects];
-            [self.insertDic removeAllObjects];
-            [self.updateArray removeAllObjects];
-        }
-        for (NSDictionary *dic in rowsArr) {
-            XCSHRecordDetialModel *model = [XCSHRecordDetialModel  modelWithDictionary:dic];
-             NSString *titStr = model.Model.length!=0?[model.Name stringByAppendingFormat:@"(%@)",model.Model]:model.Name;
-            model.titleStr =  model.Unit.length!=0?[titStr stringByAppendingFormat:@"(%@)",model.Unit]:titStr;
-            [self.dataArray addObject:model];
-        }
         dispatch_async(dispatch_get_main_queue(), ^{
+            NSArray *rowsArr = [responder objectForKey:@"rows"];
+            if ([self.tableView.mj_header isRefreshing]) {
+                [self.dataArray removeAllObjects];
+                [self.insertDic removeAllObjects];
+                [self.updateArray removeAllObjects];
+            }
+            for (NSDictionary *dic in rowsArr) {
+                XCSHRecordDetialModel *model = [XCSHRecordDetialModel  modelWithDictionary:dic];
+                NSString *titStr = model.Model.length!=0?[model.Name stringByAppendingFormat:@"(%@)",model.Model]:model.Name;
+                model.titleStr =  model.Unit.length!=0?[titStr stringByAppendingFormat:@"(%@)",model.Unit]:titStr;
+                [self.dataArray addObject:model];
+            }
             [self.tableView reloadData];
             [self endRefreshWithError:NO];
         });
     } failure:^(int status, NSString *info) {
-        [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
         dispatch_async(dispatch_get_main_queue(), ^{
+            [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
             [self.tableView reloadData];
             [self endRefreshWithError:YES];
         });
@@ -202,21 +206,21 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     XCSHRecordDetialCell *cell = [XCSHRecordDetialCell cellWithTableView:tableView];
     cell.indexPath = indexPath;
-XCSHRecordDetialModel *model  = self.dataArray[indexPath.row];
+    XCSHRecordDetialModel *model  = self.dataArray[indexPath.row];
     Weak_Self;
     kWeakSelf(cell);
     cell.savDataBlock = ^(NSMutableDictionary * cellDic) {
-         if (
-             //![cellDic[@"QuantityReceive"]  isEqualToString:model.QuantityReceive]
+        if (
+            //![cellDic[@"QuantityReceive"]  isEqualToString:model.QuantityReceive]
             ![cellDic[@"QuantityCheck"] isEqualToString:model.QuantityCheck]
             || ![cellDic[@"Remark"] isEqualToString:model.Remark]) {
             [weakSelf.insertDic setValue:cellDic forKey:@(indexPath.row).stringValue];
         }
         [weakSelf.tableView reloadRow:weakcell.indexPath.row inSection:weakcell.indexPath.section withRowAnimation:UITableViewRowAnimationNone];
-
+        
     };
     NSArray *indexArr = self.insertDic.allKeys;
-     if ([indexArr containsObject:@(indexPath.row).stringValue]) {
+    if ([indexArr containsObject:@(indexPath.row).stringValue]) {
         cell.cellDic =  self.insertDic[@(indexPath.row).stringValue] ;
     }else{
         cell.data = model;
@@ -230,7 +234,7 @@ XCSHRecordDetialModel *model  = self.dataArray[indexPath.row];
     XCSHRecordDetialCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     XCSHRecordDetialModel *model  = self.dataArray[indexPath.row];
     [self  click_ReceiveGoodsDetialCell:cell alertViewWithModel:model];
- }
+}
 #pragma mark ---------------- QMUIDialogViewController 处理
 -(void)click_ReceiveGoodsDetialCell:( XCSHRecordDetialCell *)cell alertViewWithModel:(XCSHRecordDetialModel*)model{
     NSInteger maxNumThis =  model.Quantity.integerValue - model.QuantityReceive.integerValue;
@@ -243,26 +247,26 @@ XCSHRecordDetialModel *model  = self.dataArray[indexPath.row];
         return;
     }
     self.maxNumThis = maxNumThis;
-
+    
     QMUIDialogViewController *dialogViewController = [[QMUIDialogViewController alloc] init];
     dialogViewController.title = model.Name;
     dialogViewController.headerViewHeight = 40;
     dialogViewController.headerSeparatorColor = UIColorWhite;
     dialogViewController.headerViewBackgroundColor = UIColorWhite;
-
+    
     //对话框的view 即 自定义内容页
     self.alertView = [[NumTFBZTVAlertView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_W -20 *2, 180)];
     self.alertView.backgroundColor = UIColorWhite;
-
+    
     self.alertView.numMentionLab.text = messageStr;
     //TextField 配置
     self.alertView.numTF.delegate = self;
     self.alertView.numTF.placeholder = @"请输入数量";
     self.alertView.numTF.text = [cell.cellDic[@"QuantityCheck"] integerValue] == 0 ?@"" :cell.cellDic[@"QuantityCheck"];
-     [self.alertView.numTF addTarget:self action:@selector(alert_TextFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
+    [self.alertView.numTF addTarget:self action:@selector(alert_TextFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
     //textView 配置
     self.alertView.BZTV.delegate = self;
-     self.alertView.BZTV.text = cell.cellDic[@"Remark"];
+    self.alertView.BZTV.text = cell.cellDic[@"Remark"];
     //内容页子控件  布局处理
     [self.alertView.numMentionLab makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.alertView.mas_top).mas_offset(NumTFPading);
@@ -294,22 +298,22 @@ XCSHRecordDetialModel *model  = self.dataArray[indexPath.row];
         make.right.mas_equalTo(self.alertView.numTF.mas_right);
         make.bottom.mas_equalTo(self.alertView.mas_bottom).offset(-NumTFPading);
     }];
-     dialogViewController.contentView = self.alertView;
+    dialogViewController.contentView = self.alertView;
     [dialogViewController addCancelButtonWithText:@"取消" block:^(__kindof QMUIDialogViewController *aDialogViewController) {
     }];
     [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
         [self.alertView.BZTV endEditing:YES];
         //FIXME:  cell  界面 数据cellDic 的调整
         if ([self.alertView.numTF.text integerValue] > maxNum.integerValue ) {
-             cell.cellDic[@"QuantityCheck"] = @(maxNumThis).stringValue;
+            cell.cellDic[@"QuantityCheck"] = @(maxNumThis).stringValue;
             [QMUITips showInfo:@"超出范围上限" inView:self.view hideAfterDelay:1.2];
         }else if([self.alertView.numTF.text integerValue] <0){
-             cell.cellDic[@"QuantityCheck"] = @"0";
+            cell.cellDic[@"QuantityCheck"] = @"0";
             [QMUITips showInfo:@"超出范围下限" inView:self.view hideAfterDelay:1.2];
         }else{
-             cell.cellDic[@"QuantityCheck"] = self.alertView.numTF.text.length==0?@"0":self.alertView.numTF.text;
+            cell.cellDic[@"QuantityCheck"] = self.alertView.numTF.text.length==0?@"0":self.alertView.numTF.text;
         }
-         cell.cellDic[@"Remark"] = self.alertView.BZTV.text;
+        cell.cellDic[@"Remark"] = self.alertView.BZTV.text;
         cell.cellDic = cell.cellDic;
         //FIXME: 新建并存储 修改后的内容到更新数组
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Id == %@", model.Id];
@@ -321,7 +325,7 @@ XCSHRecordDetialModel *model  = self.dataArray[indexPath.row];
             [currentDic setValue:cell.cellDic[@"QuantityCheck"] forKey:@"QuantityCheck"];
             [currentDic setValue:cell.cellDic[@"ModId"] forKey:@"ModId"];
             [currentDic setValue:cell.cellDic[@"Id"] forKey:@"Id"];
-
+            
             if (havDic) {
                 if (![[havDic valueForKey:@"Remark"] isEqualToString:[currentDic valueForKey:@"Remark"]] || ![[havDic valueForKey:@"QuantityCheck"] isEqualToString:[currentDic valueForKey:@"QuantityCheck"]]) {
                     [havDic setValue:[havDic valueForKey:@"Remark"] forKey:@"Remark"];
@@ -338,7 +342,7 @@ XCSHRecordDetialModel *model  = self.dataArray[indexPath.row];
                 [self.updateArray removeObject:havDic];
             }
         }
-
+        
         //FIXME: 存储更改后的数据到 字典内 便于滑动时进行加载修改后的数据
         if (cell.savDataBlock) {
             cell.savDataBlock(cell.cellDic);

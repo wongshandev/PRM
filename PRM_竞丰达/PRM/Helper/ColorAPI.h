@@ -29,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 分割线颜色
 #define Color_SrprateLine                 RGBColor(240, 240, 240)
 
+#define Color_TabViewSectionBackColor     Color_RGB_HEX(0xc4c8D0, 1)
 
 
 // RGB 颜色 

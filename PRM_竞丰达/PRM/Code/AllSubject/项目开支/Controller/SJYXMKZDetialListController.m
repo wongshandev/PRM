@@ -75,7 +75,7 @@
     }];
     self.tableView.mj_footer =[MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
         weakSelf.page++;
-
+        
         [weakSelf requestData_XMKZDetialList];
     }];
     [self.tableView.mj_header beginRefreshing];
@@ -86,40 +86,40 @@
 
 -(void)requestData_XMKZDetialList { 
     [SJYRequestTool requestXMKZDetialListWithProjectBranchID:self.listModel.Id Page:self.page success:^(id responder) {
-        NSArray *rowsArr = [responder objectForKey:@"rows"];
-        self.totalNum = [[responder objectForKey:@"total"] integerValue];
-        if (self.tableView.mj_header.isRefreshing) {
-            [self.dataArray removeAllObjects];
-        }
-        NSArray *spendingTypeArray = [SJYDefaultManager shareManager].getXMKZSpendTypeArray;
-        for (NSDictionary *dic in rowsArr) {
-            XMKZDetialListModel  *model = [XMKZDetialListModel  modelWithDictionary:dic];
-            model.modelType = ModelType_XMKZ;
-
-            model.SpendingTypeIDChange = model.SpendingTypeID;
-            model.OccurDateChange = model.OccurDate;
-            model.RemarkChange = model.Remark;
-            model.AmountChange = model.Amount;
-
-            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Id == %@", model.SpendingTypeID];
-            XMKZSpendTypeModel *typeModel =  [spendingTypeArray filteredArrayUsingPredicate:predicate].firstObject;
-            model.SpndingTypeName = typeModel.name;
-            model.SpndingTypeNameChange = model.SpndingTypeName;
-
-            model.titleStr = [model.ApplyName stringByAppendingFormat:@"(%@)",model.SpndingTypeName];
-            model.stateString = [ListXMKZDetialStateArray objectAtIndex:model.State];
-            StateCode idx = [StateCodeStringArray indexOfObject:model.stateString];
-            model.stateColor =   [StateCodeColorHexArray objectAtIndex:idx];  
-
-            [self.dataArray addObject:model];
-        }
         dispatch_async(dispatch_get_main_queue(), ^{
+            NSArray *rowsArr = [responder objectForKey:@"rows"];
+            self.totalNum = [[responder objectForKey:@"total"] integerValue];
+            if (self.tableView.mj_header.isRefreshing) {
+                [self.dataArray removeAllObjects];
+            }
+            NSArray *spendingTypeArray = [SJYDefaultManager shareManager].getXMKZSpendTypeArray;
+            for (NSDictionary *dic in rowsArr) {
+                XMKZDetialListModel  *model = [XMKZDetialListModel  modelWithDictionary:dic];
+                model.modelType = ModelType_XMKZ;
+                
+                model.SpendingTypeIDChange = model.SpendingTypeID;
+                model.OccurDateChange = model.OccurDate;
+                model.RemarkChange = model.Remark;
+                model.AmountChange = model.Amount;
+                
+                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Id == %@", model.SpendingTypeID];
+                XMKZSpendTypeModel *typeModel =  [spendingTypeArray filteredArrayUsingPredicate:predicate].firstObject;
+                model.SpndingTypeName = typeModel.name;
+                model.SpndingTypeNameChange = model.SpndingTypeName;
+                
+                model.titleStr = [model.ApplyName stringByAppendingFormat:@"(%@)",model.SpndingTypeName];
+                model.stateString = [ListXMKZDetialStateArray objectAtIndex:model.State];
+                StateCode idx = [StateCodeStringArray indexOfObject:model.stateString];
+                model.stateColor =   [StateCodeColorHexArray objectAtIndex:idx];
+                
+                [self.dataArray addObject:model];
+            }
             [self.tableView reloadData];
             [self endRefreshWithError:NO];
         });
     } failure:^(int status, NSString *info) {
-        [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
         dispatch_async(dispatch_get_main_queue(), ^{
+            [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
             [self.tableView reloadData];
             [self endRefreshWithError:YES];
         });
@@ -161,7 +161,7 @@
     XMKZDetialController *xmkzVC = [[XMKZDetialController alloc]init];
     xmkzVC.detialModel = model;
     xmkzVC.listModel = self.listModel;
-//    xmkzVC.title =  self.title;
+    //    xmkzVC.title =  self.title;
     xmkzVC.title = @"开支详情";
     [self.navigationController pushViewController:xmkzVC animated:YES];
 }
@@ -178,5 +178,5 @@
 }
 
 
- 
+
 @end

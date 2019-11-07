@@ -36,13 +36,13 @@
 #pragma mark ======================= 数据绑定
 -(void)bindViewModel{
     Weak_Self;
-
+    
     self.tableView.mj_header =[MJRefreshNormalHeader headerWithRefreshingBlock:^{
         weakSelf.page = 1;
         [weakSelf  requestData_XMQG];
     }];
-
-
+    
+    
     self.tableView.mj_footer =[MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
         weakSelf.page ++;
         [weakSelf  requestData_XMQG];
@@ -52,33 +52,33 @@
         [weakSelf.tableView.mj_header beginRefreshing];
     };
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshListView) name:@"refreshXMQKListView" object:nil];
-
+    
 }
 
 -(void)requestData_XMQG{
     [SJYRequestTool requestXMJDListWithPage:self.page  success:^(id responder) {
-        self.totalNum = [[responder objectForKey:@"total"] integerValue];
-        NSArray *rowsArr = [responder objectForKey:@"rows"];
-        if (self.tableView.mj_header.isRefreshing) {
-                 [self.dataArray removeAllObjects]; 
-        }
-        for (NSDictionary *dic in rowsArr) {
-            XMJDListModel *model = [XMJDListModel  modelWithDictionary:dic];
-            model.titleStr = model.Address.length? [model.Name stringByAppendingFormat:@" (%@)",model.Address]:model.Name;
-            [self.dataArray addObject:model];
-        }
         dispatch_async(dispatch_get_main_queue(), ^{
+            self.totalNum = [[responder objectForKey:@"total"] integerValue];
+            NSArray *rowsArr = [responder objectForKey:@"rows"];
+            if (self.tableView.mj_header.isRefreshing) {
+                [self.dataArray removeAllObjects];
+            }
+            for (NSDictionary *dic in rowsArr) {
+                XMJDListModel *model = [XMJDListModel  modelWithDictionary:dic];
+                model.titleStr = model.Address.length? [model.Name stringByAppendingFormat:@" (%@)",model.Address]:model.Name;
+                [self.dataArray addObject:model];
+            }
             [self.tableView reloadData];
             [self endRefreshWithError:NO];
         });
     } failure:^(int status, NSString *info) {
-        [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
         dispatch_async(dispatch_get_main_queue(), ^{
+            [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
             [self.tableView reloadData];
             [self endRefreshWithError:YES];
         });
     }];
-
+    
 }
 -(void)endRefreshWithError:(BOOL)havError{
     [self.tableView.mj_header endRefreshing];
@@ -87,7 +87,7 @@
     }else{
         [self.tableView.mj_footer endRefreshingWithNoMoreData];
     }
-
+    
     if (self.dataArray.count == 0) {
         self.tableView.customImg = !havError ? [UIImage imageNamed:@"empty"]:SJYCommonImage(@"daoda");
         self.tableView.customMsg = !havError? @"没有数据了,休息下吧":@"网络错误,请检查网络后重试";

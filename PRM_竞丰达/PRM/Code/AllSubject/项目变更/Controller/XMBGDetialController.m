@@ -83,6 +83,7 @@
 
 -(void)requestData_XMBGDetial{
     [SJYRequestTool requestXMBGDetialWithProjectBranchID:self.listModel.Id SearchCode:@"" success:^(id responder) {
+        dispatch_async(dispatch_get_main_queue(), ^{
         NSArray *rowsArr = [responder objectForKey:@"rows"];
         self.DState = [[responder objectForKey:@"DState"] integerValue];
         self.WaitChange = [[responder objectForKey:@"WaitChange"] integerValue];
@@ -101,13 +102,12 @@
             model.isNewAdd= NO;
             [self.dataArray addObject:model];
         }
-        dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView reloadData];
             [self endRefreshWithError:NO];
         });
     } failure:^(int status, NSString *info) {
-        [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
         dispatch_async(dispatch_get_main_queue(), ^{
+            [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
             [self.tableView reloadData];
             [self endRefreshWithError:YES];
         });

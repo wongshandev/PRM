@@ -21,17 +21,19 @@ NSData *cookiesData = [NSKeyedArchiver archivedDataWithRootObject:cookies];\
 [[NSUserDefaults standardUserDefaults] synchronize];\
 
 + (void)post:(NSString *)urlString parameters:(NSDictionary *)params success:(void (^) (NSURLSessionDataTask *dataTask,id responseObjcet))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
-    if (![self isNetAvilable]) {
-        [QMUITips hideAllTips];
-//        SJYAlertShow(@"当前网络不可用,请检查网络", @"确定");
-        [self alertView];
-//
-        return;
-    }
-    NSLog(@"当前请求:%@\n,参数:%@",urlString,params);
-    AFHTTPSessionManager * manager = [self createSessionManager];
-
-    [manager POST:urlString parameters:params progress:nil success:success failure:failure];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (![self isNetAvilable]) {
+            [QMUITips hideAllTips];
+            //        SJYAlertShow(@"当前网络不可用,请检查网络", @"确定");
+            [self alertView];
+            //
+            return;
+        }
+        NSLog(@"当前请求:%@\n,参数:%@",urlString,params);
+        AFHTTPSessionManager * manager = [self createSessionManager];
+        
+        [manager POST:urlString parameters:params progress:nil success:success failure:failure];
+    });
 }
 
 //+ (void)postHeader:(NSString *)urlString parameters:(NSDictionary *)params success:(void (^) (NSURLSessionDataTask *dataTask,id responseObjcet))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
@@ -100,67 +102,73 @@ NSData *cookiesData = [NSKeyedArchiver archivedDataWithRootObject:cookies];\
 //}
 
 + (void)get:(NSString *)urlString parameters:(NSDictionary *)params success:(void (^) (NSURLSessionDataTask *dataTask,id responseObject))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
-    if (![self isNetAvilable]) {
-        [QMUITips hideAllTips];
-//        SJYAlertShow(@"当前网络不可用,请检查网络", @"确定");
-        [self alertView];
-
-        return;
-    }
-    AFHTTPSessionManager * manager = [self createSessionManager];
-    [manager GET:urlString parameters:params progress:nil success:success failure:failure];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (![self isNetAvilable]) {
+            [QMUITips hideAllTips];
+            //        SJYAlertShow(@"当前网络不可用,请检查网络", @"确定");
+            [self alertView];
+            
+            return;
+        }
+        AFHTTPSessionManager * manager = [self createSessionManager];
+        [manager GET:urlString parameters:params progress:nil success:success failure:failure];
+    });
 }
 
 +(void)upLoadMoreImageWithURLString:(NSString *)URLString parameters:(NSDictionary *)parameters imageArray:(NSArray *)imageArray fileName:(NSString *)name progerss:(void (^)(id))progress success:(void (^) (NSURLSessionDataTask *dataTask,id responseObjcet))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
-    if (![self isNetAvilable]) {
-        [QMUITips hideAllTips];
-//        SJYAlertShow(@"当前网络不可用,请检查网络", @"确定");
-        [self alertView];
-        return;
-    }
-
-    AFHTTPSessionManager * manager = [self createSessionManager];
-    //添加HTTPHeader
-    [manager.requestSerializer setValue:@"ios" forHTTPHeaderField:@"os"];
-    [manager.requestSerializer setValue:@"multipart/form-data" forHTTPHeaderField:@"Content-Type"];
-    //加上这行代码, https ssl 验证
-//    [manager setSecurityPolicy:[self customSecurityPolicy]];
-    NSURLSessionDataTask *uploadTask =  [manager POST:URLString parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
-        for (int i = 0; i < imageArray.count; i ++) {
-            UIImage *image = imageArray[i];
-            //旋转图片
-            UIImage *normalizedImage = [[self class] normalizedImageWithOriginalImage:image];
-            CGFloat compressRatio = 0.5;
-            NSLog(@"压缩比例:%lf", compressRatio);
-            NSData *imageData = UIImageJPEGRepresentation(normalizedImage, compressRatio);
-            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-            [formatter setDateFormat:@"yyyyMMddHHmmss"];
-            NSString *dateString = [formatter stringFromDate:[NSDate date]];
-            NSString *fileName = [NSString  stringWithFormat:@"%@.jpg",[NSString stringWithFormat:@"%@%d",dateString,i]];
-            [formData appendPartWithFileData:imageData name:[NSString stringWithFormat:@"%@",name] fileName:fileName mimeType:@"image/jpeg"];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (![self isNetAvilable]) {
+            [QMUITips hideAllTips];
+            //        SJYAlertShow(@"当前网络不可用,请检查网络", @"确定");
+            [self alertView];
+            return;
         }
-    } progress:progress success:success  failure:failure];
-    [uploadTask resume];
+        
+        AFHTTPSessionManager * manager = [self createSessionManager];
+        //添加HTTPHeader
+        [manager.requestSerializer setValue:@"ios" forHTTPHeaderField:@"os"];
+        [manager.requestSerializer setValue:@"multipart/form-data" forHTTPHeaderField:@"Content-Type"];
+        //加上这行代码, https ssl 验证
+        //    [manager setSecurityPolicy:[self customSecurityPolicy]];
+        NSURLSessionDataTask *uploadTask =  [manager POST:URLString parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+            for (int i = 0; i < imageArray.count; i ++) {
+                UIImage *image = imageArray[i];
+                //旋转图片
+                UIImage *normalizedImage = [[self class] normalizedImageWithOriginalImage:image];
+                CGFloat compressRatio = 0.5;
+                NSLog(@"压缩比例:%lf", compressRatio);
+                NSData *imageData = UIImageJPEGRepresentation(normalizedImage, compressRatio);
+                NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+                [formatter setDateFormat:@"yyyyMMddHHmmss"];
+                NSString *dateString = [formatter stringFromDate:[NSDate date]];
+                NSString *fileName = [NSString  stringWithFormat:@"%@.jpg",[NSString stringWithFormat:@"%@%d",dateString,i]];
+                [formData appendPartWithFileData:imageData name:[NSString stringWithFormat:@"%@",name] fileName:fileName mimeType:@"image/jpeg"];
+            }
+        } progress:progress success:success  failure:failure];
+        [uploadTask resume];
+    });
 }
 +(void)uploadFileWithUrl:(NSString *)url paradic:(NSDictionary *)paradic   filePath:(NSString *)filepath progress:(void(^)(NSProgress * uploadProgress))progress   success:(void (^) (NSURLSessionDataTask *dataTask,id responseObjcet))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
-    if (![self isNetAvilable]) {
-        [QMUITips hideAllTips];
-         [self alertView];
-        return;
-    }
-    AFHTTPSessionManager *sharedManager1 = [[AFHTTPSessionManager alloc]init];
-    sharedManager1.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", @"text/plain",nil];
-    [sharedManager1 POST:url parameters:paradic constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
-         NSData *data = [NSData dataWithContentsOfFile:filepath];
-//        NSString *mimeType =[NSString mimeTypeForFileAtPath:filepath];
-//        NSString *fileName =  [filepath.lastPathComponent componentsSeparatedByString:@"."].lastObject;
-        [formData appendPartWithFileData:data
-                                    name:[filepath.lastPathComponent componentsSeparatedByString:@"."].firstObject
-                                fileName:filepath.lastPathComponent
-                                mimeType:[NSString mimeTypeForFileAtPath:filepath]];
-    } progress:progress   success:success  failure:failure];
-    //        //上传数据:FileData-->data  name-->fileName(固定，和服务器一致)  fileName-->你的语音文件名  mimeType-->我的语音文件type是audio/amr 如果你是图片可能为image/jpeg
- }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (![self isNetAvilable]) {
+            [QMUITips hideAllTips];
+            [self alertView];
+            return;
+        }
+        AFHTTPSessionManager *sharedManager1 = [[AFHTTPSessionManager alloc]init];
+        sharedManager1.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", @"text/plain",nil];
+        [sharedManager1 POST:url parameters:paradic constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+            NSData *data = [NSData dataWithContentsOfFile:filepath];
+            //        NSString *mimeType =[NSString mimeTypeForFileAtPath:filepath];
+            //        NSString *fileName =  [filepath.lastPathComponent componentsSeparatedByString:@"."].lastObject;
+            [formData appendPartWithFileData:data
+                                        name:[filepath.lastPathComponent componentsSeparatedByString:@"."].firstObject
+                                    fileName:filepath.lastPathComponent
+                                    mimeType:[NSString mimeTypeForFileAtPath:filepath]];
+        } progress:progress   success:success  failure:failure];
+        //        //上传数据:FileData-->data  name-->fileName(固定，和服务器一致)  fileName-->你的语音文件名  mimeType-->我的语音文件type是audio/amr 如果你是图片可能为image/jpeg
+    });
+}
 
 //+ (void)postRegisterHeader:(NSString *)urlString parameters:(NSDictionary *)params success:(void (^) (NSURLSessionDataTask *dataTask,id responseObjcet))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
 //
@@ -214,7 +222,7 @@ NSData *cookiesData = [NSKeyedArchiver archivedDataWithRootObject:cookies];\
                   completionHandler:(void (^)(NSURLResponse *response, NSURL *filePath, NSError *error))completionHandler{
     if (![self isNetAvilable]) {
         [QMUITips hideAllTips];
-         [self alertView];
+        [self alertView];
         return;
     }
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
@@ -262,11 +270,11 @@ NSData *cookiesData = [NSKeyedArchiver archivedDataWithRootObject:cookies];\
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     [manager.requestSerializer setTimeoutInterval:kRequestTimeOut];
     manager.requestSerializer.HTTPShouldHandleCookies = YES;
-
+    
     manager.securityPolicy = [AFSecurityPolicy defaultPolicy];
     manager.securityPolicy.allowInvalidCertificates = YES;//忽略https证书
     manager.securityPolicy.validatesDomainName = NO;
-
+    
     NSData *data = [[NSUserDefaults standardUserDefaults]objectForKey:DEVICE_COOKIE];
     if (data.length != 0) {
         NSArray *cookieArray = [NSKeyedUnarchiver unarchiveObjectWithData:data];
@@ -286,7 +294,7 @@ NSData *cookiesData = [NSKeyedArchiver archivedDataWithRootObject:cookies];\
         [self goToAppSystemSetting];
     }]];
     [kWindow.rootViewController presentViewController:alert animated:YES completion:nil];
-
+    
 }
 
 // 如果用户关闭了接收通知功能，该方法可以跳转到APP设置页面进行修改

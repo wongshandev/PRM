@@ -49,6 +49,7 @@
 +(void)requestXCSHRecordChangeWithParam:(NSDictionary *)paramDic success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure;
 #pragma mark ============== 项目请购
 +(void)requestXMQGList:(NSString *)employID  page:(NSInteger)page success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure;
++(void)requestXMQGWithMarketOrderID:(NSString *)marketOrderID projectBranchCode:(NSString *)projectBranchCode success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure;
 +(void)requestXMQGWithMarketOrderID:(NSString *)marketOrderID success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure;
 +(void)requestXMQGApprovelWithParam:(NSDictionary *)paramDic success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure;
 

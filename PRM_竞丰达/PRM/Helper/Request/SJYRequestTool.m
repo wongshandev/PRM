@@ -280,6 +280,18 @@
         }
     }];
 }
++(void)requestXMQGWithMarketOrderID:(NSString *)marketOrderID projectBranchCode:(NSString *)projectBranchCode success:(Success)success failure:(Failure)failure{
+    [RequestTool requestXMQGWithMarketOrderID:marketOrderID projectBranchCode:projectBranchCode success:^(NSURLSessionDataTask *dataTask, id responseObjcet) {
+        id  respond = [NSJSONSerialization  JSONObjectWithData:responseObjcet options:0 error:nil];
+        success(respond);
+    } failure:^(NSURLSessionDataTask *dataTask, NSError *error) {
+        if ([AFNetworkReachabilityManager sharedManager].reachable) {
+            failure(-1,@"请求失败");
+        } else{
+            failure(-1,@"网络异常,请检查您的网络状况");
+        }
+    }];
+}
 +(void)requestXMQGWithMarketOrderID:(NSString *)marketOrderID success:(Success)success failure:(Failure)failure{
     [RequestTool requestXMQGWithMarketOrderID:marketOrderID success:^(NSURLSessionDataTask *dataTask, id responseObjcet) {
         id  respond = [NSJSONSerialization  JSONObjectWithData:responseObjcet options:0 error:nil];

@@ -27,35 +27,35 @@
 
 -(void)bindViewModel{
     [SJYRequestTool requestXMJDGanttDataWithProjectBranchID:self.listModel.Id success:^(id responder) {
-        NSArray *firstCategoriesArr = [responder objectForKey:@"firstCategories"];
-        NSArray *secondCategoriesArr = [responder objectForKey:@"secondCategories"];
-        
-        NSString *kssj =     [firstCategoriesArr.firstObject objectForKey:@"BeginDate"];
-        NSString *jjsj =     [secondCategoriesArr.lastObject objectForKey:@"EndDate"];
-        
-        self.miniXStr = [self dateStringFormJSDateString:kssj];
-        self.maxXStr = [self dateStringFormJSDateString:jjsj];
-        
-        NSArray *rowsArr = [responder objectForKey:@"rows"];
-        [self.dataArray removeAllObjects];
-        
-        for (NSDictionary *dic in rowsArr) {
-            
-            StageModel *model = [StageModel  modelWithDictionary:dic];
-            StasticGanttModel *ganntModel = [[StasticGanttModel alloc] init];
-            ganntModel.JD_Id = model.Id;
-            ganntModel.JDName = model.Name;
-            ganntModel.JDNum = model.CompletionRate;
-            
-            //实际
-            ganntModel.sjKSRQ =[self dateStringFormJSDateString:model.ActualBeginDate];
-            ganntModel.sjJSRQ =[self dateStringFormJSDateString:model.ActualEndDate];
-            //规划
-            ganntModel.jhKSRQ = [self dateStringFormJSDateString:model.BeginDate];
-            ganntModel.jhJSRQ = [self dateStringFormJSDateString:model.EndDate]; 
-            [self.dataArray addObject:ganntModel];
-        }
         dispatch_async(dispatch_get_main_queue(), ^{
+            NSArray *firstCategoriesArr = [responder objectForKey:@"firstCategories"];
+            NSArray *secondCategoriesArr = [responder objectForKey:@"secondCategories"];
+            
+            NSString *kssj =     [firstCategoriesArr.firstObject objectForKey:@"BeginDate"];
+            NSString *jjsj =     [secondCategoriesArr.lastObject objectForKey:@"EndDate"];
+            
+            self.miniXStr = [self dateStringFormJSDateString:kssj];
+            self.maxXStr = [self dateStringFormJSDateString:jjsj];
+            
+            NSArray *rowsArr = [responder objectForKey:@"rows"];
+            [self.dataArray removeAllObjects];
+            
+            for (NSDictionary *dic in rowsArr) {
+                
+                StageModel *model = [StageModel  modelWithDictionary:dic];
+                StasticGanttModel *ganntModel = [[StasticGanttModel alloc] init];
+                ganntModel.JD_Id = model.Id;
+                ganntModel.JDName = model.Name;
+                ganntModel.JDNum = model.CompletionRate;
+                
+                //实际
+                ganntModel.sjKSRQ =[self dateStringFormJSDateString:model.ActualBeginDate];
+                ganntModel.sjJSRQ =[self dateStringFormJSDateString:model.ActualEndDate];
+                //规划
+                ganntModel.jhKSRQ = [self dateStringFormJSDateString:model.BeginDate];
+                ganntModel.jhJSRQ = [self dateStringFormJSDateString:model.EndDate];
+                [self.dataArray addObject:ganntModel];
+            }
             if (self.maxXStr.length==0 || self.miniXStr.length == 0) {
                 [QMUITips showError:@"数据出错,统计图初始化失败" inView:self.view hideAfterDelay:1.2];
                 return ;
@@ -63,7 +63,10 @@
             [self initScrollGanntView];
         });
     } failure:^(int status, NSString *info) {
-        [QMUITips showError:@"数据出错,统计图初始化失败" inView:self.view hideAfterDelay:1.2];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            [QMUITips showError:@"数据出错,统计图初始化失败" inView:self.view hideAfterDelay:1.2];
+        });
     }];
 }
 

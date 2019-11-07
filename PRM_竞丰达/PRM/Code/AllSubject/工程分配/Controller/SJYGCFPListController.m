@@ -21,7 +21,7 @@
 -(void)setUpNavigationBar{
     self.navBar.hidden = NO;
     self.navBar.titleLabel.text = self.title;
-
+    
 }
 
 
@@ -40,12 +40,12 @@
     self.tableView.mj_header =[MJRefreshNormalHeader headerWithRefreshingBlock:^{
         weakSelf.page = 1;
         [weakSelf  requestData_GCFP];
-
+        
     }];
     self.tableView.mj_footer =[MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
         weakSelf.page ++;
         [weakSelf  requestData_GCFP];
-     }];
+    }];
     [self.tableView.mj_header beginRefreshing];
     self.tableView.refreshBlock = ^{
         [weakSelf.tableView.mj_header beginRefreshing];
@@ -55,17 +55,17 @@
 
 -(void)requestData_GCFP{
     [SJYRequestTool requestGCFPWithPage:self.page success:^(id responder) {
-        self.totalNum = [[responder objectForKey:@"total"] integerValue];
-        NSArray *rowsArr = [responder objectForKey:@"rows"];
-        if (self.tableView.mj_header.isRefreshing) {
-            [self.dataArray removeAllObjects];
-        }
-        for (NSDictionary *dic in rowsArr) {
-            RWFPListModel *model = [RWFPListModel  modelWithDictionary:dic];
-            model.titleStr = model.Code.length? [model.Name stringByAppendingFormat:@" (%@)",model.Code]:model.Name;
-            [self.dataArray addObject:model];
-        }
         dispatch_async(dispatch_get_main_queue(), ^{
+            self.totalNum = [[responder objectForKey:@"total"] integerValue];
+            NSArray *rowsArr = [responder objectForKey:@"rows"];
+            if (self.tableView.mj_header.isRefreshing) {
+                [self.dataArray removeAllObjects];
+            }
+            for (NSDictionary *dic in rowsArr) {
+                RWFPListModel *model = [RWFPListModel  modelWithDictionary:dic];
+                model.titleStr = model.Code.length? [model.Name stringByAppendingFormat:@" (%@)",model.Code]:model.Name;
+                [self.dataArray addObject:model];
+            }
             [self.tableView reloadData];
             [self endRefreshWithError:NO];
         });

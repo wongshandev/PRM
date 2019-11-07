@@ -38,7 +38,7 @@
 }
 #pragma mark ======================= 数据绑定
 -(void)bindViewModel{
-    Weak_Self; 
+    Weak_Self;
     self.tableView.mj_header =[MJRefreshNormalHeader headerWithRefreshingBlock:^{
         if (KJumpURLToEnum(weakSelf.mainModel.url) == Engineering) {  //施工管理
             [weakSelf  requestData_SGGL];
@@ -48,11 +48,11 @@
             [weakSelf  requestData_XCSH];
         }
     }];
-
+    
     
     self.tableView.mj_footer =[MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
         if (KJumpURLToEnum(weakSelf.mainModel.url) == Engineering) { //施工管理
-//            [weakSelf  requestData_SGGL];
+            //            [weakSelf  requestData_SGGL];
             [self.tableView.mj_footer endRefreshingWithNoMoreData];
         }
         if (KJumpURLToEnum(weakSelf.mainModel.url) == Procurement) {  //现场收货
@@ -68,21 +68,21 @@
 
 -(void)requestData_SGGL{
     [SJYRequestTool requestSGGLListWithEmployId:[SJYUserManager sharedInstance].sjyloginUC.Id page:self.page  success:^(id responder) {
-        NSArray *rowsArr = [responder objectForKey:@"rows"];
-        if ([self.tableView.mj_header isRefreshing]) {
-            [self.dataArray removeAllObjects];
-        } 
-        for (NSDictionary *dic in rowsArr) {
-            EngineeringModel *model = [EngineeringModel  modelWithDictionary:dic];
-            [self.dataArray addObject:model];
-        }
         dispatch_async(dispatch_get_main_queue(), ^{
+            NSArray *rowsArr = [responder objectForKey:@"rows"];
+            if ([self.tableView.mj_header isRefreshing]) {
+                [self.dataArray removeAllObjects];
+            }
+            for (NSDictionary *dic in rowsArr) {
+                EngineeringModel *model = [EngineeringModel  modelWithDictionary:dic];
+                [self.dataArray addObject:model];
+            }
             [self.tableView reloadData];
             [self endRefreshWithError:NO];
         });
     } failure:^(int status, NSString *info) {
-        [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
         dispatch_async(dispatch_get_main_queue(), ^{
+            [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
             [self.tableView reloadData];
             [self endRefreshWithError:YES];
         });
@@ -90,22 +90,22 @@
 }
 -(void)requestData_XCSH{
     [SJYRequestTool requestXCSHList: [SJYUserManager sharedInstance].sjyloginUC.Id page:self.page success:^(id responder) {
-        if ([self.tableView.mj_header isRefreshing]) {
-            [self.dataArray removeAllObjects];
-        }
-        self.totalNum = [[responder objectForKey:@"total"] integerValue];
-        NSArray *rowsArr = [responder objectForKey:@"rows"];
-        for (NSDictionary *dic in rowsArr) {
-            EngineeringModel *model = [EngineeringModel  modelWithDictionary:dic];
-            [self.dataArray addObject:model];
-        }
         dispatch_async(dispatch_get_main_queue(), ^{
+            if ([self.tableView.mj_header isRefreshing]) {
+                [self.dataArray removeAllObjects];
+            }
+            self.totalNum = [[responder objectForKey:@"total"] integerValue];
+            NSArray *rowsArr = [responder objectForKey:@"rows"];
+            for (NSDictionary *dic in rowsArr) {
+                EngineeringModel *model = [EngineeringModel  modelWithDictionary:dic];
+                [self.dataArray addObject:model];
+            }
             [self.tableView reloadData];
             [self endRefreshWithError:NO];
         });
     } failure:^(int status, NSString *info) {
-        [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
         dispatch_async(dispatch_get_main_queue(), ^{
+            [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
             [self.tableView reloadData];
             [self endRefreshWithError:YES];
         });

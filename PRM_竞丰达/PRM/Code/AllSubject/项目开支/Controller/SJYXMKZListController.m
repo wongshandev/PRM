@@ -21,7 +21,7 @@
 -(void)setUpNavigationBar{
     //    self.navBar.backButton.hidden = NO;
     self.navBar.titleLabel.text = self.title;
-
+    
 }
 
 -(void)setupTableView{
@@ -30,7 +30,7 @@
     self.tableView.separatorInset = UIEdgeInsetsZero;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.estimatedRowHeight = 90;
- }
+}
 -(void)refreshCurrentList{
     self.page = 0;
     [self requestData_XMKZList];
@@ -44,7 +44,7 @@
     }];
     self.tableView.mj_footer =[MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
         weakSelf.page++;
-
+        
         [weakSelf requestData_XMKZList];
     }];
     [self.tableView.mj_header beginRefreshing];
@@ -56,23 +56,23 @@
 
 -(void)requestData_XMKZList {
     [SJYRequestTool requestXMKZListWithPage:self.page success:^(id responder) {
-        NSArray *rowsArr = [responder objectForKey:@"rows"];
-        self.totalNum = [[responder objectForKey:@"total"] integerValue];
-        if (self.tableView.mj_header.isRefreshing) {
-            [self.dataArray removeAllObjects];
-        }
-        for (NSDictionary *dic in rowsArr) {
-            XMKZListModel *model = [XMKZListModel  modelWithDictionary:dic];
-            model.titleStr = [model.Name stringByAppendingFormat:@"(%@)",model.ProjectTypeName];
-            [self.dataArray addObject:model];
-        }
         dispatch_async(dispatch_get_main_queue(), ^{
+            NSArray *rowsArr = [responder objectForKey:@"rows"];
+            self.totalNum = [[responder objectForKey:@"total"] integerValue];
+            if (self.tableView.mj_header.isRefreshing) {
+                [self.dataArray removeAllObjects];
+            }
+            for (NSDictionary *dic in rowsArr) {
+                XMKZListModel *model = [XMKZListModel  modelWithDictionary:dic];
+                model.titleStr = [model.Name stringByAppendingFormat:@"(%@)",model.ProjectTypeName];
+                [self.dataArray addObject:model];
+            }
             [self.tableView reloadData];
             [self endRefreshWithError:NO];
         });
     } failure:^(int status, NSString *info) {
-        [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
         dispatch_async(dispatch_get_main_queue(), ^{
+            [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
             [self.tableView reloadData];
             [self endRefreshWithError:YES];
         });
@@ -113,8 +113,8 @@
     XMKZListModel *model =  self.dataArray[indexPath.row];
     SJYXMKZDetialListController *detialVC = [[SJYXMKZDetialListController alloc]init];
     detialVC.listModel = model;
-//    detialVC.title = @"开支详情";
-        detialVC.title =  model.Name;
+    //    detialVC.title = @"开支详情";
+    detialVC.title =  model.Name;
     [self.navigationController pushViewController:detialVC animated:YES];
 }
 
@@ -130,6 +130,6 @@
 }
 
 
- 
+
 
 @end

@@ -183,6 +183,7 @@
 }
 -(void)requestData_KZFK{
     [SJYRequestTool requestKZFKListWithSearchStateID:self.shStateType SearchSpendTypeID:self.spendTypeID Page:self.page success:^(id responder) {
+        dispatch_async(dispatch_get_main_queue(), ^{
         NSArray *rowsArr = [responder objectForKey:@"rows"];
         self.totalNum = [[responder objectForKey:@"total"] integerValue];
         self.eld = [[responder objectForKey:@"eId"] integerValue];
@@ -209,13 +210,12 @@
             model.stateColor =   [StateCodeColorHexArray objectAtIndex:idx];
             [self.dataArray addObject:model];
         }
-        dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView reloadData];
             [self endRefreshWithError:NO];
         });
     } failure:^(int status, NSString *info) {
-        [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
         dispatch_async(dispatch_get_main_queue(), ^{
+            [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
             [self.tableView reloadData];
             [self endRefreshWithError:YES];
         });

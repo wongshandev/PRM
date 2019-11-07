@@ -27,7 +27,7 @@
     self.tableView.separatorInset = UIEdgeInsetsZero;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.estimatedRowHeight = 90;
-
+    
 }
 #pragma mark ======================= 数据绑定
 -(void)bindViewModel {
@@ -48,41 +48,41 @@
     }
     if (KJumpURLToEnum(self.mainModel.url) == FileTransfer) {
         apiStr = API_JJQR_SCB;
-
+        
     }
     if (KJumpURLToEnum(self.mainModel.url) == FileTransferDesign) {
         apiStr = API_JJQR_JSB;
     }
-
+    
     [SJYRequestTool requestJJQRListWithAPIUrl:apiStr EmployID:[SJYUserManager sharedInstance].sjyloginUC.Id success:^(id responder) {
-        NSArray *rowsArr = [responder objectForKey:@"rows"];
-        [self.dataArray removeAllObjects];
-
-        for (NSDictionary *dic in rowsArr) {
-            SJYJJQRListModel  *model = [SJYJJQRListModel  modelWithDictionary:dic];
-            if (KJumpURLToEnum(self.mainModel.url) == FileTransferEngineering) { // 工程
-                model.titleStr = [model.Name stringByAppendingFormat:@" (%@)",model.ProjectTypeName];
-            }
-            if (KJumpURLToEnum(self.mainModel.url) == FileTransfer) { // 市场
-                model.titleStr =  model.Name ;
-            }
-            if (KJumpURLToEnum(self.mainModel.url) == FileTransferDesign) { //设计/技术
-                model.titleStr =  model.Name ;
-            }
-            [self.dataArray addObject:model];
-        }
         dispatch_async(dispatch_get_main_queue(), ^{
+            NSArray *rowsArr = [responder objectForKey:@"rows"];
+            [self.dataArray removeAllObjects];
+            
+            for (NSDictionary *dic in rowsArr) {
+                SJYJJQRListModel  *model = [SJYJJQRListModel  modelWithDictionary:dic];
+                if (KJumpURLToEnum(self.mainModel.url) == FileTransferEngineering) { // 工程
+                    model.titleStr = [model.Name stringByAppendingFormat:@" (%@)",model.ProjectTypeName];
+                }
+                if (KJumpURLToEnum(self.mainModel.url) == FileTransfer) { // 市场
+                    model.titleStr =  model.Name ;
+                }
+                if (KJumpURLToEnum(self.mainModel.url) == FileTransferDesign) { //设计/技术
+                    model.titleStr =  model.Name ;
+                }
+                [self.dataArray addObject:model];
+            }
             [self.tableView reloadData];
             [self endRefreshWithError:NO];
         });
     } failure:^(int status, NSString *info) {
-        [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
         dispatch_async(dispatch_get_main_queue(), ^{
+            [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
             [self.tableView reloadData];
             [self endRefreshWithError:YES];
         });
     }];
-
+    
 }
 -(void)endRefreshWithError:(BOOL)havError{
     [self.tableView.mj_header endRefreshing];
@@ -119,25 +119,30 @@
     //     }
     //    if (KJumpURLToEnum(self.mainModel.url) == FileTransferDesign) { //设计/技术
     //     }
-
+    
     [self  requestAppGetFTInfoWithProjectBranchID:model];
-
+    
 }
 
 -(void)requestAppGetFTInfoWithProjectBranchID:(SJYJJQRListModel *)listModel{
     [QMUITips showLoadingInView:self.view];
     [SJYRequestTool requestJJQRFTInfoWithProjectBranchID:listModel.Id success:^(id responder) {
-        [QMUITips hideAllTips];
-        JJQRFTInfotModel *model = [JJQRFTInfotModel modelWithJSON:responder];
-        if ([listModel.Id isEqualToString:model.ProjectBranchID]) {
-            [self showJJQRAlertViewWithInfoModel:model listModel:listModel];
-        }
-        else{
-
-
-        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            [QMUITips hideAllTips];
+            JJQRFTInfotModel *model = [JJQRFTInfotModel modelWithJSON:responder];
+            if ([listModel.Id isEqualToString:model.ProjectBranchID]) {
+                [self showJJQRAlertViewWithInfoModel:model listModel:listModel];
+            }
+            else{
+                
+            }
+        });
     } failure:^(int status, NSString *info) {
-        [QMUITips showError:info inView:self.view hideAfterDelay:1.2];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [QMUITips hideAllTips];
+            [QMUITips showError:info inView:self.view hideAfterDelay:1.2];
+        });
     }];
 }
 
@@ -149,7 +154,7 @@
     dialogViewController.title = @"交接详情";
     dialogViewController.items = @[@"工程合同", @"设备清单", @"方案图纸"];
     dialogViewController.allowsMultipleSelection = YES;// 打开多选
-
+    
     // 设置是否可以选择
     if (KJumpURLToEnum(self.mainModel.url) == FileTransferEngineering) { //工程
         dialogViewController.tableView.userInteractionEnabled = NO;
@@ -177,17 +182,17 @@
         }
         cell.textLabel.textColor = aDialogViewController.tableView.userInteractionEnabled? Color_TEXT_HIGH : Color_TEXT_NOMARL;
     };
-
+    
     [dialogViewController addCancelButtonWithText:@"取消" block:nil];
     Weak_Self;
     [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
         QMUIDialogSelectionViewController *dialogVC = (QMUIDialogSelectionViewController *)aDialogViewController;
-
+        
         NSString *apiUrl;
         NSMutableDictionary *paraDic = [@{
-                                          @"ProjectBranchID":listModel.Id,
-                                          @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id
-                                          } mutableCopy];
+            @"ProjectBranchID":listModel.Id,
+            @"EmployeeID":[SJYUserManager sharedInstance].sjyloginUC.Id
+        } mutableCopy];
         if (KJumpURLToEnum(self.mainModel.url) == FileTransferEngineering) { //工程
             apiUrl = API_JJQRSubmit_GCB;
         }
@@ -201,14 +206,20 @@
             apiUrl = API_JJQRSubmit_JSB;
         }
         [SJYRequestTool requestJJQRRTFTInfoSubmitWithAPIUrl:apiUrl params:paraDic success:^(id responder) {
-            [dialogVC hide];
-            [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
-            if ([[responder valueForKey:@"success"] boolValue]== YES) {
-                [weakSelf.tableView.mj_header beginRefreshing];
-            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                [dialogVC hide];
+                [QMUITips showWithText:[responder valueForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
+                if ([[responder valueForKey:@"success"] boolValue]== YES) {
+                    [weakSelf.tableView.mj_header beginRefreshing];
+                }
+            });
         } failure:^(int status, NSString *info) {
-            [QMUITips showError:info inView:self.view hideAfterDelay:1.2];
-            [dialogVC hide];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                [QMUITips showError:info inView:self.view hideAfterDelay:1.2];
+                [dialogVC hide];
+            });
         }];
     }];
     [dialogViewController show];

@@ -186,34 +186,38 @@
         }
         [QMUITips showLoading:@"正在登录,请稍后..." inView:weakSelf.view];
         [SJYRequestTool loginInfoWithUserName:weakSelf.nameTF.text passworld:weakSelf.passwordTF.text success:^(LoginModel *loginInfo) {
-            [QMUITips hideAllTipsInView: weakSelf.view];
-            [SJYUserManager sharedInstance].loginModel= loginInfo;
-            [[SJYUserManager sharedInstance]updateLoginModel];
-            
-            
-            [SJYUserManager sharedInstance].sjyloginUC= loginInfo.uc;
-            [[SJYUserManager sharedInstance] updateLoginUC];
-            
-            [SJYUserManager sharedInstance].ucAemp= loginInfo.ucAemp;
-            [[SJYUserManager sharedInstance] updateUcAemp];
-            
-            [QMUITips showSucceed:@"登录成功" inView:weakSelf.view hideAfterDelay:0.6];
-            if ([[SJYDefaultManager shareManager] isRemberPassword]) {
-                [[SJYDefaultManager shareManager] saveUserName:weakSelf.nameTF.text password:weakSelf.passwordTF.text];
-            }
-            [[SJYDefaultManager shareManager] saveEmployeeName:loginInfo.employeeName Dt_Info:loginInfo.dt EmployeeID:loginInfo.employeeID DepartmentID:loginInfo.departmentID PositionID:loginInfo.positionID];
-            
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                SJYMainViewController *mainVC = [[SJYMainViewController alloc] init];
-                [weakSelf.navigationController qmui_pushViewController:mainVC animated:YES completion:^{
-                    AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                    [delegate gotoMainVC];
-                }];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [QMUITips hideAllTipsInView: weakSelf.view];
+                [SJYUserManager sharedInstance].loginModel= loginInfo;
+                [[SJYUserManager sharedInstance]updateLoginModel];
+                
+                
+                [SJYUserManager sharedInstance].sjyloginUC= loginInfo.uc;
+                [[SJYUserManager sharedInstance] updateLoginUC];
+                
+                [SJYUserManager sharedInstance].ucAemp= loginInfo.ucAemp;
+                [[SJYUserManager sharedInstance] updateUcAemp];
+                
+                [QMUITips showSucceed:@"登录成功" inView:weakSelf.view hideAfterDelay:0.6];
+                if ([[SJYDefaultManager shareManager] isRemberPassword]) {
+                    [[SJYDefaultManager shareManager] saveUserName:weakSelf.nameTF.text password:weakSelf.passwordTF.text];
+                }
+                [[SJYDefaultManager shareManager] saveEmployeeName:loginInfo.employeeName Dt_Info:loginInfo.dt EmployeeID:loginInfo.employeeID DepartmentID:loginInfo.departmentID PositionID:loginInfo.positionID];
+                
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    SJYMainViewController *mainVC = [[SJYMainViewController alloc] init];
+                    [weakSelf.navigationController qmui_pushViewController:mainVC animated:YES completion:^{
+                        AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                        [delegate gotoMainVC];
+                    }];
+                });
             });
             
         } failure:^(int status, NSString *info) {
-            [QMUITips hideAllTipsInView: weakSelf.view];
-            [QMUITips showError:info inView:weakSelf.view hideAfterDelay:1.5];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [QMUITips hideAllTipsInView: weakSelf.view];
+                [QMUITips showError:info inView:weakSelf.view hideAfterDelay:1.5];
+            });
         }];
     }];
     
@@ -244,7 +248,7 @@
     visionBelongLab.textColor = Color_TEXT_NOMARL;
     NSString *belong = [SJYDefaultManager.shareManager getSoftwareBelong];
     if (belong == nil || belong.length == 0) {
-        belong = @"常州正选软件科技有限公司";
+        belong = SoftwareBelongTo;
         [SJYDefaultManager.shareManager saveSoftwareBelong:belong];
     }
     NSString *belongstr = [NSString stringWithFormat:@"Copyright © %ld ",(long)[NSDate date].year];

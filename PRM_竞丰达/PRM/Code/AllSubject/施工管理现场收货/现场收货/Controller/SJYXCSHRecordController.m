@@ -42,33 +42,33 @@
         [weakSelf.tableView.mj_header beginRefreshing];
     };
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshXCSHRecordListView) name:@"refreshXCSHRecordListView" object:nil];
-
+    
 }
 
 -(void)requestData_RecordList{
-//    value == 1 ? "已计划" : value == 2 ? "已申请" : value == 3 ? "已驳回" : value == 4 ? "已审核" : value == 5 ? "已下单" : value == 6 ? "已采购" : "已完成"
+    //    value == 1 ? "已计划" : value == 2 ? "已申请" : value == 3 ? "已驳回" : value == 4 ? "已审核" : value == 5 ? "已下单" : value == 6 ? "已采购" : "已完成"
     [SJYRequestTool  requestXCSHRecordList:self.engineerModel.Id success:^(id responder) {
-        NSArray *rowsArr = [responder objectForKey:@"rows"];
-        [self.dataArray removeAllObjects];
-        
-        for (NSDictionary *dic in rowsArr) {
-            XCSHRecordModel *model = [XCSHRecordModel  modelWithDictionary:dic];
-            NSString *titlStr =  model.SiteState.integerValue == 1? [model.SupplierName stringByAppendingFormat:@"  (%@)  ",  @"采购接收"]: [model.Approval stringByAppendingFormat:@"  (%@)  ",  @"总部发货"];
-            model.titleName = titlStr;
-
-            BOOL isHav = [StateCodeStringArray containsObject:model.StateName];
-            StateCode idx = [StateCodeStringArray indexOfObject:model.StateName];
-            model.stateColor = isHav ?  [StateCodeColorHexArray objectAtIndex:idx] : StateCodeColorHexArray.firstObject;
-
-            [self.dataArray addObject:model];
-        }
         dispatch_async(dispatch_get_main_queue(), ^{
+            NSArray *rowsArr = [responder objectForKey:@"rows"];
+            [self.dataArray removeAllObjects];
+            
+            for (NSDictionary *dic in rowsArr) {
+                XCSHRecordModel *model = [XCSHRecordModel  modelWithDictionary:dic];
+                NSString *titlStr =  model.SiteState.integerValue == 1? [model.SupplierName stringByAppendingFormat:@"  (%@)  ",  @"采购接收"]: [model.Approval stringByAppendingFormat:@"  (%@)  ",  @"总部发货"];
+                model.titleName = titlStr;
+                
+                BOOL isHav = [StateCodeStringArray containsObject:model.StateName];
+                StateCode idx = [StateCodeStringArray indexOfObject:model.StateName];
+                model.stateColor = isHav ?  [StateCodeColorHexArray objectAtIndex:idx] : StateCodeColorHexArray.firstObject;
+                
+                [self.dataArray addObject:model];
+            }
             [self.tableView reloadData];
             [self endRefreshWithError:NO];
         });
     } failure:^(int status, NSString *info) {
-        [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
         dispatch_async(dispatch_get_main_queue(), ^{
+            [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
             [self.tableView reloadData];
             [self endRefreshWithError:YES];
         });

@@ -28,8 +28,7 @@
 #import "HttpClient.h"
 #import "ZJScrollPageView.h"
 
-
-
+ #import "IQKeyboardManager.h"
 
 
 #import "SJYHeader.h"

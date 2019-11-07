@@ -113,15 +113,15 @@
         make.height.mas_equalTo(2);
     }];
     __block NSInteger shStateType = self.shStateType;
-
+    
     Weak_Self;
     [self.searchAlertView.stateBtn clickWithBlock:^{
         [self.searchAlertView endEditing:YES];
         [BRStringPickerView showStringPickerWithTitle:@"状态" dataSource:STATEArray defaultSelValue:weakSelf.searchAlertView.stateBtn.currentTitle isAutoSelect:NO themeColor:Color_NavigationLightBlue resultBlock:^(id selectValue) {
             [weakSelf.searchAlertView.stateBtn setTitle:selectValue forState:UIControlStateNormal];
             NSInteger index = [STATEArray indexOfObject:selectValue] -1;
-             shStateType = index;
-         }];
+            shStateType = index;
+        }];
     }];
     
     dialogViewController.contentView = self.searchAlertView;
@@ -131,7 +131,7 @@
     
     [dialogViewController addSubmitButtonWithText:@"确定" block:^(QMUIDialogViewController *aDialogViewController) {
         [weakSelf.searchAlertView endEditing:YES];
-         weakSelf.shStateType = shStateType;
+        weakSelf.shStateType = shStateType;
         weakSelf.searchCode = weakSelf.searchAlertView.codeTF.text;
         weakSelf.searchName = weakSelf.searchAlertView.nameTF.text;
         [modalViewController hideInView:weakSelf.view animated:YES completion:^(BOOL finished) {
@@ -180,35 +180,35 @@
      @return <#return value description#>
      */
     [SJYRequestTool requestSJSHListWithSearchStateID:@(self.shStateType).stringValue SearchCode:self.searchCode SearchName:self.searchName page:self.page  success:^(id responder) {
-        NSArray *rowsArr = [responder objectForKey:@"rows"];
-        self.totalNum = [[responder objectForKey:@"total"] integerValue];
-        NSInteger dpld = [[responder objectForKey:@"dpId"] integerValue];
-        BOOL finalShow = [[responder objectForKey:@"finalShow"] boolValue];
-
-        //        self.dpld = dpld;
-        if (self.tableView.mj_header.isRefreshing) {
-            [self.dataArray removeAllObjects];
-        }
-        for (NSDictionary *dic in rowsArr) {
-            SJSHListModel  *model = [SJSHListModel  modelWithDictionary:dic];
-            model.titleStr = [model.Name stringByAppendingFormat:@" (%@)",model.Code];
-
-//            BOOL isWSH = ((model.State.integerValue == 2 && dpld == [SJYUserManager sharedInstance].sjyloginUC.EngineeringDpId.integerValue) || (model.State.integerValue == 5 && dpld == [SJYUserManager sharedInstance].sjyloginUC.DesignDpId.integerValue));
-            BOOL isWSH = ((model.State.integerValue == 2 && dpld == [SJYUserManager sharedInstance].sjyloginUC.EngineeringDpId.integerValue) || (( model.State.integerValue == 5 || model.State.integerValue == 6 ) && dpld == [SJYUserManager sharedInstance].sjyloginUC.DesignDpId.integerValue));
-
-            model.stateString = isWSH ? [STATEArray objectAtIndex:1] : STATEArray.lastObject;
-            model.StateColor =  isWSH ? [ListSTATEColorArray objectAtIndex:1] : ListSTATEColorArray.lastObject;
-            model.isCanSH = isWSH;
-            model.showYHBtn =  finalShow && isWSH ;
-            [self.dataArray addObject:model];
-        }
         dispatch_async(dispatch_get_main_queue(), ^{
+            NSArray *rowsArr = [responder objectForKey:@"rows"];
+            self.totalNum = [[responder objectForKey:@"total"] integerValue];
+            NSInteger dpld = [[responder objectForKey:@"dpId"] integerValue];
+            BOOL finalShow = [[responder objectForKey:@"finalShow"] boolValue];
+            
+            //        self.dpld = dpld;
+            if (self.tableView.mj_header.isRefreshing) {
+                [self.dataArray removeAllObjects];
+            }
+            for (NSDictionary *dic in rowsArr) {
+                SJSHListModel  *model = [SJSHListModel  modelWithDictionary:dic];
+                model.titleStr = [model.Name stringByAppendingFormat:@" (%@)",model.Code];
+                
+                //            BOOL isWSH = ((model.State.integerValue == 2 && dpld == [SJYUserManager sharedInstance].sjyloginUC.EngineeringDpId.integerValue) || (model.State.integerValue == 5 && dpld == [SJYUserManager sharedInstance].sjyloginUC.DesignDpId.integerValue));
+                BOOL isWSH = ((model.State.integerValue == 2 && dpld == [SJYUserManager sharedInstance].sjyloginUC.EngineeringDpId.integerValue) || (( model.State.integerValue == 5 || model.State.integerValue == 6 ) && dpld == [SJYUserManager sharedInstance].sjyloginUC.DesignDpId.integerValue));
+                
+                model.stateString = isWSH ? [STATEArray objectAtIndex:1] : STATEArray.lastObject;
+                model.StateColor =  isWSH ? [ListSTATEColorArray objectAtIndex:1] : ListSTATEColorArray.lastObject;
+                model.isCanSH = isWSH;
+                model.showYHBtn =  finalShow && isWSH ;
+                [self.dataArray addObject:model];
+            }
             [self.tableView reloadData];
             [self endRefreshWithError:NO];
         });
     } failure:^(int status, NSString *info) {
-        [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
         dispatch_async(dispatch_get_main_queue(), ^{
+            [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
             [self.tableView reloadData];
             [self endRefreshWithError:YES];
         });

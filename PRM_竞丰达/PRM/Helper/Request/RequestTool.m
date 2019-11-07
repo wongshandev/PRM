@@ -169,7 +169,16 @@
     NSLog(@"%@",params);
     [HttpClient post:API_XMQGList parameters:params success:success failure:failure];
 }
-
+//ProjectBranchCode
++(void)requestXMQGWithMarketOrderID:(NSString *)marketOrderID projectBranchCode:(NSString *)projectBranchCode success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
+    NSDictionary *params = @{
+        @"MarketOrderID":marketOrderID,
+        @"ProjectBranchCode":projectBranchCode
+    };
+    NSLog(@"%@",API_XMQGDetialList);
+    NSLog(@"%@",params);
+    [HttpClient post:API_XMQGDetialList parameters:params success:success failure:failure];
+}
 +(void)requestXMQGWithMarketOrderID:(NSString *)marketOrderID success:(void (^) (NSURLSessionDataTask *dataTask, id responseObjcet ))success failure:(void (^)(NSURLSessionDataTask *dataTask,NSError *error))failure{
     NSDictionary *params = @{@"MarketOrderID":marketOrderID};
     NSLog(@"%@",API_XMQGDetialList);

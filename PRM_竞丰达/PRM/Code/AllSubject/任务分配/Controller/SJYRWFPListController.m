@@ -21,7 +21,7 @@
 -(void)setUpNavigationBar{
     self.navBar.hidden = NO;
     self.navBar.titleLabel.text = self.title;
-
+    
 }
 
 
@@ -39,13 +39,13 @@
     Weak_Self;
     self.tableView.mj_header =[MJRefreshNormalHeader headerWithRefreshingBlock:^{
         weakSelf.page = 1;
-//        [weakSelf  requestData_RWFP];
+        //        [weakSelf  requestData_RWFP];
         [weakSelf requestData_RWFP_JFD];
-
+        
     }];
     self.tableView.mj_footer =[MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
         weakSelf.page ++;
-//        [weakSelf  requestData_RWFP];
+        //        [weakSelf  requestData_RWFP];
         [weakSelf requestData_RWFP_JFD];
     }];
     [self.tableView.mj_header beginRefreshing];
@@ -57,23 +57,23 @@
 
 -(void)requestData_RWFP{
     [SJYRequestTool requestRWFPList:[SJYUserManager sharedInstance].sjyloginUC.Id page:self.page success:^(id responder) {
-        self.totalNum = [[responder objectForKey:@"total"] integerValue];
-        NSArray *rowsArr = [responder objectForKey:@"rows"];
-        if (self.tableView.mj_header.isRefreshing) {
-            [self.dataArray removeAllObjects];
-        }
-        for (NSDictionary *dic in rowsArr) {
-            RWFPListModel *model = [RWFPListModel  modelWithDictionary:dic];
-            model.titleStr = model.Code.length? [model.Name stringByAppendingFormat:@" (%@)",model.Code]:model.Name;
-            [self.dataArray addObject:model];
-        }
         dispatch_async(dispatch_get_main_queue(), ^{
+            self.totalNum = [[responder objectForKey:@"total"] integerValue];
+            NSArray *rowsArr = [responder objectForKey:@"rows"];
+            if (self.tableView.mj_header.isRefreshing) {
+                [self.dataArray removeAllObjects];
+            }
+            for (NSDictionary *dic in rowsArr) {
+                RWFPListModel *model = [RWFPListModel  modelWithDictionary:dic];
+                model.titleStr = model.Code.length? [model.Name stringByAppendingFormat:@" (%@)",model.Code]:model.Name;
+                [self.dataArray addObject:model];
+            }
             [self.tableView reloadData];
             [self endRefreshWithError:NO];
         });
     } failure:^(int status, NSString *info) {
-        [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
         dispatch_async(dispatch_get_main_queue(), ^{
+            [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
             [self.tableView reloadData];
             [self endRefreshWithError:YES];
         });
@@ -82,23 +82,23 @@
 
 -(void)requestData_RWFP_JFD{
     [SJYRequestTool requestRWFPList:[SJYUserManager sharedInstance].sjyloginUC.PositionID page:self.page success:^(id responder) {
-        self.totalNum = [[responder objectForKey:@"total"] integerValue];
-        NSArray *rowsArr = [responder objectForKey:@"rows"];
-        if (self.tableView.mj_header.isRefreshing) {
-            [self.dataArray removeAllObjects];
-        }
-        for (NSDictionary *dic in rowsArr) {
-            RWFPListModel *model = [RWFPListModel  modelWithDictionary:dic];
-            model.titleStr = model.Code.length? [model.Name stringByAppendingFormat:@" (%@)",model.Code]:model.Name;
-            [self.dataArray addObject:model];
-        }
         dispatch_async(dispatch_get_main_queue(), ^{
+            self.totalNum = [[responder objectForKey:@"total"] integerValue];
+            NSArray *rowsArr = [responder objectForKey:@"rows"];
+            if (self.tableView.mj_header.isRefreshing) {
+                [self.dataArray removeAllObjects];
+            }
+            for (NSDictionary *dic in rowsArr) {
+                RWFPListModel *model = [RWFPListModel  modelWithDictionary:dic];
+                model.titleStr = model.Code.length? [model.Name stringByAppendingFormat:@" (%@)",model.Code]:model.Name;
+                [self.dataArray addObject:model];
+            }
             [self.tableView reloadData];
             [self endRefreshWithError:NO];
         });
     } failure:^(int status, NSString *info) {
-        [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
         dispatch_async(dispatch_get_main_queue(), ^{
+            [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
             [self.tableView reloadData];
             [self endRefreshWithError:YES];
         });

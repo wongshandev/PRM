@@ -43,29 +43,29 @@
 -(void)requestData_SJSH_GCJD{
     [SJYRequestTool requestSJSHWithAPI:API_SJSH_GCJDList parameters:
      @{
-       @"DeepenDesignID":self.sjshListModel.Id
-       }   success:^(id responder) {
-           if (self.tableView.mj_header.isRefreshing) {
-               [self.dataArray removeAllObjects];
-           }
-           NSArray *rowsArr = [responder objectForKey:@"rows"];
-
-           for (NSDictionary *dic in rowsArr) {
-               GCJDListModel *model = [GCJDListModel  modelWithDictionary:dic];
-               model.titleStr = model.ChildName.length?[model.Name stringByAppendingFormat:@"(%@)",model.ChildName]:model.Name; 
-               [self.dataArray addObject:model];
-           }
-           dispatch_async(dispatch_get_main_queue(), ^{
-               [self.tableView reloadData];
-               [self endRefreshWithError:NO];
-           });
-       } failure:^(int status, NSString *info) {
-           [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
-           dispatch_async(dispatch_get_main_queue(), ^{
-               [self.tableView reloadData];
-               [self endRefreshWithError:YES];
-           });
-       }];
+         @"DeepenDesignID":self.sjshListModel.Id
+     }   success:^(id responder) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (self.tableView.mj_header.isRefreshing) {
+                [self.dataArray removeAllObjects];
+            }
+            NSArray *rowsArr = [responder objectForKey:@"rows"];
+            
+            for (NSDictionary *dic in rowsArr) {
+                GCJDListModel *model = [GCJDListModel  modelWithDictionary:dic];
+                model.titleStr = model.ChildName.length?[model.Name stringByAppendingFormat:@"(%@)",model.ChildName]:model.Name;
+                [self.dataArray addObject:model];
+            }
+            [self.tableView reloadData];
+            [self endRefreshWithError:NO];
+        });
+    } failure:^(int status, NSString *info) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
+            [self.tableView reloadData];
+            [self endRefreshWithError:YES];
+        });
+    }];
 }
 
 -(void)endRefreshWithError:(BOOL)havError{
@@ -84,7 +84,7 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return  self.dataArray.count;
 }
- 
+
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     GCJDListCell *cell = [GCJDListCell cellWithTableView:tableView];
     GCJDListModel *model =  self.dataArray[indexPath.row];

@@ -26,16 +26,16 @@
     [self.navBar.rightButton clickWithBlock:^{
         NSString *content =  [weakSelf.alertContentView.xmbgDescriptTV.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
         NSMutableDictionary *paradic = [@{
-                                          @"ChangeOrderID":weakSelf.detialModel.Id,
-                                          @"ProjectBranchID":weakSelf.projectBranchID,
-                                          @"EmployeeID":KEmployID,
-                                          @"ChangeType":[weakSelf.alertContentView.typeBtn.currentTitle  isEqualToString: @"签证变更"]?@"1":@"2",
-                                          @"Remark":content,
-                                          }mutableCopy];
+            @"ChangeOrderID":weakSelf.detialModel.Id,
+            @"ProjectBranchID":weakSelf.projectBranchID,
+            @"EmployeeID":KEmployID,
+            @"ChangeType":[weakSelf.alertContentView.typeBtn.currentTitle  isEqualToString: @"签证变更"]?@"1":@"2",
+            @"Remark":content,
+        }mutableCopy];
         if (content.length == 0) {
             [QMUITips showWithText:@"请输入变更描述" inView:weakSelf.view hideAfterDelay:1.2];
             return ;
-        } 
+        }
         if (weakSelf.detialModel.isNewAdd && weakSelf.uploadFilePath.length== 0) {
             [QMUITips showWithText:@"请选择附件" inView:weakSelf.view hideAfterDelay:1.2];
         }else{
@@ -44,25 +44,30 @@
     }];
 }
 - (void)uploadFileAndNewAddAndChangeProject:(NSMutableDictionary *)paradic {
-     [HttpClient uploadFileWithUrl:API_XMQGBGDetialSubmit paradic:paradic filePath:self.uploadFilePath progress:^(NSProgress *uploadProgress) {
+    [HttpClient uploadFileWithUrl:API_XMQGBGDetialSubmit paradic:paradic filePath:self.uploadFilePath progress:^(NSProgress *uploadProgress) {
         CGFloat    pro = uploadProgress.fractionCompleted;
         dispatch_async(dispatch_get_main_queue(), ^{
             [QMUITips showLoading:[NSString stringWithFormat:@"%.2f", pro] inView:self.view];
         });
     }  success:^(NSURLSessionDataTask *dataTask, id responseObjcet) {
-        [QMUITips hideAllTips];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"refreshSJYXMBGViewControllerList" object:nil];
-        [QMUITips showSucceed:[responseObjcet objectForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self.navigationController.viewControllers  enumerateObjectsUsingBlock:^(__kindof UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                if ([obj isKindOfClass:SJYXMBGViewController.class]) {
-                    [self.navigationController popToViewController:obj animated:YES];
-                    *stop = YES;
-                }
-            }];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [QMUITips hideAllTips];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"refreshSJYXMBGViewControllerList" object:nil];
+            [QMUITips showSucceed:[responseObjcet objectForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self.navigationController.viewControllers  enumerateObjectsUsingBlock:^(__kindof UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if ([obj isKindOfClass:SJYXMBGViewController.class]) {
+                        [self.navigationController popToViewController:obj animated:YES];
+                        *stop = YES;
+                    }
+                }];
+            });
         });
     } failure:^(NSURLSessionDataTask *dataTask, NSError *error) {
-        [QMUITips showSucceed:error.description inView:self.view hideAfterDelay:1.2];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [QMUITips hideAllTips];
+            [QMUITips showSucceed:error.description inView:self.view hideAfterDelay:1.2];
+        });
     }];
 }
 
@@ -71,49 +76,49 @@
     self.alertContentView.detailModel = self.detialModel;
     self.alertContentView.xmbgDescriptTV.delegate = self;
     [self.view addSubview:self.alertContentView];
-
+    
     UILabel *sepLab = [[UILabel alloc]init];
     sepLab.backgroundColor = Color_SrprateLine;
     [self.alertContentView addSubview:sepLab];
-
+    
     [self.alertContentView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.navBar.mas_bottom).offset(10);
         make.left.mas_equalTo(self.view).offset(10);
         make.right.mas_equalTo(self.view).offset(-10);
         make.height.mas_equalTo(250);
     }];
-
+    
     self.alertContentView.backgroundColor = UIColorWhite;
     self.alertContentView.detailModel = self.detialModel;
-
+    
     [self.alertContentView.xmbgTypeLab makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.alertContentView.mas_top).offset(5);
         make.left.mas_equalTo(self.alertContentView.mas_left).offset(10);
         make.right.mas_equalTo( self.alertContentView.mas_right).offset(-10);
         make.height.mas_equalTo(20);
     }];
-
+    
     [self.alertContentView.typeBtn makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.alertContentView.xmbgTypeLab.mas_bottom).offset(5);
         make.left.mas_equalTo(self.alertContentView.mas_left).offset(10);
         make.right.mas_equalTo( self.alertContentView.mas_right).offset(-10);
         make.height.mas_equalTo(35);
     }];
-
+    
     [self.alertContentView.rightTypeImgView makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.alertContentView.typeBtn.mas_centerY);
         make.right.mas_equalTo(self.alertContentView.mas_right).offset(-10);
         make.height.mas_equalTo(30);
         make.width.mas_equalTo(30);
     }];
-
+    
     [self.alertContentView.xmbgDescriptLab makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.alertContentView.typeBtn.mas_bottom).offset(5);
         make.left.mas_equalTo(self.alertContentView.mas_left).offset(10);
         make.right.mas_equalTo( self.alertContentView.mas_right).offset(-10);
         make.height.mas_equalTo(20);
     }];
-
+    
     [self.alertContentView.xmbgDescriptTV makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.alertContentView.xmbgDescriptLab.mas_bottom).offset(5);
         make.left.mas_equalTo(self.alertContentView.mas_left).offset(10);
@@ -138,7 +143,7 @@
         make.left.mas_equalTo(self.alertContentView.fujianBtn.mas_left);
         make.right.mas_equalTo(self.alertContentView.fujianBtn.mas_right);
     }];
-
+    
     Weak_Self;
     [self.alertContentView.typeBtn clickWithBlock:^{
         [weakSelf.alertContentView endEditing:YES];
@@ -146,8 +151,8 @@
             [weakSelf.alertContentView.typeBtn setTitle:selectValue forState:UIControlStateNormal];
         }];
     }];
-
-
+    
+    
     [self.alertContentView.fujianBtn clickWithBlock:^{
         if (weakSelf.detialModel.isNewAdd) {
             [weakSelf.alertContentView endEditing:YES];
@@ -162,19 +167,19 @@
 
 #pragma mark    附件选择
 -(void)selectFileAction:(UIButton *)sender{
-
+    
     NSLog(@"%@",[self getAllFileNames:@"Documents"]);
     UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"文件选择" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     [alertVC addAction:[UIAlertAction actionWithTitle:@"从相册获取" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [self getImageFromDCMI];
     }]];
-
+    
     [alertVC addAction:[UIAlertAction actionWithTitle:@"相机拍照" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [self getPhotoFromCamera];
     }]];
-//    [alertVC addAction:[UIAlertAction actionWithTitle:@"沙盒获取文件" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//        [self getFileFromSandBox];
-//    }]];
+    //    [alertVC addAction:[UIAlertAction actionWithTitle:@"沙盒获取文件" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    //        [self getFileFromSandBox];
+    //    }]];
     [alertVC addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDestructive handler:nil]];
     [self presentViewController:alertVC animated:YES completion:nil];
 }
@@ -195,7 +200,7 @@
         self.uploadFilePath = filePath;
     };
     [self presentViewController:fileSelectVC animated:YES completion:nil];
-
+    
 }
 -(void)getPhotoFromCamera{
     if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
@@ -230,7 +235,7 @@
     pickerImage.allowsEditing = NO;
     [self presentViewController:pickerImage animated:YES completion:^{
     }];
-
+    
 }
 //从相册选择图片后操作
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
@@ -243,19 +248,19 @@
     if (picker.sourceType == UIImagePickerControllerSourceTypeSavedPhotosAlbum) {
         fileStr =  [self saveImage:image withName:[NSString stringWithFormat:@"photo%ld.png",(long)i++]];
     }
-//    NSString *dateStr = [NSDate br_getDateString:[NSDate date] format:@"yyyyMMddHHmmss"];
-//    if (picker.sourceType == UIImagePickerControllerSourceTypeCamera ) {
-//        fileStr = [self saveImage:image withName:[NSString stringWithFormat:@"camera%@%ld.png",dateStr,(long)i++]];
-//    }
-//    if (picker.sourceType == UIImagePickerControllerSourceTypeSavedPhotosAlbum) {
-//        fileStr =  [self saveImage:image withName:[NSString stringWithFormat:@"photo%@dateStr%ld.png",dateStr,(long)i++]];
-//    }
+    //    NSString *dateStr = [NSDate br_getDateString:[NSDate date] format:@"yyyyMMddHHmmss"];
+    //    if (picker.sourceType == UIImagePickerControllerSourceTypeCamera ) {
+    //        fileStr = [self saveImage:image withName:[NSString stringWithFormat:@"camera%@%ld.png",dateStr,(long)i++]];
+    //    }
+    //    if (picker.sourceType == UIImagePickerControllerSourceTypeSavedPhotosAlbum) {
+    //        fileStr =  [self saveImage:image withName:[NSString stringWithFormat:@"photo%@dateStr%ld.png",dateStr,(long)i++]];
+    //    }
     [picker dismissViewControllerAnimated:YES completion:^{
         [self .alertContentView.fujianBtn setTitle:fileStr.lastPathComponent forState:UIControlStateNormal];
-//        self.alertContentView.fjImgView.image = SJYCommonImage([NSString matchType:fileStr.lastPathComponent]);
+        //        self.alertContentView.fjImgView.image = SJYCommonImage([NSString matchType:fileStr.lastPathComponent]);
         self.alertContentView.fjImgView.image = image;
         self.uploadFilePath = fileStr;
-    }]; 
+    }];
 }
 
 //保存图片
@@ -323,7 +328,7 @@
     }
 }
 -(void)downLoadFileWithCellModeUrl:(NSString  *)downloadUrl saveAtPath:(NSString *)saveFilePath{
-//    NSURL * url = [NSURL URLWithString:[downloadUrl stringByReplacingOccurrencesOfString:@".." withString:API_ImageUrl]];
+    //    NSURL * url = [NSURL URLWithString:[downloadUrl stringByReplacingOccurrencesOfString:@".." withString:API_ImageUrl]];
     NSURL * url = [NSURL URLWithString: downloadUrl];
     [HttpClient downLoadFilesWithURLStringr:url progress:^(NSProgress *downloadProgress) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -336,13 +341,13 @@
             [QMUITips hideAllTips];
             UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"查看附件?" message:nil preferredStyle:UIAlertControllerStyleAlert];
             [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-
+                
             }]];
             [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 [self openFileAtPath:filePath];
             }]];
             [self presentViewController:alert animated:YES completion:nil];
-
+            
         });
         NSLog(@" 附件 : %@",filePath);
     }];

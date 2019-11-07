@@ -54,6 +54,7 @@
 
 -(void)requestData_CGFK{
     [SJYRequestTool requestCGFKListWithPage:self.page success:^(id responder) {
+        dispatch_async(dispatch_get_main_queue(), ^{
         self.totalNum = [[responder objectForKey:@"total"] integerValue];
         NSArray *rowsArr = [responder objectForKey:@"rows"];
         if (self.tableView.mj_header.isRefreshing) {
@@ -64,7 +65,6 @@
             model.isCGFK = YES;
              [self.dataArray addObject:model];
         }
-        dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView reloadData];
             [self endRefreshWithError:NO];
         });

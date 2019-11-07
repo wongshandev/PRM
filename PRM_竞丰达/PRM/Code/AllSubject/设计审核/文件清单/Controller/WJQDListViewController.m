@@ -45,29 +45,29 @@
 -(void)requestData_SJSH_WJQD{
     [SJYRequestTool requestSJSHWithAPI:API_SJSH_WJQDList parameters:
      @{
-       @"DeepenDesignID":self.sjshListModel.Id
-       }   success:^(id responder) {
-           if (self.tableView.mj_header.isRefreshing) {
-               [self.dataArray removeAllObjects];
-           }
-           NSArray *rowsArr = [responder objectForKey:@"rows"];
-
-           for (NSDictionary *dic in rowsArr) {
-               XMBGDetailModel *model = [XMBGDetailModel  modelWithDictionary:dic];
-               model.Url =[model.Url stringByReplacingOccurrencesOfString:@".." withString:API_ImageUrl];
-               [self.dataArray addObject:model];
-           }
-           dispatch_async(dispatch_get_main_queue(), ^{
-               [self.tableView reloadData];
-               [self endRefreshWithError:NO];
-           });
-       } failure:^(int status, NSString *info) {
-           [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
-           dispatch_async(dispatch_get_main_queue(), ^{
-               [self.tableView reloadData];
-               [self endRefreshWithError:YES];
-           });
-       }];
+         @"DeepenDesignID":self.sjshListModel.Id
+     }   success:^(id responder) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (self.tableView.mj_header.isRefreshing) {
+                [self.dataArray removeAllObjects];
+            }
+            NSArray *rowsArr = [responder objectForKey:@"rows"];
+            
+            for (NSDictionary *dic in rowsArr) {
+                XMBGDetailModel *model = [XMBGDetailModel  modelWithDictionary:dic];
+                model.Url =[model.Url stringByReplacingOccurrencesOfString:@".." withString:API_ImageUrl];
+                [self.dataArray addObject:model];
+            }
+            [self.tableView reloadData];
+            [self endRefreshWithError:NO];
+        });
+    } failure:^(int status, NSString *info) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
+            [self.tableView reloadData];
+            [self endRefreshWithError:YES];
+        });
+    }];
 }
 
 -(void)endRefreshWithError:(BOOL)havError{
@@ -118,23 +118,23 @@
         //不存在-------下载保存
         [self downLoadFileWithCellModeUrl:model.Url saveAtPath:savefilePath];
     }
-//    if ([fileManager fileExistsAtPath:savefilePath]) {
-//        //存在  --------弹窗提示直接打开 //重新新下载
-//        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"确认" message:@"文件已存在是否重新下载" preferredStyle:UIAlertControllerStyleAlert];
-//        [alertVC addAction: [UIAlertAction actionWithTitle:@"直接打开" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//            //快速预览
-//            [self openFileAtPath:[NSURL fileURLWithPath:savefilePath]];
-//        }]];
-//        [alertVC addAction: [UIAlertAction actionWithTitle:@"重新下载" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//            [fileManager removeItemAtPath:savefilePath error:nil];
-//            [self downLoadFileWithCellModeUrl:model.Url saveAtPath:savefilePath];
-//        }]];
-//        [alertVC addAction: [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
-//        [self presentViewController:alertVC animated:YES completion:nil];
-//    }else {
-//        //不存在-------下载保存
-//        [self downLoadFileWithCellModeUrl:model.Url saveAtPath:savefilePath];
-//    }
+    //    if ([fileManager fileExistsAtPath:savefilePath]) {
+    //        //存在  --------弹窗提示直接打开 //重新新下载
+    //        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"确认" message:@"文件已存在是否重新下载" preferredStyle:UIAlertControllerStyleAlert];
+    //        [alertVC addAction: [UIAlertAction actionWithTitle:@"直接打开" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    //            //快速预览
+    //            [self openFileAtPath:[NSURL fileURLWithPath:savefilePath]];
+    //        }]];
+    //        [alertVC addAction: [UIAlertAction actionWithTitle:@"重新下载" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    //            [fileManager removeItemAtPath:savefilePath error:nil];
+    //            [self downLoadFileWithCellModeUrl:model.Url saveAtPath:savefilePath];
+    //        }]];
+    //        [alertVC addAction: [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    //        [self presentViewController:alertVC animated:YES completion:nil];
+    //    }else {
+    //        //不存在-------下载保存
+    //        [self downLoadFileWithCellModeUrl:model.Url saveAtPath:savefilePath];
+    //    }
 }
 
 
@@ -150,9 +150,11 @@
     } destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
         return [NSURL fileURLWithPath:saveFilePath];
     } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
-        [QMUITips hideAllTips];
-        [self openFileAtPath:filePath];
-
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [QMUITips hideAllTips];
+            [self openFileAtPath:filePath];
+        });
+        
         NSLog(@" 附件 : %@",filePath);
         //        dispatch_async(dispatch_get_main_queue(), ^{
         //            [QMUITips hideAllTips];
@@ -168,7 +170,7 @@
         //        });
         //        NSLog(@" 附件 : %@",filePath);
     }];
-
+    
 }
 #pragma mark ------------ 查看文件
 -(void)openFileAtPath:(NSURL *)filePath{

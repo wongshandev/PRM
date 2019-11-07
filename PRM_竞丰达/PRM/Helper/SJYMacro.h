@@ -12,6 +12,11 @@
 #define  DisplayName  [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleDisplayName"]
 //列表分页加载个数
 #define PageOfRows  @(20)
+
+#define SearchBarHeight    44
+
+#define String_BuildFormat(format,...)      [NSString stringWithFormat:format,##__VA_ARGS__]
+#define NSStringFormat(format,...)           [NSString stringWithFormat:format,##__VA_ARGS__]
 //屏幕尺寸
 #define SCREEN_BOUNDS [UIScreen mainScreen].bounds //获取屏幕尺寸
 #define SCREEN_H SCREEN_BOUNDS.size.height//获取屏幕高度
@@ -116,8 +121,13 @@ UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"提�
 #define SJYCommonImage(imageName) [UIImage imageNamed:imageName]
 //#define SJYNotCommonImage(imageName) [SJYPublicTool getNotCommonImage:imageName]
 
+#ifdef DEBUG
+#define SoftwareBelongTo @"郑州正选软件科技有限公司"
+#else
+#define SoftwareBelongTo @"常州正选软件科技有限公司"
+#endif
 
-
+#define APPFORJFD  1
 
 #ifdef DEBUG
 #define NSLog(format , ...) NSLog((@"\n[***函数名:%s]\n" "[行号:%d]\n" format), __FUNCTION__, __LINE__, ##__VA_ARGS__)

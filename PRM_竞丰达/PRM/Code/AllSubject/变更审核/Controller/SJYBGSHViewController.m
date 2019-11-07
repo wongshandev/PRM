@@ -103,7 +103,7 @@
             [weakSelf.searchAlertView.stateBtn setTitle:selectValue forState:UIControlStateNormal];
             NSInteger index = [STATEArray indexOfObject:selectValue] -1;
             shStateType = index;
-         }];
+        }];
     }];
     
     dialogViewController.contentView = self.searchAlertView;
@@ -153,30 +153,30 @@
     //    NSString *stateString = [stateStr isEqual: @"未审核"]?@"0":([stateStr  isEqual:@"全部"]?@"2":@"1");
     
     [SJYRequestTool requestBGSHListWithEmployID:[SJYUserManager sharedInstance].sjyloginUC.Id SearchStateID:@(self.shStateType).stringValue SearchCode:self.searchCode page:self.page success:^(id responder) {
-        
-        NSArray *rowsArr = [responder objectForKey:@"rows"];
-        self.totalNum = [[responder objectForKey:@"total"] integerValue];
-        if (self.tableView.mj_header.isRefreshing) {
-            [self.dataArray removeAllObjects]; 
-        }
-        for (NSDictionary *dic in rowsArr) {
-            BGSHListModel *model = [BGSHListModel  modelWithDictionary:dic];
-            model.titleStr = [model.Name  stringByAppendingFormat:@" (%@)", model.Code];
-            NSString *string = model.ChangeType.integerValue == 1 ? @"签证变更":@"乙方责任";
-            model.subtitleStr = [model.CName  stringByAppendingFormat:@"(%@)", string];
-            BOOL isYSH = model.ApprovalID.integerValue>0;
-            model.stateStr = isYSH ?STATEArray.lastObject:[STATEArray objectAtIndex:1];
-            model.stateColor = isYSH ?ListSTATEColorArray.lastObject:[ListSTATEColorArray objectAtIndex:1];
-            model.Url =[model.Url stringByReplacingOccurrencesOfString:@".." withString:API_ImageUrl];
-            [self.dataArray addObject:model];
-        }
         dispatch_async(dispatch_get_main_queue(), ^{
+            
+            NSArray *rowsArr = [responder objectForKey:@"rows"];
+            self.totalNum = [[responder objectForKey:@"total"] integerValue];
+            if (self.tableView.mj_header.isRefreshing) {
+                [self.dataArray removeAllObjects];
+            }
+            for (NSDictionary *dic in rowsArr) {
+                BGSHListModel *model = [BGSHListModel  modelWithDictionary:dic];
+                model.titleStr = [model.Name  stringByAppendingFormat:@" (%@)", model.Code];
+                NSString *string = model.ChangeType.integerValue == 1 ? @"签证变更":@"乙方责任";
+                model.subtitleStr = [model.CName  stringByAppendingFormat:@"(%@)", string];
+                BOOL isYSH = model.ApprovalID.integerValue>0;
+                model.stateStr = isYSH ?STATEArray.lastObject:[STATEArray objectAtIndex:1];
+                model.stateColor = isYSH ?ListSTATEColorArray.lastObject:[ListSTATEColorArray objectAtIndex:1];
+                model.Url =[model.Url stringByReplacingOccurrencesOfString:@".." withString:API_ImageUrl];
+                [self.dataArray addObject:model];
+            }
             [self.tableView reloadData];
             [self endRefreshWithError:NO];
         });
     } failure:^(int status, NSString *info) {
-        [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
         dispatch_async(dispatch_get_main_queue(), ^{
+            [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
             [self.tableView reloadData];
             [self endRefreshWithError:YES];
         });
@@ -227,12 +227,18 @@
     [alert addAction:[QMUIAlertAction actionWithTitle:@"确定" style:QMUIAlertActionStyleDefault handler:^(__kindof QMUIAlertController *aAlertController, QMUIAlertAction *action) {
         
         [SJYRequestTool requestBGSHSubmitWithEmployID:[SJYUserManager sharedInstance].sjyloginUC.Id ChangeOrderID:model.Id success:^(id responder) {
-            [QMUITips showSucceed:[responder objectForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
-            if ([[responder valueForKey:@"success"] boolValue]== YES) {
-                [self.tableView.mj_header beginRefreshing];
-            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                [QMUITips showSucceed:[responder objectForKey:@"msg"] inView:self.view hideAfterDelay:1.2];
+                if ([[responder valueForKey:@"success"] boolValue]== YES) {
+                    [self.tableView.mj_header beginRefreshing];
+                }
+            });
         } failure:^(int status, NSString *info) {
-            [QMUITips showSucceed:info inView:self.view hideAfterDelay:1.2];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                [QMUITips showSucceed:info inView:self.view hideAfterDelay:1.2];
+            });
         }];
     }]];
     [alert addCancelAction];
@@ -250,24 +256,24 @@
         //不存在-------下载保存
         [self downLoadFileWithCellModeUrl:model.Url saveAtPath:savefilePath];
     }
-//    if ([fileManager fileExistsAtPath:savefilePath]) {
-//        //存在  --------弹窗提示直接打开 //重新新下载
-//        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"确认" message:@"文件已存在是否重新下载" preferredStyle:UIAlertControllerStyleAlert];
-//        [alertVC addAction: [UIAlertAction actionWithTitle:@"直接打开" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//            //快速预览
-//            [self openFileAtPath:[NSURL fileURLWithPath:savefilePath]];
-//        }]];
-//        [alertVC addAction: [UIAlertAction actionWithTitle:@"重新下载" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//            [fileManager removeItemAtPath:savefilePath error:nil];
-//            [self downLoadFileWithCellModeUrl:model.Url saveAtPath:savefilePath];
-//        }]];
-//        [alertVC addAction: [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
-//        [self presentViewController:alertVC animated:YES completion:nil];
-//    }else {
-//        //不存在-------下载保存
-//        [self downLoadFileWithCellModeUrl:model.Url saveAtPath:savefilePath];
-//    }
-
+    //    if ([fileManager fileExistsAtPath:savefilePath]) {
+    //        //存在  --------弹窗提示直接打开 //重新新下载
+    //        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"确认" message:@"文件已存在是否重新下载" preferredStyle:UIAlertControllerStyleAlert];
+    //        [alertVC addAction: [UIAlertAction actionWithTitle:@"直接打开" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    //            //快速预览
+    //            [self openFileAtPath:[NSURL fileURLWithPath:savefilePath]];
+    //        }]];
+    //        [alertVC addAction: [UIAlertAction actionWithTitle:@"重新下载" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    //            [fileManager removeItemAtPath:savefilePath error:nil];
+    //            [self downLoadFileWithCellModeUrl:model.Url saveAtPath:savefilePath];
+    //        }]];
+    //        [alertVC addAction: [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    //        [self presentViewController:alertVC animated:YES completion:nil];
+    //    }else {
+    //        //不存在-------下载保存
+    //        [self downLoadFileWithCellModeUrl:model.Url saveAtPath:savefilePath];
+    //    }
+    
 }
 
 #pragma mark ------------ 附件查看 ------------ UIDocumentInteractionControllerdelegate
@@ -285,21 +291,23 @@
     } destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
         return [NSURL fileURLWithPath:saveFilePath];
     } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [QMUITips hideAllTips];
-//            UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"查看附件?" message:nil preferredStyle:UIAlertControllerStyleAlert];
-//            [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-//
-//            }]];
-//            [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//                [self openFileAtPath:filePath];
-//            }]];
-//            [self presentViewController:alert animated:YES completion:nil];
-//
-//        });
-//        NSLog(@" 附件 : %@",filePath);
-         [QMUITips hideAllTips];
-        [self openFileAtPath:filePath];
+        //        dispatch_async(dispatch_get_main_queue(), ^{
+        //            [QMUITips hideAllTips];
+        //            UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"查看附件?" message:nil preferredStyle:UIAlertControllerStyleAlert];
+        //            [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        //
+        //            }]];
+        //            [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        //                [self openFileAtPath:filePath];
+        //            }]];
+        //            [self presentViewController:alert animated:YES completion:nil];
+        //
+        //        });
+        //        NSLog(@" 附件 : %@",filePath);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [QMUITips hideAllTips];
+            [self openFileAtPath:filePath];
+        });
     }];
     
 }
@@ -334,7 +342,7 @@
             NSLog(@"打开失败");
         }
     } else {
-        SJYAlertShow(@"打开文档失败，可能文档损坏，请重试", @"确认"); 
+        SJYAlertShow(@"打开文档失败，可能文档损坏，请重试", @"确认");
     }
 }
 

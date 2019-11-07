@@ -49,10 +49,8 @@
 
     self.tagViewF  = CGRectMake(tagViewX, tagViewY , tagViewW, tagViewH) ;
 
-    self.cellHeight  = self.tagView.subviews.count==0? padding  + (CGRectGetMaxY(self.tagViewF)):padding*2 + (CGRectGetMaxY(self.tagViewF));//  padding + (CGRectGetMaxY(self.tagViewF));
+    self.cellHeight  = self.tagView.subviews.count==0? padding/2  + (CGRectGetMaxY(self.tagViewF)):padding*2/2 + (CGRectGetMaxY(self.tagViewF));//  padding + (CGRectGetMaxY(self.tagViewF));
 }
-
-
 
 - (CGFloat)setTagViewSubviewsWithModel:(CGFKDetialModel *)model {
     [self.tagView removeAllSubviews];
@@ -105,10 +103,6 @@
     free(properties);
     return props;
 }
-
-
-
-
 
 - (nonnull id)copyWithZone:(nullable NSZone *)zone {
     CGFKDetialFrame *model = [[CGFKDetialFrame allocWithZone:zone] init];

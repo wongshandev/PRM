@@ -51,7 +51,7 @@
     [self.addBtn clickWithBlock:^{
         //        [weakSelf update_JDHBData];
         WLJHDetialController *detialVC =  [[WLJHDetialController alloc] init];
-
+        
         WLJHListModel *newModel = [[WLJHListModel alloc] init];
         newModel.State = @"-888";
         
@@ -76,29 +76,29 @@
 
 -(void)requestData_WLJH{
     [SJYRequestTool requestWLJHListWithProjectBranchID: self.engineerModel.Id success:^(id responder) {
-        if ([self.tableView.mj_header isRefreshing]) {
-            [self.dataArray removeAllObjects];
-        } 
-        self.dState = [responder objectForKey:@"dState"];
-        self.addBtn.hidden = self.dState.integerValue < 7;
-        NSArray *rowsArr = [responder objectForKey:@"rows"];
-         for (NSDictionary *dic in rowsArr) {
-            WLJHListModel *model = [WLJHListModel  modelWithDictionary:dic];
-            if (model.State.integerValue < ListWLJHStateArray.count ) {
-                model.stateString = [ListWLJHStateArray objectAtIndex:model.State.integerValue];
-                 StateCode idx = [StateCodeStringArray indexOfObject:model.stateString];
-                model.stateColor =   [StateCodeColorHexArray objectAtIndex:idx];
-             }
-
-            [self.dataArray addObject:model];
-        }
         dispatch_async(dispatch_get_main_queue(), ^{
+            if ([self.tableView.mj_header isRefreshing]) {
+                [self.dataArray removeAllObjects];
+            }
+            self.dState = [responder objectForKey:@"dState"];
+            self.addBtn.hidden = self.dState.integerValue < 7;
+            NSArray *rowsArr = [responder objectForKey:@"rows"];
+            for (NSDictionary *dic in rowsArr) {
+                WLJHListModel *model = [WLJHListModel  modelWithDictionary:dic];
+                if (model.State.integerValue < ListWLJHStateArray.count ) {
+                    model.stateString = [ListWLJHStateArray objectAtIndex:model.State.integerValue];
+                    StateCode idx = [StateCodeStringArray indexOfObject:model.stateString];
+                    model.stateColor =   [StateCodeColorHexArray objectAtIndex:idx];
+                }
+                
+                [self.dataArray addObject:model];
+            }
             [self.tableView reloadData];
             [self endRefreshWithError:NO];
         });
     } failure:^(int status, NSString *info) {
-        [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
         dispatch_async(dispatch_get_main_queue(), ^{
+            [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
             [self.tableView reloadData];
             [self endRefreshWithError:YES];
         });
@@ -135,9 +135,9 @@
     WLJHListModel *model = [self.dataArray objectAtIndex:indexPath.row];
     WLJHDetialController *detialVC =  [[WLJHDetialController alloc] init];
     detialVC.title= @"物料详情";
-//    if (self.dState.integerValue >= 7 && (model.State.integerValue == 3 || model.State.integerValue ==1)) {
-//        detialVC.title = @"修改物料详情";
-//    }
+    //    if (self.dState.integerValue >= 7 && (model.State.integerValue == 3 || model.State.integerValue ==1)) {
+    //        detialVC.title = @"修改物料详情";
+    //    }
     detialVC.dState = self.dState;
     detialVC.marketOrderID = model.Id;
     detialVC.projectBranchID = self.engineerModel.Id;

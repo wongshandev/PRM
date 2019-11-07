@@ -24,6 +24,12 @@
 @property(nonatomic,copy)NSString * spendTypeID;
 @property(nonatomic,strong)NSMutableArray * spendTypeArray;
 
+@property (strong,nonatomic) UISegmentedControl *searchCtr;
+
+@property (strong,nonatomic) QMUIButton *searchTypeBtn;
+@property (strong,nonatomic) QMUILabel *typeMenLab;
+@property (strong,nonatomic) UIView *searchTypeView;
+
 @end
 
 @implementation SJYKZSHListController
@@ -45,21 +51,25 @@
 
 
 -(void)setUpNavigationBar{
-    Weak_Self;
     //    self.navBar.backButton.hidden = NO;
     self.navBar.titleLabel.text = self.title;
     self.shStateType = 0;
     
     XMKZSpendTypeModel *modelAll = self.spendTypeArray.firstObject;
     self.spendTypeID = modelAll.Id;
-    
+#ifndef APPFORJFD
+    Weak_Self;
+    //FIXME: 无竞丰达宏定义
     [self.navBar.rightButton setTitle:@"查询" forState:UIControlStateNormal];
     self.navBar.rightButton.hidden = NO;
     [self.navBar.rightButton clickWithBlock:^{
         [weakSelf alertSearchView];
     }];
+#endif
 }
 
+#ifndef APPFORJFD
+//FIXME: 无竞丰达宏定义  ======处理
 -(void)alertSearchView{
     QMUIModalPresentationViewController *modalViewController = [[QMUIModalPresentationViewController alloc] init];
     QMUIDialogViewController *dialogViewController = [[QMUIDialogViewController alloc] init];
@@ -163,10 +173,131 @@
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.estimatedRowHeight = 90;
 }
+#else
+//FIXME:  竞丰达宏定义  ======处理
+//FIXME:调整搜索方式
+-(void)setupTableView{
+    
+}
+- (void)buildSubviews{
+    self.searchCtr = [[UISegmentedControl alloc]initWithItems:STATEArray];
+    self.searchCtr.selectedSegmentIndex =  1;
+    self.shStateType = self.searchCtr.selectedSegmentIndex-1;
+    [self.searchCtr setTitleTextAttributes:@{NSFontAttributeName:Font_System(15)} forState:UIControlStateNormal];
+    [self.searchCtr setTitleTextAttributes:@{NSForegroundColorAttributeName:UIColor.whiteColor} forState:UIControlStateSelected];
+ 
+    if (@available(iOS 13.0, *)) {
+        self.searchCtr.selectedSegmentTintColor = Color_NavigationLightBlue;
+    } else {
+        self.searchCtr.tintColor = Color_NavigationLightBlue;
+    }
+    [self.searchCtr addTarget:self action:@selector(changeSearchSegmentState:) forControlEvents:UIControlEventValueChanged];
+    [self.view addSubview:self.searchCtr];
+    
+    //类型搜索
+    self.searchTypeView = [UIView new];
+    [self.view addSubview:self.searchTypeView];
+    
+    self.typeMenLab = [[QMUILabel alloc] init];
+    self.typeMenLab.text = @"类型 : " ;
+    
+    self.typeMenLab.lineBreakMode = NSLineBreakByCharWrapping;
+    self.typeMenLab.font = Font_System(15);
+    self.typeMenLab.textColor = Color_TEXT_HIGH;
+    [self.searchTypeView addSubview:self.typeMenLab];
+    
+    UIImageView *imageView = [[UIImageView alloc]init];
+    imageView.image = UIImageMake(@"down-1");
+    [self.searchTypeView addSubview:imageView];
+    
+    self.searchTypeBtn  = [[QMUIButton alloc]init];
+    self.searchTypeBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    self.searchTypeBtn.titleLabel.font = Font_System(15);
+    [self.searchTypeBtn setTitleColor:Color_TEXT_HIGH forState:UIControlStateNormal];
+    self.searchTypeBtn.adjustsButtonWhenHighlighted = NO;
+    [self.searchTypeBtn setTitleColor:Color_TEXT_HIGH forState:UIControlStateHighlighted];
+    [self.searchTypeView addSubview:self.searchTypeBtn];
+    
+    XMKZSpendTypeModel *modelAll = self.spendTypeArray.firstObject;
+    self.spendTypeID = modelAll.Id;
+    [self.searchTypeBtn setTitle:modelAll.name forState:UIControlStateNormal];
+    
+    Weak_Self;
+    [self.searchTypeBtn clickWithBlock:^{
+        NSMutableArray *spendingIdArray = [NSMutableArray new];
+        NSMutableArray *spendingNameArray = [NSMutableArray new];
+        [weakSelf.spendTypeArray enumerateObjectsUsingBlock:^(XMKZSpendTypeModel *_Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [spendingIdArray addObject:obj.Id];
+            [spendingNameArray addObject:obj.name];
+        }];
+        [BRStringPickerView showStringPickerWithTitle:@"类型" dataSource:spendingNameArray defaultSelValue:weakSelf.searchAlertView.typeBtn.currentTitle isAutoSelect:NO themeColor:Color_NavigationLightBlue resultBlock:^(id selectValue) {
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name == %@",selectValue];
+            XMKZSpendTypeModel *model = [weakSelf.spendTypeArray filteredArrayUsingPredicate:predicate].firstObject;
+            weakSelf.spendTypeID = model.Id;
+            [weakSelf.searchTypeBtn setTitle:selectValue forState:UIControlStateNormal];
+            [weakSelf.tableView.mj_header beginRefreshing];
+        }];
+    }];
+    
+    //TableView
+    [self.view addSubview:self.tableView];
+    self.tableView.separatorStyle =  UITableViewCellSeparatorStyleSingleLine;
+    self.tableView.separatorInset = UIEdgeInsetsZero;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.estimatedRowHeight = 90;
+    
+    
+    [self.searchCtr mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.navBar.height+10);
+        make.centerX.mas_equalTo(self.view.mas_centerX);
+        make.height.mas_equalTo(SearchBarHeight - 10);
+        make.width.mas_equalTo(SCREEN_WIDTH- 20);
+    }];
+    
+    [self.searchTypeView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.searchCtr.mas_bottom).mas_offset(10);
+        make.left.mas_equalTo(self.view).mas_offset(10);
+        make.right.mas_equalTo(self.view).mas_offset(-10);
+        make.height.mas_equalTo(SearchBarHeight);
+    }];
+    [self.searchTypeView  rounded:5 width:1 color:Color_TEXT_WEAK];
+    
+    [self.typeMenLab mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.searchTypeView).mas_offset(10);
+        make.width.mas_equalTo(60);
+        make.centerY.mas_equalTo(self.searchTypeView.mas_centerY);
+        make.height.mas_equalTo(SearchBarHeight-10);
+    }];
+    
+    [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self.searchTypeView).mas_offset(-10);
+        make.centerY.mas_equalTo(self.searchTypeView.mas_centerY);
+        make.height.mas_equalTo(15);
+        make.width.mas_equalTo(20);
+        
+    }];
+    
+    [self.searchTypeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.typeMenLab.mas_right);
+        make.right.mas_equalTo(imageView);
+        make.centerY.mas_equalTo(self.searchTypeView.mas_centerY);
+        make.height.mas_equalTo(SearchBarHeight-10);
+    }];
+    
+    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.searchTypeView.mas_bottom).mas_offset(5);
+        make.left.right.bottom.mas_equalTo(self.view);
+    }];
+}
+
+-(void)changeSearchSegmentState:(UISegmentedControl *)sender{
+    self.shStateType = sender.selectedSegmentIndex -1;
+    [self.tableView.mj_header beginRefreshing];
+}
+#endif
+
 #pragma mark ======================= 数据绑定
 -(void)bindViewModel{
-    
-    
     Weak_Self;
     self.tableView.mj_header =[MJRefreshNormalHeader headerWithRefreshingBlock:^{
         weakSelf.page = 1;
@@ -184,44 +315,40 @@
 }
 -(void)requestData_KZSH{
     [SJYRequestTool requestKZSHListWithSearchStateID:self.shStateType SearchSpendTypeID:self.spendTypeID Page:self.page success:^(id responder) {
-        NSArray *rowsArr = [responder objectForKey:@"rows"];
-        self.totalNum = [[responder objectForKey:@"total"] integerValue];
-        self.eld = [[responder objectForKey:@"eId"] integerValue];
-        if (self.tableView.mj_header.isRefreshing) {
-            [self.dataArray removeAllObjects];
-        }
-        NSArray *spendingTypeArray = [SJYDefaultManager shareManager].getXMKZSpendTypeArray;
-        for (NSDictionary *dic in rowsArr) {
-            XMKZDetialListModel  *model = [XMKZDetialListModel  modelWithDictionary:dic];
-            model.modelType = ModelType_KZSH;
-            model.SpendingTypeIDChange = model.SpendingTypeID;
-            model.OccurDateChange = model.OccurDate;
-            model.RemarkChange = model.Remark;
-            model.AmountChange = model.Amount;
-            
-            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Id == %@", model.SpendingTypeID];
-            XMKZSpendTypeModel *typeModel =  [spendingTypeArray filteredArrayUsingPredicate:predicate].firstObject;
-            model.SpndingTypeName = typeModel.name;
-            model.SpndingTypeNameChange = model.SpndingTypeName;
-            
-            model.titleStr = [model.ApplyName stringByAppendingFormat:@"(%@)",model.SpndingTypeName];
-            model.stateString = [ListKZFKStateArray objectAtIndex:model.State];
-            StateCode idx = [StateCodeStringArray indexOfObject:model.stateString];
-            model.stateColor =   [StateCodeColorHexArray objectAtIndex:idx];
-            
-            [self.dataArray addObject:model];
-        }
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.tableView reloadData];
-            [self endRefreshWithError:NO];
-        });
-        dispatch_async(dispatch_get_main_queue(), ^{
+            NSArray *rowsArr = [responder objectForKey:@"rows"];
+            self.totalNum = [[responder objectForKey:@"total"] integerValue];
+            self.eld = [[responder objectForKey:@"eId"] integerValue];
+            if (self.tableView.mj_header.isRefreshing) {
+                [self.dataArray removeAllObjects];
+            }
+            NSArray *spendingTypeArray = [SJYDefaultManager shareManager].getXMKZSpendTypeArray;
+            for (NSDictionary *dic in rowsArr) {
+                XMKZDetialListModel  *model = [XMKZDetialListModel  modelWithDictionary:dic];
+                model.modelType = ModelType_KZSH;
+                model.SpendingTypeIDChange = model.SpendingTypeID;
+                model.OccurDateChange = model.OccurDate;
+                model.RemarkChange = model.Remark;
+                model.AmountChange = model.Amount;
+                
+                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"Id == %@", model.SpendingTypeID];
+                XMKZSpendTypeModel *typeModel =  [spendingTypeArray filteredArrayUsingPredicate:predicate].firstObject;
+                model.SpndingTypeName = typeModel.name;
+                model.SpndingTypeNameChange = model.SpndingTypeName;
+                
+                model.titleStr = [model.ApplyName stringByAppendingFormat:@"(%@)",model.SpndingTypeName];
+                model.stateString = [ListKZFKStateArray objectAtIndex:model.State];
+                StateCode idx = [StateCodeStringArray indexOfObject:model.stateString];
+                model.stateColor =   [StateCodeColorHexArray objectAtIndex:idx];
+                
+                [self.dataArray addObject:model];
+            }
             [self.tableView reloadData];
             [self endRefreshWithError:NO];
         });
     } failure:^(int status, NSString *info) {
-        [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
         dispatch_async(dispatch_get_main_queue(), ^{
+            [QMUITips showWithText:info inView:self.view hideAfterDelay:1.5];
             [self.tableView reloadData];
             [self endRefreshWithError:YES];
         });
